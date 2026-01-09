@@ -5,6 +5,8 @@
 # Use the '-b' flag to launch the BlueROV2
 # Use the '-m' flag to launch multiple CougUVs
 
+set -e
+
 function printInfo {
     # print blue
     echo -e "\033[0m\033[36m[INFO] $1\033[0m"

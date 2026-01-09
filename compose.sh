@@ -3,6 +3,8 @@
 #
 # Sets up a quick CoUGARs development environment
 
+set -e
+
 function printInfo {
     # print blue
     echo -e "\033[0m\033[36m[INFO] $1\033[0m"
@@ -45,7 +47,8 @@ case $1 in
 		while [ "$(docker exec cougars-ct ps -p 1 -o uid= | tr -d ' ')" != "$HOST_UID" ]; do sleep 1; done
 
 		# Import external repositories
-		docker exec --user frostlab-docker -w /home/frostlab-docker/coug_ws/src cougars-ct vcs import < $(dirname "$(readlink -f "$0")")/coug_ws/src/cougars.repos
+		docker exec -i --user frostlab-docker -w /home/frostlab-docker/coug_ws/src cougars-ct \
+			vcs import < $(dirname "$(readlink -f "$0")")/coug_ws/src/cougars.repos
 
 		# Check if a 'coug_dev' tmux session already exists
 		if [ "$(docker exec -it --user frostlab-docker -e HOME=/home/frostlab-docker cougars-ct \
