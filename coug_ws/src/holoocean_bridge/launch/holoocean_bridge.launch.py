@@ -1,0 +1,192 @@
+# Copyright (c) 2026 BYU FRoSt Lab
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import os
+from ament_index_python.packages import get_package_share_directory
+from launch import LaunchDescription
+from launch_ros.actions import Node
+from launch.actions import DeclareLaunchArgument
+from launch.substitutions import LaunchConfiguration, PythonExpression
+
+
+def generate_launch_description():
+
+    use_sim_time = LaunchConfiguration("use_sim_time", default="true")
+    auv_ns = LaunchConfiguration("auv_ns", default="auv0")
+
+    pkg_share = get_package_share_directory("holoocean_bridge")
+    params_file = os.path.join(pkg_share, "config", "bridge_params.yaml")
+
+    base_link_frame = PythonExpression(
+        [
+            "'",
+            auv_ns,
+            "/base_link' if '",
+            auv_ns,
+            "' != '' else 'base_link'",
+        ]
+    )
+
+    com_link_frame = PythonExpression(
+        [
+            "'",
+            auv_ns,
+            "/com_link' if '",
+            auv_ns,
+            "' != '' else 'com_link'",
+        ]
+    )
+
+    imu_link_frame = PythonExpression(
+        [
+            "'",
+            auv_ns,
+            "/imu_link' if '",
+            auv_ns,
+            "' != '' else 'imu_link'",
+        ]
+    )
+
+    depth_link_frame = PythonExpression(
+        [
+            "'",
+            auv_ns,
+            "/depth_link' if '",
+            auv_ns,
+            "' != '' else 'depth_link'",
+        ]
+    )
+
+    modem_link_frame = PythonExpression(
+        [
+            "'",
+            auv_ns,
+            "/modem_link' if '",
+            auv_ns,
+            "' != '' else 'modem_link'",
+        ]
+    )
+
+    dvl_link_frame = PythonExpression(
+        [
+            "'",
+            auv_ns,
+            "/dvl_link' if '",
+            auv_ns,
+            "' != '' else 'dvl_link'",
+        ]
+    )
+
+    agent_name = PythonExpression(
+        ["'", auv_ns, "' if '", auv_ns, "' != '' else 'auv0'"]
+    )
+
+    return LaunchDescription(
+        [
+            DeclareLaunchArgument(
+                "use_sim_time",
+                default_value="true",
+                description="Use simulation (HoloOcean) clock if true",
+            ),
+            DeclareLaunchArgument(
+                "auv_ns",
+                default_value="auv0",
+                description=(
+                    "Namespace for the AUV (e.g. auv0), used for namespacing topics and frames"
+                ),
+            ),
+            Node(
+                package="holoocean_bridge",
+                executable="depth_converter",
+                name="depth_converter_node",
+                parameters=[
+                    params_file,
+                    {"use_sim_time": use_sim_time, "child_frame_id": depth_link_frame},
+                ],
+            ),
+            Node(
+                package="holoocean_bridge",
+                executable="gps_converter",
+                name="gps_converter_node",
+                parameters=[
+                    params_file,
+                    {"use_sim_time": use_sim_time, "frame_id": base_link_frame},
+                ],
+            ),
+            Node(
+                package="holoocean_bridge",
+                executable="cmd_vel_converter",
+                name="cmd_vel_converter_node",
+                parameters=[
+                    params_file,
+                    {"use_sim_time": use_sim_time, "agent_name": agent_name},
+                ],
+            ),
+            Node(
+                package="holoocean_bridge",
+                executable="dvl_converter",
+                name="dvl_converter_node",
+                parameters=[
+                    params_file,
+                    {"use_sim_time": use_sim_time, "frame_id": dvl_link_frame},
+                ],
+            ),
+            Node(
+                package="holoocean_bridge",
+                executable="heading_converter",
+                name="heading_converter_node",
+                parameters=[
+                    params_file,
+                    {"use_sim_time": use_sim_time, "frame_id": modem_link_frame},
+                ],
+            ),
+            Node(
+                package="holoocean_bridge",
+                executable="fin_state_publisher",
+                name="fin_state_publisher_node",
+                parameters=[params_file, {"use_sim_time": use_sim_time}],
+            ),
+            Node(
+                package="holoocean_bridge",
+                executable="truth_converter",
+                name="truth_converter_node",
+                parameters=[
+                    params_file,
+                    {
+                        "use_sim_time": use_sim_time,
+                        "com_frame_id": com_link_frame,
+                        "child_frame_id": base_link_frame,
+                    },
+                ],
+            ),
+            Node(
+                package="holoocean_bridge",
+                executable="hsd_converter",
+                name="hsd_converter_node",
+                parameters=[
+                    params_file,
+                    {"use_sim_time": use_sim_time, "agent_name": agent_name},
+                ],
+            ),
+            Node(
+                package="holoocean_bridge",
+                executable="imu_converter",
+                name="imu_converter_node",
+                parameters=[
+                    params_file,
+                    {"use_sim_time": use_sim_time, "frame_id": imu_link_frame},
+                ],
+            ),
+        ]
+    )

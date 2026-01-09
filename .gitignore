@@ -1,0 +1,17 @@
+**/build
+**/install
+**/log
+**/build_isolated
+**/install_isolated
+**/devel_isolated
+
+scripts/plots/**/*.db3
+scripts/plots/**/metadata.yaml
+scripts/plots/**/*.png
+coug_ws/src/examples
+
+__pycache__
+.vscode
+.venv
+.DS_Store
+core

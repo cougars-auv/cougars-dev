@@ -1,0 +1,139 @@
+/**/factor_graph_node:
+  ros__parameters:
+    # --- Node Settings ---
+    publish_global_tf: true # Publish the map -> odom transform.
+    publish_smoothed_path: true # Publish the full smoothed path for visualization.
+    publish_velocity: true # Publish the estimated velocity (of DVL frame in map frame).
+    publish_imu_bias: true # Publish the estimated IMU biases (accel + gyro).
+
+    # These are computationally expensive to calculate, so disable if not needed.
+    publish_pose_cov: true # Publish the pose covariance along with the pose.
+    publish_velocity_cov: false # Publish the velocity covariance along with the velocity.
+    publish_imu_bias_cov: false # Publish the IMU bias covariance along with the bias.
+
+    # --- GTSAM Smoother Settings ---
+    smoother_lag: 20.0 # The time window (in seconds) of past states to smooth over.
+    relinearize_threshold: 0.1 # Lower values are more accurate but slower.
+    relinearize_skip: 1 # Number of updates to skip between relinearizations.
+
+    # --- ROS Topics and Frames ---
+    imu_topic: "imu/data"
+    gps_odom_topic: "odometry/gps"
+    depth_odom_topic: "odometry/depth"
+    heading_topic: "imu/heading"
+    dvl_topic: "dvl/data"
+    global_odom_topic: "odometry/global"
+    smoothed_path_topic: "smoothed_path"
+    velocity_topic: "~/velocity" # Published at the DVL frame.
+    # Topic for the IMU bias. Published as a TwistWithCovarianceStamped,
+    # where 'linear' holds accelerometer bias and 'angular' holds gyroscope bias.
+    imu_bias_topic: "~/imu_bias"
+
+    # --- Sensor Noise Models ---
+    # For each sensor, `use_parameter_covariance: true` will force the node to
+    # ignore the covariance in the sensor message and use the sigma value(s)
+    # specified in this file instead.
+    #
+    # Robust Kernels:
+    # - "None": Standard Least Squares (Gaussian). Sensitive to outliers.
+    # - "Huber": Linear penalty for large errors. Good general robustness. (k=1.345 standard)
+    # - "Tukey": Ignores large errors completely. Best for sensors with distinct 'bad' readings. (k=4.685 standard)
+
+    imu:
+      use_parameter_covariance: true
+      parameter_covariance:
+        accel_noise_sigma: 0.078 # [m/s^2] Accelerometer measurement noise sigma.
+        gyro_noise_sigma: 0.012 # [rad/s] Gyroscope measurement noise sigma.
+      accel_bias_rw_sigma: 1.05e-04 # [m/s^3] Sigma for accelerometer bias random walk.
+      gyro_bias_rw_sigma: 3.91e-05 # [rad/s^2] Sigma for gyroscope bias random walk.
+      integration_covariance: 1e-5 # A small covariance for the integration process itself.
+      gravity: [0.0, 0.0, -9.8] # [m/s^2]
+
+    gps:
+      enable_gps: true
+      use_parameter_covariance: true
+      parameter_covariance:
+        position_noise_sigma: 7.5 # [m] GPS position uncertainty sigma.
+        altitude_noise_sigma: 1e9 # [m] GPS altitude uncertainty sigma.
+      robust_kernel: "None"
+      robust_k: 1.345
+
+    depth:
+      use_parameter_covariance: true
+      parameter_covariance:
+        position_z_noise_sigma: 1.0 # [m] Depth sensor Z-position uncertainty sigma.
+      robust_kernel: "None"
+      robust_k: 1.345
+
+    heading:
+      enable_heading: true
+      use_parameter_covariance: true
+      parameter_covariance:
+        yaw_noise_sigma: 0.1 # [rad] Heading sensor yaw uncertainty sigma.
+        roll_pitch_noise_sigma: 1e9 # [rad] Heading sensor roll and pitch uncertainty sigma.
+      robust_kernel: "None"
+      robust_k: 1.345
+
+    dvl:
+      use_parameter_covariance: true
+      parameter_covariance:
+        velocity_noise_sigma: 0.2 # [m/s] DVL body-velocity uncertainty sigma.
+      timeout_threshold: 1.0 # [s] Time before switching to depth-driven FGO (DVL dropout).
+      robust_kernel: "None"
+      robust_k: 1.345
+
+    # --- Initial State Priors ---
+    prior:
+      initialization_duration: 10.0 # [s] Time duration to collect and average data before initializing.
+
+      # If true, forces the initial state to be set by the values below,
+      # ignoring any information from initial sensor messages.
+      use_parameter_priors: false
+      parameter_priors:
+        initial_position: [0.0, 0.0, 0.0] # [m]
+        initial_orientation: [0.0, 0.0, 0.0] # [rad]
+        initial_velocity: [0.0, 0.0, 0.0] # [m/s] (at DVL frame)
+        initial_accel_bias: [0.0, 0.0, 0.0] # [m/s^2]
+        initial_gyro_bias: [0.0, 0.0, 0.0] # [rad/s]
+        initial_position_sigma: 1e-3 # [m] Initial position uncertainty.
+        initial_orientation_sigma: 1e-3 # [rad] Initial yaw uncertainty.
+        initial_velocity_sigma: 1e-3 # [m/s] Initial velocity uncertainty.
+      initial_accel_bias_sigma: 1e-3 # [m/s^2] Initial accelerometer bias uncertainty.
+      initial_gyro_bias_sigma: 1e-4 # [rad/s] Initial gyroscope bias uncertainty.
+
+    # --- Experimental Features ---
+    experimental:
+      # TURTLMap-based DVL preintegration implementation
+      enable_dvl_preintegration: false
+
+/auv0/factor_graph_node:
+  ros__parameters:
+    prior:
+      parameter_priors:
+        initial_position: [0.0, 0.0, 0.0] # [m]
+        initial_orientation: [0.0, 0.0, 0.0] # [rad]
+
+/auv1/factor_graph_node:
+  ros__parameters:
+    prior:
+      parameter_priors:
+        initial_position: [0.0, 20.0, 0.0] # [m]
+        initial_orientation: [0.0, 0.0, 0.0] # [rad]
+
+/**/navsat_preprocessor_node:
+  ros__parameters:
+    # --- Node Settings ---
+    origin_pub_rate: 1.0 # [Hz] Rate at which to publish the GPS origin.
+
+    # --- ROS Topics and Frames ---
+    input_topic: "gps/fix"
+    odom_output_topic: "odometry/gps"
+    origin_output_topic: "/origin"
+
+    map_frame: "map" # Global, non-drifting world frame
+
+    use_parameter_origin: true
+    parameter_origin:
+      latitude: 40.33940
+      longitude: -111.90721
+      altitude: 1412.0

@@ -1,0 +1,100 @@
+# Copyright (c) 2026 BYU FRoSt Lab
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: Docker CI
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - ".github/workflows/docker_ci.yml"
+      - "docker/Dockerfile"
+      - "docker/gtsam/Dockerfile"
+      - "coug_ws/src/cougars.repos"
+      - "coug_ws/src/**/package.xml"
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      gtsam: ${{ steps.filter.outputs.gtsam }}
+      cougars: ${{ steps.filter.outputs.cougars }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            gtsam:
+              - '.github/workflows/docker_ci.yml'
+              - 'docker/gtsam/Dockerfile'
+            cougars:
+              - '.github/workflows/docker_ci.yml'
+              - 'docker/Dockerfile'
+              - 'coug_ws/src/cougars.repos'
+              - 'coug_ws/src/**/package.xml'
+
+  build-gtsam:
+    needs: changes
+    if: ${{ needs.changes.outputs.gtsam == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repo
+        uses: actions/checkout@v4
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: snelsondurrant
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build and push to DockerHub
+        uses: docker/build-push-action@v6
+        with:
+          context: "{{defaultContext}}"
+          file: docker/gtsam/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: snelsondurrant/cougars:gtsam
+
+  build-cougars:
+    needs: [changes, build-gtsam]
+    if: |
+      always() && 
+      !failure() && 
+      !cancelled() && 
+      (needs.build-gtsam.result == 'success' || (needs.build-gtsam.result == 'skipped' && needs.changes.outputs.cougars == 'true'))
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repo
+        uses: actions/checkout@v4
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: snelsondurrant
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build and push to DockerHub
+        uses: docker/build-push-action@v6
+        with:
+          context: "{{defaultContext}}"
+          file: docker/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: snelsondurrant/cougars:latest

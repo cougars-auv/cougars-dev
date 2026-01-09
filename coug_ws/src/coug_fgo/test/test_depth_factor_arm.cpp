@@ -1,0 +1,104 @@
+// Copyright (c) 2026 BYU FRoSt Lab
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+/**
+ * @file test_depth_factor_arm.cpp
+ * @brief Unit tests for depth_factor_arm.hpp.
+ * @author Nelson Durrant (w Gemini 3 Pro)
+ * @date Jan 2026
+ */
+
+#include <gtest/gtest.h>
+#include <gtsam/base/numericalDerivative.h>
+#include <gtsam/inference/Symbol.h>
+
+#include <boost/bind/bind.hpp>
+
+#include "coug_fgo/factors/depth_factor_arm.hpp"
+
+/**
+ * @brief Test the error evaluation logic of the CustomDepthFactorArm.
+ *
+ * Verifies the factor's residual calculation: `error = measured_depth - (pose.z + lever_arm_z)`.
+ *
+ * Cases tested:
+ * 1.  **No Lever Arm**: Ideal case where sensor is at the body origin.
+ *     - Verifies 0 error when match is exact.
+ *     - Verifies 1.0 error when depth is off by 1m.
+ * 2.  **Lever Arm Offset**: Sensor is vertically offset (0, 0, 1).
+ *     - Verifies that the factor correctly accounts for the offset (e.g., body at Z=4 means sensor at Z=5).
+ * 3.  **Rotation + Lever Arm**: AUV is upside down (Roll = PI).
+ *     - Verifies that the lever arm is correctly rotated into the global frame.
+ */
+TEST(DepthFactorArmTest, ErrorEvaluation) {
+  gtsam::Key poseKey = gtsam::symbol_shorthand::X(1);
+  gtsam::SharedNoiseModel model = gtsam::noiseModel::Isotropic::Sigma(1, 0.1);
+
+  // Case 1: No Lever Arm
+  coug_fgo::factors::CustomDepthFactorArm factor1(poseKey, 5.0, gtsam::Pose3::Identity(), model);
+  EXPECT_NEAR(
+    factor1.evaluateError(
+      gtsam::Pose3(
+        gtsam::Rot3(), gtsam::Point3(
+          0, 0,
+          5)))[0], 0.0, 1e-9);
+  EXPECT_NEAR(
+    factor1.evaluateError(
+      gtsam::Pose3(
+        gtsam::Rot3(), gtsam::Point3(
+          0, 0,
+          6)))[0], 1.0, 1e-9);
+
+  // Case 2: Lever Arm (0, 0, 1)
+  coug_fgo::factors::CustomDepthFactorArm factor2(poseKey, 5.0,
+    gtsam::Pose3(gtsam::Rot3(), gtsam::Point3(0, 0, 1)), model);
+  EXPECT_NEAR(
+    factor2.evaluateError(
+      gtsam::Pose3(
+        gtsam::Rot3(), gtsam::Point3(
+          0, 0,
+          4)))[0], 0.0, 1e-9);
+
+  // Case 3: Upside down AUV with Lever Arm
+  EXPECT_NEAR(
+    factor2.evaluateError(
+      gtsam::Pose3(
+        gtsam::Rot3::Rx(M_PI), gtsam::Point3(
+          0, 0,
+          6)))[0], 0.0,
+    1e-9);
+}
+
+/**
+ * @brief Verify Jacobians of the CustomDepthFactorArm using numerical differentiation.
+ *
+ * Ensures that the analytical Jacobian implementation used by the optimization engine
+ * matches the numerical derivative of the error function. This is critical for
+ * correct convergence of the factor graph.
+ */
+TEST(DepthFactorArmTest, Jacobians) {
+  coug_fgo::factors::CustomDepthFactorArm factor(gtsam::symbol_shorthand::X(1), 5.0,
+    gtsam::Pose3(gtsam::Rot3(), gtsam::Point3(0.5, 0.5, 0.5)),
+    gtsam::noiseModel::Isotropic::Sigma(1, 0.1));
+  gtsam::Pose3 pose = gtsam::Pose3(gtsam::Rot3::Ypr(0.1, 0.2, 0.3), gtsam::Point3(1, 2, 4));
+
+  gtsam::Matrix expectedH = gtsam::numericalDerivative11<gtsam::Vector, gtsam::Pose3>(
+    boost::bind(
+      &coug_fgo::factors::CustomDepthFactorArm::evaluateError, &factor,
+      boost::placeholders::_1, boost::none), pose, 1e-5);
+
+  gtsam::Matrix actualH;
+  factor.evaluateError(pose, actualH);
+  EXPECT_TRUE(gtsam::assert_equal(expectedH, actualH, 1e-5));
+}

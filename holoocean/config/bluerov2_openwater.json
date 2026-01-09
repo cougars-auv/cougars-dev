@@ -1,0 +1,94 @@
+{
+    "name": "bluerov2_openwater",
+    "package_name": "Ocean",
+    "world": "OpenWater",
+    "main_agent": "auv0",
+    "ticks_per_sec": 200,
+    "frames_per_sec": false,
+    "agents": [
+        {
+            "agent_name": "auv0",
+            "agent_type": "BlueROV2",
+            "sensors": [
+                {
+                    "sensor_type": "IMUSensor",
+                    "socket": "IMUSocket",
+                    "Hz": 200,
+                    "configuration": {
+                        "AccelSigma": 0.0078,
+                        "AngVelSigma": 0.0012,
+                        "AccelBiasSigma": 1.05e-05,
+                        "AngVelBiasSigma": 3.91e-06,
+                        "ReturnBias": true
+                    },
+                    "ros_publish": true
+                },
+                {
+                    "sensor_type": "GPSSensor",
+                    "socket": "COM",
+                    "Hz": 1,
+                    "configuration": {
+                        "Sigma": 2.5,
+                        "Depth": 0.5,
+                        "DepthSigma": 0.1
+                    },
+                    "ros_publish": true
+                },
+                {
+                    "sensor_type": "DepthSensor",
+                    "socket": "DepthSocket",
+                    "Hz": 10,
+                    "configuration": {
+                        "Sigma": 0.2
+                    },
+                    "ros_publish": true
+                },
+                {
+                    "sensor_type": "RotationSensor",
+                    "socket": "AcousticModemSocket",
+                    "Hz": 10,
+                    "ros_publish": true
+                },
+                {
+                    "sensor_type": "DVLSensor",
+                    "socket": "DVLSocket",
+                    "Hz": 15,
+                    "configuration": {
+                        "VelSigma": 0.02,
+                        "DebugLines": false
+                    },
+                    "ros_publish": true
+                },
+                {
+                    "sensor_type": "DynamicsSensor",
+                    "configuration": {
+                        "UseCOM": true,
+                        "UseRPY": false
+                    },
+                    "ros_publish": true
+                },
+                {
+                    "sensor_type": "LocationSensor",
+                    "socket": "COM",
+                    "ros_publish": true
+                },
+                {
+                    "sensor_type": "VelocitySensor",
+                    "socket": "DVLSocket",
+                    "ros_publish": true
+                }
+            ],
+            "control_scheme": 0,
+            "location": [
+                0,
+                0,
+                0
+            ],
+            "rotation": [
+                0,
+                0,
+                0
+            ]
+        }
+    ]
+}

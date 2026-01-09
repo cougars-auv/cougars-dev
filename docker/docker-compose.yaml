@@ -1,0 +1,62 @@
+# Copyright (c) 2026 BYU FRoSt Lab
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+services:
+  gtsam:
+    image: snelsondurrant/cougars:gtsam
+    build:
+      context: ..
+      dockerfile: docker/gtsam/Dockerfile
+    profiles:
+      - build-reqs
+
+  mapproxy:
+    image: danielsnider/mapproxy
+    container_name: mapproxy-ct
+    ports:
+      - "8080:8080"
+    volumes:
+      - ~/mapproxy:/mapproxy
+    profiles:
+      - mapproxy
+
+  cougars:
+    image: snelsondurrant/cougars:latest
+    build: 
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: cougars-ct
+    user: root
+    network_mode: host
+    privileged: true
+    environment:
+      - HOST_UID=${HOST_UID:-1000} # Permission fix on Linux
+      - HOST_GID=${HOST_GID:-1000} # Permission fix on Linux
+      - DISPLAY=$DISPLAY
+      - QT_X11_NO_MITSHM=1
+    volumes:
+      - ../coug_ws:/home/frostlab-docker/coug_ws
+      - ../scripts:/home/frostlab-docker/scripts
+      - ./entrypoint.sh:/entrypoint.sh
+      - ./introduction.txt:/introduction.txt
+      - ./.tmux.conf:/home/frostlab-docker/.tmux.conf
+      - /dev:/dev:rw
+      - /etc/udev:/etc/udev:rw
+      - /dev/shm:/dev/shm
+      - /etc/localtime:/etc/localtime:ro
+      - /tmp/.X11-unix:/tmp/.X11-unix
+    stdin_open: true
+    tty: true
+    restart: always
+    entrypoint: ["/entrypoint.sh"]

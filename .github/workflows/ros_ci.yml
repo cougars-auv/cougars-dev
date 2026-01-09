@@ -1,0 +1,50 @@
+# Copyright (c) 2026 BYU FRoSt Lab
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: ROS CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    container:
+      image: snelsondurrant/cougars:latest
+      options: --user root
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fix permissions
+        run: |
+          chown -R frostlab-docker:frostlab-docker .
+      - name: Save package list
+        run: |
+          su frostlab-docker -c "source /opt/ros/humble/setup.bash && colcon list --names-only --base-paths coug_ws/src > coug_ws/packages_to_test.txt"
+      - name: Install ROS dependencies
+        run: |
+          su frostlab-docker -c "vcs import coug_ws/src < coug_ws/src/cougars.repos"
+          su frostlab-docker -c "rosdep update"
+          apt update
+          su frostlab-docker -c "rosdep install --from-paths coug_ws/src --ignore-src -r -y"
+      - name: Build workspace
+        shell: bash
+        run: |
+          su frostlab-docker -c "source /opt/ros/humble/setup.bash && cd coug_ws && colcon build"
+      - name: Run tests
+        shell: bash
+        run: |
+          su frostlab-docker -c 'source /opt/ros/humble/setup.bash && cd coug_ws && colcon test --packages-select $(cat packages_to_test.txt) && colcon test-result --verbose'
