@@ -15,3 +15,15 @@ __pycache__
 .venv
 .DS_Store
 core
+
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.synctex.gz
+*.out
+*.toc
+*.lot
+*.lof
+*.bbl
+*.blg
