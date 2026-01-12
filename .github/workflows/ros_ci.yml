@@ -28,8 +28,18 @@ jobs:
       options: --user root
     steps:
       - uses: actions/checkout@v4
+      - name: Cache ccache
+        uses: actions/cache@v4
+        with:
+          path: coug_ws/.ccache
+          key: ccache-${{ runner.os }}-${{ github.sha }}
+          restore-keys: |
+            ccache-${{ runner.os }}-
+      - name: Install ccache
+        run: apt update && apt install -y ccache
       - name: Fix permissions
         run: |
+          mkdir -p coug_ws/.ccache
           chown -R frostlab-docker:frostlab-docker .
       - name: Save package list
         run: |
@@ -43,7 +53,7 @@ jobs:
       - name: Build workspace
         shell: bash
         run: |
-          su frostlab-docker -c "source /opt/ros/humble/setup.bash && cd coug_ws && colcon build"
+          su frostlab-docker -c "source /opt/ros/humble/setup.bash && cd coug_ws && export CCACHE_DIR=\$(pwd)/.ccache && colcon build --cmake-args -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache"
       - name: Run tests
         shell: bash
         run: |
