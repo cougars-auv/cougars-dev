@@ -46,10 +46,6 @@ case $1 in
 		# Wait for './entrypoint.sh' to finish
 		while [ "$(docker exec cougars-ct ps -p 1 -o uid= | tr -d ' ')" != "$HOST_UID" ]; do sleep 1; done
 
-		# Import external repositories
-		docker exec -i --user frostlab-docker -w /home/frostlab-docker/coug_ws/src cougars-ct \
-			vcs import < $(dirname "$(readlink -f "$0")")/coug_ws/src/cougars.repos
-
 		# Check if a 'coug_dev' tmux session already exists
 		if [ "$(docker exec -it --user frostlab-docker -e HOME=/home/frostlab-docker cougars-ct \
 			tmux list-sessions | grep coug_dev)" == "" ]; then

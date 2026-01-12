@@ -16,6 +16,7 @@ import os
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription, DeclareLaunchArgument
+from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 
@@ -58,6 +59,7 @@ def generate_launch_description():
             "use_sim_time": use_sim_time,
             "auv_ns": auv_ns,
         }.items(),
+        condition=IfCondition(compare),
     )
 
     coug_fgo_cmd = IncludeLaunchDescription(

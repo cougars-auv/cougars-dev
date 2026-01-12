@@ -88,7 +88,7 @@
 
       # If true, forces the initial state to be set by the values below,
       # ignoring any information from initial sensor messages.
-      use_parameter_priors: false
+      use_parameter_priors: true
       parameter_priors:
         initial_position: [0.0, 0.0, 0.0] # [m]
         initial_orientation: [0.0, 0.0, 0.0] # [rad]

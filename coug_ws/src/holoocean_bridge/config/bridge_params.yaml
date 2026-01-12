@@ -54,7 +54,7 @@
     imu_topic: "DynamicsSensorIMU"
     output_topic: "odometry/truth"
 
-    holoocean_origin: [0.0, 0.0, 0.0] # [m] Location of the map frame origin in HoloOcean coordinates.
+    publish_tf: false # Whether to publish the map->base_link transform
 
 /**/fin_state_publisher_node:
   ros__parameters:

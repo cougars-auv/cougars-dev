@@ -2,7 +2,7 @@
   ros__parameters:
     frequency: 30.0
     two_d_mode: false
-    publish_tf: true
+    publish_tf: false # Published by IEKF instead
 
     twist0: dvl/data
     twist0_config: [false, false, false, # X, Y, Z

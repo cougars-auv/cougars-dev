@@ -77,8 +77,8 @@ def generate_launch_description():
                     {
                         "use_sim_time": use_sim_time,
                         "map_frame": "map",
-                        "odom_frame": odom_frame,  # Namespacing for multiple agents
-                        "base_frame": base_frame,  # Namespacing for multiple agents
+                        "odom_frame": odom_frame,
+                        "base_frame": base_frame,
                     },
                 ],
             ),
@@ -116,13 +116,13 @@ def generate_launch_description():
                     {"use_sim_time": use_sim_time, "set_origin": set_origin},
                 ],
             ),
-            # Uncomment this if not using a local EKF to publish the odom->base_link TF
-            # Node(
-            #     package="tf2_ros",
-            #     executable="static_transform_publisher",
-            #     name="static_transform",
-            #     arguments=["0", "0", "0", "0", "0", "0", odom_frame, base_frame],
-            #     parameters=[{"use_sim_time": use_sim_time}],
-            # ),
+            # TODO: Replace this with the IEKF
+            Node(
+                package="tf2_ros",
+                executable="static_transform_publisher",
+                name="static_transform",
+                arguments=["0", "0", "0", "0", "0", "0", odom_frame, base_frame],
+                parameters=[{"use_sim_time": use_sim_time}],
+            ),
         ]
     )

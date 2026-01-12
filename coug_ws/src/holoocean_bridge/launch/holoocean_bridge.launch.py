@@ -17,6 +17,7 @@ from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch_ros.actions import Node
 from launch.actions import DeclareLaunchArgument
+from launch.conditions import IfCondition
 from launch.substitutions import LaunchConfiguration, PythonExpression
 
 
@@ -24,6 +25,7 @@ def generate_launch_description():
 
     use_sim_time = LaunchConfiguration("use_sim_time", default="true")
     auv_ns = LaunchConfiguration("auv_ns", default="auv0")
+    main_agent = LaunchConfiguration("main_agent", default="true")
 
     pkg_share = get_package_share_directory("holoocean_bridge")
     params_file = os.path.join(pkg_share, "config", "bridge_params.yaml")
@@ -106,6 +108,11 @@ def generate_launch_description():
                     "Namespace for the AUV (e.g. auv0), used for namespacing topics and frames"
                 ),
             ),
+            DeclareLaunchArgument(
+                "main_agent",
+                default_value="true",
+                description="Whether this agent is the main agent (publishes world transforms)",
+            ),
             Node(
                 package="holoocean_bridge",
                 executable="depth_converter",
@@ -187,6 +194,15 @@ def generate_launch_description():
                     params_file,
                     {"use_sim_time": use_sim_time, "frame_id": imu_link_frame},
                 ],
+            ),
+            # Set this to the starting position of the main AUV in HoloOcean
+            Node(
+                package="tf2_ros",
+                executable="static_transform_publisher",
+                name="holoocean_transform",
+                arguments=["0", "0", "0", "0", "0", "0", "map", "holoocean"],
+                condition=IfCondition(main_agent),
+                parameters=[{"use_sim_time": use_sim_time}],
             ),
         ]
     )

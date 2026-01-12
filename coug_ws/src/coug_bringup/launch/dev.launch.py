@@ -75,7 +75,6 @@ def launch_setup(context, *args, **kwargs):
                 "use_sim_time": use_sim_time,
                 "urdf_file": urdf_file,
                 "auv_ns": auv_ns,
-                # Only allow the first agent to set the origin
                 "set_origin": "true" if i == 0 else "false",
                 "compare": compare,
             }.items(),
@@ -88,6 +87,7 @@ def launch_setup(context, *args, **kwargs):
             launch_arguments={
                 "use_sim_time": use_sim_time,
                 "auv_ns": auv_ns,
+                "main_agent": "true" if i == 0 else "false",
             }.items(),
         )
 
