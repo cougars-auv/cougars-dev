@@ -91,7 +91,7 @@ displays:
       visible: true
       collapsed: true
       topic: /auv0/odometry/truth
-      color: "#ff0000"
+      color: "#ffffff"
       draw_style: lines
       position_tolerance: 0
       buffer_size: 0
@@ -168,7 +168,7 @@ displays:
       visible: true
       collapsed: true
       topic: /auv1/odometry/truth
-      color: "#ff0000"
+      color: "#ffffff"
       draw_style: lines
       position_tolerance: 0
       buffer_size: 0

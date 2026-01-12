@@ -82,12 +82,11 @@ def generate_launch_description():
                     },
                 ],
             ),
-            # TURTLMap-based config for real-time comparison
+            # TURTLMap-based FGO for real-time comparison
             Node(
                 package="coug_fgo",
                 executable="factor_graph",
-                name="factor_graph_node",
-                namespace="tm",
+                name="factor_graph_node_tm",
                 condition=IfCondition(LaunchConfiguration("compare")),
                 parameters=[
                     params_file,
@@ -97,11 +96,11 @@ def generate_launch_description():
                         "odom_frame": odom_frame,
                         "base_frame": base_frame,
 
-                        "imu_topic": ["/", auv_ns, "/imu/data"],
-                        "gps_odom_topic": ["/", auv_ns, "/odometry/gps"],
-                        "depth_odom_topic": ["/", auv_ns, "/odometry/depth"],
-                        "heading_topic": ["/", auv_ns, "/imu/heading"],
-                        "dvl_topic": ["/", auv_ns, "/dvl/data"],
+                        "global_odom_topic": "odometry/global_tm",
+                        "smoothed_path_topic": "smoothed_path_tm",
+                        "velocity_topic": "~/velocity_tm",
+                        "imu_bias_topic": "~/imu_bias_tm",
+
                         "publish_global_tf": False,
                         "experimental.enable_dvl_preintegration": True,
                     },

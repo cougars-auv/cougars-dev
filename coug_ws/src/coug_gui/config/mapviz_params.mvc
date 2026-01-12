@@ -90,7 +90,7 @@ displays:
     config:
       visible: false
       collapsed: true
-      topic: /auv0/tm/odometry/global
+      topic: /auv0/odometry/global_tm
       color: "#55aaff"
       draw_style: lines
       position_tolerance: 0
@@ -151,7 +151,7 @@ displays:
       visible: true
       collapsed: true
       topic: /auv0/odometry/truth
-      color: "#ff0000"
+      color: "#ffffff"
       draw_style: lines
       position_tolerance: 0
       buffer_size: 0

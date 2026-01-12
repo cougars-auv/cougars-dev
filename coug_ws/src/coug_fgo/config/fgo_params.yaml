@@ -1,4 +1,4 @@
-/**/factor_graph_node:
+/**:
   ros__parameters:
     # --- Node Settings ---
     publish_global_tf: true # Publish the map -> odom transform.
@@ -106,14 +106,14 @@
       # TURTLMap-based DVL preintegration implementation
       enable_dvl_preintegration: false
 
-/auv0/factor_graph_node:
+/auv0/**:
   ros__parameters:
     prior:
       parameter_priors:
         initial_position: [0.0, 0.0, 0.0] # [m]
         initial_orientation: [0.0, 0.0, 0.0] # [rad]
 
-/auv1/factor_graph_node:
+/auv1/**:
   ros__parameters:
     prior:
       parameter_priors:
