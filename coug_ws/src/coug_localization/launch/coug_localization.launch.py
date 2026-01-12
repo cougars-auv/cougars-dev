@@ -70,7 +70,9 @@ def generate_launch_description():
                         "world_frame": odom_frame,
                     },
                 ],
-                remappings=[("odometry/filtered", "odometry/local_ekf")],
+                remappings=[
+                    ("odometry/filtered", "odometry/local_ekf")
+                ],  # Different topic to avoid conflict with IEKF
             ),
             # https://docs.ros.org/en/melodic/api/robot_localization/html/state_estimation_nodes.html
             Node(
