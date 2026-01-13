@@ -1,5 +1,5 @@
 repositories:
-  examples:
+  seatrac_interfaces:
     type: git
-    url: https://github.com/ros2/examples.git
-    version: humble
+    url: https://github.com/BYU-FRoSt-Lab/seatrac_interfaces.git
+    version: main

@@ -10,6 +10,7 @@ bags/*
 coug_ws/src/*
 !coug_ws/src/coug_*
 !coug_ws/src/holoocean_*
+!coug_ws/src/cougars.repos
 
 __pycache__
 .vscode
