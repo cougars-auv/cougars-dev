@@ -35,8 +35,6 @@ ENV ROS_BUILD_ARCH=$TARGETARCH
 # Install ROS packages
 USER root
 RUN apt update && apt install -y --no-install-recommends \
-    # CycloneDDS ROS2 middleware - Nelson Durrant, Jan 2026
-    ros-humble-rmw-cyclonedds-cpp \
     # Helpful ROS GUI tools - Nelson Durrant, Jan 2026
     ros-humble-rqt* ros-humble-plotjuggler-ros \
     # Drive the AUV with a joystick or keyboard - Nelson Durrant, Jan 2026
@@ -51,9 +49,7 @@ COPY --chown=frostlab-docker:frostlab-docker coug_ws/src .
 USER frostlab-docker
 RUN pip3 install --no-cache-dir \
     # Tool for managing external repos - Nelson Durrant, Jan 2026
-    vcstool \
-    # Used by plotting scripts - Nelson Durrant, Jan 2026
-    rosbags
+    vcstool
 ENV PATH="$PATH:/home/frostlab-docker/.local/bin"
 
 # Install custom ROS package dependencies (rosdep)
