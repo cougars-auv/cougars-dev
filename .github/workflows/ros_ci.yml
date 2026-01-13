@@ -39,7 +39,7 @@ jobs:
           key: ccache-${{ runner.os }}-${{ matrix.platform }}-${{ github.sha }}
           restore-keys: |
             ccache-${{ runner.os }}-${{ matrix.platform }}-
-      - name: Create CI Script
+      - name: Create Build/Test Script
         run: |
           cat << 'EOF' > ci_script.sh
           #!/bin/bash
@@ -58,7 +58,7 @@ jobs:
           su frostlab-docker -c 'source /opt/ros/humble/setup.bash && cd coug_ws && colcon test --packages-select $(cat packages_to_test.txt) && colcon test-result --verbose'
           EOF
           chmod +x ci_script.sh
-      - name: Run CI
+      - name: Run Build/Test Script
         run: |
           docker run --rm \
             --platform ${{ matrix.platform }} \
