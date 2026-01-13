@@ -19,7 +19,7 @@ endif()
 ### END CMAKE POLICIES ###
 
 project(coug_gui
-  LANGUAGES CXX)
+  LANGUAGES C CXX)
 
 # Skip builds on incompatible architectures
 if(NOT "$ENV{ROS_BUILD_ARCH}" STREQUAL "amd64")
