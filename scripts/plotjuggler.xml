@@ -3,29 +3,29 @@
  <tabbed_widget name="Main Window" parent="main_window">
   <Tab containers="1" tab_name="Position">
    <Container>
-    <DockSplitter orientation="-" count="3" sizes="0.333333;0.333333;0.333333">
+    <DockSplitter count="3" sizes="0.333805;0.33239;0.333805" orientation="-">
      <DockArea name="...">
-      <plot mode="TimeSeries" style="Lines" flip_x="false" flip_y="false">
-       <range right="172.296677" left="52.297730" bottom="-148.579052" top="-110.556915"/>
+      <plot flip_x="false" mode="TimeSeries" flip_y="false" line_width="1.0">
+       <range bottom="-0.194934" left="25.938627" top="0.004754" right="30.957195"/>
        <limitY/>
-       <curve name="/auv0/odometry/global/pose/pose/position/x" color="#2ca02c"/>
-       <curve name="/auv0/odometry/truth/pose/pose/position/x" color="#000000"/>
+       <curve color="#2ca02c" name="/auv0/odometry/global/pose/pose/position/x"/>
+       <curve color="#000000" name="/auv0/odometry/truth/pose/pose/position/x"/>
       </plot>
      </DockArea>
      <DockArea name="...">
-      <plot mode="TimeSeries" style="Lines" flip_x="false" flip_y="false">
-       <range right="172.296677" left="52.297730" bottom="-35.085779" top="2.706886"/>
+      <plot flip_x="false" mode="TimeSeries" flip_y="false" line_width="1.0">
+       <range bottom="-0.124519" left="25.938627" top="0.003037" right="30.957195"/>
        <limitY/>
-       <curve name="/auv0/odometry/global/pose/pose/position/y" color="#2ca02c"/>
-       <curve name="/auv0/odometry/truth/pose/pose/position/y" color="#000000"/>
+       <curve color="#2ca02c" name="/auv0/odometry/global/pose/pose/position/y"/>
+       <curve color="#000000" name="/auv0/odometry/truth/pose/pose/position/y"/>
       </plot>
      </DockArea>
      <DockArea name="...">
-      <plot mode="TimeSeries" style="Lines" flip_x="false" flip_y="false">
-       <range right="172.296677" left="52.297730" bottom="0.014981" top="0.212260"/>
+      <plot flip_x="false" mode="TimeSeries" flip_y="false" line_width="1.0">
+       <range bottom="-0.022526" left="25.938627" top="0.078166" right="30.957195"/>
        <limitY/>
-       <curve name="/auv0/odometry/global/pose/pose/position/z" color="#2ca02c"/>
-       <curve name="/auv0/odometry/truth/pose/pose/position/z" color="#000000"/>
+       <curve color="#2ca02c" name="/auv0/odometry/global/pose/pose/position/z"/>
+       <curve color="#000000" name="/auv0/odometry/truth/pose/pose/position/z"/>
       </plot>
      </DockArea>
     </DockSplitter>
@@ -33,29 +33,29 @@
   </Tab>
   <Tab containers="1" tab_name="Orientation">
    <Container>
-    <DockSplitter orientation="-" count="3" sizes="0.333333;0.333333;0.333333">
+    <DockSplitter count="3" sizes="0.333805;0.33239;0.333805" orientation="-">
      <DockArea name="...">
-      <plot mode="TimeSeries" style="Lines" flip_x="false" flip_y="false">
-       <range right="172.296677" left="52.297730" bottom="-0.471006" top="0.134618"/>
+      <plot flip_x="false" mode="TimeSeries" flip_y="false" line_width="1.0">
+       <range bottom="-0.062796" left="25.938627" top="0.073316" right="30.957195"/>
        <limitY/>
-       <curve name="/auv0/odometry/global/pose/pose/orientation/roll" color="#1f77b4"/>
-       <curve name="/auv0/odometry/truth/pose/pose/orientation/roll" color="#000000"/>
+       <curve color="#1f77b4" name="/auv0/odometry/global/pose/pose/orientation/roll"/>
+       <curve color="#000000" name="/auv0/odometry/truth/pose/pose/orientation/roll"/>
       </plot>
      </DockArea>
      <DockArea name="...">
-      <plot mode="TimeSeries" style="Lines" flip_x="false" flip_y="false">
-       <range right="172.296677" left="52.297730" bottom="-0.069258" top="0.147206"/>
+      <plot flip_x="false" mode="TimeSeries" flip_y="false" line_width="1.0">
+       <range bottom="-0.069499" left="25.938627" top="0.070909" right="30.957195"/>
        <limitY/>
-       <curve name="/auv0/odometry/global/pose/pose/orientation/pitch" color="#1f77b4"/>
-       <curve name="/auv0/odometry/truth/pose/pose/orientation/pitch" color="#000000"/>
+       <curve color="#1f77b4" name="/auv0/odometry/global/pose/pose/orientation/pitch"/>
+       <curve color="#000000" name="/auv0/odometry/truth/pose/pose/orientation/pitch"/>
       </plot>
      </DockArea>
      <DockArea name="...">
-      <plot mode="TimeSeries" style="Lines" flip_x="false" flip_y="false">
-       <range right="172.296677" left="52.297730" bottom="-3.298540" top="3.298454"/>
+      <plot flip_x="false" mode="TimeSeries" flip_y="false" line_width="1.0">
+       <range bottom="-0.031951" left="25.938627" top="0.030409" right="30.957195"/>
        <limitY/>
-       <curve name="/auv0/odometry/global/pose/pose/orientation/yaw" color="#1f77b4"/>
-       <curve name="/auv0/odometry/truth/pose/pose/orientation/yaw" color="#000000"/>
+       <curve color="#1f77b4" name="/auv0/odometry/global/pose/pose/orientation/yaw"/>
+       <curve color="#000000" name="/auv0/odometry/truth/pose/pose/orientation/yaw"/>
       </plot>
      </DockArea>
     </DockSplitter>
@@ -63,29 +63,29 @@
   </Tab>
   <Tab containers="1" tab_name="Linear Velocity">
    <Container>
-    <DockSplitter orientation="-" count="3" sizes="0.333333;0.333333;0.333333">
+    <DockSplitter count="3" sizes="0.333805;0.33239;0.333805" orientation="-">
      <DockArea name="...">
-      <plot mode="TimeSeries" style="Lines" flip_x="false" flip_y="false">
-       <range right="172.296088" left="52.297109" bottom="-2.679073" top="2.687067"/>
+      <plot flip_x="false" mode="TimeSeries" flip_y="false" line_width="1.0">
+       <range bottom="-0.082545" left="25.940986" top="0.077060" right="30.956643"/>
        <limitY/>
-       <curve name="/auv0/factor_graph_node/velocity/twist/twist/linear/x" color="#d62728"/>
-       <curve name="/auv0/VelocitySensor/twist/twist/linear/x" color="#000000"/>
+       <curve color="#d62728" name="/auv0/factor_graph_node/velocity/twist/twist/linear/x"/>
+       <curve color="#000000" name="/auv0/VelocitySensor/twist/twist/linear/x"/>
       </plot>
      </DockArea>
      <DockArea name="...">
-      <plot mode="TimeSeries" style="Lines" flip_x="false" flip_y="false">
-       <range right="172.296088" left="52.297109" bottom="-2.666687" top="2.692826"/>
+      <plot flip_x="false" mode="TimeSeries" flip_y="false" line_width="1.0">
+       <range bottom="-0.108010" left="25.940986" top="0.093046" right="30.956643"/>
        <limitY/>
-       <curve name="/auv0/factor_graph_node/velocity/twist/twist/linear/y" color="#d62728"/>
-       <curve name="/auv0/VelocitySensor/twist/twist/linear/y" color="#000000"/>
+       <curve color="#d62728" name="/auv0/factor_graph_node/velocity/twist/twist/linear/y"/>
+       <curve color="#000000" name="/auv0/VelocitySensor/twist/twist/linear/y"/>
       </plot>
      </DockArea>
      <DockArea name="...">
-      <plot mode="TimeSeries" style="Lines" flip_x="false" flip_y="false">
-       <range right="172.296088" left="52.297109" bottom="-0.169937" top="0.303133"/>
+      <plot flip_x="false" mode="TimeSeries" flip_y="false" line_width="1.0">
+       <range bottom="-0.019873" left="25.940986" top="0.026462" right="30.956643"/>
        <limitY/>
-       <curve name="/auv0/factor_graph_node/velocity/twist/twist/linear/z" color="#d62728"/>
-       <curve name="/auv0/VelocitySensor/twist/twist/linear/z" color="#000000"/>
+       <curve color="#d62728" name="/auv0/factor_graph_node/velocity/twist/twist/linear/z"/>
+       <curve color="#000000" name="/auv0/VelocitySensor/twist/twist/linear/z"/>
       </plot>
      </DockArea>
     </DockSplitter>
@@ -93,29 +93,29 @@
   </Tab>
   <Tab containers="1" tab_name="Accel Bias">
    <Container>
-    <DockSplitter orientation="-" count="3" sizes="0.333333;0.333333;0.333333">
+    <DockSplitter count="3" sizes="0.333805;0.33239;0.333805" orientation="-">
      <DockArea name="...">
-      <plot mode="TimeSeries" style="Lines" flip_x="false" flip_y="false">
-       <range right="172.297651" left="52.300677" bottom="-0.006957" top="0.034721"/>
+      <plot flip_x="false" mode="TimeSeries" flip_y="false" line_width="1.0">
+       <range bottom="-0.003079" left="25.941049" top="0.000075" right="30.956488"/>
        <limitY/>
-       <curve name="/auv0/factor_graph_node/imu_bias/twist/twist/linear/x" color="#ff7f0e"/>
-       <curve name="/auv0/IMUSensorBias/twist/twist/linear/x" color="#000000"/>
+       <curve color="#ff7f0e" name="/auv0/factor_graph_node/imu_bias/twist/twist/linear/x"/>
+       <curve color="#000000" name="/auv0/IMUSensorBias/twist/twist/linear/x"/>
       </plot>
      </DockArea>
      <DockArea name="...">
-      <plot mode="TimeSeries" style="Lines" flip_x="false" flip_y="false">
-       <range right="172.297651" left="52.300677" bottom="-0.010626" top="0.003868"/>
+      <plot flip_x="false" mode="TimeSeries" flip_y="false" line_width="1.0">
+       <range bottom="-0.004368" left="25.941049" top="0.000106" right="30.956488"/>
        <limitY/>
-       <curve name="/auv0/factor_graph_node/imu_bias/twist/twist/linear/y" color="#ff7f0e"/>
-       <curve name="/auv0/IMUSensorBias/twist/twist/linear/y" color="#000000"/>
+       <curve color="#ff7f0e" name="/auv0/factor_graph_node/imu_bias/twist/twist/linear/y"/>
+       <curve color="#000000" name="/auv0/IMUSensorBias/twist/twist/linear/y"/>
       </plot>
      </DockArea>
      <DockArea name="...">
-      <plot mode="TimeSeries" style="Lines" flip_x="false" flip_y="false">
-       <range right="172.297651" left="52.300677" bottom="0.002029" top="0.014132"/>
+      <plot flip_x="false" mode="TimeSeries" flip_y="false" line_width="1.0">
+       <range bottom="-0.000036" left="25.941049" top="0.000584" right="30.956488"/>
        <limitY/>
-       <curve name="/auv0/factor_graph_node/imu_bias/twist/twist/linear/z" color="#ff7f0e"/>
-       <curve name="/auv0/IMUSensorBias/twist/twist/linear/z" color="#000000"/>
+       <curve color="#ff7f0e" name="/auv0/factor_graph_node/imu_bias/twist/twist/linear/z"/>
+       <curve color="#000000" name="/auv0/IMUSensorBias/twist/twist/linear/z"/>
       </plot>
      </DockArea>
     </DockSplitter>
@@ -123,42 +123,42 @@
   </Tab>
   <Tab containers="1" tab_name="Gyro Bias">
    <Container>
-    <DockSplitter orientation="-" count="3" sizes="0.333333;0.333333;0.333333">
+    <DockSplitter count="3" sizes="0.333805;0.33239;0.333805" orientation="-">
      <DockArea name="...">
-      <plot mode="TimeSeries" style="Lines" flip_x="false" flip_y="false">
-       <range right="172.297651" left="52.300677" bottom="-0.000757" top="0.001021"/>
+      <plot flip_x="false" mode="TimeSeries" flip_y="false" line_width="1.0">
+       <range bottom="-0.001693" left="25.941049" top="0.000041" right="30.956488"/>
        <limitY/>
-       <curve name="/auv0/factor_graph_node/imu_bias/twist/twist/angular/x" color="#9467bd"/>
-       <curve name="/auv0/IMUSensorBias/twist/twist/angular/x" color="#000000"/>
+       <curve color="#9467bd" name="/auv0/factor_graph_node/imu_bias/twist/twist/angular/x"/>
+       <curve color="#000000" name="/auv0/IMUSensorBias/twist/twist/angular/x"/>
       </plot>
      </DockArea>
      <DockArea name="...">
-      <plot mode="TimeSeries" style="Lines" flip_x="false" flip_y="false">
-       <range right="172.297651" left="52.300677" bottom="-0.000105" top="0.003530"/>
+      <plot flip_x="false" mode="TimeSeries" flip_y="false" line_width="1.0">
+       <range bottom="-0.000354" left="25.941049" top="0.000014" right="30.956488"/>
        <limitY/>
-       <curve name="/auv0/factor_graph_node/imu_bias/twist/twist/angular/y" color="#9467bd"/>
-       <curve name="/auv0/IMUSensorBias/twist/twist/angular/y" color="#000000"/>
+       <curve color="#9467bd" name="/auv0/factor_graph_node/imu_bias/twist/twist/angular/y"/>
+       <curve color="#000000" name="/auv0/IMUSensorBias/twist/twist/angular/y"/>
       </plot>
      </DockArea>
      <DockArea name="...">
-      <plot mode="TimeSeries" style="Lines" flip_x="false" flip_y="false">
-       <range right="172.297651" left="52.300677" bottom="-0.000068" top="0.004333"/>
+      <plot flip_x="false" mode="TimeSeries" flip_y="false" line_width="1.0">
+       <range bottom="-0.001157" left="25.941049" top="0.000028" right="30.956488"/>
        <limitY/>
-       <curve name="/auv0/factor_graph_node/imu_bias/twist/twist/angular/z" color="#9467bd"/>
-       <curve name="/auv0/IMUSensorBias/twist/twist/angular/z" color="#000000"/>
+       <curve color="#9467bd" name="/auv0/factor_graph_node/imu_bias/twist/twist/angular/z"/>
+       <curve color="#000000" name="/auv0/IMUSensorBias/twist/twist/angular/z"/>
       </plot>
      </DockArea>
     </DockSplitter>
    </Container>
   </Tab>
-  <currentTabIndex index="3"/>
+  <currentTabIndex index="0"/>
  </tabbed_widget>
  <use_relative_time_offset enabled="1"/>
  <!-- - - - - - - - - - - - - - - -->
  <!-- - - - - - - - - - - - - - - -->
  <Plugins>
   <plugin ID="DataLoad CSV">
-   <parameters time_axis="" delimiter="0"/>
+   <parameters delimiter="0" time_axis=""/>
   </plugin>
   <plugin ID="DataLoad MCAP"/>
   <plugin ID="DataLoad ROS2 bags">
@@ -176,7 +176,7 @@
    <max_array_size value="100"/>
    <boolean_strings_to_number value="true"/>
    <remove_suffix_from_strings value="true"/>
-   <selected_topics value="/auv0/IMUSensorBias;/auv0/VelocitySensor;/dvl/data;/gps/fix;/odometry/gps;/factor_graph_node/imu_bias;/factor_graph_node/velocity;/imu/data;/imu/heading;/odometry/depth;/odometry/global;/odometry/global_ekf;/odometry/global_ukf;/odometry/local_ekf;/odometry/truth;/smoothed_path"/>
+   <selected_topics value="/auv0/IMUSensorBias;/auv0/VelocitySensor;/auv0/odometry/global;/auv0/odometry/global_ekf;/auv0/odometry/global_iekf;/auv0/odometry/global_tm;/auv0/odometry/global_ukf;/auv0/odometry/truth;/auv0/factor_graph_node/velocity;/auv0/factor_graph_node/imu_bias;/auv0/factor_graph_node_tm/imu_bias_tm;/auv0/factor_graph_node_tm/velocity_tm"/>
   </plugin>
   <plugin ID="UDP Server"/>
   <plugin ID="WebSocket Server"/>
@@ -198,3 +198,4 @@
  <snippets/>
  <!-- - - - - - - - - - - - - - - -->
 </root>
+
