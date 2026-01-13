@@ -1,5 +1,5 @@
 repositories:
-  seatrac_interfaces:
+  dvl_msgs:
     type: git
-    url: https://github.com/BYU-FRoSt-Lab/seatrac_interfaces.git
+    url: https://github.com/gt-marine-robotics-group/dvl_msgs.git
     version: main
