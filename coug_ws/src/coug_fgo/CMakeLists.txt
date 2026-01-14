@@ -126,12 +126,19 @@ if(BUILD_TESTING)
   )
   target_link_libraries(test_gps_factor_arm gtsam)
 
-  ament_add_gtest(test_heading_factor_arm test/test_heading_factor_arm.cpp)
-  target_include_directories(test_heading_factor_arm PUBLIC
+  ament_add_gtest(test_ahrs_factor test/test_ahrs_factor.cpp)
+  target_include_directories(test_ahrs_factor PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     ${GTSAM_EIGEN_INCLUDE_DIR}
   )
-  target_link_libraries(test_heading_factor_arm gtsam)
+  target_link_libraries(test_ahrs_factor gtsam)
+
+  ament_add_gtest(test_mag_factor_arm test/test_mag_factor_arm.cpp)
+  target_include_directories(test_mag_factor_arm PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    ${GTSAM_EIGEN_INCLUDE_DIR}
+  )
+  target_link_libraries(test_mag_factor_arm gtsam)
 endif()
 
 ament_package()

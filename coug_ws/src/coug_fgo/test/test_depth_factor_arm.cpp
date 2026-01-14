@@ -33,13 +33,9 @@
  * Verifies the factor's residual calculation: `error = measured_depth - (pose.z + lever_arm_z)`.
  *
  * Cases tested:
- * 1.  **No Lever Arm**: Ideal case where sensor is at the body origin.
- *     - Verifies 0 error when match is exact.
- *     - Verifies 1.0 error when depth is off by 1m.
- * 2.  **Lever Arm Offset**: Sensor is vertically offset (0, 0, 1).
- *     - Verifies that the factor correctly accounts for the offset (e.g., body at Z=4 means sensor at Z=5).
- * 3.  **Rotation + Lever Arm**: AUV is upside down (Roll = PI).
- *     - Verifies that the lever arm is correctly rotated into the global frame.
+ * 1.  **No Lever Arm**: Simple depth match.
+ * 2.  **Lever Arm Offset**: Depth sensor vertically offset.
+ * 3.  **Rotation + Lever Arm**: AUV orientation affecting sensor depth.
  */
 TEST(DepthFactorArmTest, ErrorEvaluation) {
   gtsam::Key poseKey = gtsam::symbol_shorthand::X(1);

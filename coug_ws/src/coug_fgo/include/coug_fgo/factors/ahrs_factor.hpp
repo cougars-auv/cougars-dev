@@ -13,8 +13,8 @@
 // limitations under the License.
 
 /**
- * @file heading_factor_arm.hpp
- * @brief GTSAM factor for heading/orientation measurements with a sensor offset.
+ * @file ahrs_factor.hpp
+ * @brief GTSAM factor for AHRS/orientation measurements with a sensor offset.
  * @author Nelson Durrant
  * @date Jan 2026
  */
@@ -34,13 +34,13 @@ namespace coug_fgo::factors
 {
 
 /**
- * @class CustomHeadingFactorArm
- * @brief GTSAM factor for heading/orientation measurements with a sensor offset.
+ * @class AhrsFactor
+ * @brief GTSAM factor for AHRS/orientation measurements with a sensor offset.
  *
- * This factor constrains the 3D orientation of the AUV based on heading/IMU measurements,
+ * This factor constrains the 3D orientation of the AUV based on AHRS/IMU measurements,
  * accounting for the rotation between the AUV base and the sensor.
  */
-class CustomHeadingFactorArm : public gtsam::NoiseModelFactor1<gtsam::Pose3>
+class AhrsFactor : public gtsam::NoiseModelFactor1<gtsam::Pose3>
 {
   /// Measured world-to-sensor rotation.
   gtsam::Rot3 measured_rot_sensor_;
@@ -49,13 +49,13 @@ class CustomHeadingFactorArm : public gtsam::NoiseModelFactor1<gtsam::Pose3>
 
 public:
   /**
-   * @brief Constructor for CustomHeadingFactorArm.
+   * @brief Constructor for AhrsFactor.
    * @param poseKey GTSAM key for the AUV pose.
    * @param measured_rot_sensor The measured orientation of the sensor in the world frame.
    * @param R_base_sensor The static rotation from base to sensor.
    * @param model The noise model for the measurement.
    */
-  CustomHeadingFactorArm(
+  AhrsFactor(
     gtsam::Key poseKey, const gtsam::Rot3 & measured_rot_sensor,
     const gtsam::Rot3 & R_base_sensor, const gtsam::SharedNoiseModel & model)
   : NoiseModelFactor1<gtsam::Pose3>(model, poseKey),

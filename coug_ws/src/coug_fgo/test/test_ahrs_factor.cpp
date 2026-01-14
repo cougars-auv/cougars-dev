@@ -13,8 +13,8 @@
 // limitations under the License.
 
 /**
- * @file test_heading_factor_arm.cpp
- * @brief Unit tests for heading_factor_arm.hpp.
+ * @file test_ahrs_factor.cpp
+ * @brief Unit tests for ahrs_factor.hpp.
  * @author Nelson Durrant (w Gemini 3 Pro)
  * @date Jan 2026
  */
@@ -25,61 +25,59 @@
 
 #include <boost/bind/bind.hpp>
 
-#include "coug_fgo/factors/heading_factor_arm.hpp"
+#include "coug_fgo/factors/ahrs_factor.hpp"
 
 /**
- * @brief Test the error evaluation logic of the CustomHeadingFactorArm.
+ * @brief Test the error evaluation logic of the AhrsFactor.
  *
  * Computes rotation residual: `error = measured_rot - (body_rot * calibration_rot)`.
  *
  * Cases tested:
  * 1.  **Identity**: Everything aligned. Zero error.
- * 2.  **Sensor Rotation**: Sensor rotated 90 deg relative to body.
- *     - If body is Identity, Sensor output is 90 deg. Error should be zero.
- * 3.  **Error Magnitude**: Introduction of a small angular error (10 deg) to verify
- *     that the residual magnitude is correct.
+ * 2.  **Mounting Rotation**: Sensor rotated 90 deg relative to body.
+ * 3.  **Error Magnitude**: Small angular error verification.
  */
-TEST(HeadingFactorArmTest, ErrorEvaluation) {
+TEST(AhrsFactorTest, ErrorEvaluation) {
   gtsam::Key poseKey = gtsam::symbol_shorthand::X(1);
   gtsam::SharedNoiseModel model = gtsam::noiseModel::Isotropic::Sigma(3, 0.1);
 
   // Case 1: Identity alignment
-  coug_fgo::factors::CustomHeadingFactorArm factor1(poseKey, gtsam::Rot3::Identity(),
+  coug_fgo::factors::AhrsFactor factor1(poseKey, gtsam::Rot3::Identity(),
     gtsam::Rot3::Identity(), model);
   EXPECT_TRUE(
     gtsam::assert_equal(
       gtsam::Vector3::Zero(),
       factor1.evaluateError(gtsam::Pose3::Identity()), 1e-9));
 
-  // Case 2: Sensor rotated 90 deg wrt Base
-  coug_fgo::factors::CustomHeadingFactorArm factor2(poseKey, gtsam::Rot3::Yaw(M_PI_2),
+  // Case 2: Mounting Rotation (Sensor rotated 90 deg wrt Base)
+  coug_fgo::factors::AhrsFactor factor2(poseKey, gtsam::Rot3::Yaw(M_PI_2),
     gtsam::Rot3::Yaw(M_PI_2), model);
   EXPECT_TRUE(
     gtsam::assert_equal(
       gtsam::Vector3::Zero(),
       factor2.evaluateError(gtsam::Pose3::Identity()), 1e-9));
 
-  // Case 3: 10 deg error check
-  double angle = 0.174533;    // 10 deg
+  // Case 3: Error Magnitude check (10 deg)
+  double angle = 0.174533;
   gtsam::Vector error =
     factor2.evaluateError(gtsam::Pose3(gtsam::Rot3::Yaw(angle), gtsam::Point3()));
   EXPECT_NEAR(error[2], angle, 1e-5);
 }
 
 /**
- * @brief Verify Jacobians of the CustomHeadingFactorArm using numerical differentiation.
+ * @brief Verify Jacobians of the AhrsFactor using numerical differentiation.
  *
  * Validates analytical derivatives for rotational error, ensuring proper handling of SE(3) manifolds.
  */
-TEST(HeadingFactorArmTest, Jacobians) {
-  coug_fgo::factors::CustomHeadingFactorArm factor(gtsam::symbol_shorthand::X(1),
+TEST(AhrsFactorTest, Jacobians) {
+  coug_fgo::factors::AhrsFactor factor(gtsam::symbol_shorthand::X(1),
     gtsam::Rot3::Ypr(0.5, 0.1, -0.1),
     gtsam::Rot3::Ypr(0.1, 0, 0), gtsam::noiseModel::Isotropic::Sigma(3, 0.1));
   gtsam::Pose3 pose = gtsam::Pose3(gtsam::Rot3::Ypr(0.4, 0.05, -0.05), gtsam::Point3(1, 1, 1));
 
   gtsam::Matrix expectedH = gtsam::numericalDerivative11<gtsam::Vector, gtsam::Pose3>(
     boost::bind(
-      &coug_fgo::factors::CustomHeadingFactorArm::evaluateError, &factor,
+      &coug_fgo::factors::AhrsFactor::evaluateError, &factor,
       boost::placeholders::_1, boost::none), pose, 1e-5);
 
   gtsam::Matrix actualH;

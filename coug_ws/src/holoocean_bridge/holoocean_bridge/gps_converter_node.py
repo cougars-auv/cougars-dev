@@ -37,7 +37,7 @@ class GpsConverterNode(Node):
         self.declare_parameter("origin_longitude", -111.74212)
         self.declare_parameter("origin_altitude", 1412.0)
         self.declare_parameter("override_covariance", True)
-        self.declare_parameter("position_noise_sigma", 2.5)
+        self.declare_parameter("position_noise_sigma", 0.2)
         self.declare_parameter("altitude_noise_sigma", 5.0)
 
         input_topic = (

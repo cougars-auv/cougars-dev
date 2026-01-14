@@ -20,7 +20,7 @@ from sensor_msgs.msg import Imu
 from geometry_msgs.msg import Quaternion, Vector3Stamped
 
 
-class HeadingConverterNode(Node):
+class AhrsConverterNode(Node):
     """
     Converts rotation sensor data from HoloOcean to a standard IMU message.
 
@@ -29,10 +29,10 @@ class HeadingConverterNode(Node):
     """
 
     def __init__(self):
-        super().__init__("heading_converter_node")
+        super().__init__("ahrs_converter_node")
 
         self.declare_parameter("input_topic", "auv0/RotationSensor")
-        self.declare_parameter("output_topic", "imu/heading")
+        self.declare_parameter("output_topic", "imu/ahrs")
         self.declare_parameter("frame_id", "base_link")
         self.declare_parameter("yaw_noise_sigma", 0.01745)
         self.declare_parameter("roll_pitch_noise_sigma", 0.00349)
@@ -59,7 +59,7 @@ class HeadingConverterNode(Node):
         self.publisher = self.create_publisher(Imu, output_topic, 10)
 
         self.get_logger().info(
-            f"Heading converter started. Listening on {input_topic} and "
+            f"AHRS converter started. Listening on {input_topic} and "
             f"publishing on {output_topic}."
         )
 
@@ -123,13 +123,13 @@ class HeadingConverterNode(Node):
 
 def main(args=None):
     rclpy.init(args=args)
-    heading_converter_node = HeadingConverterNode()
+    ahrs_converter_node = AhrsConverterNode()
     try:
-        rclpy.spin(heading_converter_node)
+        rclpy.spin(ahrs_converter_node)
     except KeyboardInterrupt:
         pass
     finally:
-        heading_converter_node.destroy_node()
+        ahrs_converter_node.destroy_node()
         if rclpy.ok():
             rclpy.shutdown()
 

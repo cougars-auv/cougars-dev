@@ -35,10 +35,8 @@
  *
  * Cases tested:
  * 1.  **No Lever Arm**: Simple position match.
- * 2.  **Lever Arm Offset**: Antenna at (1, 0, 0) relative to body.
- *     - If body is at (0, 2, 3), antenna is at (1, 2, 3). Matches measurement.
- * 3.  **Rotation + Lever Arm**: Body rotated 90 deg yaw.
- *     - Antenna offset (1, 0, 0) becomes global offset (0, 1, 0).
+ * 2.  **Lever Arm Offset**: Antenna offset relative to body.
+ * 3.  **Rotation + Lever Arm**: Body orientation affecting antenna position.
  */
 TEST(GPSFactorArmTest, ErrorEvaluation) {
   gtsam::Key poseKey = gtsam::symbol_shorthand::X(1);
@@ -53,7 +51,6 @@ TEST(GPSFactorArmTest, ErrorEvaluation) {
       factor1.evaluateError(gtsam::Pose3(gtsam::Rot3(), gtsam::Point3(1, 2, 3))), 1e-9));
 
   // Case 2: Lever Arm (1, 0, 0)
-  // Measurement is at (1, 2, 3)
   coug_fgo::factors::CustomGPSFactorArm factor2(poseKey, gtsam::Point3(1, 2, 3),
     gtsam::Pose3(gtsam::Rot3(), gtsam::Point3(1, 0, 0)), model);
   EXPECT_TRUE(
@@ -62,9 +59,6 @@ TEST(GPSFactorArmTest, ErrorEvaluation) {
       factor2.evaluateError(gtsam::Pose3(gtsam::Rot3(), gtsam::Point3(0, 2, 3))), 1e-9));
 
   // Case 3: 90 deg yaw with Lever Arm
-  // Body at (1, 1, 3), Yaw=90 deg.
-  // Lever Arm (1, 0, 0) rotates to (0, 1, 0).
-  // Antenna Pos = Body + Rotated_Lever = (1, 1, 3) + (0, 1, 0) = (1, 2, 3). Matches measurement.
   EXPECT_TRUE(
     gtsam::assert_equal(
       gtsam::Vector3::Zero(),

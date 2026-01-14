@@ -28,11 +28,12 @@ setup(
             'gps_converter = holoocean_bridge.gps_converter_node:main',
             'cmd_vel_converter = holoocean_bridge.cmd_vel_converter_node:main',
             'dvl_converter = holoocean_bridge.dvl_converter_node:main',
-            'heading_converter = holoocean_bridge.heading_converter_node:main',
+            'ahrs_converter = holoocean_bridge.ahrs_converter_node:main',
             'fin_state_publisher = holoocean_bridge.fin_state_publisher_node:main',
             'truth_converter = holoocean_bridge.truth_converter_node:main',
             'hsd_converter = holoocean_bridge.hsd_converter_node:main',
             'imu_converter = holoocean_bridge.imu_converter_node:main',
+            'mag_converter = holoocean_bridge.mag_converter_node:main',
         ],
     },
 )

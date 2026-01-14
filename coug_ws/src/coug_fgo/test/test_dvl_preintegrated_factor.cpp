@@ -34,9 +34,9 @@
  * nodes `i` and `j` to the preintegrated DVL measurement.
  *
  * Cases tested:
- * 1.  **Identity Poses**: With expected translation (1, 0, 0), error should be (-1, 0, 0) if poses stay at origin.
- * 2.  **Correct Translation**: Pose `i` at origin, Pose `j` at (1, 0, 0). Error should be zero.
- * 3.  **Rotation + Translation**: Pose `i` rotated 90 deg. Checks if the relative delta is computed in the correct frame.
+ * 1.  **Identity Poses**: Identity alignment check.
+ * 2.  **Correct Translation**: Standard translation check.
+ * 3.  **Rotation + Translation**: Rotated frame check.
  */
 TEST(DVLPreintegratedFactorTest, ErrorEvaluation) {
   gtsam::Key poseIKey = gtsam::symbol_shorthand::X(1);
@@ -46,14 +46,13 @@ TEST(DVLPreintegratedFactorTest, ErrorEvaluation) {
   coug_fgo::factors::CustomDVLPreintegratedFactor factor(
     poseIKey, poseJKey, measured_translation, model);
 
-  // Case 1: Identity poses (Expected translation 1m in X, but actual is 0)
-  // Error = Actual - Expected = 0 - 1 = -1
+  // Case 1: Identity Poses
   EXPECT_TRUE(
     gtsam::assert_equal(
       gtsam::Vector3(-1, 0, 0),
       factor.evaluateError(gtsam::Pose3::Identity(), gtsam::Pose3::Identity()), 1e-9));
 
-  // Case 2: One frame translation (Matches measurement)
+  // Case 2: One frame translation
   gtsam::Pose3 pose_i = gtsam::Pose3::Identity();
   gtsam::Pose3 pose_j = gtsam::Pose3(gtsam::Rot3::Identity(), gtsam::Point3(1, 0, 0));
   EXPECT_TRUE(
@@ -61,7 +60,7 @@ TEST(DVLPreintegratedFactorTest, ErrorEvaluation) {
       gtsam::Vector3::Zero(),
       factor.evaluateError(pose_i, pose_j), 1e-9));
 
-  // Case 3: 90 deg yaw with matching relative translation
+  // Case 3: 90 deg yaw
   pose_i = gtsam::Pose3(gtsam::Rot3::Yaw(M_PI_2), gtsam::Point3(0, 0, 0));
   pose_j = gtsam::Pose3(gtsam::Rot3::Identity(), gtsam::Point3(0, 1, 0));
   EXPECT_TRUE(

@@ -45,6 +45,7 @@
 #include <nav_msgs/msg/path.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/imu.hpp>
+#include <sensor_msgs/msg/magnetic_field.hpp>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
 
 #include "coug_fgo/utils/conversion_utils.hpp"
@@ -58,8 +59,8 @@ namespace coug_fgo
  * @class FactorGraphNode
  * @brief Performs factor graph optimization for AUV navigation.
  *
- * This node integrates measurements from IMU, DVL, GPS, depth, and heading sensors
- * into a global factor graph. It uses fixed-lag smoothing (ISAM2) to estimate
+ * This node integrates measurements from IMU, DVL, GPS, depth, magnetometer, and AHRS
+ * sensors into a global factor graph. It uses fixed-lag smoothing (ISAM2) to estimate
  * the AUV's pose, velocity, and IMU biases in real-time.
  */
 class FactorGraphNode : public rclcpp::Node
@@ -118,10 +119,28 @@ public:
     double robust_k;
   };
 
-  struct HeadingParams
+  struct MagParams
   {
-    /// Enable/disable heading factor processing.
+    /// Enable/disable magnetic factor processing.
     bool enable;
+    /// Flag to constrain only the yaw angle.
+    bool constrain_yaw_only;
+    /// Use fixed sigma values instead of message covariance.
+    bool use_parameter_covariance;
+    /// Magnetic field noise sigma.
+    double magnetic_field_noise_sigma;
+    /// Type of robust cost function.
+    std::string robust_kernel;
+    /// Threshold for the robust kernel.
+    double robust_k;
+    /// Reference magnetic field vector (world frame).
+    std::vector<double> reference_field;
+  };
+
+  struct AhrsParams
+  {
+    /// Enable/disable AHRS factor processing.
+    bool enable_ahrs;
     /// Use fixed sigma values instead of message covariance.
     bool use_parameter_covariance;
     /// Yaw noise sigma [rad].
@@ -190,7 +209,8 @@ public:
     sensor_msgs::msg::Imu::SharedPtr imu;
     nav_msgs::msg::Odometry::SharedPtr gps;
     nav_msgs::msg::Odometry::SharedPtr depth;
-    sensor_msgs::msg::Imu::SharedPtr heading;
+    sensor_msgs::msg::Imu::SharedPtr ahrs;
+    sensor_msgs::msg::MagneticField::SharedPtr mag;
     geometry_msgs::msg::TwistWithCovarianceStamped::SharedPtr dvl;
   };
 
@@ -231,7 +251,8 @@ private:
    * @param imu_msgs Queue of IMU messages.
    * @param gps_msgs Queue of GPS messages.
    * @param depth_msgs Queue of depth messages.
-   * @param heading_msgs Queue of heading messages.
+   * @param mag_msgs Queue of magnetic field messages.
+   * @param ahrs_msgs Queue of AHRS messages.
    * @param dvl_msgs Queue of DVL messages.
    * @return The averaged measurements.
    */
@@ -239,11 +260,12 @@ private:
     const std::deque<sensor_msgs::msg::Imu::SharedPtr> & imu_msgs,
     const std::deque<nav_msgs::msg::Odometry::SharedPtr> & gps_msgs,
     const std::deque<nav_msgs::msg::Odometry::SharedPtr> & depth_msgs,
-    const std::deque<sensor_msgs::msg::Imu::SharedPtr> & heading_msgs,
+    const std::deque<sensor_msgs::msg::MagneticField::SharedPtr> & mag_msgs,
+    const std::deque<sensor_msgs::msg::Imu::SharedPtr> & ahrs_msgs,
     const std::deque<geometry_msgs::msg::TwistWithCovarianceStamped::SharedPtr> & dvl_msgs);
 
   /**
-   * @brief Computes initial orientation using IMU (leveling) and heading sensor.
+   * @brief Computes initial orientation using IMU, magnetometer, and AHRS sensor.
    * @return The initial GTSAM rotation.
    */
   gtsam::Rot3 computeInitialOrientation();
@@ -289,13 +311,21 @@ private:
     gtsam::NonlinearFactorGraph & graph,
     const std::deque<nav_msgs::msg::Odometry::SharedPtr> & depth_msgs);
   /**
-   * @brief Adds a heading orientation factor to the graph.
+   * @brief Adds a magnetic orientation factor to the graph.
    * @param graph The target factor graph.
-   * @param heading_msgs Queue of heading messages to process.
+   * @param mag_msgs Queue of Mag messages.
    */
-  void addHeadingFactor(
+  void addMagFactor(
     gtsam::NonlinearFactorGraph & graph,
-    const std::deque<sensor_msgs::msg::Imu::SharedPtr> & heading_msgs);
+    const std::deque<sensor_msgs::msg::MagneticField::SharedPtr> & mag_msgs);
+  /**
+   * @brief Adds a AHRS orientation factor to the graph.
+   * @param graph The target factor graph.
+   * @param ahrs_msgs Queue of AHRS messages to process.
+   */
+  void addAhrsFactor(
+    gtsam::NonlinearFactorGraph & graph,
+    const std::deque<sensor_msgs::msg::Imu::SharedPtr> & ahrs_msgs);
   /**
    * @brief Adds a velocity (DVL) factor to the graph.
    * @param graph The target factor graph.
@@ -418,8 +448,10 @@ private:
   nav_msgs::msg::Odometry::SharedPtr initial_gps_;
   /// Averaged depth data used for position initialization.
   nav_msgs::msg::Odometry::SharedPtr initial_depth_;
-  /// Averaged heading data used for orientation initialization.
-  sensor_msgs::msg::Imu::SharedPtr initial_heading_;
+  /// Averaged AHRS data used for orientation initialization.
+  sensor_msgs::msg::Imu::SharedPtr initial_ahrs_;
+  /// Averaged magnetic data used for orientation initialization.
+  sensor_msgs::msg::MagneticField::SharedPtr initial_mag_;
   /// Averaged DVL data used for velocity initialization.
   geometry_msgs::msg::TwistWithCovarianceStamped::SharedPtr initial_dvl_;
 
@@ -430,8 +462,10 @@ private:
   std::deque<nav_msgs::msg::Odometry::SharedPtr> gps_queue_;
   /// Queue of incoming depth messages.
   std::deque<nav_msgs::msg::Odometry::SharedPtr> depth_queue_;
-  /// Queue of incoming heading messages.
-  std::deque<sensor_msgs::msg::Imu::SharedPtr> heading_queue_;
+  /// Queue of incoming Mag messages.
+  std::deque<sensor_msgs::msg::MagneticField::SharedPtr> mag_queue_;
+  /// Queue of incoming AHRS messages.
+  std::deque<sensor_msgs::msg::Imu::SharedPtr> ahrs_queue_;
   /// Queue of incoming DVL messages.
   std::deque<geometry_msgs::msg::TwistWithCovarianceStamped::SharedPtr> dvl_queue_;
 
@@ -447,8 +481,10 @@ private:
   std::mutex gps_queue_mutex_;
   /// Lock for the depth message queue.
   std::mutex depth_queue_mutex_;
-  /// Lock for the heading message queue.
-  std::mutex heading_queue_mutex_;
+  /// Lock for the Mag message queue.
+  std::mutex mag_queue_mutex_;
+  /// Lock for the AHRS message queue.
+  std::mutex ahrs_queue_mutex_;
   /// Lock for the DVL message queue.
   std::mutex dvl_queue_mutex_;
 
@@ -466,8 +502,10 @@ private:
   bool have_gps_to_dvl_tf_ = false;
   /// True if the depth-to-DVL transform has been successfully looked up.
   bool have_depth_to_dvl_tf_ = false;
-  /// True if the heading-to-DVL transform has been successfully looked up.
-  bool have_heading_to_dvl_tf_ = false;
+  /// True if the Mag-to-DVL transform has been successfully looked up.
+  bool have_mag_to_dvl_tf_ = false;
+  /// True if the AHRS-to-DVL transform has been successfully looked up.
+  bool have_ahrs_to_dvl_tf_ = false;
 
   /// Transformation from the DVL frame to the base link frame.
   geometry_msgs::msg::TransformStamped dvl_to_base_tf_;
@@ -477,8 +515,10 @@ private:
   geometry_msgs::msg::TransformStamped gps_to_dvl_tf_;
   /// Transformation from the depth sensor frame to the DVL frame.
   geometry_msgs::msg::TransformStamped depth_to_dvl_tf_;
-  /// Transformation from the heading sensor frame to the DVL frame.
-  geometry_msgs::msg::TransformStamped heading_to_dvl_tf_;
+  /// Transformation from the Mag sensor frame to the DVL frame.
+  geometry_msgs::msg::TransformStamped mag_to_dvl_tf_;
+  /// Transformation from the AHRS sensor frame to the DVL frame.
+  geometry_msgs::msg::TransformStamped ahrs_to_dvl_tf_;
 
   // --- ROS Interfaces ---
   /// Optimized global odometry publisher.
@@ -496,8 +536,10 @@ private:
   rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr gps_odom_sub_;
   /// Depth odom subscriber.
   rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr depth_odom_sub_;
-  /// Heading IMU subscriber.
-  rclcpp::Subscription<sensor_msgs::msg::Imu>::SharedPtr heading_sub_;
+  /// Magnetic field subscriber.
+  rclcpp::Subscription<sensor_msgs::msg::MagneticField>::SharedPtr mag_sub_;
+  /// AHRS IMU subscriber.
+  rclcpp::Subscription<sensor_msgs::msg::Imu>::SharedPtr ahrs_sub_;
   /// Body-frame DVL twist subscriber.
   rclcpp::Subscription<geometry_msgs::msg::TwistWithCovarianceStamped>::SharedPtr dvl_sub_;
   /// Timer for the main factor graph optimization loop.
@@ -540,8 +582,10 @@ private:
   std::string gps_odom_topic_;
   /// Depth odom topic name.
   std::string depth_odom_topic_;
-  /// Heading IMU topic name.
-  std::string heading_topic_;
+  /// Magnetic field topic name.
+  std::string mag_topic_;
+  /// AHRS IMU topic name.
+  std::string ahrs_topic_;
   /// Body-frame DVL twist topic name.
   std::string dvl_topic_;
   /// Optimized global odometry topic name.
@@ -566,8 +610,10 @@ private:
   GpsParams gps_params_;
   /// Configuration for depth processing.
   DepthParams depth_params_;
-  /// Configuration for heading processing.
-  HeadingParams heading_params_;
+  /// Configuration for Mag processing.
+  MagParams mag_params_;
+  /// Configuration for AHRS processing.
+  AhrsParams ahrs_params_;
   /// Configuration for DVL processing.
   DvlParams dvl_params_;
   /// Configuration for priors and initialization.

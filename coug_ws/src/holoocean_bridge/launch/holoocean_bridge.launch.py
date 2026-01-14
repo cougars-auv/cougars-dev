@@ -151,8 +151,8 @@ def generate_launch_description():
             ),
             Node(
                 package="holoocean_bridge",
-                executable="heading_converter",
-                name="heading_converter_node",
+                executable="ahrs_converter",
+                name="ahrs_converter_node",
                 parameters=[
                     params_file,
                     {"use_sim_time": use_sim_time, "frame_id": modem_link_frame},
@@ -195,12 +195,21 @@ def generate_launch_description():
                     {"use_sim_time": use_sim_time, "frame_id": imu_link_frame},
                 ],
             ),
+            Node(
+                package="holoocean_bridge",
+                executable="mag_converter",
+                name="mag_converter_node",
+                parameters=[
+                    params_file,
+                    {"use_sim_time": use_sim_time, "frame_id": imu_link_frame},
+                ],
+            ),
             # Set this to the starting position of the main AUV in HoloOcean
             Node(
                 package="tf2_ros",
                 executable="static_transform_publisher",
                 name="holoocean_transform",
-                arguments=["0", "0", "0", "0", "0", "0", "map", "holoocean"],
+                arguments=["0", "0", "0", "0", "0", "0", "map", "holoocean_global_frame"],
                 condition=IfCondition(main_agent),
                 parameters=[{"use_sim_time": use_sim_time}],
             ),

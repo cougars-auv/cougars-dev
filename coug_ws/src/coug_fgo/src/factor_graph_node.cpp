@@ -30,14 +30,16 @@
 #include "coug_fgo/factors/dvl_factor.hpp"
 #include "coug_fgo/factors/dvl_preintegrated_factor.hpp"
 #include "coug_fgo/factors/gps_factor_arm.hpp"
-#include "coug_fgo/factors/heading_factor_arm.hpp"
+#include "coug_fgo/factors/ahrs_factor.hpp"
+#include "coug_fgo/factors/mag_factor_arm.hpp"
 #include "coug_fgo/utils/conversion_utils.hpp"
 
 using coug_fgo::factors::CustomDepthFactorArm;
 using coug_fgo::factors::CustomDVLFactor;
 using coug_fgo::factors::CustomDVLPreintegratedFactor;
 using coug_fgo::factors::CustomGPSFactorArm;
-using coug_fgo::factors::CustomHeadingFactorArm;
+using coug_fgo::factors::AhrsFactor;
+using coug_fgo::factors::CustomMagFactorArm;
 using coug_fgo::utils::toGtsam;
 using coug_fgo::utils::toQuatMsg;
 using coug_fgo::utils::toPointMsg;
@@ -73,7 +75,8 @@ void FactorGraphNode::loadParameters()
   imu_topic_ = declare_parameter<std::string>("imu_topic", "imu/data");
   gps_odom_topic_ = declare_parameter<std::string>("gps_odom_topic", "odometry/gps");
   depth_odom_topic_ = declare_parameter<std::string>("depth_odom_topic", "odometry/depth");
-  heading_topic_ = declare_parameter<std::string>("heading_topic", "imu/heading");
+  mag_topic_ = declare_parameter<std::string>("mag_topic", "imu/mag");
+  ahrs_topic_ = declare_parameter<std::string>("ahrs_topic", "imu/ahrs");
   dvl_topic_ = declare_parameter<std::string>("dvl_topic", "dvl/data");
   global_odom_topic_ = declare_parameter<std::string>("global_odom_topic", "odometry/global");
   smoothed_path_topic_ = declare_parameter<std::string>("smoothed_path_topic", "smoothed_path");
@@ -88,9 +91,9 @@ void FactorGraphNode::loadParameters()
   imu_params_.use_parameter_covariance =
     declare_parameter<bool>("imu.use_parameter_covariance", false);
   imu_params_.accel_noise_sigma =
-    declare_parameter<double>("imu.parameter_covariance.accel_noise_sigma", 0.078);
+    declare_parameter<double>("imu.parameter_covariance.accel_noise_sigma", 0.0078);
   imu_params_.gyro_noise_sigma =
-    declare_parameter<double>("imu.parameter_covariance.gyro_noise_sigma", 0.012);
+    declare_parameter<double>("imu.parameter_covariance.gyro_noise_sigma", 0.0012);
   imu_params_.accel_bias_rw_sigma =
     declare_parameter<double>("imu.accel_bias_rw_sigma", 1.05e-04);
   imu_params_.gyro_bias_rw_sigma = declare_parameter<double>("imu.gyro_bias_rw_sigma", 3.91e-05);
@@ -98,37 +101,48 @@ void FactorGraphNode::loadParameters()
     declare_parameter<double>("imu.integration_covariance", 1e-5);
   imu_params_.gravity = declare_parameter<std::vector<double>>("imu.gravity", {0.0, 0.0, -9.8});
 
-  gps_params_.enable = declare_parameter<bool>("gps.enable_gps", true);
+  gps_params_.enable = declare_parameter<bool>("gps.enable_gps", false);
   gps_params_.use_parameter_covariance =
     declare_parameter<bool>("gps.use_parameter_covariance", false);
   gps_params_.position_noise_sigma =
-    declare_parameter<double>("gps.parameter_covariance.position_noise_sigma", 7.5);
+    declare_parameter<double>("gps.parameter_covariance.position_noise_sigma", 0.2);
   gps_params_.altitude_noise_sigma =
-    declare_parameter<double>("gps.parameter_covariance.altitude_noise_sigma", 1e9);
+    declare_parameter<double>("gps.parameter_covariance.altitude_noise_sigma", 5.0);
   gps_params_.robust_kernel = declare_parameter<std::string>("gps.robust_kernel", "None");
   gps_params_.robust_k = declare_parameter<double>("gps.robust_k", 1.345);
 
   depth_params_.use_parameter_covariance =
     declare_parameter<bool>("depth.use_parameter_covariance", false);
   depth_params_.position_z_noise_sigma =
-    declare_parameter<double>("depth.parameter_covariance.position_z_noise_sigma", 1.0);
+    declare_parameter<double>("depth.parameter_covariance.position_z_noise_sigma", 0.2);
   depth_params_.robust_kernel = declare_parameter<std::string>("depth.robust_kernel", "None");
   depth_params_.robust_k = declare_parameter<double>("depth.robust_k", 1.345);
 
-  heading_params_.enable = declare_parameter<bool>("heading.enable_heading", true);
-  heading_params_.use_parameter_covariance =
-    declare_parameter<bool>("heading.use_parameter_covariance", false);
-  heading_params_.yaw_noise_sigma =
-    declare_parameter<double>("heading.parameter_covariance.yaw_noise_sigma", 0.1);
-  heading_params_.roll_pitch_noise_sigma =
-    declare_parameter<double>("heading.parameter_covariance.roll_pitch_noise_sigma", 1e9);
-  heading_params_.robust_kernel = declare_parameter<std::string>("heading.robust_kernel", "None");
-  heading_params_.robust_k = declare_parameter<double>("heading.robust_k", 1.345);
+  mag_params_.enable = declare_parameter<bool>("mag.enable_mag", false);
+  mag_params_.constrain_yaw_only = declare_parameter<bool>("mag.constrain_yaw_only", true);
+  mag_params_.use_parameter_covariance =
+    declare_parameter<bool>("mag.use_parameter_covariance", false);
+  mag_params_.magnetic_field_noise_sigma =
+    declare_parameter<double>("mag.parameter_covariance.magnetic_field_noise_sigma", 0.006);
+  mag_params_.reference_field =
+    declare_parameter<std::vector<double>>("mag.reference_field", {0.41, 0.08, 0.91});
+  mag_params_.robust_kernel = declare_parameter<std::string>("mag.robust_kernel", "None");
+  mag_params_.robust_k = declare_parameter<double>("mag.robust_k", 1.345);
+
+  ahrs_params_.enable_ahrs = declare_parameter<bool>("ahrs.enable_ahrs", false);
+  ahrs_params_.use_parameter_covariance =
+    declare_parameter<bool>("ahrs.use_parameter_covariance", false);
+  ahrs_params_.yaw_noise_sigma =
+    declare_parameter<double>("ahrs.parameter_covariance.yaw_noise_sigma", 0.01745);
+  ahrs_params_.roll_pitch_noise_sigma =
+    declare_parameter<double>("ahrs.parameter_covariance.roll_pitch_noise_sigma", 0.00349);
+  ahrs_params_.robust_kernel = declare_parameter<std::string>("ahrs.robust_kernel", "None");
+  ahrs_params_.robust_k = declare_parameter<double>("ahrs.robust_k", 1.345);
 
   dvl_params_.use_parameter_covariance =
     declare_parameter<bool>("dvl.use_parameter_covariance", false);
   dvl_params_.velocity_noise_sigma =
-    declare_parameter<double>("dvl.parameter_covariance.velocity_noise_sigma", 0.2);
+    declare_parameter<double>("dvl.parameter_covariance.velocity_noise_sigma", 0.02);
   dvl_params_.timeout_threshold =
     declare_parameter<double>("dvl.timeout_threshold", 1.0);
   dvl_params_.robust_kernel = declare_parameter<std::string>("dvl.robust_kernel", "None");
@@ -225,11 +239,19 @@ void FactorGraphNode::setupRosInterfaces()
     },
     sensor_options);
 
-  heading_sub_ = create_subscription<sensor_msgs::msg::Imu>(
-    heading_topic_, 20,
+  mag_sub_ = create_subscription<sensor_msgs::msg::MagneticField>(
+    mag_topic_, 20,
+    [this](const sensor_msgs::msg::MagneticField::SharedPtr msg) {
+      std::scoped_lock lock(mag_queue_mutex_);
+      mag_queue_.push_back(msg);
+    },
+    sensor_options);
+
+  ahrs_sub_ = create_subscription<sensor_msgs::msg::Imu>(
+    ahrs_topic_, 20,
     [this](const sensor_msgs::msg::Imu::SharedPtr msg) {
-      std::scoped_lock lock(heading_queue_mutex_);
-      heading_queue_.push_back(msg);
+      std::scoped_lock lock(ahrs_queue_mutex_);
+      ahrs_queue_.push_back(msg);
     },
     sensor_options);
 
@@ -290,9 +312,13 @@ bool FactorGraphNode::lookupInitialTransforms()
       depth_to_dvl_tf_ = lookup(dvl_frame_, initial_depth_->child_frame_id);
       have_depth_to_dvl_tf_ = true;
     }
-    if (heading_params_.enable && !have_heading_to_dvl_tf_) {
-      heading_to_dvl_tf_ = lookup(dvl_frame_, initial_heading_->header.frame_id);
-      have_heading_to_dvl_tf_ = true;
+    if (mag_params_.enable && !have_mag_to_dvl_tf_) {
+      mag_to_dvl_tf_ = lookup(dvl_frame_, initial_mag_->header.frame_id);
+      have_mag_to_dvl_tf_ = true;
+    }
+    if (ahrs_params_.enable_ahrs && !have_ahrs_to_dvl_tf_) {
+      ahrs_to_dvl_tf_ = lookup(dvl_frame_, initial_ahrs_->header.frame_id);
+      have_ahrs_to_dvl_tf_ = true;
     }
   } catch (const tf2::TransformException & ex) {
     RCLCPP_ERROR_THROTTLE(
@@ -339,7 +365,8 @@ FactorGraphNode::AveragedMeasurements FactorGraphNode::computeAveragedMeasuremen
   const std::deque<sensor_msgs::msg::Imu::SharedPtr> & imu_msgs,
   const std::deque<nav_msgs::msg::Odometry::SharedPtr> & gps_msgs,
   const std::deque<nav_msgs::msg::Odometry::SharedPtr> & depth_msgs,
-  const std::deque<sensor_msgs::msg::Imu::SharedPtr> & heading_msgs,
+  const std::deque<sensor_msgs::msg::MagneticField::SharedPtr> & mag_msgs,
+  const std::deque<sensor_msgs::msg::Imu::SharedPtr> & ahrs_msgs,
   const std::deque<geometry_msgs::msg::TwistWithCovarianceStamped::SharedPtr> & dvl_msgs)
 {
   AveragedMeasurements result;
@@ -412,16 +439,34 @@ FactorGraphNode::AveragedMeasurements FactorGraphNode::computeAveragedMeasuremen
   result.dvl->twist.twist.linear.y /= n_dvl;
   result.dvl->twist.twist.linear.z /= n_dvl;
 
-  // Average Heading
-  if (heading_params_.enable) {
-    result.heading = std::make_shared<sensor_msgs::msg::Imu>(*heading_msgs.back());
-    gtsam::Rot3 R_ref = toGtsam(heading_msgs.front()->orientation);
+  // Average Magnetometer
+  if (mag_params_.enable) {
+    result.mag = std::make_shared<sensor_msgs::msg::MagneticField>(*mag_msgs.back());
+    result.mag->magnetic_field.x = 0;
+    result.mag->magnetic_field.y = 0;
+    result.mag->magnetic_field.z = 0;
+
+    for (const auto & m : mag_msgs) {
+      result.mag->magnetic_field.x += m->magnetic_field.x;
+      result.mag->magnetic_field.y += m->magnetic_field.y;
+      result.mag->magnetic_field.z += m->magnetic_field.z;
+    }
+    double n_mag = mag_msgs.size();
+    result.mag->magnetic_field.x /= n_mag;
+    result.mag->magnetic_field.y /= n_mag;
+    result.mag->magnetic_field.z /= n_mag;
+  }
+
+  // Average AHRS
+  if (ahrs_params_.enable_ahrs) {
+    result.ahrs = std::make_shared<sensor_msgs::msg::Imu>(*ahrs_msgs.back());
+    gtsam::Rot3 R_ref = toGtsam(ahrs_msgs.front()->orientation);
     gtsam::Vector3 log_sum = gtsam::Vector3::Zero();
-    for (const auto & m : heading_msgs) {
+    for (const auto & m : ahrs_msgs) {
       log_sum += gtsam::Rot3::Logmap(R_ref.between(toGtsam(m->orientation)));
     }
-    gtsam::Vector3 log_avg = log_sum / static_cast<double>(heading_msgs.size());
-    result.heading->orientation = toQuatMsg(R_ref.compose(gtsam::Rot3::Expmap(log_avg)));
+    gtsam::Vector3 log_avg = log_sum / static_cast<double>(ahrs_msgs.size());
+    result.ahrs->orientation = toQuatMsg(R_ref.compose(gtsam::Rot3::Expmap(log_avg)));
   }
 
   return result;
@@ -455,13 +500,33 @@ gtsam::Rot3 FactorGraphNode::computeInitialOrientation()
       accel_base.y() * accel_base.y() +
       accel_base.z() * accel_base.z()));
 
-  if (heading_params_.enable) {
-    // Account for heading sensor rotation
-    gtsam::Rot3 R_dvl_sensor = toGtsam(heading_to_dvl_tf_.transform.rotation);
+  if (ahrs_params_.enable_ahrs) {
+    // Account for AHRS sensor rotation
+    gtsam::Rot3 R_dvl_sensor = toGtsam(ahrs_to_dvl_tf_.transform.rotation);
     gtsam::Rot3 R_base_sensor = R_base_dvl * R_dvl_sensor;
-    gtsam::Rot3 R_world_sensor = toGtsam(initial_heading_->orientation);
+    gtsam::Rot3 R_world_sensor = toGtsam(initial_ahrs_->orientation);
     gtsam::Rot3 R_world_base_measured = R_world_sensor * R_base_sensor.inverse();
     yaw = R_world_base_measured.yaw();
+  } else if (mag_params_.enable) {
+    // Account for magnetometer rotation
+    gtsam::Rot3 R_dvl_sensor = toGtsam(mag_to_dvl_tf_.transform.rotation);
+
+    gtsam::Rot3 R_base_sensor = R_base_dvl * R_dvl_sensor;
+    gtsam::Vector3 mag_sensor(initial_mag_->magnetic_field.x,
+      initial_mag_->magnetic_field.y,
+      initial_mag_->magnetic_field.z);
+    gtsam::Vector3 mag_base = R_base_sensor * mag_sensor;
+
+    // IMPORTANT! Use the tilt-compensated magnetic vector to calculate yaw
+    gtsam::Rot3 R_rp = gtsam::Rot3::Ypr(0.0, pitch, roll);
+    gtsam::Vector3 mag_horizontal = R_rp.unrotate(mag_base);
+
+    double measured_yaw = std::atan2(mag_horizontal.y(), mag_horizontal.x());
+    double ref_yaw = std::atan2(
+      mag_params_.reference_field[1],
+      mag_params_.reference_field[0]);
+
+    yaw = measured_yaw - ref_yaw;
   }
 
   return gtsam::Rot3::Ypr(yaw, pitch, roll) * R_base_dvl;
@@ -549,10 +614,14 @@ void FactorGraphNode::addPriorFactors(gtsam::NonlinearFactorGraph & graph, gtsam
       depth_params_.position_z_noise_sigma :
       std::sqrt(initial_depth_->pose.covariance[14]);
 
-    if (heading_params_.enable) {
-      prior_pose_sigmas(2) = heading_params_.use_parameter_covariance ?
-        heading_params_.yaw_noise_sigma :
-        std::sqrt(initial_heading_->orientation_covariance[8]);
+    if (ahrs_params_.enable_ahrs) {
+      prior_pose_sigmas(2) = ahrs_params_.use_parameter_covariance ?
+        ahrs_params_.yaw_noise_sigma :
+        std::sqrt(initial_ahrs_->orientation_covariance[8]);
+    } else if (mag_params_.enable) {
+      prior_pose_sigmas(2) = mag_params_.use_parameter_covariance ?
+        mag_params_.magnetic_field_noise_sigma :
+        std::sqrt(initial_mag_->magnetic_field_covariance[8]);
     }
     prior_pose_sigmas(0) = imu_params_.use_parameter_covariance ?
       imu_params_.gyro_noise_sigma :
@@ -603,12 +672,12 @@ void FactorGraphNode::initializeGraph()
 {
   // --- Wait for Sensor Data ---
   if (!sensors_ready_) {
-    std::scoped_lock lock(imu_queue_mutex_, gps_queue_mutex_, heading_queue_mutex_,
-      depth_queue_mutex_, dvl_queue_mutex_);
+    std::scoped_lock lock(imu_queue_mutex_, gps_queue_mutex_, depth_queue_mutex_,
+      mag_queue_mutex_, ahrs_queue_mutex_, dvl_queue_mutex_);
 
     if (!imu_queue_.empty() && (!gps_params_.enable || !gps_queue_.empty()) &&
-      (!heading_params_.enable || !heading_queue_.empty()) && !depth_queue_.empty() &&
-      !dvl_queue_.empty())
+      !depth_queue_.empty() && (!mag_params_.enable || !mag_queue_.empty()) &&
+      (!ahrs_params_.enable_ahrs || !ahrs_queue_.empty()) && !dvl_queue_.empty())
     {
       if (prior_params_.use_parameter_priors) {
         RCLCPP_INFO(
@@ -617,7 +686,8 @@ void FactorGraphNode::initializeGraph()
         initial_imu_ = imu_queue_.back();
         if (gps_params_.enable) {initial_gps_ = gps_queue_.back();}
         initial_depth_ = depth_queue_.back();
-        if (heading_params_.enable) {initial_heading_ = heading_queue_.back();}
+        if (mag_params_.enable) {initial_mag_ = mag_queue_.back();}
+        if (ahrs_params_.enable_ahrs) {initial_ahrs_ = ahrs_queue_.back();}
         initial_dvl_ = dvl_queue_.back();
         data_averaged_ = true;
       } else {
@@ -627,10 +697,11 @@ void FactorGraphNode::initializeGraph()
       sensors_ready_ = true;
     } else {
       RCLCPP_WARN_THROTTLE(
-        get_logger(), *get_clock(), 5000, "Waiting for sensors: %s%s%s%s%s",
+        get_logger(), *get_clock(), 5000, "Waiting for sensors: %s%s%s%s%s%s",
         imu_queue_.empty() ? "[IMU] " : "",
         (gps_params_.enable && gps_queue_.empty()) ? "[GPS] " : "",
-        (heading_params_.enable && heading_queue_.empty()) ? "[Heading] " : "",
+        (mag_params_.enable && mag_queue_.empty()) ? "[Magnetometer] " : "",
+        (ahrs_params_.enable_ahrs && ahrs_queue_.empty()) ? "[AHRS] " : "",
         depth_queue_.empty() ? "[Depth] " : "", dvl_queue_.empty() ? "[DVL]" : "");
       return;
     }
@@ -649,27 +720,32 @@ void FactorGraphNode::initializeGraph()
       std::deque<sensor_msgs::msg::Imu::SharedPtr> imu_msgs;
       std::deque<nav_msgs::msg::Odometry::SharedPtr> gps_msgs;
       std::deque<nav_msgs::msg::Odometry::SharedPtr> depth_msgs;
-      std::deque<sensor_msgs::msg::Imu::SharedPtr> heading_msgs;
+      std::deque<sensor_msgs::msg::MagneticField::SharedPtr> mag_msgs;
+      std::deque<sensor_msgs::msg::Imu::SharedPtr> ahrs_msgs;
       std::deque<geometry_msgs::msg::TwistWithCovarianceStamped::SharedPtr> dvl_msgs;
 
       {
-        std::scoped_lock lock(imu_queue_mutex_, gps_queue_mutex_, heading_queue_mutex_,
-          depth_queue_mutex_, dvl_queue_mutex_);
+        std::scoped_lock lock(imu_queue_mutex_, gps_queue_mutex_, depth_queue_mutex_,
+          mag_queue_mutex_, ahrs_queue_mutex_, dvl_queue_mutex_);
 
         imu_msgs = std::move(imu_queue_);
         gps_msgs = std::move(gps_queue_);
         depth_msgs = std::move(depth_queue_);
-        heading_msgs = std::move(heading_queue_);
+        mag_msgs = std::move(mag_queue_);
+        ahrs_msgs = std::move(ahrs_queue_);
         dvl_msgs = std::move(dvl_queue_);
       }
 
       AveragedMeasurements avgs =
-        computeAveragedMeasurements(imu_msgs, gps_msgs, depth_msgs, heading_msgs, dvl_msgs);
+        computeAveragedMeasurements(
+        imu_msgs, gps_msgs, depth_msgs, mag_msgs, ahrs_msgs,
+        dvl_msgs);
 
       initial_imu_ = avgs.imu;
       initial_gps_ = avgs.gps;
       initial_depth_ = avgs.depth;
-      initial_heading_ = avgs.heading;
+      initial_mag_ = avgs.mag;
+      initial_ahrs_ = avgs.ahrs;
       initial_dvl_ = avgs.dvl;
 
       RCLCPP_INFO(get_logger(), "Sensor data averaged successfully! Initializing graph...");
@@ -781,37 +857,105 @@ void FactorGraphNode::addDepthFactor(
     toGtsam(depth_to_dvl_tf_.transform), depth_noise);
 }
 
-void FactorGraphNode::addHeadingFactor(
+void FactorGraphNode::addAhrsFactor(
   gtsam::NonlinearFactorGraph & graph,
-  const std::deque<sensor_msgs::msg::Imu::SharedPtr> & heading_msgs)
+  const std::deque<sensor_msgs::msg::Imu::SharedPtr> & ahrs_msgs)
 {
-  if (!have_heading_to_dvl_tf_ || heading_msgs.empty()) {return;}
+  if (!have_ahrs_to_dvl_tf_ || ahrs_msgs.empty()) {return;}
 
-  const auto & heading_msg = heading_msgs.back();
+  const auto & ahrs_msg = ahrs_msgs.back();
 
-  gtsam::Vector3 heading_sigmas;
-  if (heading_params_.use_parameter_covariance) {
-    heading_sigmas << heading_params_.roll_pitch_noise_sigma,
-      heading_params_.roll_pitch_noise_sigma, heading_params_.yaw_noise_sigma;
+  gtsam::Vector3 ahrs_sigmas;
+  if (ahrs_params_.use_parameter_covariance) {
+    ahrs_sigmas << ahrs_params_.roll_pitch_noise_sigma,
+      ahrs_params_.roll_pitch_noise_sigma, ahrs_params_.yaw_noise_sigma;
   } else {
-    heading_sigmas
-      << heading_params_.roll_pitch_noise_sigma,        // Enable ignoring roll from heading sensor
-      heading_params_.roll_pitch_noise_sigma,           // Enable ignoring pitch from heading sensor
-      sqrt(heading_msg->orientation_covariance[8]);
+    ahrs_sigmas
+      << ahrs_params_.roll_pitch_noise_sigma,        // Enable ignoring roll from AHRS sensor
+      ahrs_params_.roll_pitch_noise_sigma,           // Enable ignoring pitch from AHRS sensor
+      sqrt(ahrs_msg->orientation_covariance[8]);
   }
-  gtsam::SharedNoiseModel heading_noise = gtsam::noiseModel::Diagonal::Sigmas(heading_sigmas);
+  gtsam::SharedNoiseModel ahrs_noise = gtsam::noiseModel::Diagonal::Sigmas(ahrs_sigmas);
 
-  if (heading_params_.robust_kernel == "Huber") {
-    heading_noise = gtsam::noiseModel::Robust::Create(
-      gtsam::noiseModel::mEstimator::Huber::Create(heading_params_.robust_k), heading_noise);
-  } else if (heading_params_.robust_kernel == "Tukey") {
-    heading_noise = gtsam::noiseModel::Robust::Create(
-      gtsam::noiseModel::mEstimator::Tukey::Create(heading_params_.robust_k), heading_noise);
+  if (ahrs_params_.robust_kernel == "Huber") {
+    ahrs_noise = gtsam::noiseModel::Robust::Create(
+      gtsam::noiseModel::mEstimator::Huber::Create(ahrs_params_.robust_k), ahrs_noise);
+  } else if (ahrs_params_.robust_kernel == "Tukey") {
+    ahrs_noise = gtsam::noiseModel::Robust::Create(
+      gtsam::noiseModel::mEstimator::Tukey::Create(ahrs_params_.robust_k), ahrs_noise);
   }
 
-  graph.emplace_shared<CustomHeadingFactorArm>(
-    X(current_step_), toGtsam(heading_msg->orientation),
-    toGtsam(heading_to_dvl_tf_.transform.rotation), heading_noise);
+  graph.emplace_shared<AhrsFactor>(
+    X(current_step_), toGtsam(ahrs_msg->orientation),
+    toGtsam(ahrs_to_dvl_tf_.transform.rotation), ahrs_noise);
+}
+
+void FactorGraphNode::addMagFactor(
+  gtsam::NonlinearFactorGraph & graph,
+  const std::deque<sensor_msgs::msg::MagneticField::SharedPtr> & mag_msgs)
+{
+  if (!have_mag_to_dvl_tf_ || mag_msgs.empty()) {return;}
+
+  const auto & mag_msg = mag_msgs.back();
+
+  gtsam::Point3 ref_vec(mag_params_.reference_field[0],
+    mag_params_.reference_field[1],
+    mag_params_.reference_field[2]);
+
+  if (mag_params_.constrain_yaw_only) {
+    // 1D Factor
+    gtsam::Vector1 mag_sigma;
+    if (mag_params_.use_parameter_covariance) {
+      mag_sigma << mag_params_.magnetic_field_noise_sigma;
+    } else {
+      double B_mag = ref_vec.norm();
+      if (B_mag > 1e-6) {
+        // IMPORTANT! Convert to angular uncertainty (rad) from magnetic field uncertainty
+        double sigma_B = sqrt(mag_msg->magnetic_field_covariance[0]);
+        mag_sigma << sigma_B / B_mag;
+      } else {
+        mag_sigma << mag_params_.magnetic_field_noise_sigma;
+      }
+    }
+    gtsam::SharedNoiseModel mag_noise = gtsam::noiseModel::Isotropic::Sigma(1, mag_sigma(0));
+
+    if (mag_params_.robust_kernel == "Huber") {
+      mag_noise = gtsam::noiseModel::Robust::Create(
+        gtsam::noiseModel::mEstimator::Huber::Create(mag_params_.robust_k), mag_noise);
+    } else if (mag_params_.robust_kernel == "Tukey") {
+      mag_noise = gtsam::noiseModel::Robust::Create(
+        gtsam::noiseModel::mEstimator::Tukey::Create(mag_params_.robust_k), mag_noise);
+    }
+
+    graph.emplace_shared<CustomMagFactorArm>(
+      X(current_step_), toGtsam(mag_msg->magnetic_field), ref_vec,
+      toGtsam(mag_to_dvl_tf_.transform.rotation), mag_noise, true);
+
+  } else {
+    // Standard 3D Factor
+    gtsam::Vector3 mag_sigmas;
+    if (mag_params_.use_parameter_covariance) {
+      mag_sigmas << mag_params_.magnetic_field_noise_sigma, mag_params_.magnetic_field_noise_sigma,
+        mag_params_.magnetic_field_noise_sigma;
+    } else {
+      mag_sigmas << sqrt(mag_msg->magnetic_field_covariance[0]),
+        sqrt(mag_msg->magnetic_field_covariance[4]),
+        sqrt(mag_msg->magnetic_field_covariance[8]);
+    }
+    gtsam::SharedNoiseModel mag_noise = gtsam::noiseModel::Diagonal::Sigmas(mag_sigmas);
+
+    if (mag_params_.robust_kernel == "Huber") {
+      mag_noise = gtsam::noiseModel::Robust::Create(
+        gtsam::noiseModel::mEstimator::Huber::Create(mag_params_.robust_k), mag_noise);
+    } else if (mag_params_.robust_kernel == "Tukey") {
+      mag_noise = gtsam::noiseModel::Robust::Create(
+        gtsam::noiseModel::mEstimator::Tukey::Create(mag_params_.robust_k), mag_noise);
+    }
+
+    graph.emplace_shared<CustomMagFactorArm>(
+      X(current_step_), toGtsam(mag_msg->magnetic_field), ref_vec,
+      toGtsam(mag_to_dvl_tf_.transform.rotation), mag_noise, false);
+  }
 }
 
 void FactorGraphNode::addDvlFactor(
@@ -1116,17 +1260,19 @@ void FactorGraphNode::optimizeGraph()
   std::deque<sensor_msgs::msg::Imu::SharedPtr> imu_msgs;
   std::deque<nav_msgs::msg::Odometry::SharedPtr> gps_msgs;
   std::deque<nav_msgs::msg::Odometry::SharedPtr> depth_msgs;
-  std::deque<sensor_msgs::msg::Imu::SharedPtr> heading_msgs;
+  std::deque<sensor_msgs::msg::MagneticField::SharedPtr> mag_msgs;
+  std::deque<sensor_msgs::msg::Imu::SharedPtr> ahrs_msgs;
   std::deque<geometry_msgs::msg::TwistWithCovarianceStamped::SharedPtr> dvl_msgs;
 
   {
     std::scoped_lock lock(imu_queue_mutex_, gps_queue_mutex_, depth_queue_mutex_,
-      heading_queue_mutex_, dvl_queue_mutex_);
+      mag_queue_mutex_, ahrs_queue_mutex_, dvl_queue_mutex_);
 
     imu_msgs = std::move(imu_queue_);
     gps_msgs = std::move(gps_queue_);
     depth_msgs = std::move(depth_queue_);
-    heading_msgs = std::move(heading_queue_);
+    mag_msgs = std::move(mag_queue_);
+    ahrs_msgs = std::move(ahrs_queue_);
     dvl_msgs = std::move(dvl_queue_);
   }
 
@@ -1170,7 +1316,8 @@ void FactorGraphNode::optimizeGraph()
   addPreintegratedImuFactor(new_graph, imu_msgs, target_time);
   if (gps_params_.enable) {addGpsFactor(new_graph, gps_msgs);}
   addDepthFactor(new_graph, depth_msgs);
-  if (heading_params_.enable) {addHeadingFactor(new_graph, heading_msgs);}
+  if (mag_params_.enable) {addMagFactor(new_graph, mag_msgs);}
+  if (ahrs_params_.enable_ahrs) {addAhrsFactor(new_graph, ahrs_msgs);}
 
   if (experimental_params_.enable_dvl_preintegration) {
     addPreintegratedDvlFactor(new_graph, dvl_msgs, imu_msgs, target_time);

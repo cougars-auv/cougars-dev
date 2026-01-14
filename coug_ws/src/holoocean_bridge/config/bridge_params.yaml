@@ -17,7 +17,7 @@
     origin_altitude: 1412.0
 
     override_covariance: true
-    position_noise_sigma: 2.5 # [m] Standard deviation of GPS position measurements.
+    position_noise_sigma: 0.2 # [m] Standard deviation of GPS position measurements.
     altitude_noise_sigma: 5.0 # [m] Standard deviation of GPS altitude measurements.
 
 /**/depth_converter_node:
@@ -28,10 +28,10 @@
     override_covariance: true
     noise_sigma: 0.2 # [m] Standard deviation of depth measurements.
 
-/**/heading_converter_node:
+/**/ahrs_converter_node:
   ros__parameters:
     input_topic: "RotationSensor"
-    output_topic: "imu/heading"
+    output_topic: "imu/ahrs"
 
     yaw_noise_sigma: 0.01745 # [rad] Standard deviation of yaw measurements.
     roll_pitch_noise_sigma: 0.00349 # [rad] Standard deviation of roll and pitch measurements.
@@ -50,8 +50,7 @@
 
 /**/truth_converter_node:
   ros__parameters:
-    input_topic: "LocationSensor"
-    imu_topic: "DynamicsSensorIMU"
+    input_topic: "DynamicsSensorOdom"
     output_topic: "odometry/truth"
 
     publish_tf: false # Whether to publish the map->base_link transform
@@ -74,3 +73,11 @@
     output_heading_topic: "/heading"
     output_speed_topic: "/speed"
     output_depth_topic: "/depth"
+
+/**/mag_converter_node:
+  ros__parameters:
+    input_topic: "MagnetometerSensor"
+    output_topic: "imu/mag"
+
+    override_covariance: true
+    noise_sigma: 0.006 # [normalized] Standard deviation of magnetometer measurements.
