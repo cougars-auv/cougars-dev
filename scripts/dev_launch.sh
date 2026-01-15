@@ -2,23 +2,25 @@
 # Created by Nelson Durrant, Jan 2026
 #
 # Launches FGO localization for HoloOcean development
-# Use the '-b' flag to launch the BlueROV2
-# Use the '-c' flag to launch comparison localization nodes
-# Use the '-m' flag to launch multiple CougUVs
-# Use the '-r' flag to record a rosbag
+#
+# Usage:
+#   ./scripts/dev_launch.sh [-b] [-c] [-m] [-r <bag_name>]
+#
+# Arguments:
+#   -b: Launch the BlueROV2 model (default: CougUV)
+#   -c: Launch comparison localization nodes
+#   -m: Launch multiple CougUV agents
+#   -r <bag_name>: Record a rosbag to ~/bags/<bag_name>
 
 function printInfo {
-    # print blue
     echo -e "\033[0m\033[36m[INFO] $1\033[0m"
 }
 
 function printWarning {
-    # print yellow
     echo -e "\033[0m\033[33m[WARNING] $1\033[0m"
 }
 
 function printError {
-    # print red
     echo -e "\033[0m\033[31m[ERROR] $1\033[0m"
 }
 
@@ -42,10 +44,6 @@ while getopts ":bcmr:" opt; do
             ;;
         r)
             BAG_PATH="$HOME/bags/$OPTARG"
-            if [ -d "$BAG_PATH" ]; then
-                printError "Bag already exists: $BAG_PATH"
-                exit 1
-            fi
             ;;
         \?)
             printError "Invalid option: -$OPTARG" >&2
@@ -57,6 +55,11 @@ while getopts ":bcmr:" opt; do
             ;;
     esac
 done
+
+if [ -n "$BAG_PATH" ] && [ -d "$BAG_PATH" ]; then
+    printError "Bag directory already exists: $BAG_PATH"
+    exit 1
+fi
 
 ARGS=("urdf_file:=$URDF" "num_agents:=$AGENTS" "compare:=$COMPARE")
 if [ -n "$BAG_PATH" ]; then
