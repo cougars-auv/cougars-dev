@@ -26,7 +26,7 @@ from evo.core.metrics import PoseRelation
 
 # %%
 # Configuration
-BAG_PATH = "../../bags/bag_name"
+BAG_PATH = "../../bags/name"
 TRUTH_TOPIC = "/auv0/odometry/truth"
 ESTIMATE_TOPICS = [
     "/auv0/odometry/global",
@@ -41,19 +41,23 @@ print(f"Saving results to: {OUTPUT_DIR.resolve()}")
 
 # %%
 def load_trajectories(bag_path, truth_topic, estimate_topics):
-    trajectories = {}
+    data_pairs = {}
     try:
         with Reader(bag_path) as reader:
-            traj_ref = file_interface.read_bag_trajectory(reader, truth_topic)
+            traj_ref_raw = file_interface.read_bag_trajectory(reader, truth_topic)
 
             for est_topic in estimate_topics:
                 try:
                     traj_est = file_interface.read_bag_trajectory(reader, est_topic)
                     
-                    traj_ref_synced, traj_est_synced = sync.associate_trajectories(traj_ref, traj_est, max_diff=0.1)
+                    traj_ref_synced, traj_est_synced = sync.associate_trajectories(traj_ref_raw, traj_est, max_diff=0.1)
+
+                    # No alignment needed when using HoloOcean ground truth
+                    # traj_est_synced.align(traj_ref_synced, correct_scale=False, correct_only_scale=False)
+
                     traj_est_aligned = copy.deepcopy(traj_est_synced)
                     
-                    trajectories[est_topic] = traj_est_aligned
+                    data_pairs[est_topic] = (traj_ref_synced, traj_est_aligned)
                     
                 except Exception as e:
                     print(f"Skipping {est_topic}: {e}")
@@ -61,26 +65,24 @@ def load_trajectories(bag_path, truth_topic, estimate_topics):
     except Exception as e:
         print(f"Error opening bag: {e}")
         
-    return trajectories, traj_ref
+    return data_pairs, traj_ref_raw
 
-def calculate_metrics(trajectories, traj_ref):
+def calculate_metrics(data_pairs):
     results = []
     
-    for name, traj in trajectories.items():
-        traj_ref_synced, traj_est_aligned_synced = sync.associate_trajectories(traj_ref, traj, max_diff=0.1)
-        
+    for name, (traj_ref, traj_est) in data_pairs.items():
         row = {"Topic": name}
         
         # APE (Absolute Pose Error)
         for rel, metric_name in [(PoseRelation.translation_part, "APE-Trans"), (PoseRelation.rotation_angle_deg, "APE-Rot")]:
             metric = metrics.APE(rel)
-            metric.process_data((traj_ref_synced, traj_est_aligned_synced))
+            metric.process_data((traj_ref, traj_est))
             row[metric_name] = metric.get_statistic(metrics.StatisticsType.rmse)
             
         # RPE (Relative Pose Error)
         for rel, metric_name in [(PoseRelation.translation_part, "RPE-Trans"), (PoseRelation.rotation_angle_deg, "RPE-Rot")]:
             metric = metrics.RPE(rel)
-            metric.process_data((traj_ref_synced, traj_est_aligned_synced))
+            metric.process_data((traj_ref, traj_est))
             row[metric_name] = metric.get_statistic(metrics.StatisticsType.rmse)
             
         results.append(row)
@@ -89,8 +91,8 @@ def calculate_metrics(trajectories, traj_ref):
 
 
 # %%
-aligned_trajectories, truth_ref = load_trajectories(BAG_PATH, TRUTH_TOPIC, ESTIMATE_TOPICS)
-df_metrics = calculate_metrics(aligned_trajectories, truth_ref)
+trajectory_pairs, truth_ref_raw = load_trajectories(BAG_PATH, TRUTH_TOPIC, ESTIMATE_TOPICS)
+df_metrics = calculate_metrics(trajectory_pairs)
 
 # %%
 csv_path = OUTPUT_DIR / "metrics.csv"
@@ -112,8 +114,9 @@ plot_mode = plot.PlotMode.xy
 fig = plt.figure(figsize=(10, 8))
 ax = plot.prepare_axis(fig, plot_mode)
 
-plot.traj(ax, plot_mode, truth_ref, style="--", color="black", label=TRUTH_TOPIC)
-plot.trajectories(ax, aligned_trajectories, plot_mode)
+plot.traj(ax, plot_mode, truth_ref_raw, style="--", color="black", label=TRUTH_TOPIC)
+est_trajectories = {k: v[1] for k, v in trajectory_pairs.items()}
+plot.trajectories(ax, est_trajectories, plot_mode)
 
 plot_path = OUTPUT_DIR / "trajectories.png"
 plt.savefig(plot_path, dpi=300)

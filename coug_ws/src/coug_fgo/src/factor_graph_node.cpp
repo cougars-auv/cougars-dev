@@ -1066,6 +1066,12 @@ void FactorGraphNode::addPreintegratedDvlFactor(
 {
   if (!have_imu_to_dvl_tf_ || !dvl_preintegrator_ || dvl_msgs.empty()) {return;}
 
+  if (imu_msgs.empty()) {
+    std::scoped_lock lock(dvl_queue_mutex_);
+    dvl_queue_.insert(dvl_queue_.begin(), dvl_msgs.begin(), dvl_msgs.end());
+    return;
+  }
+
   double last_dvl_time = prev_time_;
   std::deque<geometry_msgs::msg::TwistWithCovarianceStamped::SharedPtr> unused_dvl_msgs;
 
