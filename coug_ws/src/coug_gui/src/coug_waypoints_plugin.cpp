@@ -280,7 +280,7 @@ void CougWaypointsPlugin::SaveWaypoints()
     QJsonArray waypoints_array;
     for (const auto & wp : wps) {
       QJsonObject wp_obj;
-      
+
       wp_obj["lon"] = wp.position.x;
       wp_obj["lat"] = wp.position.y;
       wp_obj["z"] = wp.position.z;
@@ -292,7 +292,7 @@ void CougWaypointsPlugin::SaveWaypoints()
         wp_obj["map_x"] = map_point.x();
         wp_obj["map_y"] = map_point.y();
       } else {
-         PrintError("Transform failed");
+        PrintError("Transform failed");
       }
 
       waypoints_array.append(wp_obj);
@@ -349,11 +349,11 @@ void CougWaypointsPlugin::LoadWaypoints()
     if (waypoint_map_.find(topic_str) != waypoint_map_.end()) {
       std::vector<geometry_msgs::msg::Pose> wps;
       QJsonArray array = obj[topic_key].toArray();
-      
+
       for (const auto & val : array) {
         QJsonObject wp_obj = val.toObject();
         geometry_msgs::msg::Pose pose;
-        
+
         if (wp_obj.contains("lat") && wp_obj.contains("lon")) {
           pose.position.x = wp_obj["lon"].toDouble();
           pose.position.y = wp_obj["lat"].toDouble();
