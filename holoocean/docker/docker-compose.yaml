@@ -14,7 +14,7 @@
 
 services: 
  holoocean:
-    image: frostlab/holoocean:2.0-runtime-ubuntu22.04-cuda12.4-ros-patch
+    image: frostlab/holoocean:2.0-runtime-ubuntu22.04-cuda12.4-ros
     build: 
       context: .
       dockerfile: Dockerfile

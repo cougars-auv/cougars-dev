@@ -14,7 +14,6 @@
 
 import rclpy
 from rclpy.node import Node
-from geometry_msgs.msg import PoseWithCovarianceStamped
 from nav_msgs.msg import Odometry
 
 
@@ -52,7 +51,7 @@ class DepthConverterNode(Node):
         )
 
         self.subscription = self.create_subscription(
-            PoseWithCovarianceStamped, input_topic, self.listener_callback, 10
+            Odometry, input_topic, self.listener_callback, 10
         )
         self.publisher = self.create_publisher(Odometry, output_topic, 10)
 
@@ -61,26 +60,21 @@ class DepthConverterNode(Node):
             f"publishing on {output_topic}."
         )
 
-    def listener_callback(self, msg: PoseWithCovarianceStamped):
+    def listener_callback(self, msg: Odometry):
         """
-        Process depth sensor data (PoseWithCovarianceStamped).
+        Process depth sensor data (Odometry).
 
-        :param msg: PoseWithCovarianceStamped message containing depth data.
+        :param msg: Odometry message containing depth data.
         """
-        odom_msg = Odometry()
-        odom_msg.header = msg.header
-        odom_msg.header.frame_id = "map"
-        odom_msg.child_frame_id = self.child_frame_id
-        odom_msg.pose.pose.position.z = msg.pose.pose.position.z
+        msg.header.frame_id = "map"
+        msg.child_frame_id = self.child_frame_id
 
         if self.override_covariance:
-            odom_msg.pose.covariance[14] = (
+            msg.pose.covariance[14] = (
                 self.noise_sigma * self.noise_sigma
             )
-        else:
-            odom_msg.pose.covariance = msg.pose.covariance
 
-        self.publisher.publish(odom_msg)
+        self.publisher.publish(msg)
 
 
 def main(args=None):
