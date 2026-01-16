@@ -25,7 +25,7 @@ from evo.core import sync, metrics
 from evo.core.metrics import PoseRelation
 
 # %%
-BAG_PATH = "../../bags/single"
+BAG_PATH = "../../bags/name"
 
 AGENT_NAMES = ["auv0", "auv1", "auv2"]
 TRUTH_SUBTOPIC = "/odometry/truth"
