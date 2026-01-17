@@ -1,17 +1,3 @@
-# ---
-# jupyter:
-#   jupytext:
-#     text_representation:
-#       extension: .py
-#       format_name: percent
-#       format_version: '1.3'
-#       jupytext_version: 1.18.1
-#   kernelspec:
-#     display_name: .venv
-#     language: python
-#     name: python3
-# ---
-
 # %%
 import copy
 from pathlib import Path
@@ -56,6 +42,7 @@ print(f"Saving results to: {OUTPUT_DIR.resolve()}")
 
 # %%
 def load_trajectories(bag_path, truth_topic, estimate_topics):
+    print(f"  Loading trajectories from {bag_path}...")
     data_pairs = {}
     traj_ref_raw = None
     try:
@@ -69,6 +56,7 @@ def load_trajectories(bag_path, truth_topic, estimate_topics):
                 try:
                     traj_est = file_interface.read_bag_trajectory(reader, est_topic)
                     
+                    # Synchronize trajectories based on timestamps
                     traj_ref_synced, traj_est_synced = sync.associate_trajectories(traj_ref_raw, traj_est, max_diff=0.1)
 
                     # No alignment needed when using HoloOcean ground truth
@@ -123,6 +111,7 @@ for agent_name, topics in AGENTS.items():
 
 print("Calculating metrics & saving CSVs...")
 for agent_name, pairs in all_trajectory_pairs.items():
+    print(f"  Processing metrics for agent: {agent_name}...")
     df_metrics = calculate_metrics(pairs)
     
     csv_path = OUTPUT_DIR / f"metrics_{agent_name}.csv"
@@ -155,6 +144,7 @@ plot_mode = plot.PlotMode.xy
 # plot_mode = plot.PlotMode.xyz
 
 for agent_name, pairs in all_trajectory_pairs.items():
+    print(f"  Plotting trajectories for agent: {agent_name}...")
     truth_ref_raw = all_truth_refs[agent_name]
     
     fig = plt.figure(figsize=(3.5, 3.0))

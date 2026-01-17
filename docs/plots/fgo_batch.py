@@ -1,17 +1,3 @@
-# ---
-# jupyter:
-#   jupytext:
-#     text_representation:
-#       extension: .py
-#       format_name: percent
-#       format_version: '1.3'
-#       jupytext_version: 1.18.1
-#   kernelspec:
-#     display_name: .venv
-#     language: python
-#     name: python3
-# ---
-
 # %%
 import pandas as pd
 import seaborn as sns
@@ -83,11 +69,23 @@ else:
     
     df_all["Algorithm"] = df_all["Algorithm"].map(LABEL_MAPPING).fillna(df_all["Algorithm"])
     
+    # Enforce a consistent order for plotting to match fgo_analysis.py (FGO -> TM -> EKF -> UKF -> IEKF)
+    ALGORITHM_ORDER = ["FGO", "TM", "EKF", "UKF", "IEKF"]
+    stats_algorithms = df_all["Algorithm"].unique()
+    # Filter order to only include algorithms present in the data
+    plot_order = [algo for algo in ALGORITHM_ORDER if algo in stats_algorithms]
+    
+    # Append any algorithms found that weren't in our expected list (just in case)
+    for algo in stats_algorithms:
+        if algo not in plot_order:
+            plot_order.append(algo)
+
     print(f"Total records loaded: {len(df_all)}")
     print(f"Algorithms found: {df_all['Algorithm'].unique()}")
     display(df_all.head())
 
 # %%
+# Apply plot settings (seaborn style, fonts, etc.)
 settings.SETTINGS.plot_seaborn_style = "whitegrid"
 settings.SETTINGS.plot_usetex = True
 settings.SETTINGS.plot_fontfamily = "serif"
@@ -116,7 +114,7 @@ for metric in metric_cols:
     fig_violin = plt.figure(figsize=(3.5, 3.0))
     ax_violin = plot.prepare_axis(fig_violin, plot.PlotMode.xy)
     
-    sns.violinplot(data=df_all, x="Algorithm", y=metric, hue="Algorithm", palette="muted", inner="box")
+    sns.violinplot(data=df_all, x="Algorithm", y=metric, hue="Algorithm", order=plot_order, hue_order=plot_order, inner="box")
     
     plt.ylabel(metric)
     plt.xlabel("Algorithm")
@@ -132,7 +130,7 @@ for metric in metric_cols:
     # --- Box Plot ---
     fig_box = plt.figure(figsize=(3.5, 3.0))
     
-    sns.boxplot(data=df_all, x="Algorithm", y=metric, hue="Algorithm", palette="muted")
+    sns.boxplot(data=df_all, x="Algorithm", y=metric, hue="Algorithm", order=plot_order, hue_order=plot_order)
     
     plt.ylabel(metric)
     plt.xlabel("Algorithm")

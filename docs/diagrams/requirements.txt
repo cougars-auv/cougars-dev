@@ -1,3 +1,2 @@
 matplotlib
 daft-pgm
-jupytext
