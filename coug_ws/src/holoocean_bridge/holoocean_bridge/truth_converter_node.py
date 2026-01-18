@@ -96,7 +96,7 @@ class TruthConverterNode(Node):
             self.get_logger().error(
                 f"Could not find transform from {self.com_frame_id} "
                 f"to {self.child_frame_id}",
-                throttle_duration_sec=1.0
+                throttle_duration_sec=1.0,
             )
             return
 

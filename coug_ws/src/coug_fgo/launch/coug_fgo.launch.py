@@ -95,10 +95,8 @@ def generate_launch_description():
                         "map_frame": "map",
                         "odom_frame": odom_frame,
                         "base_frame": base_frame,
-
                         "global_odom_topic": "odometry/global_tm",
                         "smoothed_path_topic": "smoothed_path_tm",
-
                         "publish_global_tf": False,
                         "experimental.enable_dvl_preintegration": True,
                     },

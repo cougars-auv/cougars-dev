@@ -21,6 +21,20 @@
     </visual>
   </link>
 
-  <!-- TODO: Add real-world sensor frames -->
+  <!-- IMU Link -->
+  <link name="imu_link"/>
+  <joint name="imu_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="imu_link"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint>
+
+  <!-- DVL Link -->
+  <link name="dvl_link"/>
+  <joint name="dvl_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="dvl_link"/>
+    <origin xyz="-0.27161 -0.10886 -0.01984" rpy="${pi} 0 0"/>
+  </joint>
 
 </robot>

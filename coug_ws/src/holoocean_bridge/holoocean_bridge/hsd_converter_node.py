@@ -48,7 +48,9 @@ class HsdConverterNode(Node):
             self.get_parameter("depth_topic").get_parameter_value().string_value
         )
         self.output_heading_topic = (
-            self.get_parameter("output_heading_topic").get_parameter_value().string_value
+            self.get_parameter("output_heading_topic")
+            .get_parameter_value()
+            .string_value
         )
         self.output_speed_topic = (
             self.get_parameter("output_speed_topic").get_parameter_value().string_value
@@ -73,22 +75,13 @@ class HsdConverterNode(Node):
 
         # Subscribers from coug_navigation
         self.heading_sub = self.create_subscription(
-            Float64,
-            self.input_heading_topic,
-            self.heading_callback,
-            10
+            Float64, self.input_heading_topic, self.heading_callback, 10
         )
         self.speed_sub = self.create_subscription(
-            Float64,
-            self.input_speed_topic,
-            self.speed_callback,
-            10
+            Float64, self.input_speed_topic, self.speed_callback, 10
         )
         self.depth_sub = self.create_subscription(
-            Float64,
-            self.input_depth_topic,
-            self.depth_callback,
-            10
+            Float64, self.input_depth_topic, self.depth_callback, 10
         )
 
         self.get_logger().info(

@@ -70,9 +70,7 @@ class DepthConverterNode(Node):
         msg.child_frame_id = self.child_frame_id
 
         if self.override_covariance:
-            msg.pose.covariance[14] = (
-                self.noise_sigma * self.noise_sigma
-            )
+            msg.pose.covariance[14] = self.noise_sigma * self.noise_sigma
 
         self.publisher.publish(msg)
 

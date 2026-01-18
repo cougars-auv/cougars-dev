@@ -25,7 +25,7 @@ def generate_launch_description():
     use_sim_time = LaunchConfiguration("use_sim_time", default="false")
     multiagent_viz = LaunchConfiguration("multiagent_viz", default="false")
 
-    pkg_share = get_package_share_directory('coug_gui')
+    pkg_share = get_package_share_directory("coug_gui")
 
     mapviz_params_file = PythonExpression(
         [

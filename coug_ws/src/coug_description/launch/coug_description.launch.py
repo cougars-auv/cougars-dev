@@ -33,9 +33,7 @@ def generate_launch_description():
     use_sim_time = LaunchConfiguration("use_sim_time")
     urdf_file = LaunchConfiguration("urdf_file")
     auv_ns = LaunchConfiguration("auv_ns")
-    frame_prefix = PythonExpression(
-        ["'", auv_ns, "/' if '", auv_ns, "' != '' else ''"]
-    )
+    frame_prefix = PythonExpression(["'", auv_ns, "/' if '", auv_ns, "' != '' else ''"])
 
     return LaunchDescription(
         [

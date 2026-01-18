@@ -50,7 +50,6 @@ USER frostlab-docker
 RUN pip3 install --no-cache-dir \
     # Tool for managing external repos - Nelson Durrant, Jan 2026
     vcstool
-ENV PATH="$PATH:/home/frostlab-docker/.local/bin"
 
 # Install custom ROS package dependencies (rosdep)
 RUN vcs import . < cougars.repos \

@@ -50,7 +50,9 @@ class AhrsConverterNode(Node):
             self.get_parameter("yaw_noise_sigma").get_parameter_value().double_value
         )
         self.roll_pitch_noise_sigma = (
-            self.get_parameter("roll_pitch_noise_sigma").get_parameter_value().double_value
+            self.get_parameter("roll_pitch_noise_sigma")
+            .get_parameter_value()
+            .double_value
         )
 
         self.subscription = self.create_subscription(
@@ -111,8 +113,8 @@ class AhrsConverterNode(Node):
 
         imu_msg.orientation = self.quaternion_from_euler(roll_rad, pitch_rad, yaw_rad)
 
-        yaw_variance = self.yaw_noise_sigma ** 2
-        roll_pitch_variance = self.roll_pitch_noise_sigma ** 2
+        yaw_variance = self.yaw_noise_sigma**2
+        roll_pitch_variance = self.roll_pitch_noise_sigma**2
 
         imu_msg.orientation_covariance[0] = roll_pitch_variance
         imu_msg.orientation_covariance[4] = roll_pitch_variance
