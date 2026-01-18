@@ -49,7 +49,7 @@ CoUGARs is a low-cost, configurable AUV platform designed for multi-agent autono
     cd coug_fgo_dev && ./holoocean/compose.sh
     ```
   
-  - Open a new terminal, enter the `cougars-ct` container using `./compose.sh`, build the `coug_ws` workspace, and launch the simulation stack using `./sim_launch.sh`.
+  - Open a new terminal, attach to the `cougars-ct` container using `./compose.sh`, build the `coug_ws` workspace, and launch the simulation stack using `./sim_launch.sh`.
   
     ```bash
     cd ~/coug_ws && colcon build --symlink-install
