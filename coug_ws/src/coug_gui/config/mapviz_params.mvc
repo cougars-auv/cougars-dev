@@ -28,6 +28,11 @@ displays:
           type: wmts
       bing_api_key: ""
       source: Google Maps
+  - type: coug_gui/coug_waypoints
+    name: new display
+    config:
+      visible: true
+      collapsed: false
   - type: mapviz_plugins/tf_frame
     name: new display
     config:
@@ -185,9 +190,3 @@ displays:
       qos_history: 1
       qos_reliability: 1
       qos_durability: 2
-  - type: coug_gui/coug_waypoints
-    name: new display
-    config:
-      visible: true
-      collapsed: false
-      waypoints_topic: /auv0/waypoints

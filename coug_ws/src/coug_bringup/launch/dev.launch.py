@@ -48,7 +48,16 @@ def launch_setup(context, *args, **kwargs):
     if bag_path_str:
         actions.append(
             ExecuteProcess(
-                cmd=["ros2", "bag", "record", "-a", "-o", bag_path_str],
+                cmd=[
+                    "ros2",
+                    "bag",
+                    "record",
+                    "-a",
+                    "-o",
+                    bag_path_str,
+                    "--storage",
+                    "mcap",
+                ],
             )
         )
 

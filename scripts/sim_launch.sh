@@ -69,7 +69,7 @@ if [ -n "$BAG_PATH" ]; then
     mv /tmp/temp_launch.log "$BAG_PATH/launch.log"
 
     mkdir -p "$BAG_PATH/config"
-    find ~/coug_ws/install -type f -path "*/config/*" -exec cp {} "$BAG_PATH/config/" \;
+    find -L ~/coug_ws/install -type f -path "*/config/*" -name "*.yaml" -exec cp {} "$BAG_PATH/config/" \;
 else
     ros2 launch coug_bringup dev.launch.py "${ARGS[@]}"
 fi
