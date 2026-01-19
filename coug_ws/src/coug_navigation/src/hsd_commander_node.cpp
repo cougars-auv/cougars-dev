@@ -64,6 +64,17 @@ HsdCommanderNode::HsdCommanderNode()
 
 void HsdCommanderNode::waypointCallback(const geometry_msgs::msg::PoseArray::SharedPtr msg)
 {
+  std::stringstream ss;
+  ss << "Received mission with " << msg->poses.size() << " waypoints: ";
+  for (size_t i = 0; i < msg->poses.size(); ++i) {
+    const auto & p = msg->poses[i].position;
+    ss << "[" << i << "]: (" << p.x << ", " << p.y << ", " << p.z << ")";
+    if (i < msg->poses.size() - 1) {
+      ss << " | ";
+    }
+  }
+  RCLCPP_INFO(get_logger(), "%s", ss.str().c_str());
+
   if (msg->poses.empty()) {
     stopMission();
     return;

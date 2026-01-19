@@ -65,8 +65,12 @@ fi
 printInfo "Launching simulation stack..."
 if [ -n "$BAG_PATH" ]; then
     printInfo "Recording to bag: $BAG_PATH"
-    ros2 launch coug_bringup dev.launch.py "${ARGS[@]}" 2>&1 | tee /tmp/temp_launch.log
-    mv /tmp/temp_launch.log "$BAG_PATH/launch.log"
+
+    TEMP_LOG_DIR=$(mktemp -d)
+    ROS_LOG_DIR="$TEMP_LOG_DIR" ros2 launch coug_bringup dev.launch.py "${ARGS[@]}"
+    if [ -d "$BAG_PATH" ] && [ -d "$TEMP_LOG_DIR" ]; then
+        mv "$TEMP_LOG_DIR" "$BAG_PATH/log"
+    fi
 
     mkdir -p "$BAG_PATH/config"
     find -L ~/coug_ws/install -type f -path "*/config/*" -name "*.yaml" -exec cp {} "$BAG_PATH/config/" \;
