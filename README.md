@@ -31,7 +31,7 @@ CoUGARs is a low-cost, configurable AUV platform designed for multi-agent autono
   git clone https://github.com/snelsondurrant/coug_fgo_dev.git
   ```
 
-- Enter the repository and run `./compose.sh` to pull the latest image from Docker Hub and launch a tmux window inside the `cougars-ct` container.
+- Enter the repository and run `./compose.sh` to pull the latest image from Docker Hub and launch the `coug_dev` tmux window inside the `cougars-ct` container.
 
   ```bash
   cd coug_fgo_dev && ./compose.sh
@@ -49,7 +49,7 @@ CoUGARs is a low-cost, configurable AUV platform designed for multi-agent autono
     cd coug_fgo_dev && ./holoocean/compose.sh
     ```
   
-  - Open a new terminal, attach to the `cougars-ct` tmux window using `./compose.sh`, build the `coug_ws` workspace, and launch the simulation stack using `./sim_launch.sh`.
+  - Open a new terminal, attach to the `coug_dev` tmux window using `./compose.sh`, build the `coug_ws` workspace, and launch the simulation stack using `./sim_launch.sh`.
   
     ```bash
     cd ~/coug_ws && colcon build --symlink-install
@@ -60,7 +60,7 @@ CoUGARs is a low-cost, configurable AUV platform designed for multi-agent autono
 
   - On your host machine, copy your `rosbag2` bag into the `bags` folder at the root of the repository.
 
-  - Inside of the `cougars-ct` tmux window, build the `coug_ws` workspace and launch the development stack using `./bag_launch.sh <bag_name>`. Provide the name of your bag as the script argument.
+  - Inside of the `coug_dev` tmux window, build the `coug_ws` workspace and launch the development stack using `./bag_launch.sh <bag_name>`. Provide the name of your bag as the script argument.
   
     ```bash
     cd ~/coug_ws && colcon build --symlink-install
