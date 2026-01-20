@@ -20,7 +20,7 @@ from holoocean_interfaces.msg import AgentCommand
 
 class CmdVelConverterNode(Node):
     """
-    Converts ROS2 cmd_vel commands to HoloOcean agent command messages.
+    Converts ROS 2 cmd_vel commands to HoloOcean agent command messages.
 
     TODO: Adjust scalars so the velocities actually kind of match.
 

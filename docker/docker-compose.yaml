@@ -50,6 +50,7 @@ services:
       - ../coug_ws:/home/frostlab-docker/coug_ws
       - ../scripts:/home/frostlab-docker/scripts
       - ./entrypoint.sh:/entrypoint.sh
+      - ./completions.sh:/completions.sh
       - ./introduction.txt:/introduction.txt
       - ./.tmux.conf:/home/frostlab-docker/.tmux.conf
       - /dev:/dev:rw

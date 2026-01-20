@@ -21,6 +21,20 @@ if [ "$TARGET_UID" != "$(id -u $USERNAME)" ]; then
     usermod -o -u "$TARGET_UID" $USERNAME
 fi
 
+# Set up environment sourcing
+if ! grep -q "source /opt/ros/humble/setup.bash" /home/$USERNAME/.bashrc; then
+    echo "" >> /home/$USERNAME/.bashrc
+    echo "# Source ROS 2 environment" >> /home/$USERNAME/.bashrc
+    echo "source /opt/ros/humble/setup.bash" >> /home/$USERNAME/.bashrc
+    echo "[ -f /home/$USERNAME/coug_ws/install/setup.bash ] && source /home/$USERNAME/coug_ws/install/setup.bash" >> /home/$USERNAME/.bashrc
+fi
+if ! grep -q "source /completions.sh" /home/$USERNAME/.bashrc; then
+    echo "" >> /home/$USERNAME/.bashrc
+    echo "# Script tab completions" >> /home/$USERNAME/.bashrc
+    echo "source /completions.sh" >> /home/$USERNAME/.bashrc
+fi
+touch /home/$USERNAME/.hushlogin
+
 chown -R $USERNAME:$USERNAME /home/$USERNAME
 
 exec gosu $USERNAME /bin/bash

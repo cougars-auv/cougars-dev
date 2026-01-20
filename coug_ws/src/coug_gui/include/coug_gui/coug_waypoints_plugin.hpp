@@ -48,7 +48,7 @@ namespace coug_gui
  *
  * This plugin supports:
  * - Geometric placement of waypoints on a map.
- * - Multi-agent support via ROS2 topic discovery.
+ * - Multi-agent support via ROS 2 topic discovery.
  * - Saving and loading mission plans to/from JSON.
  * - Modifying waypoint depth.
  * - Visualization of active and ghost (non-selected agent) paths.

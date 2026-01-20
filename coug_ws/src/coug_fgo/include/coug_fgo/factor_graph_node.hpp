@@ -14,7 +14,7 @@
 
 /**
  * @file factor_graph_node.hpp
- * @brief ROS2 node for factor graph optimization using GTSAM and fixed-lag smoothing.
+ * @brief ROS 2 node for factor graph optimization using GTSAM and fixed-lag smoothing.
  * @author Nelson Durrant
  * @date Jan 2026
  */
@@ -227,7 +227,7 @@ private:
 
   // --- Setup & Helpers ---
   /**
-   * @brief Loads ROS2 parameters into local structures.
+   * @brief Loads ROS 2 parameters into local structures.
    */
   void loadParameters();
   /**
@@ -545,11 +545,11 @@ private:
   /// Timer for the main factor graph optimization loop.
   rclcpp::TimerBase::SharedPtr factor_graph_timer_;
 
-  /// ROS2 TF transform broadcaster.
+  /// ROS 2 TF transform broadcaster.
   std::unique_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
-  /// ROS2 TF transform listener.
+  /// ROS 2 TF transform listener.
   std::shared_ptr<tf2_ros::TransformListener> tf_listener_{nullptr};
-  /// ROS2 TF buffer.
+  /// ROS 2 TF buffer.
   std::unique_ptr<tf2_ros::Buffer> tf_buffer_;
 
   // --- Parameters ---

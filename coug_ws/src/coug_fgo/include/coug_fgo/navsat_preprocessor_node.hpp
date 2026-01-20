@@ -14,7 +14,7 @@
 
 /**
  * @file navsat_preprocessor_node.hpp
- * @brief ROS2 node for preprocessing NavSatFix messages into ENU odometry.
+ * @brief ROS 2 node for preprocessing NavSatFix messages into ENU odometry.
  * @author Nelson Durrant
  * @date Jan 2026
  */

@@ -14,7 +14,7 @@
 
 /**
  * @file hsd_commander_node.hpp
- * @brief ROS2 node for HSD (Heading, Speed, Depth) command generation and waypoint navigation.
+ * @brief ROS 2 node for HSD (Heading, Speed, Depth) command generation and waypoint navigation.
  * @author Nelson Durrant
  * @date Jan 2026
  */

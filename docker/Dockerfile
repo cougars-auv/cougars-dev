@@ -66,9 +66,4 @@ RUN vcs import . < cougars.repos \
 
 WORKDIR /home/frostlab-docker
 
-# Set up automatic sourcing
-RUN echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc \
-    && echo "source /home/frostlab-docker/coug_ws/install/setup.bash" >> ~/.bashrc \
-    && touch ~/.hushlogin
-
 CMD ["bash"]

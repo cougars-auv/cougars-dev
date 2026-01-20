@@ -21,7 +21,7 @@ from std_msgs.msg import Header
 
 class HsdConverterNode(Node):
     """
-    Converts standard ROS2 command messages into HoloOcean desired command messages.
+    Converts standard ROS 2 command messages into HoloOcean desired command messages.
 
     :author: Nelson Durrant (w Gemini 3 Pro)
     :date: Jan 2026

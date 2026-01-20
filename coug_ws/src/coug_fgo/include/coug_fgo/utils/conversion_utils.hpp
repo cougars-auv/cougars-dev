@@ -14,7 +14,7 @@
 
 /**
  * @file conversion_utils.hpp
- * @brief Utility functions for converting between ROS2 and GTSAM data types.
+ * @brief Utility functions for converting between ROS 2 and GTSAM data types.
  * @author Nelson Durrant
  * @date Jan 2026
  */
