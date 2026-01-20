@@ -25,6 +25,7 @@
 #include <geodesy/utm.h>
 
 #include <string>
+#include <vector>
 
 #include <nav_msgs/msg/odometry.hpp>
 #include <rclcpp/rclcpp.hpp>

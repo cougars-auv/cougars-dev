@@ -31,7 +31,7 @@ fi
 if ! grep -q "source /completions.sh" /home/$USERNAME/.bashrc; then
     echo "" >> /home/$USERNAME/.bashrc
     echo "# Script tab completions" >> /home/$USERNAME/.bashrc
-    echo "source /completions.sh" >> /home/$USERNAME/.bashrc
+    echo "[ -f /completions.sh ] && source /completions.sh" >> /home/$USERNAME/.bashrc
 fi
 touch /home/$USERNAME/.hushlogin
 
