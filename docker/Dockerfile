@@ -70,7 +70,6 @@ USER root
 COPY docker/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-USER frostlab-docker
 WORKDIR /home/frostlab-docker
 
 ENTRYPOINT ["/entrypoint.sh"]
