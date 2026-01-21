@@ -7,14 +7,18 @@ repositories:
     type: git
     url: https://github.com/paagutie/dvl_msgs.git
     version: master
-  # pressure_sensor_ros2:
-  #   type: git
-  #   url: https://github.com/BYU-FRoSt-Lab/pressure_sensor_ros2.git
-  #   version: main
   # dvl-a50:
   #   type: git
   #   url: https://github.com/paagutie/dvl-a50.git
   #   version: master
+  # time_sync_utils:
+  #   type: git
+  #   url: https://github.com/BYU-FRoSt-Lab/time_sync_utils.git
+  #   version: main
+  # pressure_sensor_ros2:
+  #   type: git
+  #   url: https://github.com/BYU-FRoSt-Lab/pressure_sensor_ros2.git
+  #   version: main
   # seatrac-ros2
   #   type: git
   #   url: https://github.com/BYU-FRoSt-Lab/seatrac-ros2.git

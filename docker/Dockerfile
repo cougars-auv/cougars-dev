@@ -38,13 +38,13 @@ ENV ROS_BUILD_ARCH=$TARGETARCH
 USER root
 RUN apt update && apt install -y --no-install-recommends \
     # Helpful ROS GUI tools - Nelson Durrant, Jan 2026
-    ros-humble-rqt* ros-humble-plotjuggler-ros \
+    ros-${ROS_DISTRO}-rqt* ros-${ROS_DISTRO}-plotjuggler-ros \
     # Drive the AUV with a joystick or keyboard - Nelson Durrant, Jan 2026
-    ros-humble-joy ros-humble-teleop-twist-joy ros-humble-teleop-twist-keyboard ros-humble-topic-tools \
+    ros-${ROS_DISTRO}-joy ros-${ROS_DISTRO}-teleop-twist-joy ros-${ROS_DISTRO}-teleop-twist-keyboard \
     # Better rosbag2 storage format - Nelson Durrant, Jan 2026
-    ros-humble-rosbag2-storage-mcap \
-    # TODO: Add this to the coug_bringup deps
-    ros-humble-sbg-driver \
+    ros-${ROS_DISTRO}-rosbag2-storage-mcap \
+    # TODO: Add this to the sensor_bridge deps
+    ros-${ROS_DISTRO}-sbg-driver ros-${ROS_DISTRO}-ntrip-client \
     && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /home/frostlab-docker/coug_ws/src && chown -R frostlab-docker:frostlab-docker /home/frostlab-docker/coug_ws
