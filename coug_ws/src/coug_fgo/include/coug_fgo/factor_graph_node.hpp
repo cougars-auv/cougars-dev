@@ -100,6 +100,8 @@ public:
   {
     /// Enable/disable GPS factor processing.
     bool enable;
+    /// Enable/disable altitude (Z) data from GPS.
+    bool enable_altitude;
     /// If true, use the frame ID parameter below instead of the header frame.
     bool use_parameter_frame;
     /// The frame ID to use if use_parameter_frame is true.
@@ -158,6 +160,8 @@ public:
   {
     /// Enable/disable AHRS factor processing.
     bool enable;
+    /// Enable/disable roll and pitch data from AHRS sensor.
+    bool enable_roll_pitch;
     /// If true, use the frame ID parameter below instead of the header frame.
     bool use_parameter_frame;
     /// The frame ID to use if use_parameter_frame is true.

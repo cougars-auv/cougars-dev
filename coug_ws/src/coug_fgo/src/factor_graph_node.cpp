@@ -109,6 +109,7 @@ void FactorGraphNode::loadParameters()
   imu_params_.gravity = declare_parameter<std::vector<double>>("imu.gravity", {0.0, 0.0, -9.8});
 
   gps_params_.enable = declare_parameter<bool>("gps.enable_gps", false);
+  gps_params_.enable_altitude = declare_parameter<bool>("gps.enable_altitude", false);
   gps_params_.use_parameter_frame =
     declare_parameter<bool>("gps.use_parameter_frame", false);
   gps_params_.parameter_frame =
@@ -149,6 +150,7 @@ void FactorGraphNode::loadParameters()
   mag_params_.robust_k = declare_parameter<double>("mag.robust_k", 1.345);
 
   ahrs_params_.enable = declare_parameter<bool>("ahrs.enable_ahrs", false);
+  ahrs_params_.enable_roll_pitch = declare_parameter<bool>("ahrs.enable_roll_pitch", false);
   ahrs_params_.use_parameter_frame =
     declare_parameter<bool>("ahrs.use_parameter_frame", false);
   ahrs_params_.parameter_frame =
@@ -207,6 +209,14 @@ void FactorGraphNode::loadParameters()
   // --- Experimental Features ---
   experimental_params_.enable_dvl_preintegration =
     declare_parameter<bool>("experimental.enable_dvl_preintegration", false);
+
+  // --- Parameter Overrides ---
+  if (!gps_params_.enable_altitude) {
+    gps_params_.altitude_noise_sigma = 1e9;
+  }
+  if (!ahrs_params_.enable_roll_pitch) {
+    ahrs_params_.roll_pitch_noise_sigma = 1e9;
+  }
 }
 
 void FactorGraphNode::setupRosInterfaces()
