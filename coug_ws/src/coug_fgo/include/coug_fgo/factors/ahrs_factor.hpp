@@ -46,6 +46,8 @@ class AhrsFactor : public gtsam::NoiseModelFactor1<gtsam::Pose3>
   gtsam::Rot3 measured_rot_sensor_;
   /// Body-to-sensor rotation.
   gtsam::Rot3 R_base_sensor_;
+  /// Magnetic declination [rad].
+  double mag_declination_;
 
 public:
   /**
@@ -53,14 +55,17 @@ public:
    * @param poseKey GTSAM key for the AUV pose.
    * @param measured_rot_sensor The measured orientation of the sensor in the world frame.
    * @param R_base_sensor The static rotation from base to sensor.
+   * @param mag_declination Magnetic declination to add to the measurement [rad].
    * @param model The noise model for the measurement.
    */
   AhrsFactor(
     gtsam::Key poseKey, const gtsam::Rot3 & measured_rot_sensor,
-    const gtsam::Rot3 & R_base_sensor, const gtsam::SharedNoiseModel & model)
+    const gtsam::Rot3 & R_base_sensor, double mag_declination,
+    const gtsam::SharedNoiseModel & model)
   : NoiseModelFactor1<gtsam::Pose3>(model, poseKey),
     measured_rot_sensor_(measured_rot_sensor),
-    R_base_sensor_(R_base_sensor) {}
+    R_base_sensor_(R_base_sensor),
+    mag_declination_(mag_declination) {}
 
   /**
    * @brief Evaluates the error and Jacobians for the factor.
@@ -72,8 +77,12 @@ public:
     const gtsam::Pose3 & pose,
     boost::optional<gtsam::Matrix &> H = boost::none) const override
   {
+    // Apply magnetic declination: R_true = R_decl * R_meas
+    gtsam::Rot3 R_decl = gtsam::Rot3::Yaw(mag_declination_);
+    gtsam::Rot3 measured_rot_sensor_true = R_decl * measured_rot_sensor_;
+
     // Predict the base-frame rotation from the measurement
-    gtsam::Rot3 measured_rot_base = measured_rot_sensor_ * R_base_sensor_.inverse();
+    gtsam::Rot3 measured_rot_base = measured_rot_sensor_true * R_base_sensor_.inverse();
 
     // Relative rotation error
     gtsam::Rot3 error_rot = measured_rot_base.inverse() * pose.rotation();

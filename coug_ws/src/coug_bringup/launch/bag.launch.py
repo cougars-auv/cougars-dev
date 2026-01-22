@@ -24,7 +24,6 @@ from launch.actions import (
     RegisterEventHandler,
     EmitEvent,
     LogInfo,
-    TimerAction,
 )
 from launch.event_handlers import OnProcessExit
 from launch.events import Shutdown
@@ -177,7 +176,9 @@ def generate_launch_description():
             DeclareLaunchArgument(
                 "start_delay",
                 default_value="0.0",
-                description="Time in seconds to skip from the beginning of the bag file (start offset)",
+                description=(
+                    "Time in seconds to skip from the beginning of the bag file (start offset)"
+                ),
             ),
             DeclareLaunchArgument(
                 "urdf_file",

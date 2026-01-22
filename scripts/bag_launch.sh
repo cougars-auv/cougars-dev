@@ -39,13 +39,25 @@ while getopts ":cd:r:" opt; do
             COMPARE="true"
             ;;
         d)
+            if [[ "$OPTARG" == -* ]]; then
+                printError "Option -d requires an argument." >&2
+                exit 1
+            fi
             DELAY="$OPTARG"
             ;;
         r)
+            if [[ "$OPTARG" == -* ]]; then
+                printError "Option -r requires an argument." >&2
+                exit 1
+            fi
             RECORD_BAG_PATH="$HOME/bags/$OPTARG"
             ;;
         \?)
             printError "Invalid option: -$OPTARG" >&2
+            exit 1
+            ;;
+        :)
+            printError "Option -$OPTARG requires an argument." >&2
             exit 1
             ;;
     esac

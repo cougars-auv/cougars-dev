@@ -33,6 +33,10 @@ while getopts ":bcmr:" opt; do
             AGENTS=3
             ;;
         r)
+            if [[ "$OPTARG" == -* ]]; then
+                printError "Option -r requires an argument." >&2
+                exit 1
+            fi
             BAG_PATH="$HOME/bags/$OPTARG"
             ;;
         \?)

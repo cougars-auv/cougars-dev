@@ -146,18 +146,18 @@ public:
     bool use_parameter_covariance;
     /// Magnetic field noise sigma.
     double magnetic_field_noise_sigma;
+    /// Reference magnetic field vector (world frame).
+    std::vector<double> reference_field;
     /// Type of robust cost function.
     std::string robust_kernel;
     /// Threshold for the robust kernel.
     double robust_k;
-    /// Reference magnetic field vector (world frame).
-    std::vector<double> reference_field;
   };
 
   struct AhrsParams
   {
     /// Enable/disable AHRS factor processing.
-    bool enable_ahrs;
+    bool enable;
     /// If true, use the frame ID parameter below instead of the header frame.
     bool use_parameter_frame;
     /// The frame ID to use if use_parameter_frame is true.
@@ -168,6 +168,8 @@ public:
     double yaw_noise_sigma;
     /// Roll/Pitch noise sigma [rad] (can be set high to ignore).
     double roll_pitch_noise_sigma;
+    /// Magnetic declination to add to the AHRS yaw [rad].
+    double mag_declination_radians;
     /// Type of robust cost function.
     std::string robust_kernel;
     /// Threshold for the robust kernel.

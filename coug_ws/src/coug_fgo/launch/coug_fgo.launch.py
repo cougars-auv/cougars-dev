@@ -44,15 +44,15 @@ def generate_launch_description():
         ]
     )
 
-    imu_link_frame = PythonExpression(
-        [
-            "'",
-            auv_ns,
-            "/imu_link' if '",
-            auv_ns,
-            "' != '' else 'imu_link'",
-        ]
-    )
+    # imu_link_frame = PythonExpression(
+    #     [
+    #         "'",
+    #         auv_ns,
+    #         "/imu_link' if '",
+    #         auv_ns,
+    #         "' != '' else 'imu_link'",
+    #     ]
+    # )
 
     # dvl_link_frame = PythonExpression(
     #     [
@@ -74,25 +74,25 @@ def generate_launch_description():
     #     ]
     # )
 
-    com_link_frame = PythonExpression(
-        [
-            "'",
-            auv_ns,
-            "/com_link' if '",
-            auv_ns,
-            "' != '' else 'com_link'",
-        ]
-    )
+    # com_link_frame = PythonExpression(
+    #     [
+    #         "'",
+    #         auv_ns,
+    #         "/com_link' if '",
+    #         auv_ns,
+    #         "' != '' else 'com_link'",
+    #     ]
+    # )
 
-    modem_link_frame = PythonExpression(
-        [
-            "'",
-            auv_ns,
-            "/modem_link' if '",
-            auv_ns,
-            "' != '' else 'modem_link'",
-        ]
-    )
+    # modem_link_frame = PythonExpression(
+    #     [
+    #         "'",
+    #         auv_ns,
+    #         "/modem_link' if '",
+    #         auv_ns,
+    #         "' != '' else 'modem_link'",
+    #     ]
+    # )
 
     return LaunchDescription(
         [
@@ -132,9 +132,9 @@ def generate_launch_description():
                         # "imu.parameter_frame": imu_link_frame,
                         # "dvl.parameter_frame": dvl_link_frame,
                         # "depth.parameter_frame": depth_link_frame,
-                        "gps.parameter_frame": com_link_frame,
-                        "mag.parameter_frame": imu_link_frame,
-                        "ahrs.parameter_frame": modem_link_frame,
+                        # "gps.parameter_frame": com_link_frame,
+                        # "mag.parameter_frame": imu_link_frame,
+                        # "ahrs.parameter_frame": modem_link_frame,
                     },
                 ],
             ),
@@ -154,9 +154,9 @@ def generate_launch_description():
                         # "imu.parameter_frame": imu_link_frame,
                         # "dvl.parameter_frame": dvl_link_frame,
                         # "depth.parameter_frame": depth_link_frame,
-                        "gps.parameter_frame": com_link_frame,
-                        "mag.parameter_frame": imu_link_frame,
-                        "ahrs.parameter_frame": modem_link_frame,
+                        # "gps.parameter_frame": com_link_frame,
+                        # "mag.parameter_frame": imu_link_frame,
+                        # "ahrs.parameter_frame": modem_link_frame,
                         "global_odom_topic": "odometry/global_tm",
                         "smoothed_path_topic": "smoothed_path_tm",
                         "publish_global_tf": False,

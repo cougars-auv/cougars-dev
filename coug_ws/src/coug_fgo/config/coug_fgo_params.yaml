@@ -76,7 +76,8 @@
       use_parameter_covariance: false
       parameter_covariance:
         magnetic_field_noise_sigma: 0.003 # [normalized] Magnetic field uncertainty sigma.
-      # Normalized Magnetic Field Vector (Local Earth Field)
+      # https://www.ngdc.noaa.gov/geomag/calculators/magcalc.shtml#igrfwmm
+      # Reference Magnetic Field Vector (Local Earth Field)
       # Provo, Utah (X=20,843.1 nT, Y=3,894.9 nT, Z=45,873.1 nT, F=50,536.6 nT)
       reference_field: [0.41, 0.08, 0.91] # [normalized]
       robust_kernel: "None"
@@ -89,6 +90,8 @@
       parameter_covariance:
         yaw_noise_sigma: 0.01745 # [rad] AHRS sensor yaw uncertainty sigma.
         roll_pitch_noise_sigma: 1e9 # [rad] AHRS sensor roll and pitch uncertainty sigma.
+      # https://www.ngdc.noaa.gov/geomag/calculators/magcalc.shtml#declination
+      mag_declination_radians: 0.0
       robust_kernel: "None"
       robust_k: 1.345
 
@@ -166,11 +169,14 @@
 /bluerov2/**:
   ros__parameters:
     gps_odom_topic: "odometry/truth"
-
-    ahrs:
-      enable_ahrs: false
+    ahrs_topic: "imu/data"
 
     imu:
+      use_parameter_frame: true
+      parameter_frame: "bluerov2/imu_link"
+
+    gps:
+      # enable_gps: true
       use_parameter_frame: true
       parameter_frame: "bluerov2/imu_link"
 
@@ -178,9 +184,17 @@
       use_parameter_frame: true
       parameter_frame: "bluerov2/imu_link"
 
+    ahrs:
+      enable_ahrs: true
+      use_parameter_frame: true
+      parameter_frame: "bluerov2/imu_link"
+      mag_declination_radians: 0.1876
+
     dvl:
       use_parameter_frame: true
       parameter_frame: "bluerov2/dvl_link"
+
+    initialization_duration: 0.0
 
     odom_output_topic: "odometry/truth"
     use_parameter_origin: false

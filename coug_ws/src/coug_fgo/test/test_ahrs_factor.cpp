@@ -43,7 +43,7 @@ TEST(AhrsFactorTest, ErrorEvaluation) {
 
   // Case 1: Identity alignment
   coug_fgo::factors::AhrsFactor factor1(poseKey, gtsam::Rot3::Identity(),
-    gtsam::Rot3::Identity(), model);
+    gtsam::Rot3::Identity(), 0.0, model);
   EXPECT_TRUE(
     gtsam::assert_equal(
       gtsam::Vector3::Zero(),
@@ -51,7 +51,7 @@ TEST(AhrsFactorTest, ErrorEvaluation) {
 
   // Case 2: Mounting Rotation (Sensor rotated 90 deg wrt Base)
   coug_fgo::factors::AhrsFactor factor2(poseKey, gtsam::Rot3::Yaw(M_PI_2),
-    gtsam::Rot3::Yaw(M_PI_2), model);
+    gtsam::Rot3::Yaw(M_PI_2), 0.0, model);
   EXPECT_TRUE(
     gtsam::assert_equal(
       gtsam::Vector3::Zero(),
@@ -72,7 +72,7 @@ TEST(AhrsFactorTest, ErrorEvaluation) {
 TEST(AhrsFactorTest, Jacobians) {
   coug_fgo::factors::AhrsFactor factor(gtsam::symbol_shorthand::X(1),
     gtsam::Rot3::Ypr(0.5, 0.1, -0.1),
-    gtsam::Rot3::Ypr(0.1, 0, 0), gtsam::noiseModel::Isotropic::Sigma(3, 0.1));
+    gtsam::Rot3::Ypr(0.1, 0, 0), 0.0, gtsam::noiseModel::Isotropic::Sigma(3, 0.1));
   gtsam::Pose3 pose = gtsam::Pose3(gtsam::Rot3::Ypr(0.4, 0.05, -0.05), gtsam::Point3(1, 1, 1));
 
   gtsam::Matrix expectedH = gtsam::numericalDerivative11<gtsam::Vector, gtsam::Pose3>(

@@ -148,7 +148,7 @@ void FactorGraphNode::loadParameters()
   mag_params_.robust_kernel = declare_parameter<std::string>("mag.robust_kernel", "None");
   mag_params_.robust_k = declare_parameter<double>("mag.robust_k", 1.345);
 
-  ahrs_params_.enable_ahrs = declare_parameter<bool>("ahrs.enable_ahrs", false);
+  ahrs_params_.enable = declare_parameter<bool>("ahrs.enable_ahrs", false);
   ahrs_params_.use_parameter_frame =
     declare_parameter<bool>("ahrs.use_parameter_frame", false);
   ahrs_params_.parameter_frame =
@@ -159,6 +159,8 @@ void FactorGraphNode::loadParameters()
     declare_parameter<double>("ahrs.parameter_covariance.yaw_noise_sigma", 0.01745);
   ahrs_params_.roll_pitch_noise_sigma =
     declare_parameter<double>("ahrs.parameter_covariance.roll_pitch_noise_sigma", 0.00349);
+  ahrs_params_.mag_declination_radians =
+    declare_parameter<double>("ahrs.mag_declination_radians", 0.0);
   ahrs_params_.robust_kernel = declare_parameter<std::string>("ahrs.robust_kernel", "None");
   ahrs_params_.robust_k = declare_parameter<double>("ahrs.robust_k", 1.345);
 
@@ -369,7 +371,7 @@ bool FactorGraphNode::lookupInitialTransforms()
       mag_to_dvl_tf_ = lookup(dvl_frame_, child_frame);
       have_mag_to_dvl_tf_ = true;
     }
-    if (ahrs_params_.enable_ahrs && !have_ahrs_to_dvl_tf_) {
+    if (ahrs_params_.enable && !have_ahrs_to_dvl_tf_) {
       std::string child_frame = ahrs_params_.use_parameter_frame ?
         ahrs_params_.parameter_frame : initial_ahrs_->header.frame_id;
       ahrs_to_dvl_tf_ = lookup(dvl_frame_, child_frame);
@@ -513,7 +515,7 @@ FactorGraphNode::AveragedMeasurements FactorGraphNode::computeAveragedMeasuremen
   }
 
   // Average AHRS
-  if (ahrs_params_.enable_ahrs) {
+  if (ahrs_params_.enable) {
     result.ahrs = std::make_shared<sensor_msgs::msg::Imu>(*ahrs_msgs.back());
     gtsam::Rot3 R_ref = toGtsam(ahrs_msgs.front()->orientation);
     gtsam::Vector3 log_sum = gtsam::Vector3::Zero();
@@ -555,13 +557,13 @@ gtsam::Rot3 FactorGraphNode::computeInitialOrientation()
       accel_base.y() * accel_base.y() +
       accel_base.z() * accel_base.z()));
 
-  if (ahrs_params_.enable_ahrs) {
+  if (ahrs_params_.enable) {
     // Account for AHRS sensor rotation
     gtsam::Rot3 R_dvl_sensor = toGtsam(ahrs_to_dvl_tf_.transform.rotation);
     gtsam::Rot3 R_base_sensor = R_base_dvl * R_dvl_sensor;
     gtsam::Rot3 R_world_sensor = toGtsam(initial_ahrs_->orientation);
     gtsam::Rot3 R_world_base_measured = R_world_sensor * R_base_sensor.inverse();
-    yaw = R_world_base_measured.yaw();
+    yaw = R_world_base_measured.yaw() + ahrs_params_.mag_declination_radians;
   } else if (mag_params_.enable) {
     // Account for magnetometer rotation
     gtsam::Rot3 R_dvl_sensor = toGtsam(mag_to_dvl_tf_.transform.rotation);
@@ -669,7 +671,7 @@ void FactorGraphNode::addPriorFactors(gtsam::NonlinearFactorGraph & graph, gtsam
       depth_params_.position_z_noise_sigma :
       std::sqrt(initial_depth_->pose.covariance[14]);
 
-    if (ahrs_params_.enable_ahrs) {
+    if (ahrs_params_.enable) {
       prior_pose_sigmas(2) = ahrs_params_.use_parameter_covariance ?
         ahrs_params_.yaw_noise_sigma :
         std::sqrt(initial_ahrs_->orientation_covariance[8]);
@@ -737,7 +739,7 @@ void FactorGraphNode::initializeGraph()
 
     if (!imu_queue_.empty() && (!gps_params_.enable || !gps_queue_.empty()) &&
       !depth_queue_.empty() && (!mag_params_.enable || !mag_queue_.empty()) &&
-      (!ahrs_params_.enable_ahrs || !ahrs_queue_.empty()) && !dvl_queue_.empty())
+      (!ahrs_params_.enable || !ahrs_queue_.empty()) && !dvl_queue_.empty())
     {
       if (prior_params_.use_parameter_priors) {
         RCLCPP_INFO(
@@ -747,7 +749,7 @@ void FactorGraphNode::initializeGraph()
         if (gps_params_.enable) {initial_gps_ = gps_queue_.back();}
         initial_depth_ = depth_queue_.back();
         if (mag_params_.enable) {initial_mag_ = mag_queue_.back();}
-        if (ahrs_params_.enable_ahrs) {initial_ahrs_ = ahrs_queue_.back();}
+        if (ahrs_params_.enable) {initial_ahrs_ = ahrs_queue_.back();}
         initial_dvl_ = dvl_queue_.back();
         data_averaged_ = true;
       } else {
@@ -761,7 +763,7 @@ void FactorGraphNode::initializeGraph()
         imu_queue_.empty() ? "[IMU] " : "",
         (gps_params_.enable && gps_queue_.empty()) ? "[GPS] " : "",
         (mag_params_.enable && mag_queue_.empty()) ? "[Magnetometer] " : "",
-        (ahrs_params_.enable_ahrs && ahrs_queue_.empty()) ? "[AHRS] " : "",
+        (ahrs_params_.enable && ahrs_queue_.empty()) ? "[AHRS] " : "",
         depth_queue_.empty() ? "[Depth] " : "", dvl_queue_.empty() ? "[DVL]" : "");
       return;
     }
@@ -947,7 +949,9 @@ void FactorGraphNode::addAhrsFactor(
 
   graph.emplace_shared<AhrsFactor>(
     X(current_step_), toGtsam(ahrs_msg->orientation),
-    toGtsam(ahrs_to_dvl_tf_.transform.rotation), ahrs_noise);
+    toGtsam(ahrs_to_dvl_tf_.transform.rotation),
+    ahrs_params_.mag_declination_radians,
+    ahrs_noise);
 }
 
 void FactorGraphNode::addMagFactor(
@@ -1070,7 +1074,7 @@ void FactorGraphNode::addPreintegratedImuFactor(
 
     if (current_imu_time <= last_imu_time) {
       RCLCPP_WARN_THROTTLE(
-        get_logger(), *get_clock(), 1000, "IMU message older than last integrated time. Skipping.");
+        get_logger(), *get_clock(), 5000, "IMU message older than last integrated time. Skipping.");
       continue;
     }
 
@@ -1170,7 +1174,7 @@ void FactorGraphNode::addPreintegratedDvlFactor(
 
     if (current_dvl_time <= last_dvl_time) {
       RCLCPP_WARN_THROTTLE(
-        get_logger(), *get_clock(), 1000, "DVL message older than last integrated time. Skipping.");
+        get_logger(), *get_clock(), 5000, "DVL message older than last integrated time. Skipping.");
       continue;
     }
 
@@ -1437,7 +1441,7 @@ void FactorGraphNode::optimizeGraph()
   if (gps_params_.enable) {addGpsFactor(new_graph, gps_msgs);}
   addDepthFactor(new_graph, depth_msgs);
   if (mag_params_.enable) {addMagFactor(new_graph, mag_msgs);}
-  if (ahrs_params_.enable_ahrs) {addAhrsFactor(new_graph, ahrs_msgs);}
+  if (ahrs_params_.enable) {addAhrsFactor(new_graph, ahrs_msgs);}
 
   if (experimental_params_.enable_dvl_preintegration) {
     addPreintegratedDvlFactor(new_graph, dvl_msgs, imu_msgs, target_time);
