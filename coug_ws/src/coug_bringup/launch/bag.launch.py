@@ -50,8 +50,7 @@ def launch_setup(context, *args, **kwargs):
     coug_bringup_dir = get_package_share_directory("coug_bringup")
     coug_bringup_launch_dir = os.path.join(coug_bringup_dir, "launch")
 
-    immediate_actions = []
-    delayed_actions = []
+    actions = []
 
     if play_bag_path_str:
         play_process = ExecuteProcess(
@@ -61,6 +60,8 @@ def launch_setup(context, *args, **kwargs):
                 "play",
                 play_bag_path_str,
                 "--clock",
+                "--start-offset",
+                start_delay,
                 "--remap",
                 "/tf:=/tf_discard",
                 "/tf_static:=/tf_static_discard",
@@ -71,9 +72,9 @@ def launch_setup(context, *args, **kwargs):
                 "/shallow/depth_data:=/bluerov2/odometry/depth",
             ],
         )
-        immediate_actions.append(play_process)
+        actions.append(play_process)
 
-        immediate_actions.append(
+        actions.append(
             RegisterEventHandler(
                 event_handler=OnProcessExit(
                     target_action=play_process,
@@ -86,7 +87,7 @@ def launch_setup(context, *args, **kwargs):
         )
 
         # TODO: Remove this when BlueROV TF is fixed
-        delayed_actions.append(
+        actions.append(
             Node(
                 package="tf2_ros",
                 executable="static_transform_publisher",
@@ -114,7 +115,7 @@ def launch_setup(context, *args, **kwargs):
         )
 
     if record_bag_path_str:
-        immediate_actions.append(
+        actions.append(
             ExecuteProcess(
                 cmd=[
                     "ros2",
@@ -129,7 +130,7 @@ def launch_setup(context, *args, **kwargs):
             )
         )
 
-    delayed_actions.append(
+    actions.append(
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
                 os.path.join(coug_bringup_launch_dir, "base.launch.py")
@@ -160,11 +161,9 @@ def launch_setup(context, *args, **kwargs):
         auv_launch,
     ]
 
-    delayed_actions.append(GroupAction(actions=agent_actions))
+    actions.append(GroupAction(actions=agent_actions))
 
-    immediate_actions.append(TimerAction(period=start_delay, actions=delayed_actions))
-
-    return immediate_actions
+    return actions
 
 
 def generate_launch_description():
@@ -178,7 +177,7 @@ def generate_launch_description():
             DeclareLaunchArgument(
                 "start_delay",
                 default_value="0.0",
-                description="Delay in seconds before starting the processing nodes",
+                description="Time in seconds to skip from the beginning of the bag file (start offset)",
             ),
             DeclareLaunchArgument(
                 "urdf_file",

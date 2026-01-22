@@ -9,7 +9,7 @@
 # Arguments:
 #   <bag_name>: Name of the rosbag to play (required)
 #   -c: Launch alternative localization methods for comparison
-#   -d <seconds>: Delay before starting nodes (default: 5.0)
+#   -d <seconds>: Start offset in seconds (default: 0.0)
 #   -r <bag_name>: Record a rosbag to ~/bags/<bag_name>
 
 SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
