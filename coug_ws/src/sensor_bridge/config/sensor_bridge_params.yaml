@@ -1,0 +1,15 @@
+/**:
+  dvl_twist_converter_node:
+    ros__parameters:
+      input_topic: "dvl/data"
+      output_topic: "dvl/twist"
+    
+  dvl_odom_converter_node:
+    ros__parameters:
+      input_topic: "dvl/position"
+      output_topic: "odometry/dvl"
+    
+  gps_odom_converter_node:
+    ros__parameters:
+      input_topic: "odometry/gps"
+      output_topic: "odometry/truth"

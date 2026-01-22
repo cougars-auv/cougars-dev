@@ -170,7 +170,6 @@
 
 /bluerov2/**:
   ros__parameters:
-    gps_odom_topic: "odometry/truth"
     ahrs_topic: "imu/data"
 
     imu:
@@ -197,6 +196,4 @@
       parameter_frame: "bluerov2/dvl_link"
 
     initialization_duration: 0.0
-
-    odom_output_topic: "odometry/truth"
     use_parameter_origin: false

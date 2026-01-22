@@ -52,7 +52,7 @@ class CmdVelConverterNode(Node):
         )
         self.publisher = self.create_publisher(AgentCommand, output_topic, 10)
         self.get_logger().info(
-            f"Cmd_vel converter started. Listening on {input_topic} and "
+            f"Cmd Vel converter started. Listening on {input_topic} and "
             f"publishing on {output_topic}."
         )
 

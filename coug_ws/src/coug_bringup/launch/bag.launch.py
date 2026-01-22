@@ -48,6 +48,7 @@ def launch_setup(context, *args, **kwargs):
 
     coug_bringup_dir = get_package_share_directory("coug_bringup")
     coug_bringup_launch_dir = os.path.join(coug_bringup_dir, "launch")
+    sensor_bridge_dir = get_package_share_directory("sensor_bridge")
 
     actions = []
 
@@ -67,8 +68,9 @@ def launch_setup(context, *args, **kwargs):
                 "/imu/nav_sat_fix:=/bluerov2/gps/fix",
                 "/imu/data:=/bluerov2/imu/data",
                 "/imu/mag:=/bluerov2/imu/mag",
-                "/dvl/twist:=/bluerov2/dvl/twist",
                 "/shallow/depth_data:=/bluerov2/odometry/depth",
+                "/dvl/data:=/bluerov2/dvl/data",
+                "/dvl/position:=/bluerov2/dvl/position",
             ],
         )
         actions.append(play_process)
@@ -82,34 +84,6 @@ def launch_setup(context, *args, **kwargs):
                         EmitEvent(event=Shutdown(reason="Bag playback finished")),
                     ],
                 )
-            )
-        )
-
-        # TODO: Remove this when BlueROV TF is fixed
-        actions.append(
-            Node(
-                package="tf2_ros",
-                executable="static_transform_publisher",
-                name="static_transform",
-                arguments=[
-                    "--x",
-                    "0",
-                    "--y",
-                    "0",
-                    "--z",
-                    "0",
-                    "--yaw",
-                    "0",
-                    "--pitch",
-                    "0",
-                    "--roll",
-                    "0",
-                    "--frame-id",
-                    "map",
-                    "--child-frame-id",
-                    "odom",
-                ],
-                parameters=[{"use_sim_time": use_sim_time}],
             )
         )
 
@@ -155,9 +129,20 @@ def launch_setup(context, *args, **kwargs):
         }.items(),
     )
 
+    sensor_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(sensor_bridge_dir, "launch", "sensor_bridge.launch.py")
+        ),
+        launch_arguments={
+            "use_sim_time": use_sim_time,
+            "auv_ns": auv_ns,
+        }.items(),
+    )
+
     agent_actions = [
         PushRosNamespace(auv_ns),
         auv_launch,
+        sensor_launch,
     ]
 
     actions.append(GroupAction(actions=agent_actions))
