@@ -195,7 +195,7 @@ displays:
     config:
       visible: true
       collapsed: true
-      topic: /dvl/odometry
+      topic: /bluerov2/odometry/dvl
       color: "#aa00ff"
       draw_style: lines
       position_tolerance: 0

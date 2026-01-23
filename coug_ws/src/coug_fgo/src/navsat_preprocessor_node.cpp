@@ -46,6 +46,10 @@ NavsatPreprocessorNode::NavsatPreprocessorNode()
   initialization_duration_ = declare_parameter<double>("initialization_duration", 10.0);
   map_frame_ = declare_parameter<std::string>("map_frame", "map");
 
+  use_parameter_child_frame_ = declare_parameter<bool>("use_parameter_child_frame", false);
+  parameter_child_frame_ =
+    declare_parameter<std::string>("parameter_child_frame", "gps_link");
+
   bool use_parameter_origin = declare_parameter<bool>("use_parameter_origin", false);
   double parameter_origin_lat = declare_parameter<double>("parameter_origin.latitude", 40.33940);
   double parameter_origin_lon =
@@ -199,7 +203,12 @@ void NavsatPreprocessorNode::navsatCallback(const sensor_msgs::msg::NavSatFix::S
   nav_msgs::msg::Odometry odom_msg;
   odom_msg.header.stamp = msg->header.stamp;
   odom_msg.header.frame_id = map_frame_;
-  odom_msg.child_frame_id = msg->header.frame_id;
+
+  if (use_parameter_child_frame_) {
+    odom_msg.child_frame_id = parameter_child_frame_;
+  } else {
+    odom_msg.child_frame_id = msg->header.frame_id;
+  }
 
   if (convertToEnu(msg, odom_msg)) {
     odom_pub_->publish(odom_msg);

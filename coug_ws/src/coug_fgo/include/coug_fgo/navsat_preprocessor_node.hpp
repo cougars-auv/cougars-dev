@@ -107,6 +107,10 @@ private:
   bool set_origin_;
   /// The local ENU map frame ID.
   std::string map_frame_;
+  /// Whether to use the parameter child frame or the one from the NavSatFix message.
+  bool use_parameter_child_frame_;
+  /// The child frame ID to use if use_parameter_child_frame_ is true.
+  std::string parameter_child_frame_;
   /// Duration to average GPS measurements before setting origin.
   double initialization_duration_;
 };

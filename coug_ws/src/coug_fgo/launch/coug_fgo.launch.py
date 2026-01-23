@@ -44,6 +44,16 @@ def generate_launch_description():
         ]
     )
 
+    # gps_link_frame = PythonExpression(
+    #     [
+    #         "'",
+    #         auv_ns,
+    #         "/gps_link' if '",
+    #         auv_ns,
+    #         "' != '' else 'gps_link'",
+    #     ]
+    # )
+
     # imu_link_frame = PythonExpression(
     #     [
     #         "'",
@@ -174,6 +184,7 @@ def generate_launch_description():
                         "use_sim_time": use_sim_time,
                         "map_frame": "map",
                         "set_origin": set_origin,
+                        # "parameter_child_frame": gps_link_frame,
                     },
                 ],
             ),
