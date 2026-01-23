@@ -11,7 +11,7 @@ from evo.tools.settings import SETTINGS
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-ALGORITHMS = ["FGO", "TM", "EKF", "UKF", "IEKF"]
+ALGORITHMS = ["FGO", "TM", "EKF", "UKF", "IEKF", "DVL"]
 
 COLORS = {
     "FGO": "#4C72B0",
@@ -19,6 +19,7 @@ COLORS = {
     "EKF": "#55A868",
     "UKF": "#C44E52",
     "IEKF": "#8172B2",
+    "DVL": "#FFC107",
     "Truth": "black",
 }
 
@@ -28,6 +29,7 @@ NAME_MAPPING = {
     "ekf": "EKF",
     "ukf": "UKF",
     "iekf": "IEKF",
+    "dvl": "DVL",
 }
 
 SETTINGS.plot_figsize = [3.5, 3.0]
@@ -193,7 +195,7 @@ def main():
             continue
 
         for agent_dir in evo_dir.iterdir():
-            if agent_dir.is_dir() and agent_dir.name.startswith("auv"):
+            if agent_dir.is_dir():
                 plot_auv(str(agent_dir), str(bag_dir), agent_dir.name)
 
     print("Done.")
