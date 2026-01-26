@@ -25,8 +25,10 @@ from launch.actions import (
     EmitEvent,
     LogInfo,
 )
+import signal
 from launch.event_handlers import OnProcessExit
-from launch.events import Shutdown
+from launch.events import matches_action
+from launch.events.process import SignalProcess
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import PushRosNamespace
@@ -52,6 +54,23 @@ def launch_setup(context, *args, **kwargs):
 
     actions = []
 
+    record_process = None
+
+    if record_bag_path_str:
+        record_process = ExecuteProcess(
+            cmd=[
+                "ros2",
+                "bag",
+                "record",
+                "-a",
+                "-o",
+                record_bag_path_str,
+                "--storage",
+                "mcap",
+            ],
+        )
+        actions.append(record_process)
+
     if play_bag_path_str:
         play_process = ExecuteProcess(
             cmd=[
@@ -75,31 +94,24 @@ def launch_setup(context, *args, **kwargs):
         )
         actions.append(play_process)
 
+        exit_event = LogInfo(msg="Bag playback finished, no recording to kill...")
+        if record_process is not None:
+            exit_event = [
+                LogInfo(msg="Bag playback finished, killing recording..."),
+                EmitEvent(
+                    event=SignalProcess(
+                        signal_number=signal.SIGINT,
+                        process_matcher=matches_action(record_process),
+                    )
+                ),
+            ]
+
         actions.append(
             RegisterEventHandler(
                 event_handler=OnProcessExit(
                     target_action=play_process,
-                    on_exit=[
-                        LogInfo(msg="Bag playback finished, shutting down..."),
-                        EmitEvent(event=Shutdown(reason="Bag playback finished")),
-                    ],
+                    on_exit=exit_event,
                 )
-            )
-        )
-
-    if record_bag_path_str:
-        actions.append(
-            ExecuteProcess(
-                cmd=[
-                    "ros2",
-                    "bag",
-                    "record",
-                    "-a",
-                    "-o",
-                    record_bag_path_str,
-                    "--storage",
-                    "mcap",
-                ],
             )
         )
 
