@@ -233,6 +233,9 @@
   <plugin ID="ROS2 Topic Re-Publisher"/>
  </Plugins>
  <!-- - - - - - - - - - - - - - - -->
+ <previouslyLoaded_Datafiles/>
+ <previouslyLoaded_Streamer name="ROS2 Topic Subscriber"/>
+ <!-- - - - - - - - - - - - - - - -->
  <customMathEquations/>
  <snippets/>
  <!-- - - - - - - - - - - - - - - -->
