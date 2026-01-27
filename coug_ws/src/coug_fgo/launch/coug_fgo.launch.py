@@ -192,7 +192,7 @@ def generate_launch_description():
             Node(
                 package="tf2_ros",
                 executable="static_transform_publisher",
-                name="static_transform",
+                name="odom_to_base_transform",
                 arguments=[
                     "--x",
                     "0",

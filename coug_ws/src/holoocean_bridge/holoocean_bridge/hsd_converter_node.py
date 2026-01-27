@@ -62,7 +62,6 @@ class HsdConverterNode(Node):
             self.get_parameter("agent_name").get_parameter_value().string_value
         )
 
-        # Publishers to HoloOcean
         self.output_heading_pub = self.create_publisher(
             DesiredCommand, self.output_heading_topic, 10
         )
@@ -73,7 +72,6 @@ class HsdConverterNode(Node):
             DesiredCommand, self.output_depth_topic, 10
         )
 
-        # Subscribers from coug_navigation
         self.heading_sub = self.create_subscription(
             Float64, self.input_heading_topic, self.heading_callback, 10
         )

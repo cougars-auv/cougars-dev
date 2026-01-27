@@ -22,7 +22,7 @@ from dvl_msgs.msg import DVL
 
 class DvlTwistConverterNode(Node):
     """
-    Converts raw DVL velocity data to TwistWithCovarianceStamped.
+    Converts raw DVL velocity data to a twist message.
 
     :author: Nelson Durrant (w Gemini 3 Pro)
     :date: Jan 2026
@@ -33,7 +33,7 @@ class DvlTwistConverterNode(Node):
 
         self.declare_parameter("input_topic", "dvl/data")
         self.declare_parameter("output_topic", "dvl/twist")
-        self.declare_parameter("frame_id", "dvl_link")
+        self.declare_parameter("dvl_frame", "dvl_link")
         self.declare_parameter("simulate_dropout", False)
         self.declare_parameter("dropout_frequency", 1.0 / 30.0)
         self.declare_parameter("dropout_duration", 5.0)
@@ -44,8 +44,8 @@ class DvlTwistConverterNode(Node):
         output_topic = (
             self.get_parameter("output_topic").get_parameter_value().string_value
         )
-        self.frame_id = (
-            self.get_parameter("frame_id").get_parameter_value().string_value
+        self.dvl_frame = (
+            self.get_parameter("dvl_frame").get_parameter_value().string_value
         )
         self.simulate_dropout = (
             self.get_parameter("simulate_dropout").get_parameter_value().bool_value
@@ -93,8 +93,8 @@ class DvlTwistConverterNode(Node):
             return
 
         twist_msg = TwistWithCovarianceStamped()
-        twist_msg.header.frame_id = self.frame_id
-        twist_msg.header.stamp = self._time_from_microseconds(msg.time_of_validity)
+        twist_msg.header.frame_id = self.dvl_frame
+        twist_msg.header.stamp = self.time_from_microseconds(msg.time_of_validity)
 
         twist_msg.twist.twist.linear.x = msg.velocity.x
         twist_msg.twist.twist.linear.y = msg.velocity.y
@@ -107,7 +107,7 @@ class DvlTwistConverterNode(Node):
         self.publisher.publish(twist_msg)
 
     @staticmethod
-    def _time_from_microseconds(us: int) -> Time:
+    def time_from_microseconds(us: int) -> Time:
         """
         Convert microseconds to builtin_interfaces/Time.
 

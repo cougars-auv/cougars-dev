@@ -213,7 +213,7 @@ def generate_launch_description():
             Node(
                 package="tf2_ros",
                 executable="static_transform_publisher",
-                name="holoocean_transform",
+                name="map_to_holoocean_transform",
                 arguments=[
                     "--x",
                     "0",

@@ -132,7 +132,7 @@ def generate_launch_description():
                 condition=IfCondition(use_mapviz),
                 package="tf2_ros",
                 executable="static_transform_publisher",
-                name="swri_transform",
+                name="map_to_origin_transform",
                 arguments=[
                     "--x",
                     "0",

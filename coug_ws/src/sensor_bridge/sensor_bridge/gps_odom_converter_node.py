@@ -15,6 +15,7 @@
 import rclpy
 from rclpy.node import Node
 from nav_msgs.msg import Odometry
+from sensor_msgs.msg import Imu
 from tf2_ros import Buffer, TransformListener
 from tf2_geometry_msgs import do_transform_pose
 
@@ -32,7 +33,7 @@ class GpsOdomConverterNode(Node):
 
         self.declare_parameter("input_topic", "odometry/gps")
         self.declare_parameter("output_topic", "odometry/truth")
-        self.declare_parameter("base_frame_id", "base_link")
+        self.declare_parameter("base_frame", "base_link")
 
         input_topic = (
             self.get_parameter("input_topic").get_parameter_value().string_value
@@ -40,8 +41,8 @@ class GpsOdomConverterNode(Node):
         output_topic = (
             self.get_parameter("output_topic").get_parameter_value().string_value
         )
-        self.base_frame_id = (
-            self.get_parameter("base_frame_id").get_parameter_value().string_value
+        self.base_frame = (
+            self.get_parameter("base_frame").get_parameter_value().string_value
         )
 
         self.tf_buffer = Buffer()
@@ -65,12 +66,12 @@ class GpsOdomConverterNode(Node):
         """
         try:
             t_gps_base = self.tf_buffer.lookup_transform(
-                msg.child_frame_id, self.base_frame_id, rclpy.time.Time()
+                msg.child_frame_id, self.base_frame, rclpy.time.Time()
             )
         except Exception:
             self.get_logger().error(
                 f"Could not find transform from {msg.child_frame_id} "
-                f"to {self.base_frame_id}",
+                f"to {self.base_frame}",
                 throttle_duration_sec=1.0,
             )
             return
@@ -79,7 +80,7 @@ class GpsOdomConverterNode(Node):
 
         out_msg = Odometry()
         out_msg.header = msg.header
-        out_msg.child_frame_id = self.base_frame_id
+        out_msg.child_frame_id = self.base_frame
         out_msg.pose.pose = p_base_in_map
         out_msg.pose.covariance = msg.pose.covariance
         out_msg.twist = msg.twist

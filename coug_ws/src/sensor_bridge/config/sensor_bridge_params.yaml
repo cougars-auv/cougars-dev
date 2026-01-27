@@ -3,7 +3,7 @@
     ros__parameters:
       input_topic: "dvl/data"
       output_topic: "dvl/twist"
-      
+
       simulate_dropout: false
       dropout_frequency: 0.033 # [Hz] Frequency of the dropout cycle (1/30).
       dropout_duration: 5.0 # [s] Duration of the dropout.
@@ -12,7 +12,9 @@
     ros__parameters:
       input_topic: "dvl/position"
       output_topic: "odometry/dvl"
-    
+
+      publish_local_tf: false
+
   gps_odom_converter_node:
     ros__parameters:
       input_topic: "odometry/gps"
