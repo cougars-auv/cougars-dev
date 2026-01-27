@@ -15,7 +15,7 @@
 import rclpy
 from rclpy.node import Node
 from nav_msgs.msg import Odometry
-from sensor_msgs.msg import Imu
+
 from tf2_ros import Buffer, TransformListener
 from tf2_geometry_msgs import do_transform_pose
 

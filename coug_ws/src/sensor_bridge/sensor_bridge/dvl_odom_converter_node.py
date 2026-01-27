@@ -101,8 +101,8 @@ class DvlOdomConverterNode(Node):
             t_odom_dvl.transform.translation.y = msg.position.y
             t_odom_dvl.transform.translation.z = msg.position.z
             t_odom_dvl.transform.rotation = self.quaternion_from_euler(
-                math.radians(msg.roll), 
-                math.radians(msg.pitch), 
+                math.radians(msg.roll),
+                math.radians(msg.pitch),
                 math.radians(msg.yaw)
             )
 
@@ -120,7 +120,7 @@ class DvlOdomConverterNode(Node):
             odom.child_frame_id = self.base_frame
 
             odom.pose.pose = p_base_in_odom
-            
+
             var = msg.pos_std**2
             odom.pose.covariance[0] = var
             odom.pose.covariance[7] = var
@@ -163,6 +163,7 @@ class DvlOdomConverterNode(Node):
         q.y = cr * sp * cy + sr * cp * sy
         q.z = cr * cp * sy - sr * sp * cy
         return q
+
 
 def main(args=None):
     rclpy.init(args=args)
