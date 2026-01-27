@@ -29,7 +29,7 @@ case $1 in
         printWarning "Stopping the cougars-ct container..."
         docker compose -f "$SCRIPT_DIR/docker/docker-compose.yaml" $PROFILES down
         ;;
-    *)
+    "up" | "")
         # Allow container to forward graphical displays to host
         xhost +
 
@@ -67,5 +67,9 @@ case $1 in
         # Attach to the 'coug_dev' tmux session
         printInfo "Attaching to 'coug_dev' tmux session..."
         docker exec -it --user frostlab-docker -e HOME=/home/frostlab-docker cougars-ct tmux attach -t coug_dev
-    ;;
+        ;;
+    *)
+        # Pass the command to the container
+        docker exec -it --user frostlab-docker -e HOME=/home/frostlab-docker cougars-ct "$@"
+        ;;
 esac

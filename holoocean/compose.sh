@@ -22,7 +22,11 @@ case $1 in
         printWarning "Stopping the holoocean-ct container..."
         docker compose -f "$SCRIPT_DIR/docker/docker-compose.yaml" down
         ;;
-    *)
+    "up" | "" | -*)
+        if [[ "$1" == "up" ]]; then
+            shift
+        fi
+
         # Allow container to forward graphical displays to host
         xhost +
 
@@ -55,5 +59,10 @@ case $1 in
             -e FASTRTPS_DEFAULT_PROFILES_FILE=/home/ue4/config/fastdds.xml holoocean-ct /bin/bash -c \
             "source ~/ros2_ws/install/setup.bash && ros2 run holoocean_main holoocean_node --ros-args \
             --params-file $PARAMS_FILE"
-    ;;
+        ;;
+    *)
+        # Pass the command to the container
+        docker exec -it --user ue4 -e HOME=/home/ue4 -e RMW_FASTRTPS_USE_QOS_FROM_XML=1 \
+            -e FASTRTPS_DEFAULT_PROFILES_FILE=/home/ue4/config/fastdds.xml holoocean-ct "$@"
+        ;;
 esac
