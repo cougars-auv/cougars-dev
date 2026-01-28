@@ -59,7 +59,7 @@
                 },
                 {
                     "sensor_type": "RotationSensor",
-                    "socket": "AcousticModemSocket",
+                    "socket": "IMUSocket",
                     "Hz": 10,
                     "ros_publish": true
                 },
