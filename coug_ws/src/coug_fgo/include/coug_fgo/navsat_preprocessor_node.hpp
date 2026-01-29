@@ -31,6 +31,7 @@
 #include <nav_msgs/msg/odometry.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/nav_sat_fix.hpp>
+#include <diagnostic_updater/diagnostic_updater.hpp>
 
 #include <coug_fgo/navsat_preprocessor_parameters.hpp>
 
@@ -77,10 +78,26 @@ private:
     const sensor_msgs::msg::NavSatFix::SharedPtr & msg,
     nav_msgs::msg::Odometry & odom_msg);
 
+  // --- Diagnostics ---
+  /**
+   * @brief Diagnostic task to report the status of the GPS origin.
+   * @param stat The diagnostic status wrapper.
+   */
+  void checkOriginStatus(diagnostic_updater::DiagnosticStatusWrapper & stat);
+
+  /**
+   * @brief Diagnostic task to report the status of the GPS fix.
+   * @param stat The diagnostic status wrapper.
+   */
+  void checkNavSatFix(diagnostic_updater::DiagnosticStatusWrapper & stat);
+
   // --- State ---
   bool origin_set_ = false;
   sensor_msgs::msg::NavSatFix origin_navsat_;
   geodesy::UTMPoint origin_utm_;
+
+  double last_navsat_time_ = 0.0;
+  int last_fix_status_ = -1;
 
   bool collecting_samples_ = false;
   double start_collection_time_ = 0.0;
@@ -92,6 +109,7 @@ private:
   rclcpp::Subscription<sensor_msgs::msg::NavSatFix>::SharedPtr navsat_sub_;
   rclcpp::Subscription<sensor_msgs::msg::NavSatFix>::SharedPtr origin_sub_;
   rclcpp::TimerBase::SharedPtr origin_timer_;
+  diagnostic_updater::Updater diagnostic_updater_;
 
   // --- Parameters ---
   std::shared_ptr<navsat_preprocessor_node::ParamListener> param_listener_;

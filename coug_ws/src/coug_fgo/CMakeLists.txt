@@ -75,6 +75,7 @@ ament_target_dependencies(navsat_preprocessor
   geographic_msgs
   tf2_geometry_msgs
   geodesy
+  diagnostic_updater
 )
 target_link_libraries(navsat_preprocessor
   navsat_preprocessor_parameters

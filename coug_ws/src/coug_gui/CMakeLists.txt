@@ -145,7 +145,7 @@ install(DIRECTORY include/
   DESTINATION include/${PROJECT_NAME}
   FILES_MATCHING PATTERN "*.h")
 
-install(DIRECTORY launch rviz mapviz plotjuggler
+install(DIRECTORY launch config rviz mapviz plotjuggler
   DESTINATION share/${PROJECT_NAME}
 )
 

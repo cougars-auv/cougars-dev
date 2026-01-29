@@ -31,7 +31,8 @@ namespace coug_fgo
 {
 
 NavsatPreprocessorNode::NavsatPreprocessorNode()
-: Node("navsat_preprocessor_node")
+: Node("navsat_preprocessor_node"),
+  diagnostic_updater_(this)
 {
   RCLCPP_INFO(get_logger(), "Starting NavSat Preprocessor Node...");
 
@@ -87,12 +88,25 @@ NavsatPreprocessorNode::NavsatPreprocessorNode()
       });
   }
 
+  // --- ROS Diagnostics ---
+  std::string ns = this->get_namespace();
+  std::string clean_ns = (ns == "/") ? "" : ns;
+  diagnostic_updater_.setHardwareID(clean_ns + "/navsat_preprocessor_node");
+
+  std::string prefix = clean_ns.empty() ? "" : "[" + clean_ns + "] ";
+
+  std::string origin_task = prefix + "GPS Origin";
+  diagnostic_updater_.add(origin_task, this, &NavsatPreprocessorNode::checkOriginStatus);
+
+  std::string fix_task = prefix + "GPS Fix";
+  diagnostic_updater_.add(fix_task, this, &NavsatPreprocessorNode::checkNavSatFix);
+
   RCLCPP_INFO(get_logger(), "Startup complete! Waiting for fix...");
 }
 
 void NavsatPreprocessorNode::originCallback(const sensor_msgs::msg::NavSatFix::SharedPtr msg)
 {
-  if (!origin_set_ && msg->status.status == sensor_msgs::msg::NavSatStatus::STATUS_FIX) {
+  if (!origin_set_ && msg->status.status >= sensor_msgs::msg::NavSatStatus::STATUS_FIX) {
     try {
       geographic_msgs::msg::GeoPoint pt;
       pt.latitude = msg->latitude;
@@ -114,6 +128,9 @@ void NavsatPreprocessorNode::originCallback(const sensor_msgs::msg::NavSatFix::S
 
 void NavsatPreprocessorNode::navsatCallback(const sensor_msgs::msg::NavSatFix::SharedPtr msg)
 {
+  last_navsat_time_ = this->get_clock()->now().seconds();
+  last_fix_status_ = msg->status.status;
+
   if (params_.simulate_dropout && params_.dropout_frequency > 0) {
     double current_time = this->get_clock()->now().seconds();
     double cycle_period = 1.0 / params_.dropout_frequency;
@@ -264,6 +281,44 @@ bool NavsatPreprocessorNode::convertToEnu(
       get_logger(), *get_clock(), 5000, "UTM conversion failed: %s",
       e.what());
     return false;
+  }
+}
+
+void NavsatPreprocessorNode::checkOriginStatus(diagnostic_updater::DiagnosticStatusWrapper & stat)
+{
+  if (origin_set_) {
+    stat.add("Origin Zone", std::to_string(origin_utm_.zone) + origin_utm_.band);
+    stat.add("Origin Latitude", origin_navsat_.latitude);
+    stat.add("Origin Longitude", origin_navsat_.longitude);
+    stat.add("Origin Altitude", origin_navsat_.altitude);
+
+    stat.summary(diagnostic_msgs::msg::DiagnosticStatus::OK, "Origin successfully set.");
+  } else {
+    stat.summary(diagnostic_msgs::msg::DiagnosticStatus::WARN, "Waiting for origin.");
+  }
+}
+
+void NavsatPreprocessorNode::checkNavSatFix(diagnostic_updater::DiagnosticStatusWrapper & stat)
+{
+  bool ok = true;
+
+  stat.add("Fix Status", last_fix_status_);
+
+  double time_since =
+    (last_navsat_time_ > 0.0) ? (this->get_clock()->now().seconds() - last_navsat_time_) : -1.0;
+  stat.add("Time Since Last (s)", time_since);
+
+  if (time_since > params_.timeout_threshold || last_navsat_time_ == 0.0) {
+    ok = false;
+    stat.mergeSummary(diagnostic_msgs::msg::DiagnosticStatus::WARN, "GPS is offline.");
+  }
+  if (last_fix_status_ == sensor_msgs::msg::NavSatStatus::STATUS_NO_FIX) {
+    ok = false;
+    stat.mergeSummary(diagnostic_msgs::msg::DiagnosticStatus::WARN, "No GPS fix acquired.");
+  }
+
+  if (ok) {
+    stat.summary(diagnostic_msgs::msg::DiagnosticStatus::OK, "GPS fix acquired.");
   }
 }
 

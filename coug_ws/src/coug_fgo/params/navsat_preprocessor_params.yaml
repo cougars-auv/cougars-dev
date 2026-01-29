@@ -17,6 +17,9 @@ navsat_preprocessor_node:
   initialization_duration:
     type: double
     default_value: 0.0
+  timeout_threshold:
+    type: double
+    default_value: 2.0
   
   simulate_dropout:
     type: bool

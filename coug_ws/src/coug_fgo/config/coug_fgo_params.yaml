@@ -50,6 +50,7 @@
       gyro_bias_rw_sigma: 3.91e-05 # [rad/s^2] Sigma for gyroscope bias random walk.
       integration_covariance: 1e-5 # A small covariance for the integration process itself.
       gravity: [0.0, 0.0, -9.8] # [m/s^2]
+      timeout_threshold: 1.0 # [s]
 
     gps:
       enable_gps: false
@@ -59,6 +60,7 @@
       parameter_covariance:
         position_noise_sigma: 0.015 # [m] GPS position uncertainty sigma.
         altitude_noise_sigma: 0.025 # [m] GPS altitude uncertainty sigma.
+      timeout_threshold: 2.0 # [s]
       robust_kernel: "None"
       robust_k: 1.345
 
@@ -67,6 +69,7 @@
       use_parameter_covariance: false
       parameter_covariance:
         position_z_noise_sigma: 0.02 # [m] Depth sensor Z-position uncertainty sigma.
+      timeout_threshold: 1.0 # [s]
       robust_kernel: "None"
       robust_k: 1.345
 
@@ -81,6 +84,7 @@
       # Reference Magnetic Field Vector (Local Earth Field)
       # Provo, Utah (X=20,843.1 nT, Y=3,894.9 nT, Z=45,873.1 nT, F=50,536.6 nT)
       reference_field: [0.41, 0.08, 0.91] # [normalized]
+      timeout_threshold: 1.0 # [s]
       robust_kernel: "None"
       robust_k: 1.345
 
@@ -94,6 +98,7 @@
         roll_pitch_noise_sigma: 0.00349 # [rad] AHRS sensor roll and pitch uncertainty sigma.
       # https://www.ngdc.noaa.gov/geomag/calculators/magcalc.shtml#declination
       mag_declination_radians: 0.0
+      timeout_threshold: 1.0 # [s]
       robust_kernel: "None"
       robust_k: 1.345
 
@@ -136,6 +141,7 @@
     # --- Node Settings ---
     origin_pub_rate: 1.0 # [Hz] Rate at which to publish the GPS origin.
     initialization_duration: 0.0 # [s] Time duration to average GPS data before setting origin.
+    timeout_threshold: 2.0 # [s]
 
     simulate_dropout: false
     dropout_frequency: 0.0333 # [Hz] Frequency of the dropout cycle (1/30).

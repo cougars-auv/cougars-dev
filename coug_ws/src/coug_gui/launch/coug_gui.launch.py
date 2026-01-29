@@ -29,10 +29,12 @@ def generate_launch_description():
     use_rviz = LaunchConfiguration("use_rviz")
     use_mapviz = LaunchConfiguration("use_mapviz")
     use_plotjuggler = LaunchConfiguration("use_plotjuggler")
+    use_diagnostics = LaunchConfiguration("use_diagnostics")
 
     pkg_share = get_package_share_directory("coug_gui")
 
     plotjuggler_layout_file = os.path.join(pkg_share, "plotjuggler", "plotjuggler.xml")
+    diagnostics_config_file = os.path.join(pkg_share, "config", "diagnostics.yaml")
 
     mapviz_config_file = PythonExpression(
         [
@@ -98,6 +100,11 @@ def generate_launch_description():
                 default_value="true",
                 description="Launch PlotJuggler if true",
             ),
+            DeclareLaunchArgument(
+                "use_diagnostics",
+                default_value="true",
+                description="Launch Diagnostic Aggregator if true",
+            ),
             Node(
                 condition=IfCondition(use_rviz),
                 package="rviz2",
@@ -160,6 +167,16 @@ def generate_launch_description():
                 name="plotjuggler",
                 arguments=["--layout", plotjuggler_layout_file],
                 parameters=[{"use_sim_time": use_sim_time}],
+            ),
+            Node(
+                condition=IfCondition(use_diagnostics),
+                package="diagnostic_aggregator",
+                executable="aggregator_node",
+                name="diagnostic_aggregator",
+                parameters=[
+                    diagnostics_config_file,
+                    {"use_sim_time": use_sim_time},
+                ],
             ),
         ]
     )

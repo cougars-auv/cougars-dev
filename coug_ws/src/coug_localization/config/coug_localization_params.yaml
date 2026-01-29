@@ -4,6 +4,7 @@
       frequency: 30.0
       two_d_mode: false
       publish_tf: false # Published by IEKF instead
+      print_diagnostics: true
 
       twist0: dvl/twist
       twist0_config: [false, false, false, # X, Y, Z
@@ -31,6 +32,7 @@
       frequency: 20.0
       two_d_mode: false
       publish_tf: false # Published by FGO instead
+      print_diagnostics: true
 
       odom0: odometry/local_ekf
       odom0_config: [false, false, false, # X, Y, Z
@@ -77,6 +79,7 @@
       frequency: 20.0
       two_d_mode: false
       publish_tf: false # Published by FGO instead
+      print_diagnostics: true
 
       odom0: odometry/local_ekf
       odom0_config: [false, false, false, # X, Y, Z

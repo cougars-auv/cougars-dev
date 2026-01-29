@@ -174,8 +174,22 @@ void FactorGraphNode::setupRosInterfaces()
     },
     sensor_options);
 
-  diagnostic_updater_.setHardwareID("factor_graph_node");
-  diagnostic_updater_.add("Factor Graph Status", this, &FactorGraphNode::produceDiagnostics);
+  // --- ROS Diagnostics ---
+  std::string ns = this->get_namespace();
+  std::string clean_ns = (ns == "/") ? "" : ns;
+  diagnostic_updater_.setHardwareID(clean_ns + "/factor_graph_node");
+
+  std::string prefix = clean_ns.empty() ? "" : "[" + clean_ns + "] ";
+  std::string suffix = params_.experimental.enable_dvl_preintegration ? " (TM)" : "";
+
+  std::string sensor_task = prefix + "Sensor Inputs" + suffix;
+  diagnostic_updater_.add(sensor_task, this, &FactorGraphNode::checkSensorInputs);
+
+  std::string state_task = prefix + "Graph State" + suffix;
+  diagnostic_updater_.add(state_task, this, &FactorGraphNode::checkGraphState);
+
+  std::string overflow_task = prefix + "Processing Overflow" + suffix;
+  diagnostic_updater_.add(overflow_task, this, &FactorGraphNode::checkProcessingOverflow);
 }
 
 FactorGraphNode::FactorGraphNode()
@@ -1046,7 +1060,7 @@ gtsam::Rot3 FactorGraphNode::getInterpolatedOrientation(
   const std::deque<sensor_msgs::msg::Imu::SharedPtr> & imu_msgs, double target_time)
 {
   if (imu_msgs.empty()) {
-    RCLCPP_WARN(get_logger(), "IMU queue empty. Returning identity rotation.");
+    RCLCPP_DEBUG(get_logger(), "IMU queue empty. Returning identity rotation.");
     return gtsam::Rot3();
   }
 
@@ -1334,7 +1348,7 @@ void FactorGraphNode::optimizeGraph()
     }
 
     if (target_stamp.seconds() <= prev_time_ + 1e-6) {
-      RCLCPP_WARN(get_logger(), "Duplicate or out-of-order timestamp detected. Skipping.");
+      RCLCPP_DEBUG(get_logger(), "Duplicate or out-of-order timestamp detected. Skipping.");
       if (params_.experimental.enable_dvl_preintegration) {
         depth_queue_.pop_back();
       } else {
@@ -1367,8 +1381,9 @@ void FactorGraphNode::optimizeGraph()
 
   if (params_.experimental.enable_dvl_preintegration) {
     if (depth_msgs.size() > 1) {
-      RCLCPP_WARN(
-        get_logger(), "Processing overflow. Skipping %zu Depth keyframes.\n"
+      RCLCPP_WARN_THROTTLE(
+        get_logger(), *get_clock(), 5000,
+        "Processing overflow. Skipping %zu Depth keyframes. "
         "This may be intentional (depth_rate_limit_hz).",
         depth_msgs.size() - 1);
       processing_overflow_ = true;
@@ -1377,8 +1392,9 @@ void FactorGraphNode::optimizeGraph()
     }
   } else {
     if (dvl_msgs.size() > 1) {
-      RCLCPP_WARN(
-        get_logger(), "Processing overflow. Skipping %zu DVL keyframes.",
+      RCLCPP_WARN_THROTTLE(
+        get_logger(), *get_clock(), 5000,
+        "Processing overflow. Skipping %zu DVL keyframes.",
         dvl_msgs.size() - 1);
       processing_overflow_ = true;
     } else {
@@ -1479,57 +1495,93 @@ void FactorGraphNode::optimizeGraph()
   }
 }
 
-void FactorGraphNode::produceDiagnostics(diagnostic_updater::DiagnosticStatusWrapper & stat)
+void FactorGraphNode::checkSensorInputs(diagnostic_updater::DiagnosticStatusWrapper & stat)
 {
-  if (graph_initialized_) {
-    stat.summary(diagnostic_msgs::msg::DiagnosticStatus::OK, "Running");
-  } else if (sensors_ready_) {
-    stat.summary(diagnostic_msgs::msg::DiagnosticStatus::OK, "Averaging");
-  } else if (!sensors_ready_ && !graph_initialized_) {
-    stat.summary(diagnostic_msgs::msg::DiagnosticStatus::WARN, "Waiting for Sensors");
-  } else {
-    stat.summary(diagnostic_msgs::msg::DiagnosticStatus::OK, "Initializing");
-  }
+  bool all_sensors_ok = true;
 
-  if (processing_overflow_) {
-    stat.add("Processing Overflow", "True");
-    stat.mergeSummary(diagnostic_msgs::msg::DiagnosticStatus::WARN, "Processing Overflow");
-  } else {
-    stat.add("Processing Overflow", "False");
-  }
+  auto check_queue =
+    [&](const std::string & name, size_t size, double last_time, bool enabled, bool is_critical,
+      double timeout) {
+      if (!enabled) {return;}
 
-  stat.add("Current Step", current_step_);
-
-  auto add_sensor_diag = [&](const std::string & name, size_t queue_size, double last_time) {
-      stat.add(name + " Queue Size", queue_size);
       double time_since =
         (last_time > 0.0) ? (this->get_clock()->now().seconds() - last_time) : -1.0;
+
+      stat.add(name + " Queue Size", size);
       stat.add(name + " Time Since Last (s)", time_since);
+
+      if (time_since > timeout || (last_time == 0.0 && size == 0)) {
+        all_sensors_ok = false;
+
+        if (is_critical) {
+          stat.mergeSummary(diagnostic_msgs::msg::DiagnosticStatus::ERROR, name + " is offline.");
+        } else {
+          stat.mergeSummary(diagnostic_msgs::msg::DiagnosticStatus::WARN, name + " is offline.");
+        }
+      }
     };
 
   {
     std::scoped_lock lock(imu_queue_mutex_);
-    add_sensor_diag("IMU", imu_queue_.size(), last_imu_time_);
+    check_queue(
+      "IMU", imu_queue_.size(), last_imu_time_, true, true,
+      params_.imu.timeout_threshold);
   }
   {
     std::scoped_lock lock(gps_queue_mutex_);
-    add_sensor_diag("GPS", gps_queue_.size(), last_gps_time_);
+    check_queue(
+      "GPS", gps_queue_.size(), last_gps_time_, params_.gps.enable_gps, false,
+      params_.gps.timeout_threshold);
   }
   {
     std::scoped_lock lock(depth_queue_mutex_);
-    add_sensor_diag("Depth", depth_queue_.size(), last_depth_time_);
+    check_queue(
+      "Depth", depth_queue_.size(), last_depth_time_, true, true,
+      params_.depth.timeout_threshold);
   }
   {
     std::scoped_lock lock(mag_queue_mutex_);
-    add_sensor_diag("Mag", mag_queue_.size(), last_mag_time_);
+    check_queue(
+      "Mag", mag_queue_.size(), last_mag_time_, params_.mag.enable_mag, false,
+      params_.mag.timeout_threshold);
   }
   {
     std::scoped_lock lock(ahrs_queue_mutex_);
-    add_sensor_diag("AHRS", ahrs_queue_.size(), last_ahrs_time_);
+    check_queue(
+      "AHRS", ahrs_queue_.size(), last_ahrs_time_, params_.ahrs.enable_ahrs, false,
+      params_.ahrs.timeout_threshold);
   }
   {
     std::scoped_lock lock(dvl_queue_mutex_);
-    add_sensor_diag("DVL", dvl_queue_.size(), last_dvl_time_);
+    check_queue(
+      "DVL", dvl_queue_.size(), last_dvl_time_, true, true,
+      params_.dvl.timeout_threshold);
+  }
+
+  if (all_sensors_ok) {
+    stat.summary(diagnostic_msgs::msg::DiagnosticStatus::OK, "All requested sensors online.");
+  }
+}
+
+void FactorGraphNode::checkGraphState(diagnostic_updater::DiagnosticStatusWrapper & stat)
+{
+  if (graph_initialized_) {
+    stat.summary(diagnostic_msgs::msg::DiagnosticStatus::OK, "Optimizing factor graph.");
+  } else if (sensors_ready_) {
+    stat.summary(diagnostic_msgs::msg::DiagnosticStatus::WARN, "Averaging sensor data.");
+  } else {
+    stat.summary(diagnostic_msgs::msg::DiagnosticStatus::WARN, "Waiting for sensor data.");
+  }
+}
+
+void FactorGraphNode::checkProcessingOverflow(diagnostic_updater::DiagnosticStatusWrapper & stat)
+{
+  if (processing_overflow_) {
+    stat.summary(
+      diagnostic_msgs::msg::DiagnosticStatus::WARN,
+      "Processing overflow detected. Skipping keyframes.");
+  } else {
+    stat.summary(diagnostic_msgs::msg::DiagnosticStatus::OK, "No processing overflow detected.");
   }
 }
 

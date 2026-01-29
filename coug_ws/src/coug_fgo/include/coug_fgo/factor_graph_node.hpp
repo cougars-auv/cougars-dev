@@ -287,11 +287,24 @@ private:
     const gtsam::imuBias::ConstantBias & current_imu_bias,
     const gtsam::Matrix & imu_bias_covariance, const rclcpp::Time & timestamp);
 
+  // --- Diagnostics ---
   /**
-   * @brief Produces diagnostic information for the node.
+   * @brief Checks sensor inputs for queue sizes and data freshness.
    * @param stat The diagnostic status wrapper.
    */
-  void produceDiagnostics(diagnostic_updater::DiagnosticStatusWrapper & stat);
+  void checkSensorInputs(diagnostic_updater::DiagnosticStatusWrapper & stat);
+
+  /**
+   * @brief Checks the overall graph lifecycle state.
+   * @param stat The diagnostic status wrapper.
+   */
+  void checkGraphState(diagnostic_updater::DiagnosticStatusWrapper & stat);
+
+  /**
+   * @brief Checks for performance issues like processing overflow.
+   * @param stat The diagnostic status wrapper.
+   */
+  void checkProcessingOverflow(diagnostic_updater::DiagnosticStatusWrapper & stat);
 
   // --- Graph State ---
   bool sensors_ready_ = false;

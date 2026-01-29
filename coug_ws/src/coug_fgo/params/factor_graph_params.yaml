@@ -105,6 +105,9 @@ factor_graph_node:
     gravity:
       type: double_array
       default_value: [0.0, 0.0, -9.8]
+    timeout_threshold:
+      type: double
+      default_value: 1.0
 
   gps:
     enable_gps:
@@ -129,6 +132,9 @@ factor_graph_node:
       altitude_noise_sigma:
         type: double
         default_value: 0.025
+    timeout_threshold:
+      type: double
+      default_value: 2.0
     robust_kernel:
       type: string
       default_value: "None"
@@ -150,6 +156,9 @@ factor_graph_node:
       position_z_noise_sigma:
         type: double
         default_value: 0.02
+    timeout_threshold:
+      type: double
+      default_value: 1.0
     robust_kernel:
       type: string
       default_value: "None"
@@ -180,6 +189,9 @@ factor_graph_node:
     reference_field:
       type: double_array
       default_value: [0.41, 0.08, 0.91]
+    timeout_threshold:
+      type: double
+      default_value: 1.0
     robust_kernel:
       type: string
       default_value: "None"
@@ -213,6 +225,9 @@ factor_graph_node:
     mag_declination_radians:
       type: double
       default_value: 0.0
+    timeout_threshold:
+      type: double
+      default_value: 1.0
     robust_kernel:
       type: string
       default_value: "None"
