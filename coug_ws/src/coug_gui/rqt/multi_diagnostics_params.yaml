@@ -1,0 +1,60 @@
+diagnostic_aggregator:
+  ros__parameters:
+    analyzers: ['auv0', 'auv1', 'auv2']
+
+    auv0:
+      type: diagnostic_aggregator/AnalyzerGroup
+      path: auv0
+      analyzers: ['factor_graph_node', 'navsat_preprocessor_node']
+
+      factor_graph_node:
+        type: diagnostic_aggregator/GenericAnalyzer
+        path: 'factor_graph_node'
+        regex: ['.*factor_graph_node.*auv0.*']
+        find_and_remove_prefix: ['factor_graph_node: [/auv0]', 'factor_graph_node_tm: [/auv0] ']
+        timeout: 5.0
+
+      navsat_preprocessor_node:
+        type: diagnostic_aggregator/GenericAnalyzer
+        path: 'navsat_preprocessor_node'
+        regex: ['.*navsat_preprocessor_node.*auv0.*']
+        find_and_remove_prefix: ['navsat_preprocessor_node: [/auv0] ']
+        timeout: 5.0
+
+    auv1:
+      type: diagnostic_aggregator/AnalyzerGroup
+      path: auv1
+      analyzers: ['factor_graph_node', 'navsat_preprocessor_node']
+
+      factor_graph_node:
+        type: diagnostic_aggregator/GenericAnalyzer
+        path: 'factor_graph_node'
+        regex: ['.*factor_graph_node.*auv1.*']
+        find_and_remove_prefix: ['factor_graph_node: [/auv1]', 'factor_graph_node_tm: [/auv1] ']
+        timeout: 5.0
+
+      navsat_preprocessor_node:
+        type: diagnostic_aggregator/GenericAnalyzer
+        path: 'navsat_preprocessor_node'
+        regex: ['.*navsat_preprocessor_node.*auv1.*']
+        find_and_remove_prefix: ['navsat_preprocessor_node: [/auv1] ']
+        timeout: 5.0
+
+    auv2:
+      type: diagnostic_aggregator/AnalyzerGroup
+      path: auv2
+      analyzers: ['factor_graph_node', 'navsat_preprocessor_node']
+
+      factor_graph_node:
+        type: diagnostic_aggregator/GenericAnalyzer
+        path: 'factor_graph_node'
+        regex: ['.*factor_graph_node.*auv2.*']
+        find_and_remove_prefix: ['factor_graph_node: [/auv2]', 'factor_graph_node_tm: [/auv2] ']
+        timeout: 5.0
+
+      navsat_preprocessor_node:
+        type: diagnostic_aggregator/GenericAnalyzer
+        path: 'navsat_preprocessor_node'
+        regex: ['.*navsat_preprocessor_node.*auv2.*']
+        find_and_remove_prefix: ['navsat_preprocessor_node: [/auv2] ']
+        timeout: 5.0

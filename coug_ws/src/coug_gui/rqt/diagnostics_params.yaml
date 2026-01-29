@@ -5,7 +5,7 @@ diagnostic_aggregator:
     auv0:
       type: diagnostic_aggregator/AnalyzerGroup
       path: auv0
-      analyzers: ['factor_graph_node', 'factor_graph_node_tm']
+      analyzers: ['factor_graph_node', 'navsat_preprocessor_node']
 
       factor_graph_node:
         type: diagnostic_aggregator/GenericAnalyzer

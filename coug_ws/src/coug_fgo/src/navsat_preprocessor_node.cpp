@@ -300,7 +300,7 @@ void NavsatPreprocessorNode::checkOriginStatus(diagnostic_updater::DiagnosticSta
 
 void NavsatPreprocessorNode::checkNavSatFix(diagnostic_updater::DiagnosticStatusWrapper & stat)
 {
-  bool ok = true;
+  stat.summary(diagnostic_msgs::msg::DiagnosticStatus::OK, "GPS fix acquired.");
 
   stat.add("Fix Status", last_fix_status_);
 
@@ -309,16 +309,10 @@ void NavsatPreprocessorNode::checkNavSatFix(diagnostic_updater::DiagnosticStatus
   stat.add("Time Since Last (s)", time_since);
 
   if (time_since > params_.timeout_threshold || last_navsat_time_ == 0.0) {
-    ok = false;
     stat.mergeSummary(diagnostic_msgs::msg::DiagnosticStatus::WARN, "GPS is offline.");
   }
   if (last_fix_status_ == sensor_msgs::msg::NavSatStatus::STATUS_NO_FIX) {
-    ok = false;
     stat.mergeSummary(diagnostic_msgs::msg::DiagnosticStatus::WARN, "No GPS fix acquired.");
-  }
-
-  if (ok) {
-    stat.summary(diagnostic_msgs::msg::DiagnosticStatus::OK, "GPS fix acquired.");
   }
 }
 

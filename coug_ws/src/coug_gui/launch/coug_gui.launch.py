@@ -29,12 +29,12 @@ def generate_launch_description():
     use_rviz = LaunchConfiguration("use_rviz")
     use_mapviz = LaunchConfiguration("use_mapviz")
     use_plotjuggler = LaunchConfiguration("use_plotjuggler")
-    use_diagnostics = LaunchConfiguration("use_diagnostics")
+    use_rqt = LaunchConfiguration("use_rqt")
 
     pkg_share = get_package_share_directory("coug_gui")
 
     plotjuggler_layout_file = os.path.join(pkg_share, "plotjuggler", "plotjuggler.xml")
-    diagnostics_config_file = os.path.join(pkg_share, "config", "diagnostics.yaml")
+    rqt_perspective_file = os.path.join(pkg_share, "rqt", "rqt.perspective")
 
     mapviz_config_file = PythonExpression(
         [
@@ -64,6 +64,22 @@ def generate_launch_description():
             multiagent_viz,
             "' == 'true' else '",
             os.path.join(pkg_share, "rviz", "rviz_config.rviz"),
+            "'",
+        ]
+    )
+
+    diagnostics_params_file = PythonExpression(
+        [
+            "'",
+            os.path.join(pkg_share, "rqt", "bluerov2_diagnostics_params.yaml"),
+            "' if '",
+            bluerov_viz,
+            "' == 'true' else '",
+            os.path.join(pkg_share, "rqt", "multi_diagnostics_params.yaml"),
+            "' if '",
+            multiagent_viz,
+            "' == 'true' else '",
+            os.path.join(pkg_share, "rqt", "diagnostics_params.yaml"),
             "'",
         ]
     )
@@ -101,9 +117,9 @@ def generate_launch_description():
                 description="Launch PlotJuggler if true",
             ),
             DeclareLaunchArgument(
-                "use_diagnostics",
+                "use_rqt",
                 default_value="true",
-                description="Launch Diagnostic Aggregator if true",
+                description="Launch RQT if true",
             ),
             Node(
                 condition=IfCondition(use_rviz),
@@ -122,8 +138,6 @@ def generate_launch_description():
                     {"config": mapviz_config_file},
                     {"use_sim_time": use_sim_time},
                 ],
-                # Remove if needed, but mapviz spams warnings
-                arguments=["--ros-args", "--log-level", "error"],
             ),
             Node(
                 condition=IfCondition(use_mapviz),
@@ -169,14 +183,22 @@ def generate_launch_description():
                 parameters=[{"use_sim_time": use_sim_time}],
             ),
             Node(
-                condition=IfCondition(use_diagnostics),
+                condition=IfCondition(use_rqt),
                 package="diagnostic_aggregator",
                 executable="aggregator_node",
                 name="diagnostic_aggregator",
                 parameters=[
-                    diagnostics_config_file,
+                    diagnostics_params_file,
                     {"use_sim_time": use_sim_time},
                 ],
+            ),
+            Node(
+                condition=IfCondition(use_rqt),
+                package="rqt_gui",
+                executable="rqt_gui",
+                name="rqt_gui",
+                arguments=["--perspective-file", rqt_perspective_file],
+                parameters=[{"use_sim_time": use_sim_time}],
             ),
         ]
     )
