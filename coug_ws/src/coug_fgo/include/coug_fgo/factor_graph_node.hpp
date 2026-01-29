@@ -45,6 +45,7 @@
 #include <nav_msgs/msg/odometry.hpp>
 #include <nav_msgs/msg/path.hpp>
 #include <rclcpp/rclcpp.hpp>
+#include <diagnostic_updater/diagnostic_updater.hpp>
 #include <sensor_msgs/msg/imu.hpp>
 #include <sensor_msgs/msg/magnetic_field.hpp>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
@@ -286,6 +287,12 @@ private:
     const gtsam::imuBias::ConstantBias & current_imu_bias,
     const gtsam::Matrix & imu_bias_covariance, const rclcpp::Time & timestamp);
 
+  /**
+   * @brief Produces diagnostic information for the node.
+   * @param stat The diagnostic status wrapper.
+   */
+  void produceDiagnostics(diagnostic_updater::DiagnosticStatusWrapper & stat);
+
   // --- Graph State ---
   bool sensors_ready_ = false;
   bool data_averaged_ = false;
@@ -296,6 +303,12 @@ private:
   size_t current_step_ = 1;
   double prev_time_ = 0.0;
   std::atomic<double> last_dvl_time_{0.0};
+  std::atomic<double> last_imu_time_{0.0};
+  std::atomic<double> last_gps_time_{0.0};
+  std::atomic<double> last_depth_time_{0.0};
+  std::atomic<double> last_mag_time_{0.0};
+  std::atomic<double> last_ahrs_time_{0.0};
+  std::atomic<bool> processing_overflow_{false};
   std::atomic<double> last_depth_trigger_time_{0.0};
   std::map<rclcpp::Time, gtsam::Key> time_to_key_;
 
@@ -373,6 +386,7 @@ private:
   std::unique_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
   std::shared_ptr<tf2_ros::TransformListener> tf_listener_{nullptr};
   std::unique_ptr<tf2_ros::Buffer> tf_buffer_;
+  diagnostic_updater::Updater diagnostic_updater_;
 
   // --- Parameters ---
   std::shared_ptr<factor_graph_node::ParamListener> param_listener_;

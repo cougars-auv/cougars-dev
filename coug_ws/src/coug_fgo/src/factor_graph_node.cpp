@@ -84,6 +84,7 @@ void FactorGraphNode::setupRosInterfaces()
     [this](const sensor_msgs::msg::Imu::SharedPtr msg) {
       std::scoped_lock lock(imu_queue_mutex_);
       imu_queue_.push_back(msg);
+      last_imu_time_ = this->get_clock()->now().seconds();
     },
     sensor_options);
 
@@ -92,6 +93,7 @@ void FactorGraphNode::setupRosInterfaces()
     [this](const nav_msgs::msg::Odometry::SharedPtr msg) {
       std::scoped_lock lock(gps_queue_mutex_);
       gps_queue_.push_back(msg);
+      last_gps_time_ = this->get_clock()->now().seconds();
     },
     sensor_options);
 
@@ -102,6 +104,7 @@ void FactorGraphNode::setupRosInterfaces()
         std::scoped_lock lock(depth_queue_mutex_);
         depth_queue_.push_back(msg);
       }
+      last_depth_time_ = this->get_clock()->now().seconds();
 
       double time_since_dvl = this->get_clock()->now().seconds() - last_dvl_time_;
       bool dvl_timed_out = time_since_dvl > params_.dvl.timeout_threshold;
@@ -139,6 +142,7 @@ void FactorGraphNode::setupRosInterfaces()
     [this](const sensor_msgs::msg::MagneticField::SharedPtr msg) {
       std::scoped_lock lock(mag_queue_mutex_);
       mag_queue_.push_back(msg);
+      last_mag_time_ = this->get_clock()->now().seconds();
     },
     sensor_options);
 
@@ -147,6 +151,7 @@ void FactorGraphNode::setupRosInterfaces()
     [this](const sensor_msgs::msg::Imu::SharedPtr msg) {
       std::scoped_lock lock(ahrs_queue_mutex_);
       ahrs_queue_.push_back(msg);
+      last_ahrs_time_ = this->get_clock()->now().seconds();
     },
     sensor_options);
 
@@ -168,10 +173,14 @@ void FactorGraphNode::setupRosInterfaces()
       }
     },
     sensor_options);
+
+  diagnostic_updater_.setHardwareID("factor_graph_node");
+  diagnostic_updater_.add("Factor Graph Status", this, &FactorGraphNode::produceDiagnostics);
 }
 
 FactorGraphNode::FactorGraphNode()
-: Node("factor_graph_node")
+: Node("factor_graph_node"),
+  diagnostic_updater_(this)
 {
   RCLCPP_INFO(get_logger(), "Starting Factor Graph Node...");
 
@@ -620,6 +629,7 @@ void FactorGraphNode::initializeGraph()
 {
   std::lock_guard<std::mutex> init_lock(initialization_mutex_);
   if (graph_initialized_) {
+    RCLCPP_DEBUG(get_logger(), "Duplicate initialization attempt detected.");
     return;
   }
 
@@ -792,7 +802,7 @@ void FactorGraphNode::addGpsFactor(
       gtsam::noiseModel::mEstimator::Tukey::Create(params_.gps.robust_k), gps_noise);
   }
 
-  RCLCPP_DEBUG(get_logger(), "Adding GPS factor at step %d", current_step_);
+  RCLCPP_DEBUG(get_logger(), "Adding GPS factor at step %zu", current_step_);
 
   graph.emplace_shared<CustomGPSFactorArm>(
     X(current_step_), toGtsam(gps_msg->pose.pose.position),
@@ -823,7 +833,7 @@ void FactorGraphNode::addDepthFactor(
       gtsam::noiseModel::mEstimator::Tukey::Create(params_.depth.robust_k), depth_noise);
   }
 
-  RCLCPP_DEBUG(get_logger(), "Adding depth factor at step %d", current_step_);
+  RCLCPP_DEBUG(get_logger(), "Adding depth factor at step %zu", current_step_);
 
   graph.emplace_shared<CustomDepthFactorArm>(
     X(current_step_), depth_msg->pose.pose.position.z,
@@ -861,7 +871,7 @@ void FactorGraphNode::addAhrsFactor(
       gtsam::noiseModel::mEstimator::Tukey::Create(params_.ahrs.robust_k), ahrs_noise);
   }
 
-  RCLCPP_DEBUG(get_logger(), "Adding AHRS factor at step %d", current_step_);
+  RCLCPP_DEBUG(get_logger(), "Adding AHRS factor at step %zu", current_step_);
 
   graph.emplace_shared<CustomAHRSFactor>(
     X(current_step_), toGtsam(ahrs_msg->orientation),
@@ -907,7 +917,7 @@ void FactorGraphNode::addMagFactor(
         gtsam::noiseModel::mEstimator::Tukey::Create(params_.mag.robust_k), mag_noise);
     }
 
-    RCLCPP_DEBUG(get_logger(), "Adding 1D mag factor at step %d", current_step_);
+    RCLCPP_DEBUG(get_logger(), "Adding 1D mag factor at step %zu", current_step_);
 
     graph.emplace_shared<CustomMagFactorArm>(
       X(current_step_), toGtsam(mag_msg->magnetic_field), ref_vec,
@@ -935,7 +945,7 @@ void FactorGraphNode::addMagFactor(
         gtsam::noiseModel::mEstimator::Tukey::Create(params_.mag.robust_k), mag_noise);
     }
 
-    RCLCPP_DEBUG(get_logger(), "Adding 3D mag factor at step %d", current_step_);
+    RCLCPP_DEBUG(get_logger(), "Adding 3D mag factor at step %zu", current_step_);
 
     graph.emplace_shared<CustomMagFactorArm>(
       X(current_step_), toGtsam(mag_msg->magnetic_field), ref_vec,
@@ -970,7 +980,7 @@ void FactorGraphNode::addDvlFactor(
       gtsam::noiseModel::mEstimator::Tukey::Create(params_.dvl.robust_k), dvl_noise);
   }
 
-  RCLCPP_DEBUG(get_logger(), "Adding DVL factor at step %d", current_step_);
+  RCLCPP_DEBUG(get_logger(), "Adding DVL factor at step %zu", current_step_);
 
   graph.emplace_shared<CustomDVLFactor>(
     X(current_step_), V(current_step_),
@@ -1023,7 +1033,7 @@ void FactorGraphNode::addPreintegratedImuFactor(
     V(current_step_), B(prev_step_),
     B(current_step_), *imu_preintegrator_);
 
-  RCLCPP_DEBUG(get_logger(), "Adding preintegrated IMU factor at step %d", current_step_);
+  RCLCPP_DEBUG(get_logger(), "Adding preintegrated IMU factor at step %zu", current_step_);
 
   // Re-queue future IMU messages
   if (!unused_imu_msgs.empty()) {
@@ -1139,7 +1149,7 @@ void FactorGraphNode::addPreintegratedDvlFactor(
     last_dvl_time = target_time;
   }
 
-  RCLCPP_DEBUG(get_logger(), "Adding preintegrated DVL factor at step %d", current_step_);
+  RCLCPP_DEBUG(get_logger(), "Adding preintegrated DVL factor at step %zu", current_step_);
 
   graph.emplace_shared<CustomDVLPreintegratedFactor>(
     X(prev_step_), X(current_step_), dvl_preintegrator_->delta(),
@@ -1358,15 +1368,21 @@ void FactorGraphNode::optimizeGraph()
   if (params_.experimental.enable_dvl_preintegration) {
     if (depth_msgs.size() > 1) {
       RCLCPP_WARN(
-        get_logger(), "Processing overflow. Skipping %ld Depth keyframes.\n"
+        get_logger(), "Processing overflow. Skipping %zu Depth keyframes.\n"
         "This may be intentional (depth_rate_limit_hz).",
         depth_msgs.size() - 1);
+      processing_overflow_ = true;
+    } else {
+      processing_overflow_ = false;
     }
   } else {
     if (dvl_msgs.size() > 1) {
       RCLCPP_WARN(
-        get_logger(), "Processing overflow. Skipping %ld DVL keyframes.",
+        get_logger(), "Processing overflow. Skipping %zu DVL keyframes.",
         dvl_msgs.size() - 1);
+      processing_overflow_ = true;
+    } else {
+      processing_overflow_ = false;
     }
   }
 
@@ -1460,6 +1476,60 @@ void FactorGraphNode::optimizeGraph()
   } catch (const std::exception & e) {
     RCLCPP_FATAL(get_logger(), "%s", e.what());
     rclcpp::shutdown();
+  }
+}
+
+void FactorGraphNode::produceDiagnostics(diagnostic_updater::DiagnosticStatusWrapper & stat)
+{
+  if (graph_initialized_) {
+    stat.summary(diagnostic_msgs::msg::DiagnosticStatus::OK, "Running");
+  } else if (sensors_ready_) {
+    stat.summary(diagnostic_msgs::msg::DiagnosticStatus::OK, "Averaging");
+  } else if (!sensors_ready_ && !graph_initialized_) {
+    stat.summary(diagnostic_msgs::msg::DiagnosticStatus::WARN, "Waiting for Sensors");
+  } else {
+    stat.summary(diagnostic_msgs::msg::DiagnosticStatus::OK, "Initializing");
+  }
+
+  if (processing_overflow_) {
+    stat.add("Processing Overflow", "True");
+    stat.mergeSummary(diagnostic_msgs::msg::DiagnosticStatus::WARN, "Processing Overflow");
+  } else {
+    stat.add("Processing Overflow", "False");
+  }
+
+  stat.add("Current Step", current_step_);
+
+  auto add_sensor_diag = [&](const std::string & name, size_t queue_size, double last_time) {
+      stat.add(name + " Queue Size", queue_size);
+      double time_since =
+        (last_time > 0.0) ? (this->get_clock()->now().seconds() - last_time) : -1.0;
+      stat.add(name + " Time Since Last (s)", time_since);
+    };
+
+  {
+    std::scoped_lock lock(imu_queue_mutex_);
+    add_sensor_diag("IMU", imu_queue_.size(), last_imu_time_);
+  }
+  {
+    std::scoped_lock lock(gps_queue_mutex_);
+    add_sensor_diag("GPS", gps_queue_.size(), last_gps_time_);
+  }
+  {
+    std::scoped_lock lock(depth_queue_mutex_);
+    add_sensor_diag("Depth", depth_queue_.size(), last_depth_time_);
+  }
+  {
+    std::scoped_lock lock(mag_queue_mutex_);
+    add_sensor_diag("Mag", mag_queue_.size(), last_mag_time_);
+  }
+  {
+    std::scoped_lock lock(ahrs_queue_mutex_);
+    add_sensor_diag("AHRS", ahrs_queue_.size(), last_ahrs_time_);
+  }
+  {
+    std::scoped_lock lock(dvl_queue_mutex_);
+    add_sensor_diag("DVL", dvl_queue_.size(), last_dvl_time_);
   }
 }
 
