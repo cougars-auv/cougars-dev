@@ -17,7 +17,6 @@ COLORS = {
     "UKF": "#C44E52",
     "IEKF": "#8172B2",
     # "DVL": "#FFC107",
-    "Truth": "black",
 }
 
 NAME_MAPPING = {

@@ -14,6 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import sys
 import rclpy
 from rclpy.node import Node
 from nav_msgs.msg import Odometry, Path
@@ -98,12 +99,13 @@ def main(args=None):
     node = OdomToPathNode()
     try:
         rclpy.spin(node)
-    except KeyboardInterrupt:
+    except (KeyboardInterrupt, rclpy.executors.ExternalShutdownException):
         pass
     finally:
         node.destroy_node()
         if rclpy.ok():
             rclpy.shutdown()
+        sys.exit(0)
 
 
 if __name__ == "__main__":

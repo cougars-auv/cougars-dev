@@ -20,7 +20,7 @@ COLORS = {
     "UKF": "#C44E52",
     "IEKF": "#8172B2",
     "DVL": "#FFC107",
-    "Truth": "black",
+    "GT": "black",
 }
 
 NAME_MAPPING = {
@@ -159,14 +159,14 @@ def plot_auv(evo_agent_dir, output_dir, auv_name):
         plot.PlotMode.xy,
         gt_traj,
         style="--",
-        color=COLORS["Truth"],
-        label="Truth",
+        color=COLORS["GT"],
+        label="GT",
     )
     add_start_end_markers(
         ax,
         gt_traj,
-        start_color=COLORS["Truth"],
-        end_color=COLORS["Truth"],
+        start_color=COLORS["GT"],
+        end_color=COLORS["GT"],
     )
 
     ax.set_title("")

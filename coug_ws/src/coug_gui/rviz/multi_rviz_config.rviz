@@ -53,198 +53,11 @@ Visualization Manager:
       Frame Timeout: 15
       Frames:
         All Enabled: true
-        auv0/base_link:
-          Value: true
-        auv0/com_link:
-          Value: true
-        auv0/depth_link:
-          Value: true
-        auv0/dvl_link:
-          Value: true
-        auv0/handle_link:
-          Value: true
-        auv0/hull_link:
-          Value: true
-        auv0/imu_link:
-          Value: true
-        auv0/left_fin_link:
-          Value: true
-        auv0/modem_link:
-          Value: true
-        auv0/odom:
-          Value: true
-        auv0/right_fin_link:
-          Value: true
-        auv0/thruster_link:
-          Value: true
-        auv0/top_fin_link:
-          Value: true
-        auv0/tray_link:
-          Value: true
-        auv0/truth_link:
-          Value: true
-        auv1/base_link:
-          Value: true
-        auv1/com_link:
-          Value: true
-        auv1/depth_link:
-          Value: true
-        auv1/dvl_link:
-          Value: true
-        auv1/handle_link:
-          Value: true
-        auv1/hull_link:
-          Value: true
-        auv1/imu_link:
-          Value: true
-        auv1/left_fin_link:
-          Value: true
-        auv1/modem_link:
-          Value: true
-        auv1/odom:
-          Value: true
-        auv1/right_fin_link:
-          Value: true
-        auv1/thruster_link:
-          Value: true
-        auv1/top_fin_link:
-          Value: true
-        auv1/tray_link:
-          Value: true
-        auv1/truth_link:
-          Value: true
-        auv2/base_link:
-          Value: true
-        auv2/com_link:
-          Value: true
-        auv2/depth_link:
-          Value: true
-        auv2/dvl_link:
-          Value: true
-        auv2/handle_link:
-          Value: true
-        auv2/hull_link:
-          Value: true
-        auv2/imu_link:
-          Value: true
-        auv2/left_fin_link:
-          Value: true
-        auv2/modem_link:
-          Value: true
-        auv2/odom:
-          Value: true
-        auv2/right_fin_link:
-          Value: true
-        auv2/thruster_link:
-          Value: true
-        auv2/top_fin_link:
-          Value: true
-        auv2/tray_link:
-          Value: true
-        auv2/truth_link:
-          Value: true
-        holoocean_global_frame:
-          Value: true
-        map:
-          Value: true
-        map__identity:
-          Value: true
-        origin:
-          Value: true
       Marker Scale: 1
       Name: TF
       Show Arrows: true
       Show Axes: true
       Show Names: false
-      Tree:
-        map:
-          auv0/odom:
-            auv0/base_link:
-              auv0/com_link:
-                auv0/depth_link:
-                  {}
-                auv0/dvl_link:
-                  {}
-                auv0/imu_link:
-                  {}
-                auv0/modem_link:
-                  {}
-              auv0/handle_link:
-                {}
-              auv0/hull_link:
-                {}
-              auv0/left_fin_link:
-                {}
-              auv0/right_fin_link:
-                {}
-              auv0/thruster_link:
-                {}
-              auv0/top_fin_link:
-                {}
-              auv0/tray_link:
-                {}
-              auv0/truth_link:
-                {}
-          auv1/odom:
-            auv1/base_link:
-              auv1/com_link:
-                auv1/depth_link:
-                  {}
-                auv1/dvl_link:
-                  {}
-                auv1/imu_link:
-                  {}
-                auv1/modem_link:
-                  {}
-              auv1/handle_link:
-                {}
-              auv1/hull_link:
-                {}
-              auv1/left_fin_link:
-                {}
-              auv1/right_fin_link:
-                {}
-              auv1/thruster_link:
-                {}
-              auv1/top_fin_link:
-                {}
-              auv1/tray_link:
-                {}
-              auv1/truth_link:
-                {}
-          auv2/odom:
-            auv2/base_link:
-              auv2/com_link:
-                auv2/depth_link:
-                  {}
-                auv2/dvl_link:
-                  {}
-                auv2/imu_link:
-                  {}
-                auv2/modem_link:
-                  {}
-              auv2/handle_link:
-                {}
-              auv2/hull_link:
-                {}
-              auv2/left_fin_link:
-                {}
-              auv2/right_fin_link:
-                {}
-              auv2/thruster_link:
-                {}
-              auv2/top_fin_link:
-                {}
-              auv2/tray_link:
-                {}
-              auv2/truth_link:
-                {}
-          holoocean_global_frame:
-            {}
-          origin:
-            {}
-        map__identity:
-          {}
       Update Interval: 0
       Value: true
     - Class: rviz_common/Group
@@ -267,70 +80,6 @@ Visualization Manager:
             Expand Link Details: false
             Expand Tree: false
             Link Tree Style: Links in Alphabetic Order
-            base_link:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-              Value: true
-            com_link:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-            depth_link:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-            dvl_link:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-            handle_link:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-              Value: true
-            hull_link:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-              Value: true
-            imu_link:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-            left_fin_link:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-              Value: true
-            modem_link:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-            right_fin_link:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-              Value: true
-            thruster_link:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-              Value: true
-            top_fin_link:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-              Value: true
-            tray_link:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-              Value: true
-            truth_link:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
           Mass Properties:
             Inertia: false
             Mass: false
@@ -358,7 +107,7 @@ Visualization Manager:
             Value: false
           Enabled: true
           Keep: 1
-          Name: Truth
+          Name: GT
           Position Tolerance: 0.10000000149011612
           Shape:
             Alpha: 1
@@ -377,6 +126,34 @@ Visualization Manager:
             History Policy: Keep Last
             Reliability Policy: Reliable
             Value: /auv0/odometry/truth
+          Value: true
+        - Alpha: 1
+          Buffer Length: 1
+          Class: rviz_default_plugins/Path
+          Color: 255; 255; 255
+          Enabled: true
+          Head Diameter: 0.30000001192092896
+          Head Length: 0.20000000298023224
+          Length: 0.30000001192092896
+          Line Style: Lines
+          Line Width: 0.029999999329447746
+          Name: GT Path
+          Offset:
+            X: 0
+            Y: 0
+            Z: 0
+          Pose Color: 255; 85; 255
+          Pose Style: None
+          Radius: 0.029999999329447746
+          Shaft Diameter: 0.10000000149011612
+          Shaft Length: 0.10000000149011612
+          Topic:
+            Depth: 5
+            Durability Policy: Volatile
+            Filter size: 10
+            History Policy: Keep Last
+            Reliability Policy: Reliable
+            Value: /auv0/path/truth
           Value: true
         - Angle Tolerance: 0.10000000149011612
           Class: rviz_default_plugins/Odometry
@@ -420,6 +197,34 @@ Visualization Manager:
         - Alpha: 1
           Buffer Length: 1
           Class: rviz_default_plugins/Path
+          Color: 25; 255; 0
+          Enabled: true
+          Head Diameter: 0.30000001192092896
+          Head Length: 0.20000000298023224
+          Length: 0.30000001192092896
+          Line Style: Lines
+          Line Width: 0.029999999329447746
+          Name: FGO Path
+          Offset:
+            X: 0
+            Y: 0
+            Z: 0
+          Pose Color: 255; 85; 255
+          Pose Style: None
+          Radius: 0.029999999329447746
+          Shaft Diameter: 0.10000000149011612
+          Shaft Length: 0.10000000149011612
+          Topic:
+            Depth: 5
+            Durability Policy: Volatile
+            Filter size: 10
+            History Policy: Keep Last
+            Reliability Policy: Reliable
+            Value: /auv0/path/global
+          Value: true
+        - Alpha: 1
+          Buffer Length: 1
+          Class: rviz_default_plugins/Path
           Color: 170; 0; 255
           Enabled: true
           Head Diameter: 0.30000001192092896
@@ -427,7 +232,7 @@ Visualization Manager:
           Length: 0.30000001192092896
           Line Style: Lines
           Line Width: 0.029999999329447746
-          Name: Path
+          Name: Smoothed Path
           Offset:
             X: 0
             Y: 0
@@ -488,70 +293,6 @@ Visualization Manager:
             Expand Link Details: false
             Expand Tree: false
             Link Tree Style: Links in Alphabetic Order
-            base_link:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-              Value: true
-            com_link:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-            depth_link:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-            dvl_link:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-            handle_link:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-              Value: true
-            hull_link:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-              Value: true
-            imu_link:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-            left_fin_link:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-              Value: true
-            modem_link:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-            right_fin_link:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-              Value: true
-            thruster_link:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-              Value: true
-            top_fin_link:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-              Value: true
-            tray_link:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-              Value: true
-            truth_link:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
           Mass Properties:
             Inertia: false
             Mass: false
@@ -579,7 +320,7 @@ Visualization Manager:
             Value: false
           Enabled: true
           Keep: 1
-          Name: Truth
+          Name: GT
           Position Tolerance: 0.10000000149011612
           Shape:
             Alpha: 1
@@ -598,6 +339,34 @@ Visualization Manager:
             History Policy: Keep Last
             Reliability Policy: Reliable
             Value: /auv1/odometry/truth
+          Value: true
+        - Alpha: 1
+          Buffer Length: 1
+          Class: rviz_default_plugins/Path
+          Color: 255; 255; 255
+          Enabled: true
+          Head Diameter: 0.30000001192092896
+          Head Length: 0.20000000298023224
+          Length: 0.30000001192092896
+          Line Style: Lines
+          Line Width: 0.029999999329447746
+          Name: GT Path
+          Offset:
+            X: 0
+            Y: 0
+            Z: 0
+          Pose Color: 255; 85; 255
+          Pose Style: None
+          Radius: 0.029999999329447746
+          Shaft Diameter: 0.10000000149011612
+          Shaft Length: 0.10000000149011612
+          Topic:
+            Depth: 5
+            Durability Policy: Volatile
+            Filter size: 10
+            History Policy: Keep Last
+            Reliability Policy: Reliable
+            Value: /auv1/path/truth
           Value: true
         - Angle Tolerance: 0.10000000149011612
           Class: rviz_default_plugins/Odometry
@@ -641,6 +410,34 @@ Visualization Manager:
         - Alpha: 1
           Buffer Length: 1
           Class: rviz_default_plugins/Path
+          Color: 25; 255; 0
+          Enabled: true
+          Head Diameter: 0.30000001192092896
+          Head Length: 0.20000000298023224
+          Length: 0.30000001192092896
+          Line Style: Lines
+          Line Width: 0.029999999329447746
+          Name: FGO Path
+          Offset:
+            X: 0
+            Y: 0
+            Z: 0
+          Pose Color: 255; 85; 255
+          Pose Style: None
+          Radius: 0.029999999329447746
+          Shaft Diameter: 0.10000000149011612
+          Shaft Length: 0.10000000149011612
+          Topic:
+            Depth: 5
+            Durability Policy: Volatile
+            Filter size: 10
+            History Policy: Keep Last
+            Reliability Policy: Reliable
+            Value: /auv1/path/global
+          Value: true
+        - Alpha: 1
+          Buffer Length: 1
+          Class: rviz_default_plugins/Path
           Color: 170; 0; 255
           Enabled: true
           Head Diameter: 0.30000001192092896
@@ -648,7 +445,7 @@ Visualization Manager:
           Length: 0.30000001192092896
           Line Style: Lines
           Line Width: 0.029999999329447746
-          Name: Path
+          Name: Smoothed Path
           Offset:
             X: 0
             Y: 0
@@ -709,70 +506,6 @@ Visualization Manager:
             Expand Link Details: false
             Expand Tree: false
             Link Tree Style: Links in Alphabetic Order
-            base_link:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-              Value: true
-            com_link:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-            depth_link:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-            dvl_link:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-            handle_link:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-              Value: true
-            hull_link:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-              Value: true
-            imu_link:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-            left_fin_link:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-              Value: true
-            modem_link:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-            right_fin_link:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-              Value: true
-            thruster_link:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-              Value: true
-            top_fin_link:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-              Value: true
-            tray_link:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-              Value: true
-            truth_link:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
           Mass Properties:
             Inertia: false
             Mass: false
@@ -800,7 +533,7 @@ Visualization Manager:
             Value: false
           Enabled: true
           Keep: 1
-          Name: Truth
+          Name: GT
           Position Tolerance: 0.10000000149011612
           Shape:
             Alpha: 1
@@ -819,6 +552,34 @@ Visualization Manager:
             History Policy: Keep Last
             Reliability Policy: Reliable
             Value: /auv2/odometry/truth
+          Value: true
+        - Alpha: 1
+          Buffer Length: 1
+          Class: rviz_default_plugins/Path
+          Color: 255; 255; 255
+          Enabled: true
+          Head Diameter: 0.30000001192092896
+          Head Length: 0.20000000298023224
+          Length: 0.30000001192092896
+          Line Style: Lines
+          Line Width: 0.029999999329447746
+          Name: GT Path
+          Offset:
+            X: 0
+            Y: 0
+            Z: 0
+          Pose Color: 255; 85; 255
+          Pose Style: None
+          Radius: 0.029999999329447746
+          Shaft Diameter: 0.10000000149011612
+          Shaft Length: 0.10000000149011612
+          Topic:
+            Depth: 5
+            Durability Policy: Volatile
+            Filter size: 10
+            History Policy: Keep Last
+            Reliability Policy: Reliable
+            Value: /auv2/path/truth
           Value: true
         - Angle Tolerance: 0.10000000149011612
           Class: rviz_default_plugins/Odometry
@@ -862,6 +623,34 @@ Visualization Manager:
         - Alpha: 1
           Buffer Length: 1
           Class: rviz_default_plugins/Path
+          Color: 25; 255; 0
+          Enabled: true
+          Head Diameter: 0.30000001192092896
+          Head Length: 0.20000000298023224
+          Length: 0.30000001192092896
+          Line Style: Lines
+          Line Width: 0.029999999329447746
+          Name: FGO Path
+          Offset:
+            X: 0
+            Y: 0
+            Z: 0
+          Pose Color: 255; 85; 255
+          Pose Style: None
+          Radius: 0.029999999329447746
+          Shaft Diameter: 0.10000000149011612
+          Shaft Length: 0.10000000149011612
+          Topic:
+            Depth: 5
+            Durability Policy: Volatile
+            Filter size: 10
+            History Policy: Keep Last
+            Reliability Policy: Reliable
+            Value: /auv2/path/global
+          Value: true
+        - Alpha: 1
+          Buffer Length: 1
+          Class: rviz_default_plugins/Path
           Color: 170; 0; 255
           Enabled: true
           Head Diameter: 0.30000001192092896
@@ -869,7 +658,7 @@ Visualization Manager:
           Length: 0.30000001192092896
           Line Style: Lines
           Line Width: 0.029999999329447746
-          Name: Path
+          Name: Smoothed Path
           Offset:
             X: 0
             Y: 0
