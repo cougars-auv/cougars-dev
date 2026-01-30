@@ -167,6 +167,7 @@ def generate_launch_description():
                         "gps.parameter_frame": gps_link_frame,
                         "mag.parameter_frame": imu_link_frame,
                         "ahrs.parameter_frame": imu_link_frame,
+                        "max_keyframe_rate": 4.0,
                         "global_odom_topic": "odometry/global_tm",
                         "smoothed_path_topic": "smoothed_path_tm",
                         "publish_global_tf": False,

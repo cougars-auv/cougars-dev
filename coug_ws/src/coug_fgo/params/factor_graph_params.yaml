@@ -32,6 +32,9 @@ factor_graph_node:
   relinearize_skip:
     type: int
     default_value: 1
+  max_keyframe_rate:
+    type: double
+    default_value: -1.0
 
   # --- ROS Topics and Frames ---
   imu_topic:
@@ -304,6 +307,3 @@ factor_graph_node:
     enable_dvl_preintegration:
       type: bool
       default_value: false
-    depth_rate_limit_hz:
-      type: double
-      default_value: 4.0

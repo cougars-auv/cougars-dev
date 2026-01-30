@@ -237,36 +237,21 @@ protected Q_SLOTS:
   void DepthChanged(double value);
 
 private:
-  /// The UI form object.
   Ui::coug_waypoints_config ui_;
-  /// The configuration widget.
   QWidget * config_widget_;
-  /// Pointer to the MapViz canvas.
   mapviz::MapCanvas * map_canvas_;
 
-  /// Map of topic names to publishers.
   std::map<std::string, rclcpp::Publisher<geometry_msgs::msg::PoseArray>::SharedPtr> publishers_;
-
-  /// Map of topic names to their respective waypoint lists.
   std::map<std::string, std::vector<geometry_msgs::msg::Pose>> waypoint_map_;
-  /// The currently selected topic.
   std::string current_topic_;
-
-  /// The active list of waypoints for the current topic.
   std::vector<geometry_msgs::msg::Pose> waypoints_;
 
-  /// Index of the currently selected waypoint (-1 if none).
   int selected_point_;
-  /// Index of the waypoint currently being dragged (-1 if none).
   int dragged_point_;
-  /// Whether the mouse is currently pressed.
   bool is_mouse_down_;
-  /// Position where the mouse was pressed.
   QPointF mouse_down_pos_;
-  /// Time (ms) when the mouse was pressed.
   qint64 mouse_down_time_;
 
-  /// Timer for discovering new topics.
   QTimer * discovery_timer_;
 
   /**

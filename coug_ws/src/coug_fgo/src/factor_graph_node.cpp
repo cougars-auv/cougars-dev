@@ -110,16 +110,6 @@ void FactorGraphNode::setupRosInterfaces()
       bool dvl_timed_out = time_since_dvl > params_.dvl.timeout_threshold;
 
       if (params_.experimental.enable_dvl_preintegration) {
-        // IMPORTANT! Limit the depth rate to less than the DVL rate
-        if (params_.experimental.depth_rate_limit_hz > 0.0) {
-          double msg_time = rclcpp::Time(msg->header.stamp).seconds();
-          double min_period = 1.0 / params_.experimental.depth_rate_limit_hz;
-          if (msg_time - last_depth_trigger_time_ < min_period) {
-            return;
-          }
-          last_depth_trigger_time_ = msg_time;
-        }
-
         if (!graph_initialized_) {
           initializeGraph();
         } else {
@@ -129,7 +119,7 @@ void FactorGraphNode::setupRosInterfaces()
         if (graph_initialized_ && dvl_timed_out) {
           RCLCPP_WARN_THROTTLE(
             get_logger(), *get_clock(), 5000,
-            "DVL timed out (%.2fs)! Using depth sensor to trigger optimization.",
+            "DVL timed out (%.2fs)! Using depth sensor to trigger keyframes.",
             time_since_dvl);
           optimizeGraph();
         }
@@ -1357,6 +1347,19 @@ void FactorGraphNode::optimizeGraph()
       }
       should_abort = true;
     }
+
+    if (!should_abort && params_.max_keyframe_rate > 0.0) {
+      double min_period = 1.0 / params_.max_keyframe_rate;
+      if (target_stamp.seconds() - prev_time_ < min_period) {
+        RCLCPP_DEBUG(get_logger(), "Limiting keyframe rate. Skipping.");
+        if (params_.experimental.enable_dvl_preintegration) {
+          depth_queue_.pop_back();
+        } else {
+          if (!dvl_queue_.empty()) {dvl_queue_.pop_back();} else {depth_queue_.pop_back();}
+        }
+        should_abort = true;
+      }
+    }
   }
 
   if (should_abort) {return;}
@@ -1384,8 +1387,7 @@ void FactorGraphNode::optimizeGraph()
     if (depth_msgs.size() > 1) {
       RCLCPP_WARN_THROTTLE(
         get_logger(), *get_clock(), 5000,
-        "Processing overflow. Skipping %zu Depth keyframes. "
-        "This may be intentional (depth_rate_limit_hz).",
+        "Processing overflow. Skipping %zu Depth keyframes.",
         depth_msgs.size() - 1);
       processing_overflow_ = true;
     } else {
