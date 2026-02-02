@@ -61,6 +61,7 @@
 
     gps:
       enable_gps: false
+      enable_gps_init_only: false
       enable_altitude: false
       use_parameter_frame: false
       use_parameter_covariance: true
@@ -82,6 +83,7 @@
 
     mag:
       enable_mag: false
+      enable_mag_init_only: false
       constrain_yaw_only: true
       use_parameter_frame: false
       use_parameter_covariance: false
@@ -97,6 +99,7 @@
 
     ahrs:
       enable_ahrs: true
+      enable_ahrs_init_only: false
       enable_roll_pitch: false
       use_parameter_frame: false
       use_parameter_covariance: false

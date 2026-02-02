@@ -119,6 +119,9 @@ factor_graph_node:
     enable_gps:
       type: bool
       default_value: false
+    enable_gps_init_only:
+      type: bool
+      default_value: false
     enable_altitude:
       type: bool
       default_value: false
@@ -176,6 +179,9 @@ factor_graph_node:
     enable_mag:
       type: bool
       default_value: false
+    enable_mag_init_only:
+      type: bool
+      default_value: false
     constrain_yaw_only:
       type: bool
       default_value: true
@@ -207,6 +213,9 @@ factor_graph_node:
 
   ahrs:
     enable_ahrs:
+      type: bool
+      default_value: false
+    enable_ahrs_init_only:
       type: bool
       default_value: false
     enable_roll_pitch:

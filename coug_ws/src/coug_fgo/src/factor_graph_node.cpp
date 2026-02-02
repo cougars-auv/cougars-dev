@@ -238,7 +238,7 @@ bool FactorGraphNode::lookupInitialTransforms()
       imu_to_dvl_tf_ = lookup(dvl_frame_, child_frame);
       have_imu_to_dvl_tf_ = true;
     }
-    if (params_.gps.enable_gps && !have_gps_to_dvl_tf_) {
+    if ((params_.gps.enable_gps || params_.gps.enable_gps_init_only) && !have_gps_to_dvl_tf_) {
       std::string child_frame = params_.gps.use_parameter_frame ?
         params_.gps.parameter_frame : initial_gps_->child_frame_id;
       gps_to_dvl_tf_ = lookup(dvl_frame_, child_frame);
@@ -250,13 +250,13 @@ bool FactorGraphNode::lookupInitialTransforms()
       depth_to_dvl_tf_ = lookup(dvl_frame_, child_frame);
       have_depth_to_dvl_tf_ = true;
     }
-    if (params_.mag.enable_mag && !have_mag_to_dvl_tf_) {
+    if ((params_.mag.enable_mag || params_.mag.enable_mag_init_only) && !have_mag_to_dvl_tf_) {
       std::string child_frame = params_.mag.use_parameter_frame ?
         params_.mag.parameter_frame : initial_mag_->header.frame_id;
       mag_to_dvl_tf_ = lookup(dvl_frame_, child_frame);
       have_mag_to_dvl_tf_ = true;
     }
-    if (params_.ahrs.enable_ahrs && !have_ahrs_to_dvl_tf_) {
+    if ((params_.ahrs.enable_ahrs || params_.ahrs.enable_ahrs_init_only) && !have_ahrs_to_dvl_tf_) {
       std::string child_frame = params_.ahrs.use_parameter_frame ?
         params_.ahrs.parameter_frame : initial_ahrs_->header.frame_id;
       ahrs_to_dvl_tf_ = lookup(dvl_frame_, child_frame);
@@ -339,7 +339,7 @@ FactorGraphNode::AveragedMeasurements FactorGraphNode::computeAveragedMeasuremen
   result.imu->angular_velocity.z /= n_imu;
 
   // Average GPS
-  if (params_.gps.enable_gps) {
+  if (params_.gps.enable_gps || params_.gps.enable_gps_init_only) {
     result.gps = std::make_shared<nav_msgs::msg::Odometry>(*gps_msgs.back());
     result.gps->pose.pose.position.x = 0;
     result.gps->pose.pose.position.y = 0;
@@ -382,7 +382,7 @@ FactorGraphNode::AveragedMeasurements FactorGraphNode::computeAveragedMeasuremen
   result.dvl->twist.twist.linear.z /= n_dvl;
 
   // Average Magnetometer
-  if (params_.mag.enable_mag) {
+  if (params_.mag.enable_mag || params_.mag.enable_mag_init_only) {
     result.mag = std::make_shared<sensor_msgs::msg::MagneticField>(*mag_msgs.back());
     result.mag->magnetic_field.x = 0;
     result.mag->magnetic_field.y = 0;
@@ -400,7 +400,7 @@ FactorGraphNode::AveragedMeasurements FactorGraphNode::computeAveragedMeasuremen
   }
 
   // Average AHRS
-  if (params_.ahrs.enable_ahrs) {
+  if (params_.ahrs.enable_ahrs || params_.ahrs.enable_ahrs_init_only) {
     result.ahrs = std::make_shared<sensor_msgs::msg::Imu>(*ahrs_msgs.back());
     gtsam::Rot3 R_ref = toGtsam(ahrs_msgs.front()->orientation);
     gtsam::Vector3 log_sum = gtsam::Vector3::Zero();
@@ -442,14 +442,14 @@ gtsam::Rot3 FactorGraphNode::computeInitialOrientation()
       accel_base.y() * accel_base.y() +
       accel_base.z() * accel_base.z()));
 
-  if (params_.ahrs.enable_ahrs) {
+  if (params_.ahrs.enable_ahrs || params_.ahrs.enable_ahrs_init_only) {
     // Account for AHRS sensor rotation
     gtsam::Rot3 R_dvl_sensor = toGtsam(ahrs_to_dvl_tf_.transform.rotation);
     gtsam::Rot3 R_base_sensor = R_base_dvl * R_dvl_sensor;
     gtsam::Rot3 R_world_sensor = toGtsam(initial_ahrs_->orientation);
     gtsam::Rot3 R_world_base_measured = R_world_sensor * R_base_sensor.inverse();
     yaw = R_world_base_measured.yaw() + params_.ahrs.mag_declination_radians;
-  } else if (params_.mag.enable_mag) {
+  } else if (params_.mag.enable_mag || params_.mag.enable_mag_init_only) {
     // Account for magnetometer rotation
     gtsam::Rot3 R_dvl_sensor = toGtsam(mag_to_dvl_tf_.transform.rotation);
 
@@ -491,7 +491,7 @@ gtsam::Point3 FactorGraphNode::computeInitialPosition(const gtsam::Rot3 & initia
   }
 
   gtsam::Point3 initial_position_dvl = P_world_dvl_param;
-  if (params_.gps.enable_gps) {
+  if (params_.gps.enable_gps || params_.gps.enable_gps_init_only) {
     // Account for GPS lever arm
     gtsam::Pose3 T_dvl_gps = toGtsam(gps_to_dvl_tf_.transform);
     gtsam::Point3 world_t_dvl_gps = initial_orientation_dvl.rotate(T_dvl_gps.translation());
