@@ -91,9 +91,8 @@ TEST(CustomDepthFactorArmTest, ErrorEvaluation) {
 /**
  * @brief Verify Jacobians of the CustomDepthFactorArm using numerical differentiation.
  *
- * Ensures that the analytical Jacobian implementation used by the optimization engine
- * matches the numerical derivative of the error function. This is critical for
- * correct convergence of the factor graph.
+ * Validates the analytical Jacobians with respect to:
+ * 1.  **Pose**: Z-component relates to depth measurement.
  */
 TEST(CustomDepthFactorArmTest, Jacobians) {
   coug_fgo::factors::CustomDepthFactorArm factor(gtsam::symbol_shorthand::X(1), 5.0,

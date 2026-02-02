@@ -77,7 +77,7 @@ TEST(CustomConstantVelocityFactorTest, ErrorEvaluation) {
 /**
  * @brief Verify Jacobians of the CustomConstantVelocityFactor using numerical differentiation.
  *
- * Validates the analytical Jacobians with respect to both:
+ * Validates the analytical Jacobians with respect to:
  * 1.  **Pose 1**: Orientation affects projection of v1.
  * 2.  **Velocity 1**: Linear.
  * 3.  **Pose 2**: Orientation affects projection of v2.

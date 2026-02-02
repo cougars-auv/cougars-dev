@@ -87,7 +87,8 @@ TEST(CustomAHRSFactorTest, ErrorEvaluation) {
 /**
  * @brief Verify Jacobians of the CustomAHRSFactor using numerical differentiation.
  *
- * Validates analytical derivatives for rotational error, ensuring proper handling of SE(3) manifolds.
+ * Validates the analytical Jacobians with respect to:
+ * 1.  **Pose**: Orientation affects the error (rotational difference).
  */
 TEST(CustomAHRSFactorTest, Jacobians) {
   coug_fgo::factors::CustomAHRSFactor factor(gtsam::symbol_shorthand::X(1),

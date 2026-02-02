@@ -157,7 +157,8 @@ TEST(CustomMagFactorArmTest, ErrorEvaluationYawOnly) {
 /**
  * @brief Verify Jacobians of the CustomMagFactorArm using numerical differentiation.
  *
- * Validates analytical derivatives for magnetic field error, ensuring proper handling of SE(3) manifolds.
+ * Validates the analytical Jacobians with respect to:
+ * 1.  **Pose**: Orientation affects the measured field direction.
  */
 TEST(CustomMagFactorArmTest, Jacobians) {
   gtsam::Key poseKey = gtsam::symbol_shorthand::X(1);
@@ -183,7 +184,8 @@ TEST(CustomMagFactorArmTest, Jacobians) {
 /**
  * @brief Verify Jacobians of the CustomMagFactorArm (Yaw Only) using numerical differentiation.
  *
- * Validates analytical derivatives for yaw error, ensuring proper handling of SE(3) manifolds.
+ * Validates the analytical Jacobians with respect to:
+ * 1.  **Pose**: Orientation (Yaw) affects the measured field direction.
  */
 TEST(CustomMagFactorArmTest, JacobiansYawOnly) {
   gtsam::Key poseKey = gtsam::symbol_shorthand::X(1);

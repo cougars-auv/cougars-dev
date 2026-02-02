@@ -82,8 +82,8 @@ TEST(CustomGPSFactorArmTest, ErrorEvaluation) {
 /**
  * @brief Verify Jacobians of the CustomGPSFactorArm using numerical differentiation.
  *
- * Validates the derivatives, ensuring correct optimization when both translation
- * and rotation (due to lever arm) are involved.
+ * Validates the analytical Jacobians with respect to:
+ * 1.  **Pose**: Position and orientation (due to lever arm).
  */
 TEST(CustomGPSFactorArmTest, Jacobians) {
   coug_fgo::factors::CustomGPSFactorArm factor(gtsam::symbol_shorthand::X(1),

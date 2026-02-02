@@ -79,8 +79,9 @@ TEST(CustomDVLPreintegratedFactorTest, ErrorEvaluation) {
 /**
  * @brief Verify Jacobians of the CustomDVLPreintegratedFactor using numerical differentiation.
  *
- * Validates the derivatives with respect to both Pose `i` and Pose `j`, which is complex
- * due to the coupling of rotation at `i` with the relative translation.
+ * Validates the analytical Jacobians with respect to:
+ * 1.  **Pose I**: Orientation and position affect the prediction.
+ * 2.  **Pose J**: Position affects relative displacement.
  */
 TEST(CustomDVLPreintegratedFactorTest, Jacobians) {
   gtsam::Key poseIKey = gtsam::symbol_shorthand::X(1);

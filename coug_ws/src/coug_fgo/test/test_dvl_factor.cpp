@@ -68,9 +68,9 @@ TEST(CustomDVLFactorTest, ErrorEvaluation) {
 /**
  * @brief Verify Jacobians of the CustomDVLFactor using numerical differentiation.
  *
- * Validates the analytical Jacobians with respect to both:
- * 1.  **Pose** (orientation affects the world-to-body projection).
- * 2.  **Velocity** (linear relationship).
+ * Validates the analytical Jacobians with respect to:
+ * 1.  **Pose**: Orientation affects the world-to-body projection.
+ * 2.  **Velocity**: Linear relationship.
  */
 TEST(CustomDVLFactorTest, Jacobians) {
   gtsam::Key poseKey = gtsam::symbol_shorthand::X(1);
