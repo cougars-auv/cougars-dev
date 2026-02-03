@@ -145,6 +145,8 @@
     experimental:
       # TURTLMap-based DVL preintegration implementation
       enable_dvl_preintegration: false
+      # TURTLMap-based DVL psuedo-measurement using IMU data
+      enable_pseudo_dvl_w_imu: false
 
 /**/origin_manager_node:
   ros__parameters:
@@ -174,21 +176,18 @@
     prior:
       parameter_priors:
         initial_position: [0.0, 0.0, 0.0] # [m]
-        initial_orientation: [0.0, 0.0, 0.0] # [rad]
 
 /auv1/**:
   ros__parameters:
     prior:
       parameter_priors:
         initial_position: [0.0, 20.0, 0.0] # [m]
-        initial_orientation: [0.0, 0.0, 0.0] # [rad]
 
 /auv2/**:
   ros__parameters:
     prior:
       parameter_priors:
         initial_position: [0.0, 40.0, 0.0] # [m]
-        initial_orientation: [0.0, 0.0, 0.0] # [rad]
 
 /bluerov2/**:
   ros__parameters:

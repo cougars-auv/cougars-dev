@@ -44,6 +44,7 @@ using coug_fgo::factors::CustomDVLPreintegratedFactor;
 using coug_fgo::factors::CustomGPSFactorArm;
 using coug_fgo::factors::CustomAHRSFactor;
 using coug_fgo::factors::CustomMagFactorArm;
+using coug_fgo::factors::CustomConstantVelocityFactor;
 using coug_fgo::utils::toGtsam;
 using coug_fgo::utils::toQuatMsg;
 using coug_fgo::utils::toPointMsg;
@@ -966,64 +967,62 @@ void FactorGraphNode::addMagFactor(
 
 void FactorGraphNode::addDvlFactor(
   gtsam::NonlinearFactorGraph & graph,
-  const std::deque<geometry_msgs::msg::TwistWithCovarianceStamped::SharedPtr> & dvl_msgs,
+  const std::deque<geometry_msgs::msg::TwistWithCovarianceStamped::SharedPtr> & dvl_msgs)
+{
+  if (dvl_msgs.empty()) {return;}
+
+  const auto & dvl_msg = dvl_msgs.back();
+
+  gtsam::Vector3 dvl_sigmas;
+  if (params_.dvl.use_parameter_covariance) {
+    dvl_sigmas << params_.dvl.parameter_covariance.velocity_noise_sigma,
+      params_.dvl.parameter_covariance.velocity_noise_sigma,
+      params_.dvl.parameter_covariance.velocity_noise_sigma;
+  } else {
+    dvl_sigmas << sqrt(dvl_msg->twist.covariance[0]), sqrt(dvl_msg->twist.covariance[7]),
+      sqrt(dvl_msg->twist.covariance[14]);
+  }
+  gtsam::SharedNoiseModel dvl_noise = gtsam::noiseModel::Diagonal::Sigmas(dvl_sigmas);
+
+  if (params_.dvl.robust_kernel == "Huber") {
+    dvl_noise = gtsam::noiseModel::Robust::Create(
+      gtsam::noiseModel::mEstimator::Huber::Create(params_.dvl.robust_k), dvl_noise);
+  } else if (params_.dvl.robust_kernel == "Tukey") {
+    dvl_noise = gtsam::noiseModel::Robust::Create(
+      gtsam::noiseModel::mEstimator::Tukey::Create(params_.dvl.robust_k), dvl_noise);
+  }
+
+  RCLCPP_DEBUG(get_logger(), "Adding DVL factor at step %zu", current_step_);
+
+  graph.emplace_shared<CustomDVLFactor>(
+    X(current_step_), V(current_step_),
+    toGtsam(dvl_msg->twist.twist.linear), dvl_noise);
+}
+
+void FactorGraphNode::addConstantVelocityFactor(
+  gtsam::NonlinearFactorGraph & graph,
   double target_time)
 {
-  if (!dvl_msgs.empty()) {
-    const auto & dvl_msg = dvl_msgs.back();
+  double dt = target_time - prev_time_;
+  double vel_random_walk = params_.dvl.velocity_random_walk;
+  double scaled_sigma = vel_random_walk * std::sqrt(std::max(dt, 0.001));
 
-    gtsam::Vector3 dvl_sigmas;
-    if (params_.dvl.use_parameter_covariance) {
-      dvl_sigmas << params_.dvl.parameter_covariance.velocity_noise_sigma,
-        params_.dvl.parameter_covariance.velocity_noise_sigma,
-        params_.dvl.parameter_covariance.velocity_noise_sigma;
-    } else {
-      dvl_sigmas << sqrt(dvl_msg->twist.covariance[0]), sqrt(dvl_msg->twist.covariance[7]),
-        sqrt(dvl_msg->twist.covariance[14]);
-    }
-    gtsam::SharedNoiseModel dvl_noise = gtsam::noiseModel::Diagonal::Sigmas(dvl_sigmas);
+  gtsam::SharedNoiseModel zero_accel_noise = gtsam::noiseModel::Isotropic::Sigma(3, scaled_sigma);
 
-    if (params_.dvl.robust_kernel == "Huber") {
-      dvl_noise = gtsam::noiseModel::Robust::Create(
-        gtsam::noiseModel::mEstimator::Huber::Create(params_.dvl.robust_k), dvl_noise);
-    } else if (params_.dvl.robust_kernel == "Tukey") {
-      dvl_noise = gtsam::noiseModel::Robust::Create(
-        gtsam::noiseModel::mEstimator::Tukey::Create(params_.dvl.robust_k), dvl_noise);
-    }
+  RCLCPP_DEBUG(get_logger(), "Adding constant velocity factor at step %zu", current_step_);
 
-    RCLCPP_DEBUG(get_logger(), "Adding DVL factor at step %zu", current_step_);
-
-    graph.emplace_shared<CustomDVLFactor>(
-      X(current_step_), V(current_step_),
-      toGtsam(dvl_msg->twist.twist.linear), dvl_noise);
-
-  } else {
-    // IMPORTANT! Add constant velocity constraints when DVL drops out.
-    RCLCPP_WARN_THROTTLE(
-      get_logger(), *get_clock(), 5000,
-      "DVL dropped out! Adding constant velocity factors.");
-
-    double dt = target_time - prev_time_;
-    double vel_random_walk = params_.dvl.velocity_random_walk;
-    double scaled_sigma = vel_random_walk * std::sqrt(std::max(dt, 0.001));
-
-    gtsam::SharedNoiseModel zero_accel_noise = gtsam::noiseModel::Isotropic::Sigma(3, scaled_sigma);
-
-    RCLCPP_DEBUG(get_logger(), "Adding constant velocity factor at step %zu", current_step_);
-
-    graph.emplace_shared<coug_fgo::factors::CustomConstantVelocityFactor>(
-      X(prev_step_), V(prev_step_),
-      X(current_step_), V(current_step_),
-      zero_accel_noise
-    );
-  }
+  graph.emplace_shared<CustomConstantVelocityFactor>(
+    X(prev_step_), V(prev_step_),
+    X(current_step_), V(current_step_),
+    zero_accel_noise
+  );
 }
 
 void FactorGraphNode::addPreintegratedImuFactor(
   gtsam::NonlinearFactorGraph & graph,
   const std::deque<sensor_msgs::msg::Imu::SharedPtr> & imu_msgs, double target_time)
 {
-  if (!have_imu_to_dvl_tf_ || !imu_preintegrator_) {return;}
+  if (!have_imu_to_dvl_tf_ || !imu_preintegrator_ || imu_msgs.empty()) {return;}
 
   double last_imu_time = prev_time_;
   std::deque<sensor_msgs::msg::Imu::SharedPtr> unused_imu_msgs;
@@ -1051,6 +1050,11 @@ void FactorGraphNode::addPreintegratedImuFactor(
       imu_preintegrator_->integrateMeasurement(last_acc, last_gyr, dt);
     }
     last_imu_time = current_imu_time;
+  }
+
+  if (last_imu_time < prev_time_) {
+    RCLCPP_DEBUG(get_logger(), "No valid IMU measurements found. Skipping.");
+    return;
   }
 
   // Extra measurement to reach exact target time
@@ -1113,8 +1117,7 @@ void FactorGraphNode::addPreintegratedDvlFactor(
   const std::deque<geometry_msgs::msg::TwistWithCovarianceStamped::SharedPtr> & dvl_msgs,
   const std::deque<sensor_msgs::msg::Imu::SharedPtr> & imu_msgs, double target_time)
 {
-  // If we don't have any new DVL messages, use a zero-order hold (ZOH)
-  if (!have_imu_to_dvl_tf_ || !dvl_preintegrator_) {return;}
+  if (!have_imu_to_dvl_tf_ || !dvl_preintegrator_ || imu_msgs.empty()) {return;}
 
   if (imu_msgs.empty()) {
     std::scoped_lock lock(dvl_queue_mutex_);
@@ -1169,23 +1172,57 @@ void FactorGraphNode::addPreintegratedDvlFactor(
     last_dvl_time = current_dvl_time;
   }
 
+  if (last_dvl_time < target_time) {
+    RCLCPP_DEBUG(get_logger(), "No valid DVL measurements found.");
+  }
+
   // Extra measurement to reach exact target time
   if (last_dvl_time < target_time) {
-    double dt = target_time - last_dvl_time;
-    if (dt > 1e-6) {
-      double time_in_dropout = target_time - last_real_dvl_time_;
+    // TURTLMap-style DVL psuedo-measurement using IMU data
+    if (params_.experimental.enable_pseudo_dvl_w_imu) {
+      gtsam::PreintegratedCombinedMeasurements pim = *imu_preintegrator_;
+      pim.resetIntegration();
 
-      double vel_random_walk = params_.dvl.velocity_random_walk;
-      double variance_growth = (vel_random_walk * vel_random_walk) * time_in_dropout;
-      gtsam::Matrix3 inflation = gtsam::Vector3::Constant(variance_growth).asDiagonal();
+      double current_loop_time = last_dvl_time;
+      gtsam::Vector3 last_acc, last_gyr;
 
-      gtsam::Matrix3 effective_cov = last_dvl_covariance_ + inflation;
+      for (const auto & msg : imu_msgs) {
+        double imu_time = rclcpp::Time(msg->header.stamp).seconds();
+        if (imu_time <= last_dvl_time) {continue;}
+        if (imu_time > target_time) {break;}
 
-      gtsam::Rot3 cur_imu_att = getInterpolatedOrientation(imu_msgs, target_time);
-      gtsam::Rot3 cur_dvl_att = cur_imu_att * R_imu_to_dvl;
+        last_acc = toGtsam(msg->linear_acceleration);
+        last_gyr = toGtsam(msg->angular_velocity);
+        pim.integrateMeasurement(last_acc, last_gyr, imu_time - current_loop_time);
+        current_loop_time = imu_time;
+      }
+
+      if (target_time > current_loop_time) {
+        pim.integrateMeasurement(last_acc, last_gyr, target_time - current_loop_time);
+      }
+
+      gtsam::Rot3 start_imu_rot = getInterpolatedOrientation(imu_msgs, last_dvl_time);
+      gtsam::NavState predicted_state = pim.predict(
+        gtsam::NavState(
+          gtsam::Pose3(start_imu_rot, gtsam::Point3()),
+          (start_imu_rot * R_imu_to_dvl).rotate(last_dvl_velocity_)),
+        prev_imu_bias_);
+
+      gtsam::Vector3 dvl_body_vel = R_dvl_to_imu.unrotate(predicted_state.bodyVelocity());
+
       dvl_preintegrator_->integrateMeasurement(
-        last_dvl_velocity_, cur_dvl_att, dt,
-        effective_cov);
+        dvl_body_vel, predicted_state.attitude() * R_imu_to_dvl, target_time - last_dvl_time,
+        gtsam::I_3x3 * 0.02);  // Hard-coded TURTLMap covariance
+
+      last_dvl_velocity_ = dvl_body_vel;
+    } else {
+      double dt = target_time - last_dvl_time;
+      if (dt > 1e-6) {
+        gtsam::Rot3 cur_imu_att = getInterpolatedOrientation(imu_msgs, target_time);
+        gtsam::Rot3 cur_dvl_att = cur_imu_att * R_imu_to_dvl;
+        dvl_preintegrator_->integrateMeasurement(
+          last_dvl_velocity_, cur_dvl_att, dt, last_dvl_covariance_);
+      }
     }
     last_dvl_time = target_time;
   }
@@ -1465,9 +1502,17 @@ void FactorGraphNode::optimizeGraph()
   if (params_.ahrs.enable_ahrs) {addAhrsFactor(new_graph, ahrs_msgs);}
 
   if (params_.experimental.enable_dvl_preintegration) {
-    addPreintegratedDvlFactor(new_graph, dvl_msgs, imu_msgs, target_time);
+    if (dvl_msgs.empty() && !params_.experimental.enable_pseudo_dvl_w_imu) {
+      addConstantVelocityFactor(new_graph, target_time);
+    } else {
+      addPreintegratedDvlFactor(new_graph, dvl_msgs, imu_msgs, target_time);
+    }
   } else {
-    addDvlFactor(new_graph, dvl_msgs, target_time);
+    if (dvl_msgs.empty()) {
+      addConstantVelocityFactor(new_graph, target_time);
+    } else {
+      addDvlFactor(new_graph, dvl_msgs);
+    }
   }
 
   // --- Incremental Fixed-Lag Smoother Update ---

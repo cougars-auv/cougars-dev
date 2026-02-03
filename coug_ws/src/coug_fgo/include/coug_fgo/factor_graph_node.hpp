@@ -209,7 +209,15 @@ private:
    */
   void addDvlFactor(
     gtsam::NonlinearFactorGraph & graph,
-    const std::deque<geometry_msgs::msg::TwistWithCovarianceStamped::SharedPtr> & dvl_msgs,
+    const std::deque<geometry_msgs::msg::TwistWithCovarianceStamped::SharedPtr> & dvl_msgs);
+
+  /**
+   * @brief Adds a constant velocity factor to the graph.
+   * @param graph The target factor graph.
+   * @param target_time The timestamp for the new pose key.
+   */
+  void addConstantVelocityFactor(
+    gtsam::NonlinearFactorGraph & graph,
     double target_time);
 
   /**

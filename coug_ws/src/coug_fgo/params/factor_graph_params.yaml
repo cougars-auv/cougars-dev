@@ -322,3 +322,6 @@ factor_graph_node:
     enable_dvl_preintegration:
       type: bool
       default_value: false
+    enable_pseudo_dvl_w_imu:
+      type: bool
+      default_value: false
