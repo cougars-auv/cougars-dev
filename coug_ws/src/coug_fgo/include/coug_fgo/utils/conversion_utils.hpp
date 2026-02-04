@@ -21,9 +21,12 @@
 
 #pragma once
 
+#include <gtsam/base/Matrix.h>
 #include <gtsam/geometry/Point3.h>
 #include <gtsam/geometry/Pose3.h>
 #include <gtsam/geometry/Rot3.h>
+
+#include <array>
 
 #include <geometry_msgs/msg/point.hpp>
 #include <geometry_msgs/msg/pose.hpp>
@@ -40,14 +43,20 @@ namespace coug_fgo::utils
  * @param msg The input Point message.
  * @return The resulting gtsam::Point3.
  */
-gtsam::Point3 toGtsam(const geometry_msgs::msg::Point & msg) {return {msg.x, msg.y, msg.z};}
+gtsam::Point3 toGtsam(const geometry_msgs::msg::Point & msg)
+{
+  return {msg.x, msg.y, msg.z};
+}
 
 /**
  * @brief Converts a geometry_msgs Vector3 to a GTSAM Vector3.
  * @param msg The input Vector3 message.
  * @return The resulting gtsam::Vector3.
  */
-gtsam::Vector3 toGtsam(const geometry_msgs::msg::Vector3 & msg) {return {msg.x, msg.y, msg.z};}
+gtsam::Vector3 toGtsam(const geometry_msgs::msg::Vector3 & msg)
+{
+  return {msg.x, msg.y, msg.z};
+}
 
 /**
  * @brief Converts a geometry_msgs Quaternion to a GTSAM Rot3.
@@ -89,6 +98,38 @@ gtsam::Vector6 toGtsam(const geometry_msgs::msg::Wrench & msg)
   gtsam::Vector6 v;
   v << msg.force.x, msg.force.y, msg.force.z, msg.torque.x, msg.torque.y, msg.torque.z;
   return v;
+}
+
+/**
+ * @brief Converts a 9-element covariance array (row-major) to a GTSAM Matrix33.
+ * @param cov The input 3x3 covariance array.
+ * @return The resulting gtsam::Matrix33.
+ */
+gtsam::Matrix33 toGtsam(const std::array<double, 9> & cov)
+{
+  gtsam::Matrix33 m;
+  for (int i = 0; i < 3; ++i) {
+    for (int j = 0; j < 3; ++j) {
+      m(i, j) = cov[i * 3 + j];
+    }
+  }
+  return m;
+}
+
+/**
+ * @brief Converts a 36-element covariance array (row-major) to a GTSAM Matrix66.
+ * @param cov The input 6x6 covariance array.
+ * @return The resulting gtsam::Matrix66.
+ */
+gtsam::Matrix66 toGtsam(const std::array<double, 36> & cov)
+{
+  gtsam::Matrix66 m;
+  for (int i = 0; i < 6; ++i) {
+    for (int j = 0; j < 6; ++j) {
+      m(i, j) = cov[i * 6 + j];
+    }
+  }
+  return m;
 }
 
 /**

@@ -120,3 +120,81 @@ TEST(ConversionUtilsTest, PoseConversion) {
   EXPECT_DOUBLE_EQ(back_to_ros.position.x, 5.0);
   EXPECT_DOUBLE_EQ(back_to_ros.orientation.w, 1.0);
 }
+
+/**
+ * @brief Test conversion between ROS Transform messages and GTSAM Pose3 objects.
+ *
+ * Cases tested:
+ * 1.  **ROS -> GTSAM**: Converts ROS Transform msg to GTSAM Pose3.
+ */
+TEST(ConversionUtilsTest, TransformConversion) {
+  geometry_msgs::msg::Transform ros_tf;
+  ros_tf.translation.x = 10.0;
+  ros_tf.translation.y = 20.0;
+  ros_tf.translation.z = 30.0;
+  ros_tf.rotation.w = 0.70710678;
+  ros_tf.rotation.z = 0.70710678;
+
+  gtsam::Pose3 gtsam_pose = coug_fgo::utils::toGtsam(ros_tf);
+  EXPECT_DOUBLE_EQ(gtsam_pose.x(), 10.0);
+  EXPECT_DOUBLE_EQ(gtsam_pose.y(), 20.0);
+  EXPECT_DOUBLE_EQ(gtsam_pose.z(), 30.0);
+  EXPECT_NEAR(gtsam_pose.rotation().yaw(), M_PI_2, 1e-4);
+}
+
+/**
+ * @brief Test conversion between ROS Wrench messages and GTSAM Vector6 objects.
+ *
+ * Cases tested:
+ * 1.  **ROS -> GTSAM**: Converts ROS Wrench msg to GTSAM Vector6 (Force/Torque).
+ */
+TEST(ConversionUtilsTest, WrenchConversion) {
+  geometry_msgs::msg::Wrench ros_wrench;
+  ros_wrench.force.x = 1.0;
+  ros_wrench.force.y = 2.0;
+  ros_wrench.force.z = 3.0;
+  ros_wrench.torque.x = 0.1;
+  ros_wrench.torque.y = 0.2;
+  ros_wrench.torque.z = 0.3;
+
+  gtsam::Vector6 gtsam_wrench = coug_fgo::utils::toGtsam(ros_wrench);
+  EXPECT_DOUBLE_EQ(gtsam_wrench(0), 1.0);
+  EXPECT_DOUBLE_EQ(gtsam_wrench(1), 2.0);
+  EXPECT_DOUBLE_EQ(gtsam_wrench(2), 3.0);
+  EXPECT_DOUBLE_EQ(gtsam_wrench(3), 0.1);
+  EXPECT_DOUBLE_EQ(gtsam_wrench(4), 0.2);
+  EXPECT_DOUBLE_EQ(gtsam_wrench(5), 0.3);
+}
+
+/**
+ * @brief Test conversion of ROS Covariance arrays to GTSAM Matrices.
+ *
+ * Cases tested:
+ * 1.  **3x3 -> Matrix33**: Converts std::array<double, 9> to GTSAM Matrix33.
+ * 2.  **6x6 -> Matrix66**: Converts std::array<double, 36> to GTSAM Matrix66.
+ */
+TEST(ConversionUtilsTest, CovarianceConversion) {
+  std::array<double, 9> cov3x3;
+  for (int i = 0; i < 9; ++i) {
+    cov3x3[i] = static_cast<double>(i);
+  }
+
+  gtsam::Matrix33 m3 = coug_fgo::utils::toGtsam(cov3x3);
+  for (int i = 0; i < 3; ++i) {
+    for (int j = 0; j < 3; ++j) {
+      EXPECT_DOUBLE_EQ(m3(i, j), static_cast<double>(i * 3 + j));
+    }
+  }
+
+  std::array<double, 36> cov6x6;
+  for (int i = 0; i < 36; ++i) {
+    cov6x6[i] = static_cast<double>(i);
+  }
+
+  gtsam::Matrix66 m6 = coug_fgo::utils::toGtsam(cov6x6);
+  for (int i = 0; i < 6; ++i) {
+    for (int j = 0; j < 6; ++j) {
+      EXPECT_DOUBLE_EQ(m6(i, j), static_cast<double>(i * 6 + j));
+    }
+  }
+}
