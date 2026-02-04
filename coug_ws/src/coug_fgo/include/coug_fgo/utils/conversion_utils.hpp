@@ -133,6 +133,48 @@ gtsam::Matrix66 toGtsam(const std::array<double, 36> & cov)
 }
 
 /**
+ * @brief Extracts the upper-left 3x3 block from a 36-element covariance array.
+ * @param cov The input 6x6 covariance array.
+ * @return The resulting gtsam::Matrix33.
+ */
+gtsam::Matrix33 toGtsam3x3(const std::array<double, 36> & cov)
+{
+  gtsam::Matrix33 m;
+  for (int i = 0; i < 3; ++i) {
+    for (int j = 0; j < 3; ++j) {
+      m(i, j) = cov[i * 6 + j];
+    }
+  }
+  return m;
+}
+
+/**
+ * @brief Extracts the diagonal of the upper-left 3x3 from a 36-element covariance array.
+ * @param cov The input 6x6 covariance array.
+ * @return The resulting gtsam::Matrix33.
+ */
+gtsam::Matrix33 toGtsam3x3Diagonal(const std::array<double, 36> & cov)
+{
+  gtsam::Matrix33 m = gtsam::Matrix33::Zero();
+  m(0, 0) = cov[0];
+  m(1, 1) = cov[7];
+  m(2, 2) = cov[14];
+  return m;
+}
+
+/**
+ * @brief Converts a single double to a GTSAM Matrix11.
+ * @param val The input value.
+ * @return The resulting gtsam::Matrix11.
+ */
+gtsam::Matrix11 toGtsam1x1(double val)
+{
+  gtsam::Matrix11 m;
+  m(0, 0) = val;
+  return m;
+}
+
+/**
  * @brief Converts a GTSAM Point3 to a geometry_msgs Point.
  * @param gtsam_obj The input GTSAM Point3.
  * @return The resulting geometry_msgs::msg::Point.
@@ -186,6 +228,100 @@ geometry_msgs::msg::Pose toPoseMsg(const gtsam::Pose3 & gtsam_obj)
   geometry_msgs::msg::Pose msg;
   msg.position = toPointMsg(gtsam_obj.translation());
   msg.orientation = toQuatMsg(gtsam_obj.rotation());
+  return msg;
+}
+
+/**
+ * @brief Converts a GTSAM Pose3 to a geometry_msgs Transform.
+ * @param gtsam_obj The input GTSAM Pose3.
+ * @return The resulting geometry_msgs::msg::Transform.
+ */
+geometry_msgs::msg::Transform toTransformMsg(const gtsam::Pose3 & gtsam_obj)
+{
+  geometry_msgs::msg::Transform msg;
+  msg.translation = toVectorMsg(gtsam_obj.translation());
+  msg.rotation = toQuatMsg(gtsam_obj.rotation());
+  return msg;
+}
+
+/**
+ * @brief Converts a GTSAM Vector6 to a geometry_msgs Wrench.
+ * @param v The input GTSAM Vector6.
+ * @return The resulting geometry_msgs::msg::Wrench.
+ */
+geometry_msgs::msg::Wrench toWrenchMsg(const gtsam::Vector6 & v)
+{
+  geometry_msgs::msg::Wrench msg;
+  msg.force.x = v(0); msg.force.y = v(1); msg.force.z = v(2);
+  msg.torque.x = v(3); msg.torque.y = v(4); msg.torque.z = v(5);
+  return msg;
+}
+
+/**
+ * @brief Converts a GTSAM Matrix33 to a 9-element covariance array.
+ * @param cov The input GTSAM Matrix33.
+ * @return The resulting std::array<double, 9>.
+ */
+std::array<double, 9> toCovariance9Msg(const gtsam::Matrix33 & cov)
+{
+  std::array<double, 9> msg;
+  for (int i = 0; i < 3; ++i) {
+    for (int j = 0; j < 3; ++j) {
+      msg[i * 3 + j] = cov(i, j);
+    }
+  }
+  return msg;
+}
+
+/**
+ * @brief Converts a GTSAM Matrix33 to a 36-element covariance array (upper-left block).
+ * @param cov The input GTSAM Matrix33.
+ * @return The resulting std::array<double, 36>.
+ */
+std::array<double, 36> toCovariance36Msg(const gtsam::Matrix33 & cov)
+{
+  std::array<double, 36> msg;
+  msg.fill(0.0);
+  for (int i = 0; i < 3; ++i) {
+    for (int j = 0; j < 3; ++j) {
+      msg[i * 6 + j] = cov(i, j);
+    }
+  }
+  return msg;
+}
+
+/**
+ * @brief Converts a GTSAM Matrix66 to a 36-element covariance array.
+ * @param cov The input GTSAM Matrix66.
+ * @return The resulting std::array<double, 36>.
+ */
+std::array<double, 36> toCovariance36Msg(const gtsam::Matrix66 & cov)
+{
+  std::array<double, 36> msg;
+  for (int i = 0; i < 6; ++i) {
+    for (int j = 0; j < 6; ++j) {
+      msg[i * 6 + j] = cov(i, j);
+    }
+  }
+  return msg;
+}
+
+/**
+ * @brief Converts a GTSAM Pose3 covariance (rot, pos) to a ROS Pose covariance (pos, rot).
+ * @param cov The input GTSAM Matrix66 (rot, pos order).
+ * @return The resulting std::array<double, 36> (pos, rot order).
+ */
+std::array<double, 36> toPoseCovarianceMsg(const gtsam::Matrix66 & cov)
+{
+  std::array<double, 36> msg;
+  for (int i = 0; i < 3; ++i) {
+    for (int j = 0; j < 3; ++j) {
+      msg[i * 6 + j] = cov(i + 3, j + 3);
+      msg[(i + 3) * 6 + (j + 3)] = cov(i, j);
+      msg[i * 6 + (j + 3)] = cov(i + 3, j);
+      msg[(i + 3) * 6 + j] = cov(i, j + 3);
+    }
+  }
   return msg;
 }
 

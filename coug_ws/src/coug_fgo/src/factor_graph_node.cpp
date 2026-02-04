@@ -48,10 +48,18 @@ using coug_fgo::factors::CustomMagFactorArm;
 using coug_fgo::factors::CustomConstantVelocityFactor;
 using coug_fgo::factors::CustomHydrodynamicFactorArm;
 using coug_fgo::utils::toGtsam;
+using coug_fgo::utils::toGtsam3x3;
+using coug_fgo::utils::toGtsam3x3Diagonal;
+using coug_fgo::utils::toGtsam1x1;
 using coug_fgo::utils::toQuatMsg;
 using coug_fgo::utils::toPointMsg;
 using coug_fgo::utils::toVectorMsg;
 using coug_fgo::utils::toPoseMsg;
+using coug_fgo::utils::toTransformMsg;
+using coug_fgo::utils::toWrenchMsg;
+using coug_fgo::utils::toCovariance9Msg;
+using coug_fgo::utils::toCovariance36Msg;
+using coug_fgo::utils::toPoseCovarianceMsg;
 using coug_fgo::utils::DVLPreintegrator;
 
 using gtsam::symbol_shorthand::B;  // Bias (ax,ay,az,gx,gy,gz)
@@ -628,10 +636,7 @@ void FactorGraphNode::addPriorFactors(gtsam::NonlinearFactorGraph & graph, gtsam
         params_.dvl.parameter_covariance.velocity_noise_sigma);
     } else {
       gtsam::Matrix33 dvl_cov = toGtsam(initial_dvl_->twist.covariance).block<3, 3>(0, 0);
-      gtsam::Vector3 prior_dvl_sigmas(sqrt(dvl_cov(0, 0)),
-        sqrt(dvl_cov(1, 1)),
-        sqrt(dvl_cov(2, 2)));
-      prior_vel_noise = gtsam::noiseModel::Diagonal::Sigmas(prior_dvl_sigmas);
+      prior_vel_noise = gtsam::noiseModel::Diagonal::Covariance(dvl_cov);
     }
   }
 
@@ -825,7 +830,7 @@ void FactorGraphNode::addGpsFactor(
       params_.gps.parameter_covariance.altitude_noise_sigma;
     gps_noise = gtsam::noiseModel::Diagonal::Sigmas(gps_sigmas);
   } else {
-    gtsam::Matrix33 gps_cov = utils::toGtsam(gps_msg->pose.covariance).block<3, 3>(0, 0);
+    gtsam::Matrix33 gps_cov = toGtsam3x3(gps_msg->pose.covariance);
 
     // Enable ignoring altitude from GPS
     if (!params_.gps.enable_altitude) {
@@ -865,9 +870,8 @@ void FactorGraphNode::addDepthFactor(
     double depth_sigma = params_.depth.parameter_covariance.position_z_noise_sigma;
     depth_noise = gtsam::noiseModel::Isotropic::Sigma(1, depth_sigma);
   } else {
-    gtsam::Matrix11 depth_cov;
-    depth_cov(0, 0) = depth_msg->pose.covariance[14];
-    depth_noise = gtsam::noiseModel::Gaussian::Covariance(depth_cov);
+    depth_noise =
+      gtsam::noiseModel::Gaussian::Covariance(toGtsam1x1(depth_msg->pose.covariance[14]));
   }
 
   if (params_.depth.robust_kernel == "Huber") {
@@ -901,7 +905,7 @@ void FactorGraphNode::addAhrsFactor(
       params_.ahrs.parameter_covariance.yaw_noise_sigma;
     ahrs_noise = gtsam::noiseModel::Diagonal::Sigmas(ahrs_sigmas);
   } else {
-    gtsam::Matrix33 ahrs_cov = utils::toGtsam(ahrs_msg->orientation_covariance);
+    gtsam::Matrix33 ahrs_cov = toGtsam(ahrs_msg->orientation_covariance);
 
     // Enable ignoring roll and pitch from AHRS
     if (!params_.ahrs.enable_roll_pitch) {
@@ -985,7 +989,7 @@ void FactorGraphNode::addMagFactor(
         params_.mag.parameter_covariance.magnetic_field_noise_sigma;
       mag_noise = gtsam::noiseModel::Diagonal::Sigmas(mag_sigmas);
     } else {
-      gtsam::Matrix33 mag_cov = utils::toGtsam(mag_msg->magnetic_field_covariance);
+      gtsam::Matrix33 mag_cov = toGtsam(mag_msg->magnetic_field_covariance);
       mag_noise = gtsam::noiseModel::Gaussian::Covariance(mag_cov);
     }
 
@@ -1021,7 +1025,7 @@ void FactorGraphNode::addDvlFactor(
       params_.dvl.parameter_covariance.velocity_noise_sigma;
     dvl_noise = gtsam::noiseModel::Diagonal::Sigmas(dvl_sigmas);
   } else {
-    gtsam::Matrix33 dvl_cov = utils::toGtsam(dvl_msg->twist.covariance).block<3, 3>(0, 0);
+    gtsam::Matrix33 dvl_cov = toGtsam3x3(dvl_msg->twist.covariance);
     dvl_noise = gtsam::noiseModel::Gaussian::Covariance(dvl_cov);
   }
 
@@ -1230,10 +1234,7 @@ void FactorGraphNode::addPreintegratedDvlFactor(
           (params_.dvl.parameter_covariance.velocity_noise_sigma *
           params_.dvl.parameter_covariance.velocity_noise_sigma);
       } else {
-        last_dvl_covariance_.setZero();
-        last_dvl_covariance_(0, 0) = dvl_msg->twist.covariance[0];
-        last_dvl_covariance_(1, 1) = dvl_msg->twist.covariance[7];
-        last_dvl_covariance_(2, 2) = dvl_msg->twist.covariance[14];
+        last_dvl_covariance_ = toGtsam3x3Diagonal(dvl_msg->twist.covariance);
       }
 
       // Integrate DVL measurement alongside interpolated IMU attitude
@@ -1347,14 +1348,7 @@ void FactorGraphNode::publishGlobalOdom(
     cov_to_pub += 1e-6 * gtsam::Matrix::Identity(6, 6);
   }
 
-  for (int i = 0; i < 3; ++i) {
-    for (int j = 0; j < 3; ++j) {
-      odom_msg.pose.covariance[i * 6 + j] = cov_to_pub(i + 3, j + 3);
-      odom_msg.pose.covariance[(i + 3) * 6 + (j + 3)] = cov_to_pub(i, j);
-      odom_msg.pose.covariance[i * 6 + (j + 3)] = cov_to_pub(i + 3, j);
-      odom_msg.pose.covariance[(i + 3) * 6 + j] = cov_to_pub(i, j + 3);
-    }
-  }
+  odom_msg.pose.covariance = toPoseCovarianceMsg(gtsam::Matrix66(cov_to_pub));
   odom_msg.twist.covariance[0] = -1.0;
   global_odom_pub_->publish(odom_msg);
 }
@@ -1417,12 +1411,7 @@ void FactorGraphNode::publishVelocity(
   // IMPORTANT! This is the velocity at the DVL with respect to the 'params_.map_frame'.
   vel_msg.header.frame_id = params_.map_frame;
   vel_msg.twist.twist.linear = toVectorMsg(current_vel);
-
-  for (int i = 0; i < 3; ++i) {
-    for (int j = 0; j < 3; ++j) {
-      vel_msg.twist.covariance[i * 6 + j] = vel_covariance(i, j);
-    }
-  }
+  vel_msg.twist.covariance = toCovariance36Msg(gtsam::Matrix33(vel_covariance));
 
   for (int i = 3; i < 6; ++i) {
     vel_msg.twist.covariance[i * 6 + i] = -1.0;
@@ -1442,16 +1431,7 @@ void FactorGraphNode::publishImuBias(
   // IMPORTANT! We use 'linear' for accelerometer bias and 'angular' for gyroscope bias.
   imu_bias_msg.twist.twist.linear = toVectorMsg(current_imu_bias.accelerometer());
   imu_bias_msg.twist.twist.angular = toVectorMsg(current_imu_bias.gyroscope());
-
-  // GTSAM IMU bias covariance is [ accel_3x3 | ... ]
-  //                          [ ...       | gyro_3x3  ]
-  // ROS twist covariance is  [ linear_3x3 | ... ]
-  //                          [ ...        | angular_3x3 ]
-  for (int i = 0; i < 6; ++i) {
-    for (int j = 0; j < 6; ++j) {
-      imu_bias_msg.twist.covariance[i * 6 + j] = imu_bias_covariance(i, j);
-    }
-  }
+  imu_bias_msg.twist.covariance = toCovariance36Msg(gtsam::Matrix66(imu_bias_covariance));
 
   imu_bias_pub_->publish(imu_bias_msg);
 }
