@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /**
- * @file hydrodynamic_factor.hpp
+ * @file hydrodynamic_drag_factor.hpp
  * @brief GTSAM factor for enforcing a simplified version of Fossen's equations with lever arm.
  * @author Nelson Durrant
  * @date Jan 2026

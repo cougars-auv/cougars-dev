@@ -13,8 +13,8 @@
 // limitations under the License.
 
 /**
- * @file test_hydrodynamic_factor.cpp
- * @brief Unit tests for hydrodynamic_factor.hpp.
+ * @file test_hydrodynamic_drag_factor.cpp
+ * @brief Unit tests for hydrodynamic_drag_factor.hpp.
  * @author Nelson Durrant (w Gemini 3 Pro)
  * @date Jan 2026
  */
@@ -25,7 +25,7 @@
 
 #include <boost/bind/bind.hpp>
 
-#include "coug_fgo/factors/hydrodynamic_factor.hpp"
+#include "coug_fgo/factors/hydrodynamic_drag_factor.hpp"
 
 /**
  * @brief Test the error evaluation logic of the CustomHydrodynamicDragFactorArm.

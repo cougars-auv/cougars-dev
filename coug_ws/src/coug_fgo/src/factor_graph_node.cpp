@@ -35,7 +35,7 @@
 #include "coug_fgo/factors/ahrs_factor.hpp"
 #include "coug_fgo/factors/mag_factor.hpp"
 #include "coug_fgo/factors/constant_velocity_factor.hpp"
-#include "coug_fgo/factors/hydrodynamic_factor.hpp"
+#include "coug_fgo/factors/hydrodynamic_drag_factor.hpp"
 #include "coug_fgo/utils/conversion_utils.hpp"
 
 
