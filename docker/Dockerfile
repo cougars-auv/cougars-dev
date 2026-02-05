@@ -43,6 +43,8 @@ RUN apt update && apt install -y --no-install-recommends \
     ros-${ROS_DISTRO}-joy ros-${ROS_DISTRO}-teleop-twist-joy ros-${ROS_DISTRO}-teleop-twist-keyboard \
     # Better rosbag2 storage format - Nelson Durrant, Jan 2026
     ros-${ROS_DISTRO}-rosbag2-storage-mcap \
+    # Package documentation - Nelson Durrant, Feb 2026
+    ros-${ROS_DISTRO}-rosdoc2 \
     && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /home/frostlab-docker/coug_ws/src && chown -R frostlab-docker:frostlab-docker /home/frostlab-docker/coug_ws
@@ -64,9 +66,20 @@ RUN vcs import . < cougars.repos \
     && sudo rm -rf /var/lib/apt/lists/* \
     && sudo rm -rf ./*
 
+# Configure bash environment - Nelson Durrant, Jan 2026
+RUN echo "" >> /home/frostlab-docker/.bashrc \
+    && echo "# Source ROS 2 environment" >> /home/frostlab-docker/.bashrc \
+    && echo "source /opt/ros/humble/setup.bash" >> /home/frostlab-docker/.bashrc \
+    && echo "[ -f /home/frostlab-docker/coug_ws/install/setup.bash ] && source /home/frostlab-docker/coug_ws/install/setup.bash" >> /home/frostlab-docker/.bashrc \
+    && echo "" >> /home/frostlab-docker/.bashrc \
+    && echo "# Script tab completions" >> /home/frostlab-docker/.bashrc \
+    && echo "[ -f /completions.sh ] && source /completions.sh" >> /home/frostlab-docker/.bashrc \
+    && touch /home/frostlab-docker/.hushlogin
+
 USER root
 COPY docker/entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+COPY docker/completions.sh /completions.sh
+RUN chmod +x /entrypoint.sh /completions.sh
 
 WORKDIR /home/frostlab-docker
 
