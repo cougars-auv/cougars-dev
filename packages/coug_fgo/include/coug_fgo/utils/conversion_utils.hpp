@@ -27,6 +27,7 @@
 #include <gtsam/geometry/Rot3.h>
 
 #include <array>
+#include <vector>
 
 #include <geometry_msgs/msg/point.hpp>
 #include <geometry_msgs/msg/pose.hpp>
@@ -160,6 +161,19 @@ gtsam::Matrix33 toGtsam3x3Diagonal(const std::array<double, 36> & cov)
   m(1, 1) = cov[7];
   m(2, 2) = cov[14];
   return m;
+}
+
+/**
+ * @brief Converts a 3-element vector to a diagonal GTSAM Matrix33.
+ * @param vec The input vector (diagonal elements).
+ * @return The resulting gtsam::Matrix33.
+ */
+gtsam::Matrix33 toGtsam3x3Diagonal(const std::vector<double> & vec)
+{
+  if (vec.size() != 3) {
+    throw std::runtime_error("Vector size must be 3 for diagonal Matrix33 conversion");
+  }
+  return gtsam::Vector3(vec[0], vec[1], vec[2]).asDiagonal();
 }
 
 /**

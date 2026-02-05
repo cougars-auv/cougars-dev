@@ -77,40 +77,40 @@ public:
   gtsam::Vector evaluateError(
     const gtsam::Pose3 & pose_key1, const gtsam::Vector3 & vel_key1,
     const gtsam::Pose3 & pose_key2, const gtsam::Vector3 & vel_key2,
-    boost::optional<gtsam::Matrix &> H1 = boost::none,
-    boost::optional<gtsam::Matrix &> H2 = boost::none,
-    boost::optional<gtsam::Matrix &> H3 = boost::none,
-    boost::optional<gtsam::Matrix &> H4 = boost::none) const override
+    boost::optional<gtsam::Matrix &> H_pose1 = boost::none,
+    boost::optional<gtsam::Matrix &> H_vel1 = boost::none,
+    boost::optional<gtsam::Matrix &> H_pose2 = boost::none,
+    boost::optional<gtsam::Matrix &> H_vel2 = boost::none) const override
   {
     // Predict the velocity measurements
     gtsam::Matrix33 J_R1_v1, J_v1, J_R2_v2, J_v2;
     gtsam::Vector3 v_body1 = pose_key1.rotation().unrotate(
-      vel_key1, H1 ? &J_R1_v1 : 0,
-      H2 ? &J_v1 : 0);
+      vel_key1, H_pose1 ? &J_R1_v1 : 0,
+      H_vel1 ? &J_v1 : 0);
     gtsam::Vector3 v_body2 = pose_key2.rotation().unrotate(
-      vel_key2, H3 ? &J_R2_v2 : 0,
-      H4 ? &J_v2 : 0);
+      vel_key2, H_pose2 ? &J_R2_v2 : 0,
+      H_vel2 ? &J_v2 : 0);
 
     // 3D velocity difference residual
     gtsam::Vector3 error = v_body1 - v_body2;
 
-    if (H1) {
+    if (H_pose1) {
       // Jacobian with respect to pose1 (3x6)
-      H1->setZero(3, 6);
-      H1->block<3, 3>(0, 0) = J_R1_v1;
+      H_pose1->setZero(3, 6);
+      H_pose1->block<3, 3>(0, 0) = J_R1_v1;
     }
-    if (H2) {
+    if (H_vel1) {
       // Jacobian with respect to velocity1 (3x3)
-      *H2 = J_v1;
+      *H_vel1 = J_v1;
     }
-    if (H3) {
+    if (H_pose2) {
       // Jacobian with respect to pose2 (3x6)
-      H3->setZero(3, 6);
-      H3->block<3, 3>(0, 0) = -J_R2_v2;
+      H_pose2->setZero(3, 6);
+      H_pose2->block<3, 3>(0, 0) = -J_R2_v2;
     }
-    if (H4) {
+    if (H_vel2) {
       // Jacobian with respect to velocity2 (3x3)
-      *H4 = -J_v2;
+      *H_vel2 = -J_v2;
     }
 
     return error;

@@ -49,9 +49,9 @@ TEST(CustomHydrodynamicDragFactorArmTest, ErrorEvaluation) {
   gtsam::SharedNoiseModel model = gtsam::noiseModel::Isotropic::Sigma(3, 0.1);
 
   double dt = 1.0;
-  double mass = 10.0;
-  double linear_drag = 0.0;
-  double quad_drag = 0.0;
+  gtsam::Matrix33 mass = gtsam::Matrix33::Identity() * 10.0;
+  gtsam::Matrix33 linear_drag = gtsam::Matrix33::Zero();
+  gtsam::Matrix33 quad_drag = gtsam::Matrix33::Zero();
   gtsam::Vector3 control_force = gtsam::Vector3::Zero();
   gtsam::Pose3 body_P_sensor = gtsam::Pose3::Identity();
 
@@ -82,7 +82,7 @@ TEST(CustomHydrodynamicDragFactorArmTest, ErrorEvaluation) {
         gtsam::Pose3::Identity(), gtsam::Vector3(1.0, 0.0, 0.0)), 1e-9));
 
   // Subcase B: Drag Equilibrium (Linear = 1.0, v = 10.0)
-  linear_drag = 1.0;
+  linear_drag = gtsam::Matrix33::Identity() * 1.0;
   control_force = gtsam::Vector3(10.0, 0.0, 0.0);
   coug_fgo::factors::CustomHydrodynamicDragFactorArm factor_drag(
     poseKey1, velKey1, poseKey2, velKey2, dt, control_force, body_P_sensor,
@@ -96,7 +96,7 @@ TEST(CustomHydrodynamicDragFactorArmTest, ErrorEvaluation) {
         gtsam::Pose3::Identity(), gtsam::Vector3(10.0, 0.0, 0.0)), 1e-9));
 
   // Case 3: Rotation
-  linear_drag = 0.0;
+  linear_drag = gtsam::Matrix33::Zero();
   control_force = gtsam::Vector3(10.0, 0.0, 0.0);
   coug_fgo::factors::CustomHydrodynamicDragFactorArm factor_rot(
     poseKey1, velKey1, poseKey2, velKey2, dt, control_force, gtsam::Pose3::Identity(),
@@ -142,7 +142,7 @@ TEST(CustomHydrodynamicDragFactorArmTest, ErrorEvaluation) {
   // Case 6: Error Check
   coug_fgo::factors::CustomHydrodynamicDragFactorArm factor_err(
     poseKey1, velKey1, poseKey2, velKey2, dt, gtsam::Vector3::Zero(), gtsam::Pose3::Identity(),
-    mass, 0.0, 0.0, model);
+    mass, gtsam::Matrix33::Zero(), gtsam::Matrix33::Zero(), model);
 
   EXPECT_TRUE(
     gtsam::assert_equal(
@@ -169,9 +169,9 @@ TEST(CustomHydrodynamicDragFactorArmTest, Jacobians) {
   gtsam::SharedNoiseModel model = gtsam::noiseModel::Isotropic::Sigma(3, 0.1);
 
   double dt = 0.5;
-  double mass = 5.0;
-  double linear_drag = 1.0;
-  double quad_drag = 0.5;
+  gtsam::Matrix33 mass = gtsam::Matrix33::Identity() * 5.0;
+  gtsam::Matrix33 linear_drag = gtsam::Matrix33::Identity() * 1.0;
+  gtsam::Matrix33 quad_drag = gtsam::Matrix33::Identity() * 0.5;
   gtsam::Vector3 control_force(2.0, -1.0, 0.5);
   gtsam::Pose3 body_P_sensor = gtsam::Pose3(gtsam::Rot3::Roll(0.1), gtsam::Point3(0.1, 0, 0));
 

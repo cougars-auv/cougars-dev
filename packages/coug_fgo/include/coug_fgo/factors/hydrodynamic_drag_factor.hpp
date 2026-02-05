@@ -49,9 +49,10 @@ class CustomHydrodynamicDragFactorArm : public gtsam::NoiseModelFactor4<gtsam::P
 private:
   double dt_;
   gtsam::Vector3 force_body_;
-  double mass_;
-  double linear_drag_;
-  double quad_drag_;
+  gtsam::Matrix33 mass_;
+  gtsam::Matrix33 linear_drag_;
+  gtsam::Matrix33 quad_drag_;
+  gtsam::Matrix33 mass_inv_;
 
 public:
   /**
@@ -74,9 +75,9 @@ public:
     double dt,
     const gtsam::Vector3 & control_force,
     const gtsam::Pose3 & body_T_sensor,
-    double mass,
-    double linear_drag,
-    double quad_drag,
+    const gtsam::Matrix33 & mass,
+    const gtsam::Matrix33 & linear_drag,
+    const gtsam::Matrix33 & quad_drag,
     const gtsam::SharedNoiseModel & noise_model)
   : NoiseModelFactor4<gtsam::Pose3, gtsam::Vector3, gtsam::Pose3, gtsam::Vector3>(
       noise_model, pose_key1, vel_key1, pose_key2, vel_key2),
@@ -86,6 +87,7 @@ public:
     quad_drag_(quad_drag)
   {
     force_body_ = body_T_sensor.rotation() * control_force;
+    mass_inv_ = mass_.inverse();
   }
 
   ~CustomHydrodynamicDragFactorArm() override {}
@@ -105,64 +107,57 @@ public:
   gtsam::Vector evaluateError(
     const gtsam::Pose3 & pose1, const gtsam::Vector3 & vel1,
     const gtsam::Pose3 & pose2, const gtsam::Vector3 & vel2,
-    boost::optional<gtsam::Matrix &> H1 = boost::none,
-    boost::optional<gtsam::Matrix &> H2 = boost::none,
-    boost::optional<gtsam::Matrix &> H3 = boost::none,
-    boost::optional<gtsam::Matrix &> H4 = boost::none) const override
+    boost::optional<gtsam::Matrix &> H_pose1 = boost::none,
+    boost::optional<gtsam::Matrix &> H_vel1 = boost::none,
+    boost::optional<gtsam::Matrix &> H_pose2 = boost::none,
+    boost::optional<gtsam::Matrix &> H_vel2 = boost::none) const override
   {
     // Predict the velocity measurements
     gtsam::Matrix33 J_vb1_R1, J_vb1_v1, J_vb2_R2, J_vb2_v2;
     gtsam::Vector3 v_body1 =
-      pose1.rotation().unrotate(vel1, H1 ? &J_vb1_R1 : 0, H2 ? &J_vb1_v1 : 0);
+      pose1.rotation().unrotate(vel1, H_pose1 ? &J_vb1_R1 : 0, H_vel1 ? &J_vb1_v1 : 0);
     gtsam::Vector3 v_body2 =
-      pose2.rotation().unrotate(vel2, H3 ? &J_vb2_R2 : 0, H4 ? &J_vb2_v2 : 0);
+      pose2.rotation().unrotate(vel2, H_pose2 ? &J_vb2_R2 : 0, H_vel2 ? &J_vb2_v2 : 0);
 
-    gtsam::Vector3 drag_force;
+    gtsam::Vector3 abs_v_body1 = v_body1.cwiseAbs();
     gtsam::Matrix33 J_drag_v = gtsam::Matrix33::Zero();
+    gtsam::Vector3 drag_force =
+      -(linear_drag_ * v_body1 + quad_drag_ * abs_v_body1.asDiagonal() * v_body1);
 
-    for (int i = 0; i < 3; i++) {
-      double u = v_body1(i);
-      double abs_u = std::abs(u);
-
-      drag_force(i) = -(linear_drag_ * u + quad_drag_ * abs_u * u);
-
-      if (H1 || H2) {
-        J_drag_v(i, i) = -(linear_drag_ + 2.0 * quad_drag_ * abs_u);
-      }
+    if (H_pose1 || H_vel1) {
+      J_drag_v = -(linear_drag_ + 2.0 * quad_drag_ * abs_v_body1.asDiagonal());
     }
 
-    gtsam::Vector3 accel_body = (force_body_ + drag_force) / mass_;
+    gtsam::Vector3 accel_body = mass_inv_ * (force_body_ + drag_force);
     gtsam::Vector3 v_body_pred = v_body1 + accel_body * dt_;
 
     // 3D velocity residual
     gtsam::Vector3 error = v_body2 - v_body_pred;
 
-    if (H1) {
+    if (H_pose1) {
       // Jacobian with respect to pose1 (3x6)
-      gtsam::Matrix33 J_scale = gtsam::Matrix33::Identity();
-      J_scale.diagonal() += (dt_ / mass_) * J_drag_v.diagonal();
+      gtsam::Matrix33 J_scale = gtsam::Matrix33::Identity() + dt_ * mass_inv_ * J_drag_v;
 
-      H1->setZero(3, 6);
-      H1->block<3, 3>(0, 0) = -J_scale * J_vb1_R1;
+      H_pose1->setZero(3, 6);
+      H_pose1->block<3, 3>(0, 0) = -J_scale * J_vb1_R1;
     }
 
-    if (H2) {
+    if (H_vel1) {
       // Jacobian with respect to velocity1 (3x3)
-      gtsam::Matrix33 J_scale = gtsam::Matrix33::Identity();
-      J_scale.diagonal() += (dt_ / mass_) * J_drag_v.diagonal();
+      gtsam::Matrix33 J_scale = gtsam::Matrix33::Identity() + dt_ * mass_inv_ * J_drag_v;
 
-      *H2 = -J_scale * J_vb1_v1;
+      *H_vel1 = -J_scale * J_vb1_v1;
     }
 
-    if (H3) {
+    if (H_pose2) {
       // Jacobian with respect to pose2 (3x6)
-      H3->setZero(3, 6);
-      H3->block<3, 3>(0, 0) = J_vb2_R2;
+      H_pose2->setZero(3, 6);
+      H_pose2->block<3, 3>(0, 0) = J_vb2_R2;
     }
 
-    if (H4) {
+    if (H_vel2) {
       // Jacobian with respect to velocity2 (3x3)
-      *H4 = J_vb2_v2;
+      *H_vel2 = J_vb2_v2;
     }
 
     return error;

@@ -126,6 +126,17 @@ TEST(ConversionUtilsTest, GtsamExtraction) {
   cov6x6_val.fill(0.0); cov6x6_val[14] = 84.0;
   gtsam::Matrix11 m11_depth = coug_fgo::utils::toGtsamDepthCovariance(cov6x6_val);
   EXPECT_DOUBLE_EQ(m11_depth(0, 0), 84.0);
+
+  std::vector<double> vec = {1.0, 2.0, 3.0};
+  gtsam::Matrix33 m_vec = coug_fgo::utils::toGtsam3x3Diagonal(vec);
+  EXPECT_DOUBLE_EQ(m_vec(0, 0), 1.0);
+  EXPECT_DOUBLE_EQ(m_vec(1, 1), 2.0);
+  EXPECT_DOUBLE_EQ(m_vec(2, 2), 3.0);
+  EXPECT_DOUBLE_EQ(m_vec(0, 1), 0.0);
+  EXPECT_DOUBLE_EQ(m_vec(1, 0), 0.0);
+
+  std::vector<double> vec_bad = {1.0, 2.0};
+  EXPECT_THROW(coug_fgo::utils::toGtsam3x3Diagonal(vec_bad), std::runtime_error);
 }
 
 /**

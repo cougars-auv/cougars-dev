@@ -123,9 +123,9 @@
       enable_hydro: false
       use_parameter_frame: false
       prediction_noise_sigma: 0.1 # Sigma for prediction noise.
-      mass: 10.0 # [kg] Mass of the vehicle.
-      linear_drag: 10.0 # [kg/s] Linear drag coefficient.
-      quad_drag: 10.0 # [kg/m] Quadratic drag coefficient.
+      mass: [10.0, 10.0, 10.0] # [kg] Mass of the vehicle (diagonal).
+      linear_drag: [10.0, 10.0, 10.0] # [kg/s] Linear drag coefficient (diagonal).
+      quad_drag: [10.0, 10.0, 10.0] # [kg/m] Quadratic drag coefficient (diagonal).
       timeout_threshold: 1.0 # [s]
       robust_kernel: "None"
       robust_k: 1.345

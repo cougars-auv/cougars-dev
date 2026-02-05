@@ -279,14 +279,14 @@ factor_graph_node:
       type: double
       default_value: 0.1
     mass:
-      type: double
-      default_value: 10.0
+      type: double_array
+      default_value: [10.0, 10.0, 10.0]
     linear_drag:
-      type: double
-      default_value: 10.0
+      type: double_array
+      default_value: [10.0, 10.0, 10.0]
     quad_drag:
-      type: double
-      default_value: 10.0
+      type: double_array
+      default_value: [10.0, 10.0, 10.0]
     timeout_threshold:
       type: double
       default_value: 1.0

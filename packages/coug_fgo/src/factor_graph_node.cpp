@@ -1042,9 +1042,9 @@ void FactorGraphNode::addHydrodynamicFactor(
     X(current_step_), V(current_step_),
     dt, toGtsam(wrench_msg->wrench.force),
     toGtsam(hydro_to_dvl_tf_.transform),
-    params_.hydro.mass,
-    params_.hydro.linear_drag,
-    params_.hydro.quad_drag,
+    toGtsam3x3Diagonal(params_.hydro.mass),
+    toGtsam3x3Diagonal(params_.hydro.linear_drag),
+    toGtsam3x3Diagonal(params_.hydro.quad_drag),
     hydro_noise);
 }
 
