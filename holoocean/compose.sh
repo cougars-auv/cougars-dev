@@ -38,6 +38,9 @@ case $1 in
         printInfo "Loading the holoocean-ct container..."
         docker compose -f "$SCRIPT_DIR/docker/docker-compose.yaml" up -d
 
+        # Wait for './entrypoint.sh' to finish
+        while [ "$(docker exec holoocean-ct ps -p 1 -o uid= | tr -d ' ')" != "$HOST_UID" ]; do sleep 1; done
+
         PARAMS_FILE="/home/ue4/config/coug_holoocean_params.yaml"
         
         while getopts ":bm" opt; do
