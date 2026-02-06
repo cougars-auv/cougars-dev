@@ -189,9 +189,9 @@ factor_graph_node:
       type: bool
       default_value: false
     parameter_covariance:
-      magnetic_field_noise_sigmas:
-        type: double_array
-        default_value: [0.003, 0.003, 0.003]
+      magnetic_field_noise_sigma:
+        type: double
+        default_value: 0.003
     reference_field:
       type: double_array
       default_value: [0.07857, 0.41316, -0.90726]
@@ -252,9 +252,6 @@ factor_graph_node:
       velocity_noise_sigmas:
         type: double_array
         default_value: [0.02, 0.02, 0.02]
-    velocity_random_walk:
-      type: double
-      default_value: 0.1
     timeout_threshold:
       type: double
       default_value: 1.0
@@ -265,8 +262,22 @@ factor_graph_node:
       type: double
       default_value: 1.345
 
+  const_vel:
+    enable_const_vel:
+      type: bool
+      default_value: false
+    enable_const_vel_dropout_only:
+      type: bool
+      default_value: true
+    velocity_sigma:
+      type: double_array
+      default_value: [0.1, 0.1, 0.1]
+
   dynamics:
     enable_dynamics:
+      type: bool
+      default_value: false
+    enable_dynamics_dropout_only:
       type: bool
       default_value: false
     use_parameter_frame:
@@ -280,13 +291,13 @@ factor_graph_node:
       default_value: [0.1, 0.1, 0.1]
     mass:
       type: double_array
-      default_value: [10.0, 10.0, 10.0]
+      default_value: [11.5, 11.5, 11.5]
     linear_drag:
       type: double_array
-      default_value: [10.0, 10.0, 10.0]
+      default_value: [11.5, 11.5, 11.5]
     quad_drag:
       type: double_array
-      default_value: [10.0, 10.0, 10.0]
+      default_value: [1.8, 1.8, 1.8]
     timeout_threshold:
       type: double
       default_value: 1.0

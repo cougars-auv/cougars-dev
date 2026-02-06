@@ -42,7 +42,7 @@
       input_topic: "DVLSensorVelocity"
       output_topic: "dvl/twist"
 
-      simulate_dropout: false
+      simulate_dropout: true
       dropout_frequency: 0.033 # [Hz] Frequency of the dropout cycle (1/30).
       dropout_duration: 5.0 # [s] Duration of the dropout.
 
@@ -82,3 +82,8 @@
 
       override_covariance: true
       noise_sigma: 0.003 # [normalized] Standard deviation of magnetometer measurements.
+
+  wrench_converter_node:
+    ros__parameters:
+      input_topic: "/command/agent"
+      output_topic: "cmd_wrench"

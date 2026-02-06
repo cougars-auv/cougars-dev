@@ -18,7 +18,6 @@
   <depend>dvl_msgs</depend>
   <depend>tf2_ros</depend>
   <depend>tf2_geometry_msgs</depend>
-  <!-- TODO: Make sure Braden's magnetometer fixes are in sbg_driver -->
   <depend>sbg_driver</depend>
   <depend>ntrip_client</depend>
 

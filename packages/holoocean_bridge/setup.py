@@ -33,6 +33,7 @@ setup(
             "hsd_converter = holoocean_bridge.hsd_converter_node:main",
             "imu_converter = holoocean_bridge.imu_converter_node:main",
             "mag_converter = holoocean_bridge.mag_converter_node:main",
+            "wrench_converter = holoocean_bridge.wrench_converter_node:main",
         ],
     },
 )

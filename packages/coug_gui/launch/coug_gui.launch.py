@@ -25,7 +25,7 @@ def generate_launch_description():
 
     use_sim_time = LaunchConfiguration("use_sim_time")
     multiagent_viz = LaunchConfiguration("multiagent_viz")
-    bluerov_viz = LaunchConfiguration("bluerov_viz")
+    bluerov2_viz = LaunchConfiguration("bluerov2_viz")
     use_rviz = LaunchConfiguration("use_rviz")
     use_mapviz = LaunchConfiguration("use_mapviz")
     use_plotjuggler = LaunchConfiguration("use_plotjuggler")
@@ -41,7 +41,7 @@ def generate_launch_description():
             "'",
             os.path.join(pkg_share, "mapviz", "bluerov2_mapviz_config.mvc"),
             "' if '",
-            bluerov_viz,
+            bluerov2_viz,
             "' == 'true' else '",
             os.path.join(pkg_share, "mapviz", "multi_mapviz_config.mvc"),
             "' if '",
@@ -57,7 +57,7 @@ def generate_launch_description():
             "'",
             os.path.join(pkg_share, "rviz", "bluerov2_rviz_config.rviz"),
             "' if '",
-            bluerov_viz,
+            bluerov2_viz,
             "' == 'true' else '",
             os.path.join(pkg_share, "rviz", "multi_rviz_config.rviz"),
             "' if '",
@@ -73,7 +73,7 @@ def generate_launch_description():
             "'",
             os.path.join(pkg_share, "rqt", "bluerov2_diagnostics_params.yaml"),
             "' if '",
-            bluerov_viz,
+            bluerov2_viz,
             "' == 'true' else '",
             os.path.join(pkg_share, "rqt", "multi_diagnostics_params.yaml"),
             "' if '",
@@ -97,9 +97,9 @@ def generate_launch_description():
                 description="Use multi-agent visualization config if true",
             ),
             DeclareLaunchArgument(
-                "bluerov_viz",
+                "bluerov2_viz",
                 default_value="false",
-                description="Load BlueROV specific viz config if true",
+                description="Load BlueROV2 specific viz config if true",
             ),
             DeclareLaunchArgument(
                 "use_rviz",

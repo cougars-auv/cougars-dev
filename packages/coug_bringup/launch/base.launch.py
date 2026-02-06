@@ -24,7 +24,7 @@ def generate_launch_description():
 
     use_sim_time = LaunchConfiguration("use_sim_time", default="false")
     multiagent_viz = LaunchConfiguration("multiagent_viz", default="false")
-    bluerov_viz = LaunchConfiguration("bluerov_viz", default="false")
+    bluerov2_viz = LaunchConfiguration("bluerov2_viz", default="false")
 
     coug_gui_dir = get_package_share_directory("coug_gui")
     coug_gui_launch_dir = os.path.join(coug_gui_dir, "launch")
@@ -32,7 +32,7 @@ def generate_launch_description():
     use_plotjuggler = PythonExpression(
         [
             "'",
-            bluerov_viz,
+            bluerov2_viz,
             "' == 'false' and '",
             multiagent_viz,
             "' == 'false'",
@@ -46,7 +46,7 @@ def generate_launch_description():
         launch_arguments={
             "use_sim_time": use_sim_time,
             "multiagent_viz": multiagent_viz,
-            "bluerov_viz": bluerov_viz,
+            "bluerov2_viz": bluerov2_viz,
             "use_rviz": "true",
             "use_mapviz": "true",
             "use_plotjuggler": use_plotjuggler,
@@ -70,9 +70,9 @@ def generate_launch_description():
     )
     ld.add_action(
         DeclareLaunchArgument(
-            "bluerov_viz",
+            "bluerov2_viz",
             default_value="false",
-            description="Load BlueROV specific viz config if true",
+            description="Load BlueROV2 specific viz config if true",
         )
     )
     ld.add_action(coug_gui_cmd)

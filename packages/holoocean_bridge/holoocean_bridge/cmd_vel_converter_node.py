@@ -81,7 +81,7 @@ class CmdVelConverterNode(Node):
         agent_cmd.header.stamp = self.get_clock().now().to_msg()
         agent_cmd.header.frame_id = self.agent_name
 
-        # Map Twist to BlueROV thruster commands
+        # Map Twist to BlueROV2 thruster commands
         fwd = msg.linear.x * self.h_scale
         lat = msg.linear.y * self.h_scale
         vert = msg.linear.z * self.v_scale

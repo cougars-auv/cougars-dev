@@ -577,9 +577,15 @@ void FactorGraphNode::addPriorFactors(gtsam::NonlinearFactorGraph & graph, gtsam
         params_.ahrs.parameter_covariance.yaw_noise_sigma :
         std::sqrt(toGtsam(initial_ahrs_->orientation_covariance)(2, 2));
     } else if (params_.mag.enable_mag) {
-      prior_pose_sigmas(2) = params_.mag.use_parameter_covariance ?
-        params_.mag.parameter_covariance.magnetic_field_noise_sigmas[0] :
-        std::sqrt(toGtsam(initial_mag_->magnetic_field_covariance)(2, 2));
+      double h_mag = std::sqrt(
+        params_.mag.reference_field[0] * params_.mag.reference_field[0] +
+        params_.mag.reference_field[1] * params_.mag.reference_field[1]);
+
+      double mag_sigma_norm = params_.mag.use_parameter_covariance ?
+        params_.mag.parameter_covariance.magnetic_field_noise_sigma :
+        std::sqrt(toGtsam(initial_mag_->magnetic_field_covariance)(0, 0));
+
+      prior_pose_sigmas(2) = mag_sigma_norm / h_mag;
     }
     prior_pose_sigmas(0) = params_.imu.use_parameter_covariance ?
       params_.imu.parameter_covariance.gyro_noise_sigmas[0] :
@@ -637,7 +643,7 @@ void FactorGraphNode::initializeGraph()
   // --- Wait for Sensor Data ---
   if (!sensors_ready_) {
     std::scoped_lock lock(imu_queue_mutex_, gps_queue_mutex_, depth_queue_mutex_,
-      mag_queue_mutex_, ahrs_queue_mutex_, dvl_queue_mutex_);
+      mag_queue_mutex_, ahrs_queue_mutex_, dvl_queue_mutex_, wrench_queue_mutex_);
 
     if (!imu_queue_.empty() &&
       (!(params_.gps.enable_gps || params_.gps.enable_gps_init_only) || !gps_queue_.empty()) &&
@@ -663,7 +669,10 @@ void FactorGraphNode::initializeGraph()
           initial_ahrs_ = ahrs_queue_.back();
         }
         initial_dvl_ = dvl_queue_.back();
-        if (params_.dynamics.enable_dynamics) {initial_wrench_ = wrench_queue_.back();}
+        if (params_.dynamics.enable_dynamics) {
+          initial_wrench_ = wrench_queue_.back();
+          latest_wrench_msg_ = initial_wrench_;
+        }
         data_averaged_ = true;
       } else {
         RCLCPP_INFO(get_logger(), "Required sensor messages received! Averaging...");
@@ -725,7 +734,10 @@ void FactorGraphNode::initializeGraph()
       initial_mag_ = avgs.mag;
       initial_ahrs_ = avgs.ahrs;
       initial_dvl_ = avgs.dvl;
-      initial_wrench_ = wrench_msgs.back();
+      if (params_.dynamics.enable_dynamics) {
+        initial_wrench_ = wrench_msgs.back();
+        latest_wrench_msg_ = initial_wrench_;
+      }
 
       RCLCPP_INFO(get_logger(), "Sensor data averaged successfully! Initializing graph...");
       data_averaged_ = true;
@@ -908,15 +920,16 @@ void FactorGraphNode::addMagFactor(
     params_.mag.reference_field[2]);
 
   gtsam::Vector1 mag_sigma;
+  double h_mag = std::sqrt(ref_vec.x() * ref_vec.x() + ref_vec.y() * ref_vec.y());
+
   if (params_.mag.use_parameter_covariance) {
-    mag_sigma << params_.mag.parameter_covariance.magnetic_field_noise_sigmas[0];
+    mag_sigma << params_.mag.parameter_covariance.magnetic_field_noise_sigma / h_mag;
   } else {
-    double B_mag = ref_vec.norm();
-    if (B_mag > 1e-6) {
-      double sigma_B = sqrt(mag_msg->magnetic_field_covariance[0]);
-      mag_sigma << sigma_B / B_mag;
+    if (h_mag > 1e-6) {
+      double sigma_norm = sqrt(mag_msg->magnetic_field_covariance[0]);
+      mag_sigma << sigma_norm / h_mag;
     } else {
-      mag_sigma << params_.mag.parameter_covariance.magnetic_field_noise_sigmas[0];
+      mag_sigma << params_.mag.parameter_covariance.magnetic_field_noise_sigma / h_mag;
     }
   }
   gtsam::SharedNoiseModel mag_noise = gtsam::noiseModel::Isotropic::Sigma(1, mag_sigma(0));
@@ -973,10 +986,11 @@ void FactorGraphNode::addConstantVelocityFactor(
   double target_time)
 {
   double dt = target_time - prev_time_;
-  double vel_random_walk = params_.dvl.velocity_random_walk;
-  double scaled_sigma = vel_random_walk * std::sqrt(std::max(dt, 0.001));
+  Eigen::Vector3d vel_random_walk = toGtsam(params_.const_vel.velocity_sigma);
+  double sqrt_dt = std::sqrt(std::max(dt, 0.001));
+  Eigen::Vector3d scaled_sigma = vel_random_walk * sqrt_dt;
 
-  gtsam::SharedNoiseModel zero_accel_noise = gtsam::noiseModel::Isotropic::Sigma(3, scaled_sigma);
+  gtsam::SharedNoiseModel zero_accel_noise = gtsam::noiseModel::Diagonal::Sigmas(scaled_sigma);
 
   RCLCPP_DEBUG(get_logger(), "Adding constant velocity factor at step %zu", current_step_);
 
@@ -992,9 +1006,16 @@ void FactorGraphNode::addAuvDynamicsFactor(
   const std::deque<geometry_msgs::msg::WrenchStamped::SharedPtr> & wrench_msgs,
   double target_time)
 {
-  if (!have_com_to_dvl_tf_ || wrench_msgs.empty()) {return;}
+  if (!have_com_to_dvl_tf_) {return;}
 
-  const auto & wrench_msg = wrench_msgs.back();
+  // Implement a zero-order hold (ZOH) for wrench commands
+  if (!wrench_msgs.empty()) {
+    latest_wrench_msg_ = wrench_msgs.back();
+  }
+
+  if (!latest_wrench_msg_) {return;}
+
+  const auto & wrench_msg = latest_wrench_msg_;
 
   gtsam::Vector3 dynamics_sigmas = toGtsam(params_.dynamics.prediction_noise_sigmas);
   gtsam::SharedNoiseModel dynamics_noise = gtsam::noiseModel::Diagonal::Sigmas(dynamics_sigmas);
@@ -1480,25 +1501,46 @@ void FactorGraphNode::optimizeGraph()
   if (params_.mag.enable_mag) {addMagFactor(new_graph, mag_msgs);}
   if (params_.ahrs.enable_ahrs) {addAhrsFactor(new_graph, ahrs_msgs);}
 
+  bool dvl_available = !dvl_msgs.empty();
+
   if (params_.experimental.enable_dvl_preintegration) {
-    if (dvl_msgs.empty() && !params_.experimental.enable_pseudo_dvl_w_imu) {
-      if (params_.dynamics.enable_dynamics) {
+    if (!dvl_available && !params_.experimental.enable_pseudo_dvl_w_imu) {
+      if (params_.dynamics.enable_dynamics ||
+        (params_.dynamics.enable_dynamics_dropout_only && !dvl_available))
+      {
         addAuvDynamicsFactor(new_graph, wrench_msgs, target_time);
-      } else {
+      }
+
+      if (params_.const_vel.enable_const_vel ||
+        (params_.const_vel.enable_const_vel_dropout_only && !dvl_available))
+      {
         addConstantVelocityFactor(new_graph, target_time);
       }
     } else {
       addPreintegratedDvlFactor(new_graph, dvl_msgs, imu_msgs, target_time);
     }
   } else {
-    if (dvl_msgs.empty()) {
-      if (params_.dynamics.enable_dynamics) {
+    if (!dvl_available) {
+      if (params_.dynamics.enable_dynamics ||
+        (params_.dynamics.enable_dynamics_dropout_only && !dvl_available))
+      {
         addAuvDynamicsFactor(new_graph, wrench_msgs, target_time);
-      } else {
+      }
+
+      if (params_.const_vel.enable_const_vel ||
+        (params_.const_vel.enable_const_vel_dropout_only && !dvl_available))
+      {
         addConstantVelocityFactor(new_graph, target_time);
       }
     } else {
       addDvlFactor(new_graph, dvl_msgs);
+
+      if (params_.dynamics.enable_dynamics) {
+        addAuvDynamicsFactor(new_graph, wrench_msgs, target_time);
+      }
+      if (params_.const_vel.enable_const_vel) {
+        addConstantVelocityFactor(new_graph, target_time);
+      }
     }
   }
 

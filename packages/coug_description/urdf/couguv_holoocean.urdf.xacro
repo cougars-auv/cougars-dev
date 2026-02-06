@@ -177,7 +177,7 @@
   </joint>
   <link name="dvl_link"/>
 
-  <!-- TODO: Fix this in HoloOcean -->
+  <!-- TODO: Check this when we move to a new HoloOcean version -->
   <joint name="truth_joint" type="fixed">
     <parent link="base_link"/>
     <child link="truth_link"/>

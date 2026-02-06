@@ -43,7 +43,7 @@ def launch_setup(context, *args, **kwargs):
     play_bag_path = LaunchConfiguration("play_bag_path")
     record_bag_path = LaunchConfiguration("record_bag_path")
     compare = LaunchConfiguration("compare")
-    bluerov_viz = LaunchConfiguration("bluerov_viz")
+    bluerov2_viz = LaunchConfiguration("bluerov2_viz")
 
     play_bag_path_str = context.perform_substitution(play_bag_path)
     record_bag_path_str = context.perform_substitution(record_bag_path)
@@ -120,7 +120,7 @@ def launch_setup(context, *args, **kwargs):
             launch_arguments={
                 "use_sim_time": use_sim_time,
                 "multiagent_viz": "false",
-                "bluerov_viz": bluerov_viz,
+                "bluerov2_viz": bluerov2_viz,
             }.items(),
         )
     )
@@ -200,9 +200,9 @@ def generate_launch_description():
                 description="Launch additional localization nodes if true",
             ),
             DeclareLaunchArgument(
-                "bluerov_viz",
+                "bluerov2_viz",
                 default_value="true",
-                description="Load BlueROV specific viz config if true",
+                description="Load BlueROV2 specific viz config if true",
             ),
             OpaqueFunction(function=launch_setup),
         ]

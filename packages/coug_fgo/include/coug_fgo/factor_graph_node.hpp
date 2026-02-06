@@ -375,6 +375,8 @@ private:
   geometry_msgs::msg::TwistWithCovarianceStamped::SharedPtr initial_dvl_;
   geometry_msgs::msg::WrenchStamped::SharedPtr initial_wrench_;
 
+  geometry_msgs::msg::WrenchStamped::SharedPtr latest_wrench_msg_;
+
   // --- Message Queues ---
   std::deque<sensor_msgs::msg::Imu::SharedPtr> imu_queue_;
   std::deque<nav_msgs::msg::Odometry::SharedPtr> gps_queue_;

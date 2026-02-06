@@ -86,7 +86,7 @@
       use_parameter_frame: false
       use_parameter_covariance: false
       parameter_covariance:
-        magnetic_field_noise_sigmas: [0.003, 0.003, 0.003] # [normalized] Magnetic field uncertainty sigmas.
+        magnetic_field_noise_sigma: 0.003 # [normalized] Magnetic field uncertainty sigma.
       # https://www.ngdc.noaa.gov/geomag/calculators/magcalc.shtml#igrfwmm
       # WMMHR-2025 (40.2406 N, 111.741 W, 2026-01-23)
       # North: 20,842.3 nT, East: 3,963.4 nT, Vertical: 45,767.8 nT
@@ -114,18 +114,23 @@
       use_parameter_covariance: false
       parameter_covariance:
         velocity_noise_sigmas: [0.02, 0.02, 0.02] # [m/s] DVL body-velocity uncertainty sigmas.
-      velocity_random_walk: 0.1 # [m/s/sqrt(s)] Velocity uncertainty growth rate during dropouts.
       timeout_threshold: 0.25 # [s] Time before switching to depth-driven keyframes (DVL dropout).
       robust_kernel: "None"
       robust_k: 1.345
 
+    const_vel:
+      enable_const_vel: false
+      enable_const_vel_dropout_only: true
+      velocity_sigma: [0.1, 0.1, 0.1] # [m/s/sqrt(s)] Velocity uncertainty growth rate during dropouts.
+
     dynamics:
       enable_dynamics: false
+      enable_dynamics_dropout_only: false
       use_parameter_frame: false
       prediction_noise_sigmas: [0.1, 0.1, 0.1] # Model prediction uncertainty sigmas.
-      mass: [10.0, 10.0, 10.0] # [kg] Mass of the vehicle (diagonal).
-      linear_drag: [10.0, 10.0, 10.0] # [kg/s] Linear drag coefficient (diagonal).
-      quad_drag: [10.0, 10.0, 10.0] # [kg/m] Quadratic drag coefficient (diagonal).
+      mass: [11.5, 11.5, 11.5] # [kg] Mass of the vehicle (diagonal)
+      linear_drag: [11.5, 11.5, 11.5] # Linear drag coefficient (diagonal)
+      quad_drag: [1.8, 1.8, 1.8] # Quadratic drag coefficient (diagonal)
       timeout_threshold: 1.0 # [s]
       robust_kernel: "None"
       robust_k: 1.345
@@ -183,7 +188,7 @@
   ros__parameters:
     prior:
       parameter_priors:
-        initial_position: [0.0, 0.0, 0.0] # [m]
+        initial_position: [0.0, 0.0, 0.0] # 0.833] # [m]
 
 /auv1/**:
   ros__parameters:

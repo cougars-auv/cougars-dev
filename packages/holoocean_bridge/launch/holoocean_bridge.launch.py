@@ -220,6 +220,18 @@ def generate_launch_description():
                     {"use_sim_time": use_sim_time, "mag_frame": imu_link_frame},
                 ],
             ),
+            Node(
+                package="holoocean_bridge",
+                executable="wrench_converter",
+                name="wrench_converter_node",
+                parameters=[
+                    params_file,
+                    {
+                        "use_sim_time": use_sim_time,
+                        "wrench_frame": com_link_frame,
+                    },
+                ],
+            ),
             # Set this to the starting position of the main AUV in HoloOcean
             Node(
                 package="tf2_ros",
@@ -231,7 +243,7 @@ def generate_launch_description():
                     "--y",
                     "0",
                     "--z",
-                    "0",
+                    "0", # "-0.833",
                     "--yaw",
                     "0",
                     "--pitch",
