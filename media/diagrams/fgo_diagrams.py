@@ -10,14 +10,14 @@ plt.rcParams["text.usetex"] = True
 plt.rcParams["font.family"] = "serif"
 
 # %%
-COLOR_VAR = "#AEC7E8"
-COLOR_PRIOR = "#0000FF"
-COLOR_FACTOR_DEPTH = "#F0E442"
-COLOR_FACTOR_HEADING = "#D55E00"
-COLOR_FACTOR_GPS = "#009E73"
-COLOR_FACTOR_DVL = "#9400D3"
+COLOR_VAR = "#B5CBE6"
+COLOR_PRIOR = "#4C72B0"
+COLOR_FACTOR_DEPTH = "#FFC107"
+COLOR_FACTOR_HEADING = "#C44E52"
+COLOR_FACTOR_GPS = "#55A868"
+COLOR_FACTOR_DVL = "#8172B2"
 COLOR_FACTOR_IMU = "#000000"
-COLOR_FACTOR_RW = "#FFFFFF"
+COLOR_FACTOR_DYNAMICS = "#DD8452"
 
 style_var = {"facecolor": COLOR_VAR, "edgecolor": "black"}
 style_prior = {"facecolor": COLOR_PRIOR, "edgecolor": "black"}
@@ -26,7 +26,7 @@ style_factor_heading = {"facecolor": COLOR_FACTOR_HEADING, "edgecolor": "black"}
 style_factor_gps = {"facecolor": COLOR_FACTOR_GPS, "edgecolor": "black"}
 style_factor_dvl = {"facecolor": COLOR_FACTOR_DVL, "edgecolor": "black"}
 style_factor_imu = {"facecolor": COLOR_FACTOR_IMU, "edgecolor": "black"}
-style_factor_rw = {"facecolor": COLOR_FACTOR_RW, "edgecolor": "black"}
+style_factor_dynamics = {"facecolor": COLOR_FACTOR_DYNAMICS, "edgecolor": "black"}
 
 # %%
 pgm = daft.PGM(directed=False)
@@ -132,6 +132,7 @@ pgm.add_edge("x2", "gps")
 
 # %%
 pgm_between = copy.deepcopy(pgm)
+pgm_dynamics = copy.deepcopy(pgm)
 
 # %%
 # Binary DVL Factors
@@ -178,4 +179,47 @@ pgm_between.render()
 # pgm_between.figure.savefig(OUTPUT_DIR / "fgo_dvl_between.pdf", bbox_inches="tight")
 pgm_between.figure.savefig(
     OUTPUT_DIR / "fgo_dvl_between.png", bbox_inches="tight", dpi=300
+)
+
+# %%
+# Dynamic Model Factors
+for i in range(2):
+    x_pos = start_x + (i * col_spacing)
+
+    pgm_dynamics.add_node(
+        f"dvl{i}",
+        f"$f^{{v}}_{{{i}}}$",
+        x_pos,
+        2.5,
+        fixed=True,
+        offset=[-10, -8],
+        plot_params=style_factor_dvl,
+    )
+    pgm_dynamics.add_edge(f"x{i}", f"dvl{i}")
+    pgm_dynamics.add_edge(f"v{i}", f"dvl{i}")
+
+for i in range(4):
+    x_pos = start_x + (i * col_spacing)
+
+    if i > 0 and i < 3:
+        mid_x = x_pos + (col_spacing / 2)
+
+        pgm_dynamics.add_node(
+            f"dynamics{i}",
+            f"$f^{{v}}_{{{i}{i+1}}}$",
+            mid_x,
+            2.5,
+            fixed=True,
+            plot_params=style_factor_dynamics,
+            offset=[0, 5],
+        )
+        pgm_dynamics.add_edge(f"x{i}", f"dynamics{i}")
+        pgm_dynamics.add_edge(f"dynamics{i}", f"x{i+1}")
+        pgm_dynamics.add_edge(f"v{i}", f"dynamics{i}")
+        pgm_dynamics.add_edge(f"v{i+1}", f"dynamics{i}")
+
+pgm_dynamics.render()
+# pgm_dynamics.figure.savefig(OUTPUT_DIR / "fgo_dynamics.pdf", bbox_inches="tight")
+pgm_dynamics.figure.savefig(
+    OUTPUT_DIR / "fgo_dynamics.png", bbox_inches="tight", dpi=300
 )
