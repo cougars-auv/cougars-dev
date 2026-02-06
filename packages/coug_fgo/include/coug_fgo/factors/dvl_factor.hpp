@@ -38,25 +38,25 @@ namespace coug_fgo::factors
 {
 
 /**
- * @class CustomDVLFactor
+ * @class DVLFactor
  * @brief GTSAM factor for DVL velocity measurements in the AUV base frame.
  *
  * This factor relates the AUV's world-frame velocity and pose to the measured
  * velocity from the DVL (provided in the AUV base frame).
  */
-class CustomDVLFactor : public gtsam::NoiseModelFactor2<gtsam::Pose3, gtsam::Vector3>
+class DVLFactor : public gtsam::NoiseModelFactor2<gtsam::Pose3, gtsam::Vector3>
 {
   gtsam::Vector3 measured_velocity_base_;
 
 public:
   /**
-   * @brief Constructor for CustomDVLFactor.
+   * @brief Constructor for DVLFactor.
    * @param pose_key GTSAM key for the AUV pose.
    * @param vel_key GTSAM key for the AUV world-frame velocity.
    * @param measured_velocity_base The velocity measurement in the base frame.
    * @param noise_model The noise model for the measurement.
    */
-  CustomDVLFactor(
+  DVLFactor(
     gtsam::Key pose_key, gtsam::Key vel_key,
     const gtsam::Vector3 & measured_velocity_base,
     const gtsam::SharedNoiseModel & noise_model)

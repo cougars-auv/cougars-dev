@@ -34,13 +34,13 @@ namespace coug_fgo::factors
 {
 
 /**
- * @class CustomAHRSYawFactorArm
+ * @class AHRSYawFactorArm
  * @brief GTSAM factor for AHRS/orientation yaw-only measurements with a lever arm.
  *
  * This factor constrains the yaw orientation of the AUV based on AHRS/IMU measurements,
  * accounting for the rotation between the AUV base and the sensor.
  */
-class CustomAHRSYawFactorArm : public gtsam::NoiseModelFactor1<gtsam::Pose3>
+class AHRSYawFactorArm : public gtsam::NoiseModelFactor1<gtsam::Pose3>
 {
   gtsam::Rot3 measured_rot_sensor_;
   gtsam::Rot3 base_R_sensor_;
@@ -48,14 +48,14 @@ class CustomAHRSYawFactorArm : public gtsam::NoiseModelFactor1<gtsam::Pose3>
 
 public:
   /**
-   * @brief Constructor for CustomAHRSYawFactorArm.
+   * @brief Constructor for AHRSYawFactorArm.
    * @param pose_key GTSAM key for the AUV pose.
    * @param measured_rot_sensor The measured orientation of the sensor in the world frame.
    * @param base_R_sensor The static rotation from base to sensor.
    * @param mag_declination Magnetic declination to add to the measurement [rad].
    * @param noise_model The noise model for the measurement (1D).
    */
-  CustomAHRSYawFactorArm(
+  AHRSYawFactorArm(
     gtsam::Key pose_key, const gtsam::Rot3 & measured_rot_sensor,
     const gtsam::Rot3 & base_R_sensor, double mag_declination,
     const gtsam::SharedNoiseModel & noise_model)

@@ -35,7 +35,7 @@ namespace coug_fgo::factors
 {
 
 /**
- * @class CustomAUVDynamicsFactorArm
+ * @class AUVDynamicsFactorArm
  * @brief GTSAM factor for enforcing simplified AUV dynamics between two poses.
  *
  * This factor constrains the velocity evolution of the AUV based on a simplified
@@ -43,7 +43,7 @@ namespace coug_fgo::factors
  *
  * Model: V_next = V_curr + (dt/m) * (F_thrust - (linear_drag * V + quad_drag * |V| * V))
  */
-class CustomAUVDynamicsFactorArm : public gtsam::NoiseModelFactor4<gtsam::Pose3,
+class AUVDynamicsFactorArm : public gtsam::NoiseModelFactor4<gtsam::Pose3,
     gtsam::Vector3, gtsam::Pose3, gtsam::Vector3>
 {
 private:
@@ -56,7 +56,7 @@ private:
 
 public:
   /**
-   * @brief Constructor for CustomAUVDynamicsFactorArm.
+   * @brief Constructor for AUVDynamicsFactorArm.
    * @param pose_key1 GTSAM key for the first pose (state i).
    * @param vel_key1 GTSAM key for the first velocity (state i).
    * @param pose_key2 GTSAM key for the second pose (state j).
@@ -69,7 +69,7 @@ public:
    * @param quad_drag Quadratic damping coefficient.
    * @param noise_model The noise model for the constraint.
    */
-  CustomAUVDynamicsFactorArm(
+  AUVDynamicsFactorArm(
     gtsam::Key pose_key1, gtsam::Key vel_key1,
     gtsam::Key pose_key2, gtsam::Key vel_key2,
     double dt,
@@ -90,7 +90,7 @@ public:
     mass_inv_ = mass_.inverse();
   }
 
-  ~CustomAUVDynamicsFactorArm() override {}
+  ~AUVDynamicsFactorArm() override {}
 
   /**
    * @brief Evaluates the error and Jacobians for the factor.

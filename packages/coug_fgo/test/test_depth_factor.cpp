@@ -28,7 +28,7 @@
 #include "coug_fgo/factors/depth_factor.hpp"
 
 /**
- * @brief Test the error evaluation logic of the CustomDepthFactorArm.
+ * @brief Test the error evaluation logic of the DepthFactorArm.
  *
  * Verifies the factor's residual calculation: `error = measured_depth - (pose.z + lever_arm_z)`.
  *
@@ -39,12 +39,12 @@
  * 4.  **Combined**: Vehicle rotated + Sensor offset.
  * 5.  **Error Check**: Verifies non-zero error magnitude.
  */
-TEST(CustomDepthFactorArmTest, ErrorEvaluation) {
+TEST(DepthFactorArmTest, ErrorEvaluation) {
   gtsam::Key poseKey = gtsam::symbol_shorthand::X(1);
   gtsam::SharedNoiseModel model = gtsam::noiseModel::Isotropic::Sigma(1, 0.1);
 
   // Case 1: Identity
-  coug_fgo::factors::CustomDepthFactorArm factor1(poseKey, 5.0, gtsam::Pose3::Identity(), model);
+  coug_fgo::factors::DepthFactorArm factor1(poseKey, 5.0, gtsam::Pose3::Identity(), model);
   EXPECT_NEAR(
     factor1.evaluateError(
       gtsam::Pose3(
@@ -61,7 +61,7 @@ TEST(CustomDepthFactorArmTest, ErrorEvaluation) {
           5)))[0], 0.0, 1e-9);
 
   // Case 3: Mounting/Lever Arm
-  coug_fgo::factors::CustomDepthFactorArm factor2(poseKey, 5.0,
+  coug_fgo::factors::DepthFactorArm factor2(poseKey, 5.0,
     gtsam::Pose3(gtsam::Rot3(), gtsam::Point3(0, 0, 1)), model);
   EXPECT_NEAR(
     factor2.evaluateError(
@@ -89,20 +89,20 @@ TEST(CustomDepthFactorArmTest, ErrorEvaluation) {
 }
 
 /**
- * @brief Verify Jacobians of the CustomDepthFactorArm using numerical differentiation.
+ * @brief Verify Jacobians of the DepthFactorArm using numerical differentiation.
  *
  * Validates the analytical Jacobians with respect to:
  * 1.  **Pose**: Z-component relates to depth measurement.
  */
-TEST(CustomDepthFactorArmTest, Jacobians) {
-  coug_fgo::factors::CustomDepthFactorArm factor(gtsam::symbol_shorthand::X(1), 5.0,
+TEST(DepthFactorArmTest, Jacobians) {
+  coug_fgo::factors::DepthFactorArm factor(gtsam::symbol_shorthand::X(1), 5.0,
     gtsam::Pose3(gtsam::Rot3(), gtsam::Point3(0.5, 0.5, 0.5)),
     gtsam::noiseModel::Isotropic::Sigma(1, 0.1));
   gtsam::Pose3 pose = gtsam::Pose3(gtsam::Rot3::Ypr(0.1, 0.2, 0.3), gtsam::Point3(1, 2, 4));
 
   gtsam::Matrix expectedH = gtsam::numericalDerivative11<gtsam::Vector, gtsam::Pose3>(
     boost::bind(
-      &coug_fgo::factors::CustomDepthFactorArm::evaluateError, &factor,
+      &coug_fgo::factors::DepthFactorArm::evaluateError, &factor,
       boost::placeholders::_1, boost::none), pose, 1e-5);
 
   gtsam::Matrix actualH;

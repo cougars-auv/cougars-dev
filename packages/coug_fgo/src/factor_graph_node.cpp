@@ -39,14 +39,14 @@
 #include "coug_fgo/utils/conversion_utils.hpp"
 
 
-using coug_fgo::factors::CustomDepthFactorArm;
-using coug_fgo::factors::CustomDVLFactor;
-using coug_fgo::factors::CustomDVLPreintegratedFactor;
-using coug_fgo::factors::CustomGPS2DFactorArm;
-using coug_fgo::factors::CustomAHRSYawFactorArm;
-using coug_fgo::factors::CustomMagYawFactorArm;
-using coug_fgo::factors::CustomAUVDynamicsFactorArm;
-using coug_fgo::factors::CustomConstantVelocityFactor;
+using coug_fgo::factors::DepthFactorArm;
+using coug_fgo::factors::DVLFactor;
+using coug_fgo::factors::DVLPreintegratedFactor;
+using coug_fgo::factors::GPS2DFactorArm;
+using coug_fgo::factors::AHRSYawFactorArm;
+using coug_fgo::factors::MagYawFactorArm;
+using coug_fgo::factors::AUVDynamicsFactorArm;
+using coug_fgo::factors::ConstantVelocityFactor;
 using coug_fgo::utils::toGtsam;
 using coug_fgo::utils::toGtsam3x3;
 using coug_fgo::utils::toGtsamDiagonal;
@@ -831,7 +831,7 @@ void FactorGraphNode::addGpsFactor(
 
   RCLCPP_DEBUG(get_logger(), "Adding GPS factor at step %zu", current_step_);
 
-  graph.emplace_shared<CustomGPS2DFactorArm>(
+  graph.emplace_shared<GPS2DFactorArm>(
     X(current_step_), toGtsam(gps_msg->pose.pose.position),
     toGtsam(gps_to_dvl_tf_.transform), gps_noise);
 }
@@ -864,7 +864,7 @@ void FactorGraphNode::addDepthFactor(
 
   RCLCPP_DEBUG(get_logger(), "Adding depth factor at step %zu", current_step_);
 
-  graph.emplace_shared<CustomDepthFactorArm>(
+  graph.emplace_shared<DepthFactorArm>(
     X(current_step_), depth_msg->pose.pose.position.z,
     toGtsam(depth_to_dvl_tf_.transform), depth_noise);
 }
@@ -898,7 +898,7 @@ void FactorGraphNode::addAhrsFactor(
 
   RCLCPP_DEBUG(get_logger(), "Adding AHRS factor at step %zu", current_step_);
 
-  graph.emplace_shared<CustomAHRSYawFactorArm>(
+  graph.emplace_shared<AHRSYawFactorArm>(
     X(current_step_), toGtsam(ahrs_msg->orientation),
     toGtsam(ahrs_to_dvl_tf_.transform.rotation),
     params_.ahrs.mag_declination_radians,
@@ -944,7 +944,7 @@ void FactorGraphNode::addMagFactor(
 
   RCLCPP_DEBUG(get_logger(), "Adding mag factor at step %zu", current_step_);
 
-  graph.emplace_shared<CustomMagYawFactorArm>(
+  graph.emplace_shared<MagYawFactorArm>(
     X(current_step_), toGtsam(mag_msg->magnetic_field), ref_vec,
     toGtsam(mag_to_dvl_tf_.transform.rotation), mag_noise);
 }
@@ -976,7 +976,7 @@ void FactorGraphNode::addDvlFactor(
 
   RCLCPP_DEBUG(get_logger(), "Adding DVL factor at step %zu", current_step_);
 
-  graph.emplace_shared<CustomDVLFactor>(
+  graph.emplace_shared<DVLFactor>(
     X(current_step_), V(current_step_),
     toGtsam(dvl_msg->twist.twist.linear), dvl_noise);
 }
@@ -994,7 +994,7 @@ void FactorGraphNode::addConstantVelocityFactor(
 
   RCLCPP_DEBUG(get_logger(), "Adding constant velocity factor at step %zu", current_step_);
 
-  graph.emplace_shared<CustomConstantVelocityFactor>(
+  graph.emplace_shared<ConstantVelocityFactor>(
     X(prev_step_), V(prev_step_),
     X(current_step_), V(current_step_),
     zero_accel_noise
@@ -1030,7 +1030,7 @@ void FactorGraphNode::addAuvDynamicsFactor(
 
   double dt = target_time - prev_time_;
   RCLCPP_DEBUG(get_logger(), "Adding dynamics factor at step %zu", current_step_);
-  graph.emplace_shared<coug_fgo::factors::CustomAUVDynamicsFactorArm>(
+  graph.emplace_shared<coug_fgo::factors::AUVDynamicsFactorArm>(
     X(prev_step_), V(prev_step_),
     X(current_step_), V(current_step_),
     dt, toGtsam(wrench_msg->wrench.force),
@@ -1248,7 +1248,7 @@ void FactorGraphNode::addPreintegratedDvlFactor(
 
   RCLCPP_DEBUG(get_logger(), "Adding preintegrated DVL factor at step %zu", current_step_);
 
-  graph.emplace_shared<CustomDVLPreintegratedFactor>(
+  graph.emplace_shared<DVLPreintegratedFactor>(
     X(prev_step_), X(current_step_), dvl_preintegrator_->delta(),
     gtsam::noiseModel::Gaussian::Covariance(dvl_preintegrator_->covariance()));
 
@@ -1505,15 +1505,14 @@ void FactorGraphNode::optimizeGraph()
 
   if (params_.experimental.enable_dvl_preintegration) {
     if (!dvl_available && !params_.experimental.enable_pseudo_dvl_w_imu) {
-      if (params_.dynamics.enable_dynamics ||
-        (params_.dynamics.enable_dynamics_dropout_only && !dvl_available))
-      {
-        addAuvDynamicsFactor(new_graph, wrench_msgs, target_time);
-      }
+      bool use_dynamics = params_.dynamics.enable_dynamics ||
+        (params_.dynamics.enable_dynamics_dropout_only && !dvl_available);
+      bool use_const_vel = params_.const_vel.enable_const_vel ||
+        (params_.const_vel.enable_const_vel_dropout_only && !dvl_available);
 
-      if (params_.const_vel.enable_const_vel ||
-        (params_.const_vel.enable_const_vel_dropout_only && !dvl_available))
-      {
+      if (use_dynamics) {
+        addAuvDynamicsFactor(new_graph, wrench_msgs, target_time);
+      } else if (use_const_vel) {
         addConstantVelocityFactor(new_graph, target_time);
       }
     } else {
@@ -1521,15 +1520,14 @@ void FactorGraphNode::optimizeGraph()
     }
   } else {
     if (!dvl_available) {
-      if (params_.dynamics.enable_dynamics ||
-        (params_.dynamics.enable_dynamics_dropout_only && !dvl_available))
-      {
-        addAuvDynamicsFactor(new_graph, wrench_msgs, target_time);
-      }
+      bool use_dynamics = params_.dynamics.enable_dynamics ||
+        (params_.dynamics.enable_dynamics_dropout_only && !dvl_available);
+      bool use_const_vel = params_.const_vel.enable_const_vel ||
+        (params_.const_vel.enable_const_vel_dropout_only && !dvl_available);
 
-      if (params_.const_vel.enable_const_vel ||
-        (params_.const_vel.enable_const_vel_dropout_only && !dvl_available))
-      {
+      if (use_dynamics) {
+        addAuvDynamicsFactor(new_graph, wrench_msgs, target_time);
+      } else if (use_const_vel) {
         addConstantVelocityFactor(new_graph, target_time);
       }
     } else {
@@ -1537,8 +1535,7 @@ void FactorGraphNode::optimizeGraph()
 
       if (params_.dynamics.enable_dynamics) {
         addAuvDynamicsFactor(new_graph, wrench_msgs, target_time);
-      }
-      if (params_.const_vel.enable_const_vel) {
+      } else if (params_.const_vel.enable_const_vel) {
         addConstantVelocityFactor(new_graph, target_time);
       }
     }

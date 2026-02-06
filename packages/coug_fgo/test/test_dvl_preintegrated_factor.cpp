@@ -28,7 +28,7 @@
 #include "coug_fgo/factors/dvl_preintegrated_factor.hpp"
 
 /**
- * @brief Test the error evaluation logic of the CustomDVLPreintegratedFactor.
+ * @brief Test the error evaluation logic of the DVLPreintegratedFactor.
  *
  * Checks that the factor correctly equates the relative pose displacement between
  * nodes `i` and `j` to the preintegrated DVL measurement.
@@ -39,12 +39,12 @@
  * 3.  **Rotation + Translation**: Rotated frame check.
  * 4.  **Error Check**: Verifies non-zero error magnitude.
  */
-TEST(CustomDVLPreintegratedFactorTest, ErrorEvaluation) {
+TEST(DVLPreintegratedFactorTest, ErrorEvaluation) {
   gtsam::Key poseIKey = gtsam::symbol_shorthand::X(1);
   gtsam::Key poseJKey = gtsam::symbol_shorthand::X(2);
   gtsam::Vector3 measured_translation(1.0, 0.0, 0.0);
   gtsam::SharedNoiseModel model = gtsam::noiseModel::Isotropic::Sigma(3, 0.1);
-  coug_fgo::factors::CustomDVLPreintegratedFactor factor(
+  coug_fgo::factors::DVLPreintegratedFactor factor(
     poseIKey, poseJKey, measured_translation, model);
 
   // Case 1: Identity
@@ -77,18 +77,18 @@ TEST(CustomDVLPreintegratedFactorTest, ErrorEvaluation) {
 }
 
 /**
- * @brief Verify Jacobians of the CustomDVLPreintegratedFactor using numerical differentiation.
+ * @brief Verify Jacobians of the DVLPreintegratedFactor using numerical differentiation.
  *
  * Validates the analytical Jacobians with respect to:
  * 1.  **Pose I**: Orientation and position affect the prediction.
  * 2.  **Pose J**: Position affects relative displacement.
  */
-TEST(CustomDVLPreintegratedFactorTest, Jacobians) {
+TEST(DVLPreintegratedFactorTest, Jacobians) {
   gtsam::Key poseIKey = gtsam::symbol_shorthand::X(1);
   gtsam::Key poseJKey = gtsam::symbol_shorthand::X(2);
   gtsam::Vector3 measured_translation(1.0, 0.5, -0.2);
   gtsam::SharedNoiseModel model = gtsam::noiseModel::Isotropic::Sigma(3, 0.1);
-  coug_fgo::factors::CustomDVLPreintegratedFactor factor(
+  coug_fgo::factors::DVLPreintegratedFactor factor(
     poseIKey, poseJKey, measured_translation, model);
 
   gtsam::Pose3 pose_i = gtsam::Pose3(gtsam::Rot3::Ypr(0.1, 0.2, 0.3), gtsam::Point3(1, 2, 3));
@@ -97,13 +97,13 @@ TEST(CustomDVLPreintegratedFactorTest, Jacobians) {
   gtsam::Matrix expectedH1 = gtsam::numericalDerivative21<gtsam::Vector, gtsam::Pose3,
       gtsam::Pose3>(
     boost::bind(
-      &coug_fgo::factors::CustomDVLPreintegratedFactor::evaluateError, &factor,
+      &coug_fgo::factors::DVLPreintegratedFactor::evaluateError, &factor,
       boost::placeholders::_1, boost::placeholders::_2, boost::none, boost::none),
     pose_i, pose_j, 1e-5);
   gtsam::Matrix expectedH2 = gtsam::numericalDerivative22<gtsam::Vector, gtsam::Pose3,
       gtsam::Pose3>(
     boost::bind(
-      &coug_fgo::factors::CustomDVLPreintegratedFactor::evaluateError, &factor,
+      &coug_fgo::factors::DVLPreintegratedFactor::evaluateError, &factor,
       boost::placeholders::_1, boost::placeholders::_2, boost::none, boost::none),
     pose_i, pose_j, 1e-5);
 

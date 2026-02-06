@@ -35,13 +35,13 @@ namespace coug_fgo::factors
 {
 
 /**
- * @class CustomMagYawFactorArm
+ * @class MagYawFactorArm
  * @brief GTSAM factor for magnetometer yaw-only measurements with a lever arm.
  *
  * This factor constrains the yaw orientation of the AUV based on magnetometer measurements,
  * accounting for the rotation between the AUV base and the sensor.
  */
-class CustomMagYawFactorArm : public gtsam::NoiseModelFactor1<gtsam::Pose3>
+class MagYawFactorArm : public gtsam::NoiseModelFactor1<gtsam::Pose3>
 {
   gtsam::Point3 reference_field_;
   gtsam::Rot3 base_R_sensor_;
@@ -50,14 +50,14 @@ class CustomMagYawFactorArm : public gtsam::NoiseModelFactor1<gtsam::Pose3>
 
 public:
   /**
-   * @brief Constructor for CustomMagYawFactorArm.
+   * @brief Constructor for MagYawFactorArm.
    * @param pose_key GTSAM key for the AUV pose.
    * @param measured_field The measured magnetic field vector (sensor frame).
    * @param reference_field The reference magnetic field vector (world frame).
    * @param base_R_sensor The static rotation from base to sensor.
    * @param noise_model The noise model for the measurement (1D).
    */
-  CustomMagYawFactorArm(
+  MagYawFactorArm(
     gtsam::Key pose_key, const gtsam::Point3 & measured_field,
     const gtsam::Point3 & reference_field,
     const gtsam::Rot3 & base_R_sensor, const gtsam::SharedNoiseModel & noise_model)

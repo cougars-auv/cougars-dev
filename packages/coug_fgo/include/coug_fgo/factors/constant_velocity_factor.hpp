@@ -35,32 +35,32 @@ namespace coug_fgo::factors
 {
 
 /**
- * @class CustomConstantVelocityFactor
+ * @class ConstantVelocityFactor
  * @brief GTSAM factor for enforcing constant body velocity between two poses.
  *
  * This factor constrains the body-frame velocity of the AUV to be constant
  * between two consecutive keyframes.
  */
-class CustomConstantVelocityFactor : public gtsam::NoiseModelFactor4<gtsam::Pose3, gtsam::Vector3,
+class ConstantVelocityFactor : public gtsam::NoiseModelFactor4<gtsam::Pose3, gtsam::Vector3,
     gtsam::Pose3, gtsam::Vector3>
 {
 public:
   /**
-   * @brief Constructor for CustomConstantVelocityFactor.
+   * @brief Constructor for ConstantVelocityFactor.
    * @param pose_key1 GTSAM key for the first pose (state i).
    * @param vel_key1 GTSAM key for the first velocity (state i).
    * @param pose_key2 GTSAM key for the second pose (state j).
    * @param vel_key2 GTSAM key for the second velocity (state j).
    * @param noise_model The noise model for the constraint.
    */
-  CustomConstantVelocityFactor(
+  ConstantVelocityFactor(
     gtsam::Key pose_key1, gtsam::Key vel_key1,
     gtsam::Key pose_key2, gtsam::Key vel_key2,
     const gtsam::SharedNoiseModel & noise_model)
   : NoiseModelFactor4<gtsam::Pose3, gtsam::Vector3, gtsam::Pose3, gtsam::Vector3>(
       noise_model, pose_key1, vel_key1, pose_key2, vel_key2) {}
 
-  ~CustomConstantVelocityFactor() override {}
+  ~ConstantVelocityFactor() override {}
 
   /**
    * @brief Evaluates the error and Jacobians for the factor.

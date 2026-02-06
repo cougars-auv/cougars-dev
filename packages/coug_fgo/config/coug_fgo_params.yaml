@@ -188,7 +188,7 @@
   ros__parameters:
     prior:
       parameter_priors:
-        initial_position: [0.0, 0.0, 0.0] # 0.833] # [m]
+        initial_position: [0.0, 0.0, 0.0] # -0.833] # [m]
 
 /auv1/**:
   ros__parameters:
