@@ -21,6 +21,8 @@ on:
       - ".github/workflows/docker_ci.yml"
       - "docker/Dockerfile"
       - "docker/entrypoint.sh"
+      - "docker/completions.sh"
+      - "docker/.tmux.conf"
       - "docker/gtsam/Dockerfile"
       - "packages/cougars.repos"
       - "packages/**/package.xml"
@@ -44,6 +46,8 @@ jobs:
               - '.github/workflows/docker_ci.yml'
               - 'docker/Dockerfile'
               - 'docker/entrypoint.sh'
+              - 'docker/completions.sh'
+              - 'docker/.tmux.conf'
               - 'packages/cougars.repos'
               - 'packages/**/package.xml'
 

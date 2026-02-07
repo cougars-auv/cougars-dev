@@ -59,6 +59,11 @@ RUN pip3 install --upgrade --no-cache-dir \
     # ASCII art boot screen - Nelson Durrant, Feb 2026
     asciimatics Pillow
 
+# Install tmux plugins
+RUN git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+COPY --chown=frostlab-docker:frostlab-docker docker/.tmux.conf /home/frostlab-docker/.tmux.conf
+RUN ~/.tmux/plugins/tpm/bin/install_plugins
+
 # Install custom ROS package dependencies (rosdep)
 RUN vcs import . < cougars.repos \
     && vcs custom --git --args submodule update --init --recursive \

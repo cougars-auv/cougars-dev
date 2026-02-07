@@ -4,5 +4,5 @@
 Helpful tips:
  - Check out https://tmuxcheatsheet.com/.
  - Use 'Ctrl+b d' to detach (or 'Ctrl+d' to discard).
- - Hold 'Ctrl' or 'Shift' to copy text.
+ - Simply select text to copy it.
 

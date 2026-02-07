@@ -48,10 +48,10 @@ services:
       - ../bags:/home/frostlab-docker/bags
       - ../packages:/home/frostlab-docker/coug_ws/src
       - ../scripts:/home/frostlab-docker/scripts
+      - ./.tmux.conf:/home/frostlab-docker/.tmux.conf
       - ./startup:/startup
       - ./entrypoint.sh:/entrypoint.sh
       - ./completions.sh:/completions.sh
-      - ./.tmux.conf:/home/frostlab-docker/.tmux.conf
       - /dev:/dev:rw
       - /etc/udev:/etc/udev:rw
       - /dev/shm:/dev/shm
