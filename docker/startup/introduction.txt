@@ -2,7 +2,7 @@
 -- 🌊 CoUGARs FGO Development --
 
 Helpful tips:
- - Check out https://tmuxcheatsheet.com/.
+ - Check out https://github.com/tmux/tmux/wiki/Getting-Started.
  - Use 'Ctrl+b d' to detach (or 'Ctrl+d' to discard).
  - Use 'Ctrl+b Ctrl+s' to save (and 'Ctrl+b Ctrl+r' to restore).
  - Simply select text to copy it.
