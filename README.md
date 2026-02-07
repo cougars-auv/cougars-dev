@@ -11,7 +11,7 @@ CoUGARs is a low-cost, configurable AUV platform designed for multi-agent autono
 
 ## Get Started
 
-<img src=".github/assets/loading_screen.gif" width="400">
+<img src=".github/assets/welcome.gif" width="400">
 
 > **Prerequisites:** Several gigabytes of storage, 64-bit Linux or Windows, and a competent NVIDIA GPU.
 
