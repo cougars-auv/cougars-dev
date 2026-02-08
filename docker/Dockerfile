@@ -26,7 +26,7 @@ ENV ROS_BUILD_ARCH=$TARGETARCH
 USER root
 RUN apt update && apt install -y --no-install-recommends \
     # Experimental DDS options - Nelson Durrant, Jan 2026
-    ros-${ROS_DISTRO}-rmw-cyclone-cpp ros-${ROS_DISTRO}-rmw-zenoh-cpp \
+    ros-${ROS_DISTRO}-rmw-cyclonedds-cpp ros-${ROS_DISTRO}-rmw-zenoh-cpp \
     # Drive the AUV with a joystick or keyboard - Nelson Durrant, Jan 2026
     ros-${ROS_DISTRO}-joy ros-${ROS_DISTRO}-teleop-twist-joy ros-${ROS_DISTRO}-teleop-twist-keyboard \
     # Better rosbag2 storage format - Nelson Durrant, Jan 2026
