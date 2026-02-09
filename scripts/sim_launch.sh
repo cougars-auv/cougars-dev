@@ -35,10 +35,6 @@ while getopts ":bcmr:" opt; do
             agents=3
             ;;
         r)
-            if [[ "$OPTARG" == -* ]]; then
-                print_error "Option -r requires an argument." >&2
-                exit 1
-            fi
             timestamp=$(date +"_%Y-%m-%d-%H-%M-%S")
             bag_path="$HOME/bags/${OPTARG}${timestamp}"
             ;;

@@ -39,17 +39,9 @@ while getopts ":cd:r:" opt; do
             compare="true"
             ;;
         d)
-            if [[ "$OPTARG" == -* ]]; then
-                print_error "Option -d requires an argument." >&2
-                exit 1
-            fi
             delay="$OPTARG"
             ;;
         r)
-            if [[ "$OPTARG" == -* ]]; then
-                print_error "Option -r requires an argument." >&2
-                exit 1
-            fi
             timestamp=$(date +"_%Y-%m-%d-%H-%M-%S")
             record_bag_path="$HOME/bags/${OPTARG}${timestamp}"
             ;;
