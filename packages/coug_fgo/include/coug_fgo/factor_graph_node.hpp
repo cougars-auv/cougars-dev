@@ -103,11 +103,13 @@ private:
    * @brief Initializes publishers, subscribers, and timers.
    */
   void setupRosInterfaces();
+
   /**
    * @brief Looks up required static transforms (e.g., imu->dvl).
    * @return True if all transforms were found.
    */
   bool lookupInitialTransforms();
+
   /**
    * @brief Configures GTSAM combined IMU preintegration parameters.
    * @return GTSAM preintegration parameters.
@@ -177,7 +179,7 @@ private:
     const std::deque<nav_msgs::msg::Odometry::SharedPtr> & gps_msgs);
 
   /**
-   * @brief Adds a depth (Z) factor to the graph.
+   * @brief Adds a depth factor to the graph.
    * @param graph The target factor graph.
    * @param depth_msgs Queue of depth messages to process.
    */
@@ -222,7 +224,7 @@ private:
     double target_time);
 
   /**
-   * @brief Adds a dynamics factor to the graph.
+   * @brief Adds an AUV dynamics factor to the graph.
    * @param graph The target factor graph.
    * @param wrench_msgs Queue of wrench messages.
    * @param target_time The timestamp for the new pose key.
@@ -253,7 +255,7 @@ private:
     const std::deque<sensor_msgs::msg::Imu::SharedPtr> & imu_msgs, double target_time);
 
   /**
-   * @brief [EXPERIMENTAL] Adds a preintegrated DVL translation factor.
+   * @brief Integrates and adds a preintegrated DVL factor to the graph.
    * @param graph The target factor graph.
    * @param dvl_msgs Queue of DVL measurements.
    * @param imu_msgs Queue of IMU measurements for orientation.
@@ -344,12 +346,13 @@ private:
   std::atomic<double> last_mag_time_{0.0};
   std::atomic<double> last_ahrs_time_{0.0};
   std::atomic<double> last_wrench_time_{0.0};
+
   std::atomic<double> last_real_dvl_time_{0.0};
-  std::atomic<bool> processing_overflow_{false};
   std::atomic<double> last_depth_trigger_time_{0.0};
   std::atomic<double> last_opt_duration_{0.0};
   std::atomic<double> total_opt_duration_{0.0};
   std::atomic<size_t> opt_count_{0};
+  std::atomic<bool> processing_overflow_{false};
   std::map<rclcpp::Time, gtsam::Key> time_to_key_;
 
   // --- GTSAM Objects ---

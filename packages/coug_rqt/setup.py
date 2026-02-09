@@ -12,7 +12,11 @@ setup(
         ("share/ament_index/resource_index/packages", ["resource/" + package_name]),
         ("share/" + package_name, ["package.xml"]),
         (os.path.join("share", package_name, "launch"), glob("launch/*.launch.py")),
-        (os.path.join("share", package_name, "rqt"), glob("rqt/*")),
+        (os.path.join("share", package_name, "rqt"), glob("rqt/*.perspective")),
+        (
+            os.path.join("share", package_name, "diagnostics"),
+            glob("diagnostics/*.yaml"),
+        ),
     ],
     install_requires=["setuptools"],
     zip_safe=True,

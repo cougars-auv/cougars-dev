@@ -32,15 +32,15 @@ def generate_launch_description():
     diagnostics_params_file = PythonExpression(
         [
             "'",
-            os.path.join(pkg_share, "rqt", "bluerov2_diagnostics_params.yaml"),
+            os.path.join(pkg_share, "diagnostics", "bluerov2_diagnostics_params.yaml"),
             "' if '",
             bluerov2_viz,
             "' == 'true' else '",
-            os.path.join(pkg_share, "rqt", "multi_diagnostics_params.yaml"),
+            os.path.join(pkg_share, "diagnostics", "multi_diagnostics_params.yaml"),
             "' if '",
             multiagent_viz,
             "' == 'true' else '",
-            os.path.join(pkg_share, "rqt", "diagnostics_params.yaml"),
+            os.path.join(pkg_share, "diagnostics", "diagnostics_params.yaml"),
             "'",
         ]
     )

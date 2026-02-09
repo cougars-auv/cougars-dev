@@ -14,7 +14,7 @@
 
 /**
  * @file origin_manager_node.hpp
- * @brief ROS 2 node for preprocessing NavSatFix messages into ENU odometry.
+ * @brief ROS 2 node for managing the geographic origin of the AUV fleet.
  * @author Nelson Durrant
  * @date Jan 2026
  */
@@ -41,11 +41,11 @@ namespace coug_fgo
 
 /**
  * @class OriginManagerNode
- * @brief Preprocesses NavSatFix measurements into local ENU coordinates.
+ * @brief Manages the geographic origin of the AUV fleet.
  *
  * This node converts global geographic coordinates (latitude, longitude, altitude)
  * into a local East-North-Up (ENU) frame relative to a set origin. It also handles
- * the publication and acquisition of the geographic origin.
+ * setting the origin in multiagent fleet scenarios.
  */
 class OriginManagerNode : public rclcpp::Node
 {

@@ -14,7 +14,7 @@
     # --- GTSAM Smoother Settings ---
     #
     # Solver Types:
-    # - "IncrementalFixedLagSmoother": Fixed-lag smoothing.
+    # - "IncrementalFixedLagSmoother": Fixed-lag smoothing. (default)
     # - "ISAM2": Full history smoothing.
 
     solver_type: "IncrementalFixedLagSmoother"
@@ -44,7 +44,7 @@
     # specified in this file instead.
     #
     # Robust Kernels:
-    # - "None": Standard Least Squares (Gaussian). Sensitive to outliers.
+    # - "None": Standard Least Squares (Gaussian). Sensitive to outliers. (default)
     # - "Huber": Linear penalty for large errors. Good general robustness. (k=1.345 standard)
     # - "Tukey": Ignores large errors completely. Best for sensors with distinct 'bad' readings. (k=4.685 standard)
 
