@@ -28,10 +28,8 @@ def generate_launch_description():
 
     coug_mapviz_dir = get_package_share_directory("coug_mapviz")
     coug_mapviz_launch_dir = os.path.join(coug_mapviz_dir, "launch")
-
     coug_rviz_dir = get_package_share_directory("coug_rviz")
     coug_rviz_launch_dir = os.path.join(coug_rviz_dir, "launch")
-
     coug_rqt_dir = get_package_share_directory("coug_rqt")
     coug_rqt_launch_dir = os.path.join(coug_rqt_dir, "launch")
 
