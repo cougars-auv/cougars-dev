@@ -15,4 +15,8 @@
       desired_speed_rpm: 1500.0 # [RPM] Constant thruster speed to command when moving.
       odom_timeout_sec: 2.0 # [s] Time to wait for odometry before stopping.
       invert_z: true
-        
+
+      # --- Random Walk ---
+      enable_rw_speed: false
+      rw_step_size: 1.0 # [RPM] Max change per step
+      rw_start_value: 1200.0 # [RPM] Starting speed

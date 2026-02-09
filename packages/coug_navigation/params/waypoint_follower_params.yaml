@@ -30,3 +30,13 @@ waypoint_follower_node:
   invert_z:
     type: bool
     default_value: true
+
+  enable_rw_speed:
+    type: bool
+    default_value: false
+  rw_step_size:
+    type: double
+    default_value: 1.0
+  rw_start_value:
+    type: double
+    default_value: 1200.0

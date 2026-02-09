@@ -25,6 +25,7 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <random>
 
 #include <geometry_msgs/msg/pose_array.hpp>
 #include <nav_msgs/msg/odometry.hpp>
@@ -130,6 +131,10 @@ private:
   std::atomic<double> last_odom_time_seconds_{0.0};
   double previous_distance_ = -1.0;
   std::atomic<double> current_dist_to_target_{0.0};
+
+  std::mt19937 rng_;
+  std::uniform_real_distribution<double> speed_dist_;
+  double current_speed_rpm_ = 1200.0;
 
   // --- ROS Interfaces ---
   rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr heading_pub_;

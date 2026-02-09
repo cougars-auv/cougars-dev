@@ -36,6 +36,12 @@ WaypointFollowerNode::WaypointFollowerNode()
     get_node_parameters_interface());
   params_ = param_listener_->get_params();
 
+  std::random_device rd;
+  rng_ = std::mt19937(rd());
+  speed_dist_ = std::uniform_real_distribution<double>(
+    -params_.rw_step_size,
+    params_.rw_step_size);
+
   // --- ROS Interfaces ---
   heading_pub_ = create_publisher<std_msgs::msg::Float64>(params_.heading_topic, 10);
   speed_pub_ = create_publisher<std_msgs::msg::Float64>(params_.speed_topic, 10);
@@ -84,6 +90,7 @@ void WaypointFollowerNode::waypointCallback(const geometry_msgs::msg::PoseArray:
   state_ = MissionState::ACTIVE;
   previous_distance_ = -1.0;
   current_dist_to_target_ = -1.0;
+  current_speed_rpm_ = params_.rw_start_value;
 
   std::stringstream ss;
   ss << "Started mission with " << msg->poses.size() << " waypoints: ";
@@ -140,8 +147,15 @@ void WaypointFollowerNode::processWaypointLogic(double current_x, double current
   double dy = target.position.y - current_y;
   double heading = std::atan2(dy, dx) * 180.0 / M_PI;
 
+  double speed_cmd = params_.desired_speed_rpm;
+  if (params_.enable_rw_speed) {
+    current_speed_rpm_ += speed_dist_(rng_);
+    current_speed_rpm_ = std::clamp(current_speed_rpm_, 800.0, 1500.0);
+    speed_cmd = current_speed_rpm_;
+  }
+
   double depth_cmd = params_.invert_z ? -target.position.z : target.position.z;
-  publishCommands(heading, params_.desired_speed_rpm, depth_cmd);
+  publishCommands(heading, speed_cmd, depth_cmd);
 }
 
 double WaypointFollowerNode::calculateDistance(double x1, double y1, double x2, double y2)
