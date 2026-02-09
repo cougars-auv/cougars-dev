@@ -9,9 +9,9 @@ show_status_bar: true
 show_capture_tools: true
 window_width: 1600
 window_height: 900
-view_scale: 0.117128991
-offset_x: 9.10471153
-offset_y: 1.57287228
+view_scale: 0.75131458
+offset_x: -11.2101583
+offset_y: -22.5667992
 use_latest_transforms: true
 background: "#a0a0a4"
 image_transport: raw
@@ -29,7 +29,7 @@ displays:
       bing_api_key: ""
       stadia_api_key: ""
       source: Google Maps
-  - type: coug_gui/coug_waypoints
+  - type: coug_mapviz/coug_waypoints
     name: new display
     config:
       visible: true
@@ -39,7 +39,7 @@ displays:
     config:
       visible: true
       collapsed: true
-      frame: bluerov2/base_link
+      frame: auv0/base_link
       color: "#00ff00"
       draw_style: arrows
       position_tolerance: 0
@@ -51,7 +51,7 @@ displays:
     config:
       visible: true
       collapsed: true
-      topic: /bluerov2/gps/fix
+      topic: /auv0/gps/fix
       color: "#55aaff"
       draw_style: points
       position_tolerance: 0
@@ -65,7 +65,7 @@ displays:
     config:
       visible: true
       collapsed: true
-      topic: /bluerov2/smoothed_path
+      topic: /auv0/smoothed_path
       color: "#ff55ff"
       qos_depth: 10
       qos_history: 1
@@ -76,7 +76,7 @@ displays:
     config:
       visible: true
       collapsed: true
-      topic: /bluerov2/odometry/truth
+      topic: /auv0/odometry/truth
       color: "#ffffff"
       draw_style: lines
       position_tolerance: 0
@@ -96,13 +96,13 @@ displays:
     config:
       visible: false
       collapsed: true
-      topic: /bluerov2/odometry/global_ekf
+      topic: /auv0/odometry/global_ekf
       color: "#ffff00"
       draw_style: lines
       position_tolerance: 0
       buffer_size: 0
       show_laps: false
-      show_covariance: false
+      show_covariance: true
       show_all_covariances: false
       static_arrow_sizes: false
       arrow_size: 25
@@ -116,13 +116,13 @@ displays:
     config:
       visible: false
       collapsed: true
-      topic: /bluerov2/odometry/global_ukf
+      topic: /auv0/odometry/global_ukf
       color: "#ffaa00"
       draw_style: lines
       position_tolerance: 0
       buffer_size: 0
       show_laps: false
-      show_covariance: false
+      show_covariance: true
       show_all_covariances: false
       static_arrow_sizes: false
       arrow_size: 25
@@ -136,13 +136,13 @@ displays:
     config:
       visible: false
       collapsed: true
-      topic: /bluerov2/odometry/global_iekf
+      topic: /auv0/odometry/global_iekf
       color: "#ff0000"
       draw_style: lines
       position_tolerance: 0
       buffer_size: 0
       show_laps: false
-      show_covariance: false
+      show_covariance: true
       show_all_covariances: false
       static_arrow_sizes: false
       arrow_size: 25
@@ -156,13 +156,13 @@ displays:
     config:
       visible: true
       collapsed: true
-      topic: /bluerov2/odometry/global
+      topic: /auv0/odometry/global
       color: "#00ff00"
       draw_style: lines
       position_tolerance: 0
       buffer_size: 0
       show_laps: false
-      show_covariance: false
+      show_covariance: true
       show_all_covariances: false
       static_arrow_sizes: false
       arrow_size: 25
@@ -176,33 +176,13 @@ displays:
     config:
       visible: false
       collapsed: true
-      topic: /bluerov2/odometry/global_tm
+      topic: /auv0/odometry/global_tm
       color: "#55aaff"
       draw_style: lines
       position_tolerance: 0
       buffer_size: 0
       show_laps: false
-      show_covariance: false
-      show_all_covariances: false
-      static_arrow_sizes: false
-      arrow_size: 25
-      show_timestamps: 0
-      qos_depth: 10
-      qos_history: 1
-      qos_reliability: 1
-      qos_durability: 2
-  - type: mapviz_plugins/odometry
-    name: DVL
-    config:
-      visible: true
-      collapsed: true
-      topic: /bluerov2/odometry/dvl
-      color: "#aa00ff"
-      draw_style: lines
-      position_tolerance: 0
-      buffer_size: 0
-      show_laps: false
-      show_covariance: false
+      show_covariance: true
       show_all_covariances: false
       static_arrow_sizes: false
       arrow_size: 25

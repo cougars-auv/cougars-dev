@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>coug_gui</name>
+  <name>coug_mapviz</name>
   <version>0.0.0</version>
-  <description>GUIs for the CougUV</description>
+  <description>Mapviz GUI for the CougUV</description>
   <maintainer email="snelsondurrant@gmail.com">Nelson Durrant</maintainer>
   <license>Apache-2.0</license>
 
@@ -23,16 +23,6 @@
   <depend condition="$ROS_BUILD_ARCH == 'amd64'">swri_transform_util</depend>
   <depend>pluginlib</depend>
   <depend>tf2</depend>
-
-  <exec_depend>rviz2</exec_depend>
-  <exec_depend>plotjuggler</exec_depend>
-  <exec_depend>plotjuggler_ros</exec_depend>
-  <exec_depend>rclpy</exec_depend>
-  <exec_depend>diagnostic_aggregator</exec_depend>
-  <exec_depend>rqt_gui</exec_depend>
-  <exec_depend>rqt_console</exec_depend>
-  <exec_depend>rqt_robot_monitor</exec_depend>
-  <exec_depend>rqt_runtime_monitor</exec_depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>

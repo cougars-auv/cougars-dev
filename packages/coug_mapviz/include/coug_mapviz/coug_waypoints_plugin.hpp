@@ -39,7 +39,7 @@
 #include <rclcpp/rclcpp.hpp>
 #include <tf2/transform_datatypes.hpp>
 
-namespace coug_gui
+namespace coug_mapviz
 {
 
 /**
@@ -326,4 +326,4 @@ private:
     const swri_transform_util::Transform & transform);
 };
 
-}  // namespace coug_gui
+}  // namespace coug_mapviz

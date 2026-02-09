@@ -19,7 +19,7 @@
  * @date Jan 2026
  */
 
-#include <coug_gui/coug_waypoints_plugin.hpp>
+#include <coug_mapviz/coug_waypoints_plugin.hpp>
 
 #include <QDateTime>
 #include <QDir>
@@ -43,10 +43,10 @@
 #include <pluginlib/class_list_macros.hpp>
 #include <rclcpp/rclcpp.hpp>
 
-PLUGINLIB_EXPORT_CLASS(coug_gui::CougWaypointsPlugin, mapviz::MapvizPlugin)
+PLUGINLIB_EXPORT_CLASS(coug_mapviz::CougWaypointsPlugin, mapviz::MapvizPlugin)
 
 
-namespace coug_gui
+namespace coug_mapviz
 {
 
 CougWaypointsPlugin::CougWaypointsPlugin()
@@ -258,7 +258,7 @@ int CougWaypointsPlugin::GetClosestPoint(const QPointF & point, double & distanc
 
 void CougWaypointsPlugin::SaveWaypoints()
 {
-  QString path = QDir::homePath() + "/coug_ws/src/coug_gui/waypoints";
+  QString path = QDir::homePath() + "/coug_ws/src/coug_mapviz/waypoints";
 
   QDir dir(path);
   if (!dir.exists()) {
@@ -314,7 +314,7 @@ void CougWaypointsPlugin::SaveWaypoints()
 
 void CougWaypointsPlugin::LoadWaypoints()
 {
-  QString path = QDir::homePath() + "/coug_ws/src/coug_gui/waypoints";
+  QString path = QDir::homePath() + "/coug_ws/src/coug_mapviz/waypoints";
 
   QString filename =
     QFileDialog::getOpenFileName(config_widget_, "Load Mission", path, "JSON Files (*.json)");
@@ -679,4 +679,4 @@ void CougWaypointsPlugin::SaveConfig(YAML::Emitter & emitter, const std::string 
   (void)path;
 }
 
-}  // namespace coug_gui
+}  // namespace coug_mapviz

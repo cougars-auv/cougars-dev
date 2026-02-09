@@ -20,7 +20,11 @@ setup(
     maintainer_email="snelsondurrant@gmail.com",
     description="HoloOcean conversion utilities for the CougUV",
     license="Apache-2.0",
-    tests_require=["pytest"],
+    extras_require={
+        "test": [
+            "pytest",
+        ],
+    },
     entry_points={
         "console_scripts": [
             "depth_converter = holoocean_bridge.depth_converter_node:main",

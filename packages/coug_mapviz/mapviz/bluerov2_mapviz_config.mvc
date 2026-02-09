@@ -9,9 +9,9 @@ show_status_bar: true
 show_capture_tools: true
 window_width: 1600
 window_height: 900
-view_scale: 0.75131458
-offset_x: -11.2101583
-offset_y: -22.5667992
+view_scale: 0.117128991
+offset_x: 9.10471153
+offset_y: 1.57287228
 use_latest_transforms: true
 background: "#a0a0a4"
 image_transport: raw
@@ -29,17 +29,17 @@ displays:
       bing_api_key: ""
       stadia_api_key: ""
       source: Google Maps
-  - type: coug_gui/coug_waypoints
+  - type: coug_mapviz/coug_waypoints
     name: new display
     config:
       visible: true
       collapsed: false
   - type: mapviz_plugins/tf_frame
-    name: auv0
+    name: new display
     config:
       visible: true
       collapsed: true
-      frame: auv0/base_link
+      frame: bluerov2/base_link
       color: "#00ff00"
       draw_style: arrows
       position_tolerance: 0
@@ -47,11 +47,11 @@ displays:
       static_arrow_sizes: true
       arrow_size: 53
   - type: mapviz_plugins/navsat
-    name: auv0
+    name: new display
     config:
       visible: true
       collapsed: true
-      topic: /auv0/gps/fix
+      topic: /bluerov2/gps/fix
       color: "#55aaff"
       draw_style: points
       position_tolerance: 0
@@ -61,22 +61,22 @@ displays:
       qos_reliability: 1
       qos_durability: 2
   - type: mapviz_plugins/path
-    name: auv0
+    name: new display
     config:
       visible: true
       collapsed: true
-      topic: /auv0/smoothed_path
+      topic: /bluerov2/smoothed_path
       color: "#ff55ff"
       qos_depth: 10
       qos_history: 1
       qos_reliability: 1
       qos_durability: 2
   - type: mapviz_plugins/odometry
-    name: auv0, GT
+    name: GT
     config:
       visible: true
       collapsed: true
-      topic: /auv0/odometry/truth
+      topic: /bluerov2/odometry/truth
       color: "#ffffff"
       draw_style: lines
       position_tolerance: 0
@@ -92,69 +92,12 @@ displays:
       qos_reliability: 1
       qos_durability: 2
   - type: mapviz_plugins/odometry
-    name: auv0, FGO
+    name: EKF
     config:
-      visible: true
+      visible: false
       collapsed: true
-      topic: /auv0/odometry/global
-      color: "#00ff00"
-      draw_style: lines
-      position_tolerance: 0
-      buffer_size: 0
-      show_laps: false
-      show_covariance: true
-      show_all_covariances: false
-      static_arrow_sizes: false
-      arrow_size: 25
-      show_timestamps: 0
-      qos_depth: 10
-      qos_history: 1
-      qos_reliability: 1
-      qos_durability: 2
-  - type: mapviz_plugins/tf_frame
-    name: auv1
-    config:
-      visible: true
-      collapsed: true
-      frame: auv1/base_link
-      color: "#00ff00"
-      draw_style: arrows
-      position_tolerance: 0
-      buffer_size: 1
-      static_arrow_sizes: true
-      arrow_size: 53
-  - type: mapviz_plugins/navsat
-    name: auv1
-    config:
-      visible: true
-      collapsed: true
-      topic: /auv1/gps/fix
-      color: "#55aaff"
-      draw_style: points
-      position_tolerance: 0
-      buffer_size: 1
-      qos_depth: 10
-      qos_history: 1
-      qos_reliability: 1
-      qos_durability: 2
-  - type: mapviz_plugins/path
-    name: auv1
-    config:
-      visible: true
-      collapsed: true
-      topic: /auv1/smoothed_path
-      color: "#ff00ff"
-      qos_depth: 10
-      qos_history: 1
-      qos_reliability: 1
-      qos_durability: 2
-  - type: mapviz_plugins/odometry
-    name: auv1, GT
-    config:
-      visible: true
-      collapsed: true
-      topic: /auv1/odometry/truth
-      color: "#ffffff"
+      topic: /bluerov2/odometry/global_ekf
+      color: "#ffff00"
       draw_style: lines
       position_tolerance: 0
       buffer_size: 0
@@ -169,69 +112,92 @@ displays:
       qos_reliability: 1
       qos_durability: 2
   - type: mapviz_plugins/odometry
-    name: auv1, FGO
+    name: UKF
     config:
-      visible: true
+      visible: false
       collapsed: true
-      topic: /auv1/odometry/global
-      color: "#00ff00"
+      topic: /bluerov2/odometry/global_ukf
+      color: "#ffaa00"
       draw_style: lines
       position_tolerance: 0
       buffer_size: 0
       show_laps: false
-      show_covariance: true
+      show_covariance: false
       show_all_covariances: false
       static_arrow_sizes: false
-      arrow_size: 22
+      arrow_size: 25
       show_timestamps: 0
       qos_depth: 10
       qos_history: 1
       qos_reliability: 1
       qos_durability: 2
-  - type: mapviz_plugins/tf_frame
-    name: auv2
+  - type: mapviz_plugins/odometry
+    name: IEKF
     config:
-      visible: true
+      visible: false
       collapsed: true
-      frame: auv2/base_link
-      color: "#00ff00"
-      draw_style: arrows
+      topic: /bluerov2/odometry/global_iekf
+      color: "#ff0000"
+      draw_style: lines
       position_tolerance: 0
-      buffer_size: 1
-      static_arrow_sizes: true
-      arrow_size: 53
-  - type: mapviz_plugins/navsat
-    name: auv2
-    config:
-      visible: true
-      collapsed: true
-      topic: /auv2/gps/fix
-      color: "#55aaff"
-      draw_style: points
-      position_tolerance: 0
-      buffer_size: 1
+      buffer_size: 0
+      show_laps: false
+      show_covariance: false
+      show_all_covariances: false
+      static_arrow_sizes: false
+      arrow_size: 25
+      show_timestamps: 0
       qos_depth: 10
       qos_history: 1
       qos_reliability: 1
       qos_durability: 2
-  - type: mapviz_plugins/path
-    name: auv2
+  - type: mapviz_plugins/odometry
+    name: FGO
     config:
       visible: true
       collapsed: true
-      topic: /auv2/smoothed_path
+      topic: /bluerov2/odometry/global
+      color: "#00ff00"
+      draw_style: lines
+      position_tolerance: 0
+      buffer_size: 0
+      show_laps: false
+      show_covariance: false
+      show_all_covariances: false
+      static_arrow_sizes: false
+      arrow_size: 25
+      show_timestamps: 0
+      qos_depth: 10
+      qos_history: 1
+      qos_reliability: 1
+      qos_durability: 2
+  - type: mapviz_plugins/odometry
+    name: TM
+    config:
+      visible: false
+      collapsed: true
+      topic: /bluerov2/odometry/global_tm
+      color: "#55aaff"
+      draw_style: lines
+      position_tolerance: 0
+      buffer_size: 0
+      show_laps: false
+      show_covariance: false
+      show_all_covariances: false
+      static_arrow_sizes: false
+      arrow_size: 25
+      show_timestamps: 0
+      qos_depth: 10
+      qos_history: 1
+      qos_reliability: 1
+      qos_durability: 2
+  - type: mapviz_plugins/odometry
+    name: DVL
+    config:
+      visible: true
+      collapsed: true
+      topic: /bluerov2/odometry/dvl
       color: "#aa00ff"
-      qos_depth: 10
-      qos_history: 1
-      qos_reliability: 1
-      qos_durability: 2
-  - type: mapviz_plugins/odometry
-    name: auv2, GT
-    config:
-      visible: true
-      collapsed: true
-      topic: /auv2/odometry/truth
-      color: "#ffffff"
       draw_style: lines
       position_tolerance: 0
       buffer_size: 0
@@ -240,26 +206,6 @@ displays:
       show_all_covariances: false
       static_arrow_sizes: false
       arrow_size: 25
-      show_timestamps: 0
-      qos_depth: 10
-      qos_history: 1
-      qos_reliability: 1
-      qos_durability: 2
-  - type: mapviz_plugins/odometry
-    name: auv2, FGO
-    config:
-      visible: true
-      collapsed: true
-      topic: /auv2/odometry/global
-      color: "#00ff00"
-      draw_style: lines
-      position_tolerance: 0
-      buffer_size: 0
-      show_laps: false
-      show_covariance: true
-      show_all_covariances: false
-      static_arrow_sizes: false
-      arrow_size: 22
       show_timestamps: 0
       qos_depth: 10
       qos_history: 1

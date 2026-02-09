@@ -19,7 +19,11 @@ setup(
     maintainer_email="snelsondurrant@gmail.com",
     description="Full-system launch files for the CougUV",
     license="Apache-2.0",
-    tests_require=["pytest"],
+    extras_require={
+        "test": [
+            "pytest",
+        ],
+    },
     entry_points={
         "console_scripts": [],
     },

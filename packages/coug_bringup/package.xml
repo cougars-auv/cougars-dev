@@ -7,16 +7,20 @@
   <maintainer email="snelsondurrant@gmail.com">Nelson Durrant</maintainer>
   <license>Apache-2.0</license>
 
-  <depend>coug_description</depend>
-  <depend>coug_fgo</depend>
-  <depend condition="$ROS_BUILD_ARCH == 'amd64'">coug_gui</depend>
-  <depend>coug_localization</depend>
-  <depend>coug_navigation</depend>
-  <depend>holoocean_bridge</depend>
-  <depend>sensor_bridge</depend>
+  <exec_depend>coug_description</depend>
+  <exec_depend>coug_fgo</depend>
+  <exec_depend>coug_localization</depend>
+  <exec_depend condition="$ROS_BUILD_ARCH == 'amd64'">coug_mapviz</depend>
+  <exec_depend>coug_navigation</depend>
+  <exec_depend>coug_rqt</depend>
+  <exec_depend>coug_rviz</depend>
+  <exec_depend>holoocean_bridge</depend>
+  <exec_depend>sensor_bridge</depend>
 
-  <test_depend>ament_lint_auto</test_depend>
-  <test_depend>ament_lint_common</test_depend>
+  <test_depend>ament_copyright</test_depend>
+  <test_depend>ament_flake8</test_depend>
+  <test_depend>ament_pep257</test_depend>
+  <test_depend>python3-pytest</test_depend>
 
   <export>
     <build_type>ament_python</build_type>

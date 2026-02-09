@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(coug_gui)
+project(coug_mapviz)
 
 if(NOT CMAKE_CXX_STANDARD)
   set(CMAKE_CXX_STANDARD 17)
@@ -15,7 +15,7 @@ endif()
 
 # Skip builds on incompatible architectures
 if(NOT "$ENV{ROS_BUILD_ARCH}" STREQUAL "amd64")
-  message(STATUS "Skipping coug_gui build on $ENV{ROS_BUILD_ARCH}")
+  message(STATUS "Skipping coug_mapviz build on $ENV{ROS_BUILD_ARCH}")
   find_package(ament_cmake REQUIRED)
   ament_package()
   return()
@@ -80,12 +80,8 @@ install(DIRECTORY include/
   DESTINATION include/${PROJECT_NAME}
   FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp")
 
-install(DIRECTORY launch rqt rviz mapviz plotjuggler
+install(DIRECTORY launch mapviz
   DESTINATION share/${PROJECT_NAME}
-)
-
-install(PROGRAMS scripts/odom_to_path_node.py
-  DESTINATION lib/${PROJECT_NAME}
 )
 
 install(TARGETS ${PROJECT_NAME}
