@@ -3,14 +3,19 @@
 
 hook_name="$1"
 shift
+args=()
 files=()
 
-for f in "$@"; do
-    files+=("src/${f#packages/}")
+for arg in "$@"; do
+    if [[ "$arg" == -* ]]; then
+        args+=("$arg")
+    else
+        files+=("src/${arg#packages/}")
+    fi
 done
 
 docker exec cougars-ct /bin/bash -c \
     "source /opt/ros/humble/setup.bash \
     && cd coug_ws \
     && export AMENT_CPPCHECK_ALLOW_SLOW_VERSIONS=1 \
-    && $hook_name \"\$@\"" -- "${files[@]}"
+    && $hook_name ${args[*]} \"\$@\"" -- "${files[@]}"

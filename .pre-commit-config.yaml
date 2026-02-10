@@ -11,6 +11,7 @@ repos:
       - id: ament_uncrustify
         name: ament_uncrustify
         entry: scripts/utils/run_precommit_hook.sh ament_uncrustify
+        args: ["--reformat"]
         language: system
         files: ^packages/.*\.(h\+\+|h|hh|hxx|hpp|cuh|c|cc|cpp|cxx|cu)$
 

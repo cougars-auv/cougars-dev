@@ -153,13 +153,13 @@ void FactorGraphNode::setupRosInterfaces()
       bool dvl_timed_out = time_since_dvl > params_.dvl.timeout_threshold;
 
       if (params_.experimental.enable_dvl_preintegration) {
-        if (!graph_initialized_) {
+        if (state_ != State::RUNNING) {
           initializeGraph();
         } else {
           optimizeGraph();
         }
       } else {
-        if (graph_initialized_ && dvl_timed_out) {
+        if (state_ == State::RUNNING && dvl_timed_out) {
           RCLCPP_WARN_THROTTLE(
             get_logger(), *get_clock(), 5000,
             "DVL timed out (%.2fs)! Using depth sensor to trigger keyframes.",
@@ -233,7 +233,7 @@ void FactorGraphNode::setupRosInterfaces()
       dvl_queue_.push(msg);
 
       if (!params_.experimental.enable_dvl_preintegration) {
-        if (!graph_initialized_) {
+        if (state_ != State::RUNNING) {
           initializeGraph();
         } else {
           optimizeGraph();
@@ -324,115 +324,134 @@ FactorGraphNode::configureImuPreintegration()
   return imu_params;
 }
 
-FactorGraphNode::AveragedMeasurements FactorGraphNode::computeAveragedMeasurements(
-  const std::deque<sensor_msgs::msg::Imu::SharedPtr> & imu_msgs,
-  const std::deque<nav_msgs::msg::Odometry::SharedPtr> & gps_msgs,
-  const std::deque<nav_msgs::msg::Odometry::SharedPtr> & depth_msgs,
-  const std::deque<sensor_msgs::msg::MagneticField::SharedPtr> & mag_msgs,
-  const std::deque<sensor_msgs::msg::Imu::SharedPtr> & ahrs_msgs,
-  const std::deque<geometry_msgs::msg::TwistWithCovarianceStamped::SharedPtr> & dvl_msgs)
+void FactorGraphNode::incrementAverages()
 {
-  AveragedMeasurements result;
-
   // Average IMU
-  result.imu = std::make_shared<sensor_msgs::msg::Imu>(*imu_msgs.back());
-  result.imu->linear_acceleration.x = 0;
-  result.imu->linear_acceleration.y = 0;
-  result.imu->linear_acceleration.z = 0;
-  result.imu->angular_velocity.x = 0;
-  result.imu->angular_velocity.y = 0;
-  result.imu->angular_velocity.z = 0;
-
-  for (const auto & m : imu_msgs) {
-    result.imu->linear_acceleration.x += m->linear_acceleration.x;
-    result.imu->linear_acceleration.y += m->linear_acceleration.y;
-    result.imu->linear_acceleration.z += m->linear_acceleration.z;
-    result.imu->angular_velocity.x += m->angular_velocity.x;
-    result.imu->angular_velocity.y += m->angular_velocity.y;
-    result.imu->angular_velocity.z += m->angular_velocity.z;
+  auto imu_msgs = imu_queue_.drain();
+  for (const auto & msg : imu_msgs) {
+    if (initial_imu_count_ == 0) {
+      initial_imu_ = msg;
+    } else {
+      double n = static_cast<double>(initial_imu_count_ + 1);
+      initial_imu_->linear_acceleration.x +=
+        (msg->linear_acceleration.x - initial_imu_->linear_acceleration.x) / n;
+      initial_imu_->linear_acceleration.y +=
+        (msg->linear_acceleration.y - initial_imu_->linear_acceleration.y) / n;
+      initial_imu_->linear_acceleration.z +=
+        (msg->linear_acceleration.z - initial_imu_->linear_acceleration.z) / n;
+      initial_imu_->angular_velocity.x +=
+        (msg->angular_velocity.x - initial_imu_->angular_velocity.x) / n;
+      initial_imu_->angular_velocity.y +=
+        (msg->angular_velocity.y - initial_imu_->angular_velocity.y) / n;
+      initial_imu_->angular_velocity.z +=
+        (msg->angular_velocity.z - initial_imu_->angular_velocity.z) / n;
+      initial_imu_->header.stamp = msg->header.stamp;
+    }
+    initial_imu_count_++;
   }
-  double n_imu = imu_msgs.size();
-  result.imu->linear_acceleration.x /= n_imu;
-  result.imu->linear_acceleration.y /= n_imu;
-  result.imu->linear_acceleration.z /= n_imu;
-  result.imu->angular_velocity.x /= n_imu;
-  result.imu->angular_velocity.y /= n_imu;
-  result.imu->angular_velocity.z /= n_imu;
 
   // Average GPS
   if (params_.gps.enable_gps || params_.gps.enable_gps_init_only) {
-    result.gps = std::make_shared<nav_msgs::msg::Odometry>(*gps_msgs.back());
-    result.gps->pose.pose.position.x = 0;
-    result.gps->pose.pose.position.y = 0;
-    result.gps->pose.pose.position.z = 0;
-
-    for (const auto & m : gps_msgs) {
-      result.gps->pose.pose.position.x += m->pose.pose.position.x;
-      result.gps->pose.pose.position.y += m->pose.pose.position.y;
-      result.gps->pose.pose.position.z += m->pose.pose.position.z;
+    auto gps_msgs = gps_queue_.drain();
+    for (const auto & msg : gps_msgs) {
+      if (initial_gps_count_ == 0) {
+        initial_gps_ = msg;
+      } else {
+        double n = static_cast<double>(initial_gps_count_ + 1);
+        initial_gps_->pose.pose.position.x +=
+          (msg->pose.pose.position.x - initial_gps_->pose.pose.position.x) / n;
+        initial_gps_->pose.pose.position.y +=
+          (msg->pose.pose.position.y - initial_gps_->pose.pose.position.y) / n;
+        initial_gps_->pose.pose.position.z +=
+          (msg->pose.pose.position.z - initial_gps_->pose.pose.position.z) / n;
+        initial_gps_->header.stamp = msg->header.stamp;
+      }
+      initial_gps_count_++;
     }
-    double n_gps = gps_msgs.size();
-    result.gps->pose.pose.position.x /= n_gps;
-    result.gps->pose.pose.position.y /= n_gps;
-    result.gps->pose.pose.position.z /= n_gps;
   }
 
   // Average Depth
-  result.depth = std::make_shared<nav_msgs::msg::Odometry>(*depth_msgs.back());
-  result.depth->pose.pose.position.z = 0;
-
-  for (const auto & m : depth_msgs) {
-    result.depth->pose.pose.position.z += m->pose.pose.position.z;
+  auto depth_msgs = depth_queue_.drain();
+  for (const auto & msg : depth_msgs) {
+    if (initial_depth_count_ == 0) {
+      initial_depth_ = msg;
+    } else {
+      double n = static_cast<double>(initial_depth_count_ + 1);
+      initial_depth_->pose.pose.position.z +=
+        (msg->pose.pose.position.z - initial_depth_->pose.pose.position.z) / n;
+      initial_depth_->header.stamp = msg->header.stamp;
+    }
+    initial_depth_count_++;
   }
-  result.depth->pose.pose.position.z /= depth_msgs.size();
 
   // Average DVL
-  result.dvl = std::make_shared<geometry_msgs::msg::TwistWithCovarianceStamped>(*dvl_msgs.back());
-  result.dvl->twist.twist.linear.x = 0;
-  result.dvl->twist.twist.linear.y = 0;
-  result.dvl->twist.twist.linear.z = 0;
-
-  for (const auto & m : dvl_msgs) {
-    result.dvl->twist.twist.linear.x += m->twist.twist.linear.x;
-    result.dvl->twist.twist.linear.y += m->twist.twist.linear.y;
-    result.dvl->twist.twist.linear.z += m->twist.twist.linear.z;
+  auto dvl_msgs = dvl_queue_.drain();
+  for (const auto & msg : dvl_msgs) {
+    if (initial_dvl_count_ == 0) {
+      initial_dvl_ = msg;
+    } else {
+      double n = static_cast<double>(initial_dvl_count_ + 1);
+      initial_dvl_->twist.twist.linear.x +=
+        (msg->twist.twist.linear.x - initial_dvl_->twist.twist.linear.x) / n;
+      initial_dvl_->twist.twist.linear.y +=
+        (msg->twist.twist.linear.y - initial_dvl_->twist.twist.linear.y) / n;
+      initial_dvl_->twist.twist.linear.z +=
+        (msg->twist.twist.linear.z - initial_dvl_->twist.twist.linear.z) / n;
+      initial_dvl_->header.stamp = msg->header.stamp;
+    }
+    initial_dvl_count_++;
   }
-  double n_dvl = dvl_msgs.size();
-  result.dvl->twist.twist.linear.x /= n_dvl;
-  result.dvl->twist.twist.linear.y /= n_dvl;
-  result.dvl->twist.twist.linear.z /= n_dvl;
 
   // Average Magnetometer
   if (params_.mag.enable_mag || params_.mag.enable_mag_init_only) {
-    result.mag = std::make_shared<sensor_msgs::msg::MagneticField>(*mag_msgs.back());
-    result.mag->magnetic_field.x = 0;
-    result.mag->magnetic_field.y = 0;
-    result.mag->magnetic_field.z = 0;
-
-    for (const auto & m : mag_msgs) {
-      result.mag->magnetic_field.x += m->magnetic_field.x;
-      result.mag->magnetic_field.y += m->magnetic_field.y;
-      result.mag->magnetic_field.z += m->magnetic_field.z;
+    auto mag_msgs = mag_queue_.drain();
+    for (const auto & msg : mag_msgs) {
+      if (initial_mag_count_ == 0) {
+        initial_mag_ = msg;
+      } else {
+        double n = static_cast<double>(initial_mag_count_ + 1);
+        initial_mag_->magnetic_field.x +=
+          (msg->magnetic_field.x - initial_mag_->magnetic_field.x) / n;
+        initial_mag_->magnetic_field.y +=
+          (msg->magnetic_field.y - initial_mag_->magnetic_field.y) / n;
+        initial_mag_->magnetic_field.z +=
+          (msg->magnetic_field.z - initial_mag_->magnetic_field.z) / n;
+        initial_mag_->header.stamp = msg->header.stamp;
+      }
+      initial_mag_count_++;
     }
-    double n_mag = mag_msgs.size();
-    result.mag->magnetic_field.x /= n_mag;
-    result.mag->magnetic_field.y /= n_mag;
-    result.mag->magnetic_field.z /= n_mag;
   }
 
   // Average AHRS
   if (params_.ahrs.enable_ahrs || params_.ahrs.enable_ahrs_init_only) {
-    result.ahrs = std::make_shared<sensor_msgs::msg::Imu>(*ahrs_msgs.back());
-    gtsam::Rot3 R_ref = toGtsam(ahrs_msgs.front()->orientation);
-    gtsam::Vector3 log_sum = gtsam::Vector3::Zero();
-    for (const auto & m : ahrs_msgs) {
-      log_sum += gtsam::Rot3::Logmap(R_ref.between(toGtsam(m->orientation)));
+    auto ahrs_msgs = ahrs_queue_.drain();
+    for (const auto & msg : ahrs_msgs) {
+      if (initial_ahrs_count_ == 0) {
+        initial_ahrs_ = msg;
+        initial_ahrs_ref_ = toGtsam(msg->orientation);
+        initial_ahrs_log_sum_ = gtsam::Vector3::Zero();
+      } else {
+        initial_ahrs_log_sum_ +=
+          gtsam::Rot3::Logmap(initial_ahrs_ref_.between(toGtsam(msg->orientation)));
+
+        gtsam::Vector3 log_avg = initial_ahrs_log_sum_ /
+          static_cast<double>(initial_ahrs_count_ + 1);
+        initial_ahrs_->orientation =
+          toQuatMsg(initial_ahrs_ref_.compose(gtsam::Rot3::Expmap(log_avg)));
+        initial_ahrs_->header.stamp = msg->header.stamp;
+      }
+      initial_ahrs_count_++;
     }
-    gtsam::Vector3 log_avg = log_sum / static_cast<double>(ahrs_msgs.size());
-    result.ahrs->orientation = toQuatMsg(R_ref.compose(gtsam::Rot3::Expmap(log_avg)));
   }
 
-  return result;
+  // Set initial wrench
+  if (params_.dynamics.enable_dynamics) {
+    auto wrench_msgs = wrench_queue_.drain();
+    if (!wrench_msgs.empty()) {
+      initial_wrench_ = wrench_msgs.back();
+      latest_wrench_msg_ = initial_wrench_;
+    }
+  }
 }
 
 gtsam::Rot3 FactorGraphNode::computeInitialOrientation()
@@ -645,23 +664,26 @@ void FactorGraphNode::addPriorFactors(gtsam::NonlinearFactorGraph & graph, gtsam
 void FactorGraphNode::initializeGraph()
 {
   std::lock_guard<std::mutex> init_lock(initialization_mutex_);
-  if (graph_initialized_) {
+  if (state_ == State::RUNNING) {
     RCLCPP_DEBUG(get_logger(), "Duplicate initialization attempt detected.");
     return;
   }
 
+  bool perform_initialization = false;
+
   // --- Wait for Sensor Data ---
-  if (!sensors_ready_) {
-    bool imu_ok = !imu_queue_.empty();
+  if (state_ == State::WAITING_FOR_SENSORS) {
+    bool imu_ok = !imu_queue_.empty() && have_imu_to_dvl_tf_;
     bool gps_ok = !(params_.gps.enable_gps || params_.gps.enable_gps_init_only) ||
-      !gps_queue_.empty();
-    bool depth_ok = !depth_queue_.empty();
+      (!gps_queue_.empty() && have_gps_to_dvl_tf_);
+    bool depth_ok = !depth_queue_.empty() && have_depth_to_dvl_tf_;
     bool mag_ok = !(params_.mag.enable_mag || params_.mag.enable_mag_init_only) ||
-      !mag_queue_.empty();
+      (!mag_queue_.empty() && have_mag_to_dvl_tf_);
     bool ahrs_ok = !(params_.ahrs.enable_ahrs || params_.ahrs.enable_ahrs_init_only) ||
-      !ahrs_queue_.empty();
-    bool dvl_ok = !dvl_queue_.empty();
-    bool wrench_ok = !params_.dynamics.enable_dynamics || !wrench_queue_.empty();
+      (!ahrs_queue_.empty() && have_ahrs_to_dvl_tf_);
+    bool dvl_ok = !dvl_queue_.empty() && have_dvl_to_base_tf_;
+    bool wrench_ok = !params_.dynamics.enable_dynamics ||
+      (!wrench_queue_.empty() && have_com_to_dvl_tf_);
 
     if (imu_ok && gps_ok && depth_ok && mag_ok && ahrs_ok && dvl_ok && wrench_ok) {
       if (params_.prior.use_parameter_priors) {
@@ -684,12 +706,13 @@ void FactorGraphNode::initializeGraph()
           initial_wrench_ = wrench_queue_.back();
           latest_wrench_msg_ = initial_wrench_;
         }
-        data_averaged_ = true;
+
+        perform_initialization = true;
       } else {
         RCLCPP_INFO(get_logger(), "Required sensor messages received! Averaging...");
         start_avg_time_ = this->get_clock()->now().seconds();
+        state_ = State::INITIALIZING;
       }
-      sensors_ready_ = true;
     } else {
       RCLCPP_WARN_THROTTLE(
         get_logger(), *get_clock(), 5000, "Waiting for sensors: %s%s%s%s%s%s%s",
@@ -704,7 +727,9 @@ void FactorGraphNode::initializeGraph()
   }
 
   // --- Average Initial Measurements ---
-  if (!data_averaged_) {
+  if (state_ == State::INITIALIZING) {
+    incrementAverages();
+
     double duration = this->get_clock()->now().seconds() - start_avg_time_;
     if (duration < params_.prior.initialization_duration) {
       RCLCPP_INFO_THROTTLE(
@@ -713,92 +738,68 @@ void FactorGraphNode::initializeGraph()
         params_.prior.initialization_duration);
       return;
     } else {
-      std::deque<sensor_msgs::msg::Imu::SharedPtr> imu_msgs = imu_queue_.drain();
-      std::deque<nav_msgs::msg::Odometry::SharedPtr> gps_msgs = gps_queue_.drain();
-      std::deque<nav_msgs::msg::Odometry::SharedPtr> depth_msgs = depth_queue_.drain();
-      std::deque<sensor_msgs::msg::MagneticField::SharedPtr> mag_msgs = mag_queue_.drain();
-      std::deque<sensor_msgs::msg::Imu::SharedPtr> ahrs_msgs = ahrs_queue_.drain();
-      std::deque<geometry_msgs::msg::TwistWithCovarianceStamped::SharedPtr> dvl_msgs =
-        dvl_queue_.drain();
-      std::deque<geometry_msgs::msg::WrenchStamped::SharedPtr> wrench_msgs = wrench_queue_.drain();
-
-      AveragedMeasurements avgs =
-        computeAveragedMeasurements(
-        imu_msgs, gps_msgs, depth_msgs, mag_msgs, ahrs_msgs,
-        dvl_msgs);
-
-      initial_imu_ = avgs.imu;
-      initial_gps_ = avgs.gps;
-      initial_depth_ = avgs.depth;
-      initial_mag_ = avgs.mag;
-      initial_ahrs_ = avgs.ahrs;
-      initial_dvl_ = avgs.dvl;
-      if (params_.dynamics.enable_dynamics) {
-        initial_wrench_ = wrench_msgs.back();
-        latest_wrench_msg_ = initial_wrench_;
-      }
-
       RCLCPP_INFO(get_logger(), "Sensor data averaged successfully! Initializing graph...");
-      data_averaged_ = true;
+      perform_initialization = true;
     }
   }
 
-  // --- Create Initial Factor Graph ---
-  gtsam::NonlinearFactorGraph initial_graph;
-  gtsam::Values initial_values;
+  // --- Create Initial Graph ---
+  if (perform_initialization) {
+    gtsam::NonlinearFactorGraph initial_graph;
+    gtsam::Values initial_values;
 
-  gtsam::Rot3 initial_orientation_dvl = computeInitialOrientation();
-  gtsam::Point3 initial_position_dvl = computeInitialPosition(initial_orientation_dvl);
-  prev_pose_ = gtsam::Pose3(initial_orientation_dvl, initial_position_dvl);
-  prev_vel_ = computeInitialVelocity(initial_orientation_dvl);
-  prev_imu_bias_ = computeInitialBias();
+    gtsam::Rot3 initial_orientation_dvl = computeInitialOrientation();
+    gtsam::Point3 initial_position_dvl = computeInitialPosition(initial_orientation_dvl);
+    prev_pose_ = gtsam::Pose3(initial_orientation_dvl, initial_position_dvl);
+    prev_vel_ = computeInitialVelocity(initial_orientation_dvl);
+    prev_imu_bias_ = computeInitialBias();
 
-  addPriorFactors(initial_graph, initial_values);
+    addPriorFactors(initial_graph, initial_values);
 
-  rclcpp::Time init_stamp = params_.experimental.enable_dvl_preintegration ?
-    initial_depth_->header.stamp :
-    initial_dvl_->header.stamp;
-  prev_time_ = init_stamp.seconds();
-  last_real_dvl_time_ = prev_time_;
-  time_to_key_[init_stamp] = X(0);
+    rclcpp::Time init_stamp = params_.experimental.enable_dvl_preintegration ?
+      initial_depth_->header.stamp :
+      initial_dvl_->header.stamp;
+    prev_time_ = init_stamp.seconds();
+    time_to_key_[init_stamp] = X(0);
 
-  // --- Initialize Preintegrators ---
-  imu_preintegrator_ = std::make_unique<gtsam::PreintegratedCombinedMeasurements>(
-    configureImuPreintegration(), prev_imu_bias_);
-  if (params_.experimental.enable_dvl_preintegration) {
-    dvl_preintegrator_ = std::make_unique<DvlPreintegrator>();
-    dvl_preintegrator_->reset(initial_orientation_dvl);
+    // --- Initialize Preintegrators ---
+    imu_preintegrator_ = std::make_unique<gtsam::PreintegratedCombinedMeasurements>(
+      configureImuPreintegration(), prev_imu_bias_);
+    if (params_.experimental.enable_dvl_preintegration) {
+      dvl_preintegrator_ = std::make_unique<DvlPreintegrator>();
+      dvl_preintegrator_->reset(initial_orientation_dvl);
 
-    last_dvl_velocity_ = toGtsam(initial_dvl_->twist.twist.linear);
-    if (params_.dvl.use_parameter_covariance) {
-      last_dvl_covariance_ = toGtsamSquaredDiagonal(
-        params_.dvl.parameter_covariance.velocity_noise_sigmas).block<3, 3>(0, 0);
+      last_dvl_velocity_ = toGtsam(initial_dvl_->twist.twist.linear);
+      if (params_.dvl.use_parameter_covariance) {
+        last_dvl_covariance_ = toGtsamSquaredDiagonal(
+          params_.dvl.parameter_covariance.velocity_noise_sigmas).block<3, 3>(0, 0);
+      } else {
+        last_dvl_covariance_ = toGtsam(initial_dvl_->twist.covariance).block<3, 3>(0, 0);
+      }
+    }
+
+    // --- Initialize Smoother ---
+    gtsam::IncrementalFixedLagSmoother::KeyTimestampMap initial_timestamps;
+    initial_timestamps[X(0)] = prev_time_;
+    initial_timestamps[V(0)] = prev_time_;
+    initial_timestamps[B(0)] = prev_time_;
+
+    gtsam::ISAM2Params isam2_params;
+    isam2_params.relinearizeThreshold = params_.relinearize_threshold;
+    isam2_params.relinearizeSkip = params_.relinearize_skip;
+    if (params_.solver_type == "ISAM2") {
+      isam_ = std::make_unique<gtsam::ISAM2>(isam2_params);
+      isam_->update(initial_graph, initial_values);
     } else {
-      last_dvl_covariance_ = toGtsam(initial_dvl_->twist.covariance).block<3, 3>(0, 0);
+      inc_smoother_ = std::make_unique<gtsam::IncrementalFixedLagSmoother>(
+        params_.smoother_lag,
+        isam2_params);
+      inc_smoother_->update(initial_graph, initial_values, initial_timestamps);
     }
+
+    state_ = State::RUNNING;
+    RCLCPP_INFO(get_logger(), "Graph initialized successfully!");
   }
-
-  // --- Initialize Smoother ---
-  gtsam::IncrementalFixedLagSmoother::KeyTimestampMap initial_timestamps;
-  initial_timestamps[X(0)] = prev_time_;
-  initial_timestamps[V(0)] = prev_time_;
-  initial_timestamps[B(0)] = prev_time_;
-
-  gtsam::ISAM2Params isam2_params;
-  isam2_params.relinearizeThreshold = params_.relinearize_threshold;
-  isam2_params.relinearizeSkip = params_.relinearize_skip;
-  if (params_.solver_type == "ISAM2") {
-    isam_ = std::make_unique<gtsam::ISAM2>(isam2_params);
-    isam_->update(initial_graph, initial_values);
-  } else {
-    inc_smoother_ = std::make_unique<gtsam::IncrementalFixedLagSmoother>(
-      params_.smoother_lag,
-      isam2_params);
-    inc_smoother_->update(initial_graph, initial_values, initial_timestamps);
-  }
-
-  graph_initialized_ = true;
-  RCLCPP_INFO(get_logger(), "Graph initialized successfully!");
 }
 
 void FactorGraphNode::addGpsFactor(
@@ -1160,7 +1161,6 @@ void FactorGraphNode::addPreintegratedDvlFactor(
     double dt = current_dvl_time - last_dvl_time;
     if (dt > 1e-9) {
       last_dvl_velocity_ = toGtsam(dvl_msg->twist.twist.linear);
-      last_real_dvl_time_ = current_dvl_time;
 
       if (params_.dvl.use_parameter_covariance) {
         last_dvl_covariance_ = toGtsamSquaredDiagonal(
@@ -1659,12 +1659,16 @@ void FactorGraphNode::checkSensorInputs(diagnostic_updater::DiagnosticStatusWrap
 
 void FactorGraphNode::checkGraphState(diagnostic_updater::DiagnosticStatusWrapper & stat)
 {
-  if (graph_initialized_) {
-    stat.summary(diagnostic_msgs::msg::DiagnosticStatus::OK, "Optimizing factor graph.");
-  } else if (sensors_ready_) {
-    stat.summary(diagnostic_msgs::msg::DiagnosticStatus::WARN, "Averaging sensor data.");
-  } else {
-    stat.summary(diagnostic_msgs::msg::DiagnosticStatus::WARN, "Waiting for sensor data.");
+  switch (state_) {
+    case State::RUNNING:
+      stat.summary(diagnostic_msgs::msg::DiagnosticStatus::OK, "Optimizing factor graph.");
+      break;
+    case State::INITIALIZING:
+      stat.summary(diagnostic_msgs::msg::DiagnosticStatus::WARN, "Initializing factor graph.");
+      break;
+    case State::WAITING_FOR_SENSORS:
+      stat.summary(diagnostic_msgs::msg::DiagnosticStatus::WARN, "Waiting for sensor data.");
+      break;
   }
 }
 

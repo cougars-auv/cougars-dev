@@ -77,14 +77,11 @@ public:
    */
   FactorGraphNode();
 
-  struct AveragedMeasurements
+  enum class State
   {
-    sensor_msgs::msg::Imu::SharedPtr imu;
-    nav_msgs::msg::Odometry::SharedPtr gps;
-    nav_msgs::msg::Odometry::SharedPtr depth;
-    sensor_msgs::msg::Imu::SharedPtr ahrs;
-    sensor_msgs::msg::MagneticField::SharedPtr mag;
-    geometry_msgs::msg::TwistWithCovarianceStamped::SharedPtr dvl;
+    WAITING_FOR_SENSORS,
+    INITIALIZING,
+    RUNNING
   };
 
 private:
@@ -113,22 +110,9 @@ private:
   configureImuPreintegration();
 
   /**
-   * @brief Averages sensor queues over a specified duration.
-   * @param imu_msgs Queue of IMU messages.
-   * @param gps_msgs Queue of GPS messages.
-   * @param depth_msgs Queue of depth messages.
-   * @param mag_msgs Queue of magnetic field messages.
-   * @param ahrs_msgs Queue of AHRS messages.
-   * @param dvl_msgs Queue of DVL messages.
-   * @return The averaged measurements.
+   * @brief Updates the sensor data averages with new data from the queues.
    */
-  AveragedMeasurements computeAveragedMeasurements(
-    const std::deque<sensor_msgs::msg::Imu::SharedPtr> & imu_msgs,
-    const std::deque<nav_msgs::msg::Odometry::SharedPtr> & gps_msgs,
-    const std::deque<nav_msgs::msg::Odometry::SharedPtr> & depth_msgs,
-    const std::deque<sensor_msgs::msg::MagneticField::SharedPtr> & mag_msgs,
-    const std::deque<sensor_msgs::msg::Imu::SharedPtr> & ahrs_msgs,
-    const std::deque<geometry_msgs::msg::TwistWithCovarianceStamped::SharedPtr> & dvl_msgs);
+  void incrementAverages();
 
   /**
    * @brief Computes initial orientation using IMU, magnetometer, and AHRS sensor.
@@ -326,17 +310,13 @@ private:
   void checkProcessingOverflow(diagnostic_updater::DiagnosticStatusWrapper & stat);
 
   // --- Graph State ---
-  bool sensors_ready_ = false;
-  bool data_averaged_ = false;
-  std::atomic<bool> graph_initialized_{false};
+  std::atomic<State> state_{State::WAITING_FOR_SENSORS};
   double start_avg_time_ = 0.0;
 
   size_t prev_step_ = 0;
   size_t current_step_ = 1;
   double prev_time_ = 0.0;
 
-  std::atomic<double> last_real_dvl_time_{0.0};
-  std::atomic<double> last_depth_trigger_time_{0.0};
   std::atomic<double> last_opt_duration_{0.0};
   std::atomic<double> total_opt_duration_{0.0};
   std::atomic<size_t> opt_count_{0};
@@ -365,8 +345,17 @@ private:
   sensor_msgs::msg::MagneticField::SharedPtr initial_mag_;
   geometry_msgs::msg::TwistWithCovarianceStamped::SharedPtr initial_dvl_;
   geometry_msgs::msg::WrenchStamped::SharedPtr initial_wrench_;
-
   geometry_msgs::msg::WrenchStamped::SharedPtr latest_wrench_msg_;
+
+  size_t initial_imu_count_ = 0;
+  size_t initial_gps_count_ = 0;
+  size_t initial_depth_count_ = 0;
+  size_t initial_ahrs_count_ = 0;
+  size_t initial_mag_count_ = 0;
+  size_t initial_dvl_count_ = 0;
+
+  gtsam::Rot3 initial_ahrs_ref_;
+  gtsam::Vector3 initial_ahrs_log_sum_ = gtsam::Vector3::Zero();
 
   // --- Message Queues ---
   utils::ThreadSafeQueue<sensor_msgs::msg::Imu::SharedPtr> imu_queue_;
