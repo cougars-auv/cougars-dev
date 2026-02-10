@@ -15,13 +15,14 @@
 import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import TwistWithCovarianceStamped
+from dvl_msgs.msg import DVL
 
 
 class DvlConverterNode(Node):
     """
-    Converts DVL data from HoloOcean to a twist with covariance message.
+    Converts DVL data from HoloOcean to a Waterlinked DVL message.
 
-    :author: Nelson Durrant (w Gemini 3 Pro)
+    :author: Nelson Durrant
     :date: Jan 2026
     """
 
@@ -29,7 +30,7 @@ class DvlConverterNode(Node):
         super().__init__("dvl_converter_node")
 
         self.declare_parameter("input_topic", "auv0/DVLSensorVelocity")
-        self.declare_parameter("output_topic", "dvl/twist")
+        self.declare_parameter("output_topic", "dvl/data")
         self.declare_parameter("dvl_frame", "dvl_link")
         self.declare_parameter("override_covariance", True)
         self.declare_parameter("noise_sigma", 0.02)
@@ -65,9 +66,7 @@ class DvlConverterNode(Node):
         self.subscription = self.create_subscription(
             TwistWithCovarianceStamped, input_topic, self.listener_callback, 10
         )
-        self.publisher = self.create_publisher(
-            TwistWithCovarianceStamped, output_topic, 10
-        )
+        self.publisher = self.create_publisher(DVL, output_topic, 10)
 
         self.get_logger().info(
             f"DVL converter started. Listening on {input_topic} and publishing on {output_topic}."
@@ -91,13 +90,41 @@ class DvlConverterNode(Node):
                 return
 
         msg.header.frame_id = self.dvl_frame
+
+        dvl_msg = DVL()
+        dvl_msg.header = msg.header
+        dvl_msg.header.frame_id = self.dvl_frame
+
+        dvl_msg.velocity.x = msg.twist.twist.linear.x
+        dvl_msg.velocity.y = msg.twist.twist.linear.y
+        dvl_msg.velocity.z = msg.twist.twist.linear.z
+
+        dvl_msg.velocity_valid = True
+
+        # Convert nanoseconds to microseconds
+        dvl_msg.time_of_validity = int(
+            msg.header.stamp.sec * 1e6 + msg.header.stamp.nanosec / 1e3
+        )
+
         if self.override_covariance:
             covariance = self.noise_sigma * self.noise_sigma
-            msg.twist.covariance[0] = covariance  # Vx
-            msg.twist.covariance[7] = covariance  # Vy
-            msg.twist.covariance[14] = covariance  # Vz
+            dvl_msg.covariance = [0.0] * 9
+            dvl_msg.covariance[0] = covariance
+            dvl_msg.covariance[4] = covariance
+            dvl_msg.covariance[8] = covariance
+        else:
+            dvl_msg.covariance = [0.0] * 9
+            dvl_msg.covariance[0] = msg.twist.covariance[0]
+            dvl_msg.covariance[1] = msg.twist.covariance[1]
+            dvl_msg.covariance[2] = msg.twist.covariance[2]
+            dvl_msg.covariance[3] = msg.twist.covariance[6]
+            dvl_msg.covariance[4] = msg.twist.covariance[7]
+            dvl_msg.covariance[5] = msg.twist.covariance[8]
+            dvl_msg.covariance[6] = msg.twist.covariance[12]
+            dvl_msg.covariance[7] = msg.twist.covariance[13]
+            dvl_msg.covariance[8] = msg.twist.covariance[14]
 
-        self.publisher.publish(msg)
+        self.publisher.publish(dvl_msg)
 
 
 def main(args=None):

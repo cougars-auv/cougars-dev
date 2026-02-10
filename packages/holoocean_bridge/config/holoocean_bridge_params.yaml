@@ -40,7 +40,7 @@
   dvl_converter_node:
     ros__parameters:
       input_topic: "DVLSensorVelocity"
-      output_topic: "dvl/twist"
+      output_topic: "dvl/data"
 
       simulate_dropout: true
       dropout_frequency: 0.033 # [Hz] Frequency of the dropout cycle (1/30).
