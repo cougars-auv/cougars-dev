@@ -74,8 +74,9 @@ class FactorGraphNode : public rclcpp::Node
 public:
   /**
    * @brief FactorGraphNode constructor.
+   * @param options The node options.
    */
-  FactorGraphNode();
+  explicit FactorGraphNode(const rclcpp::NodeOptions & options);
 
   enum class State
   {

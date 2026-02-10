@@ -54,9 +54,9 @@
       parameter_covariance:
         accel_noise_sigmas: [0.0078, 0.0078, 0.0078] # [m/s^2] Accelerometer measurement noise sigmas.
         gyro_noise_sigmas: [0.0012, 0.0012, 0.0012] # [rad/s] Gyroscope measurement noise sigmas.
-      accel_bias_rw_sigmas: [1.05e-04, 1.05e-04, 1.05e-04] # [m/s^3] Sigmas for accelerometer bias random walk.
-      gyro_bias_rw_sigmas: [3.91e-05, 3.91e-05, 3.91e-05] # [rad/s^2] Sigmas for gyroscope bias random walk.
-      integration_covariance: 1e-5 # A small covariance for the integration process itself.
+      accel_bias_rw_sigmas: [0.000105, 0.000105, 0.000105] # [m/s^3] Sigmas for accelerometer bias random walk.
+      gyro_bias_rw_sigmas: [0.0000391, 0.0000391, 0.0000391] # [rad/s^2] Sigmas for gyroscope bias random walk.
+      integration_covariance: 0.00001 # A small covariance for the integration process itself.
       gravity: [0.0, 0.0, -9.8] # [m/s^2]
       timeout_threshold: 1.0 # [s]
 
@@ -151,11 +151,11 @@
         initial_velocity: [0.0, 0.0, 0.0] # [m/s] (at DVL frame)
         initial_accel_bias: [0.0, 0.0, 0.0] # [m/s^2]
         initial_gyro_bias: [0.0, 0.0, 0.0] # [rad/s]
-        initial_position_sigmas: [1e-3, 1e-3, 1e-3] # [m] Initial position uncertainty.
-        initial_orientation_sigmas: [1e-3, 1e-3, 1e-3] # [rad] Initial yaw uncertainty.
-        initial_velocity_sigmas: [1e-3, 1e-3, 1e-3] # [m/s] Initial velocity uncertainty.
-      initial_accel_bias_sigmas: [1e-2, 1e-2, 1e-2] # [m/s^2] Initial accelerometer bias uncertainty.
-      initial_gyro_bias_sigmas: [1e-3, 1e-3, 1e-3] # [rad/s] Initial gyroscope bias uncertainty.
+        initial_position_sigmas: [0.001, 0.001, 0.001] # [m] Initial position uncertainty.
+        initial_orientation_sigmas: [0.001, 0.001, 0.001] # [rad] Initial yaw uncertainty.
+        initial_velocity_sigmas: [0.001, 0.001, 0.001] # [m/s] Initial velocity uncertainty.
+      initial_accel_bias_sigmas: [0.01, 0.01, 0.01] # [m/s^2] Initial accelerometer bias uncertainty.
+      initial_gyro_bias_sigmas: [0.001, 0.001, 0.001] # [rad/s] Initial gyroscope bias uncertainty.
 
     # --- Experimental Features ---
     experimental:

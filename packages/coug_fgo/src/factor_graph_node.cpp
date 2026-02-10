@@ -27,6 +27,7 @@
 #include <gtsam/slam/PriorFactor.h>
 
 #include <algorithm>
+#include <rclcpp_components/register_node_macro.hpp>
 
 #include "coug_fgo/factors/depth_factor.hpp"
 #include "coug_fgo/factors/dvl_factor.hpp"
@@ -281,8 +282,8 @@ void FactorGraphNode::setupRosInterfaces()
   diagnostic_updater_.add(overflow_task, this, &FactorGraphNode::checkProcessingOverflow);
 }
 
-FactorGraphNode::FactorGraphNode()
-: Node("factor_graph_node"),
+FactorGraphNode::FactorGraphNode(const rclcpp::NodeOptions & options)
+: Node("factor_graph_node", options),
   diagnostic_updater_(this)
 {
   RCLCPP_INFO(get_logger(), "Starting Factor Graph Node...");
@@ -1693,13 +1694,4 @@ void FactorGraphNode::checkProcessingOverflow(diagnostic_updater::DiagnosticStat
 
 }  // namespace coug_fgo
 
-int main(int argc, char * argv[])
-{
-  rclcpp::init(argc, argv);
-  auto node = std::make_shared<coug_fgo::FactorGraphNode>();
-  rclcpp::executors::MultiThreadedExecutor executor;
-  executor.add_node(node);
-  executor.spin();
-  rclcpp::shutdown();
-  return 0;
-}
+RCLCPP_COMPONENTS_REGISTER_NODE(coug_fgo::FactorGraphNode)

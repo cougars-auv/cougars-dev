@@ -104,13 +104,13 @@ factor_graph_node:
         default_value: [0.0012, 0.0012, 0.0012]
     accel_bias_rw_sigmas:
       type: double_array
-      default_value: [1.05e-4, 1.05e-4, 1.05e-4]
+      default_value: [0.000105, 0.000105, 0.000105]
     gyro_bias_rw_sigmas:
       type: double_array
-      default_value: [3.91e-5, 3.91e-5, 3.91e-5]
+      default_value: [0.0000391, 0.0000391, 0.0000391]
     integration_covariance:
       type: double
-      default_value: 1.0e-5
+      default_value: 0.00001
     gravity:
       type: double_array
       default_value: [0.0, 0.0, -9.8]
@@ -334,19 +334,19 @@ factor_graph_node:
         default_value: [0.0, 0.0, 0.0]
       initial_position_sigmas:
         type: double_array
-        default_value: [1.0e-3, 1.0e-3, 1.0e-3]
+        default_value: [0.001, 0.001, 0.001]
       initial_orientation_sigmas:
         type: double_array
-        default_value: [1.0e-3, 1.0e-3, 1.0e-3]
+        default_value: [0.001, 0.001, 0.001]
       initial_velocity_sigmas:
         type: double_array
-        default_value: [1.0e-3, 1.0e-3, 1.0e-3]
+        default_value: [0.001, 0.001, 0.001]
     initial_accel_bias_sigmas:
       type: double_array
-      default_value: [1.0e-2, 1.0e-2, 1.0e-2]
+      default_value: [0.01, 0.01, 0.01]
     initial_gyro_bias_sigmas:
       type: double_array
-      default_value: [1.0e-3, 1.0e-3, 1.0e-3]
+      default_value: [0.001, 0.001, 0.001]
 
   # --- Experimental Features ---
   experimental:

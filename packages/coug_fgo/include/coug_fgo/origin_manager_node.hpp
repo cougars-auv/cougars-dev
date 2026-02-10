@@ -52,8 +52,9 @@ class OriginManagerNode : public rclcpp::Node
 public:
   /**
    * @brief OriginManagerNode constructor.
+   * @param options The node options.
    */
-  OriginManagerNode();
+  explicit OriginManagerNode(const rclcpp::NodeOptions & options);
 
 private:
   // --- Logic ---

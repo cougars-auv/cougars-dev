@@ -25,13 +25,14 @@
 #include <tf2/LinearMath/Quaternion.h>
 
 #include <geographic_msgs/msg/geo_point.hpp>
+#include <rclcpp_components/register_node_macro.hpp>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
 
 namespace coug_fgo
 {
 
-OriginManagerNode::OriginManagerNode()
-: Node("origin_manager_node"),
+OriginManagerNode::OriginManagerNode(const rclcpp::NodeOptions & options)
+: Node("origin_manager_node", options),
   diagnostic_updater_(this)
 {
   RCLCPP_INFO(get_logger(), "Starting Origin Manager Node...");
@@ -318,13 +319,4 @@ void OriginManagerNode::checkNavSatFix(diagnostic_updater::DiagnosticStatusWrapp
 
 }  // namespace coug_fgo
 
-int main(int argc, char * argv[])
-{
-  rclcpp::init(argc, argv);
-  auto node = std::make_shared<coug_fgo::OriginManagerNode>();
-  rclcpp::executors::MultiThreadedExecutor executor;
-  executor.add_node(node);
-  executor.spin();
-  rclcpp::shutdown();
-  return 0;
-}
+RCLCPP_COMPONENTS_REGISTER_NODE(coug_fgo::OriginManagerNode)
