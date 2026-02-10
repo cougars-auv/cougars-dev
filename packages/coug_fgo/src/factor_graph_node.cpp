@@ -534,6 +534,7 @@ gtsam::Point3 FactorGraphNode::computeInitialPosition(const gtsam::Rot3 & initia
     gtsam::Point3 world_t_dvl_gps = initial_orientation_dvl.rotate(T_dvl_gps.translation());
     initial_position_dvl = toGtsam(initial_gps_->pose.pose.position) - world_t_dvl_gps;
   }
+  // Account for depth lever arm
   gtsam::Pose3 T_dvl_depth = toGtsam(depth_to_dvl_tf_.transform);
   gtsam::Point3 world_t_dvl_depth = initial_orientation_dvl.rotate(T_dvl_depth.translation());
   initial_position_dvl.z() = initial_depth_->pose.pose.position.z - world_t_dvl_depth.z();
@@ -1462,7 +1463,7 @@ void FactorGraphNode::optimizeGraph()
 
   double target_time = target_stamp.seconds();
 
-  // --- Create New Factor Graph ---
+  // --- Create Factor Graph ---
   gtsam::NonlinearFactorGraph new_graph;
   gtsam::Values new_values;
   gtsam::IncrementalFixedLagSmoother::KeyTimestampMap new_timestamps;

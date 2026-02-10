@@ -338,7 +338,7 @@ protected:
   gtsam::Vector3 last_dvl_velocity_ = gtsam::Vector3::Zero();
   gtsam::Matrix3 last_dvl_covariance_ = gtsam::Matrix3::Zero();
 
-  // --- Initial Averaged Measurements ---
+  // --- Averaged Measurements ---
   sensor_msgs::msg::Imu::SharedPtr initial_imu_;
   nav_msgs::msg::Odometry::SharedPtr initial_gps_;
   nav_msgs::msg::Odometry::SharedPtr initial_depth_;
