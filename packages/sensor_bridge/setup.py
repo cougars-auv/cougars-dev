@@ -27,7 +27,6 @@ setup(
     },
     entry_points={
         "console_scripts": [
-            "dvl_twist_converter = sensor_bridge.dvl_twist_converter_node:main",
             "dvl_odom_converter = sensor_bridge.dvl_odom_converter_node:main",
             "gps_odom_converter = sensor_bridge.gps_odom_converter_node:main",
         ],

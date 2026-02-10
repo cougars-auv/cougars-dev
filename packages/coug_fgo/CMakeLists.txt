@@ -26,6 +26,7 @@ find_package(tf2 REQUIRED)
 find_package(tf2_ros REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
 find_package(diagnostic_updater REQUIRED)
+find_package(dvl_msgs REQUIRED)
 find_package(GTSAM REQUIRED)
 find_package(generate_parameter_library REQUIRED)
 
@@ -48,10 +49,16 @@ generate_parameter_library(
   "params/origin_manager_params.yaml"
 )
 
+generate_parameter_library(
+  dvl_a50_twist_parameters
+  "params/dvl_a50_twist_params.yaml"
+)
+
 # --- Component Library ---
 add_library(factor_graph_component SHARED
   src/factor_graph_node.cpp
   src/origin_manager_node.cpp
+  src/dvl_a50_twist_node.cpp
 )
 
 target_include_directories(factor_graph_component PUBLIC
@@ -64,6 +71,7 @@ target_link_libraries(factor_graph_component
   gtsam_unstable
   factor_graph_parameters
   origin_manager_parameters
+  dvl_a50_twist_parameters
 )
 
 ament_target_dependencies(factor_graph_component
@@ -78,11 +86,13 @@ ament_target_dependencies(factor_graph_component
   tf2_ros
   tf2_geometry_msgs
   diagnostic_updater
+  dvl_msgs
 )
 
 rclcpp_components_register_nodes(factor_graph_component
   "coug_fgo::FactorGraphNode"
   "coug_fgo::OriginManagerNode"
+  "coug_fgo::DvlA50TwistNode"
 )
 
 # --- Executables ---
@@ -93,6 +103,10 @@ ament_target_dependencies(factor_graph rclcpp rclcpp_components)
 add_executable(origin_manager src/origin_manager_main.cpp)
 target_link_libraries(origin_manager factor_graph_component)
 ament_target_dependencies(origin_manager rclcpp rclcpp_components)
+
+add_executable(dvl_a50_twist src/dvl_a50_twist_main.cpp)
+target_link_libraries(dvl_a50_twist factor_graph_component)
+ament_target_dependencies(dvl_a50_twist rclcpp rclcpp_components)
 
 # --- Install ---
 install(TARGETS
@@ -105,6 +119,7 @@ install(TARGETS
 install(TARGETS
   factor_graph
   origin_manager
+  dvl_a50_twist
   DESTINATION lib/${PROJECT_NAME}
 )
 
@@ -238,6 +253,19 @@ if(BUILD_TESTING)
     sensor_msgs
     nav_msgs
     geodesy
+  )
+
+  ament_add_gtest(test_dvl_a50_twist_node test/test_dvl_a50_twist_node.cpp)
+  target_include_directories(test_dvl_a50_twist_node PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  )
+  target_link_libraries(test_dvl_a50_twist_node
+    factor_graph_component
+  )
+  ament_target_dependencies(test_dvl_a50_twist_node
+    rclcpp
+    geometry_msgs
+    dvl_msgs
   )
 endif()
 

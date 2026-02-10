@@ -190,6 +190,18 @@ def generate_launch_description():
                 ],
             ),
             Node(
+                package="coug_fgo",
+                executable="dvl_a50_twist",
+                name="dvl_a50_twist_node",
+                parameters=[
+                    params_file,
+                    {
+                        "use_sim_time": use_sim_time,
+                        "parameter_frame": dvl_link_frame,
+                    },
+                ],
+            ),
+            Node(
                 package="tf2_ros",
                 executable="static_transform_publisher",
                 name="odom_to_base_transform",

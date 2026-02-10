@@ -133,7 +133,7 @@ void OriginManagerNode::navsatCallback(const sensor_msgs::msg::NavSatFix::Shared
   last_fix_status_ = msg->status.status;
 
   if (params_.simulate_dropout && params_.dropout_frequency > 0) {
-    double current_time = this->get_clock()->now().seconds();
+    double current_time = get_clock()->now().seconds();
     double cycle_period = 1.0 / params_.dropout_frequency;
     if (fmod(current_time, cycle_period) < params_.dropout_duration) {
       RCLCPP_WARN_THROTTLE(
@@ -144,7 +144,7 @@ void OriginManagerNode::navsatCallback(const sensor_msgs::msg::NavSatFix::Shared
   }
 
   if (msg->status.status == sensor_msgs::msg::NavSatStatus::STATUS_NO_FIX) {
-    RCLCPP_WARN_THROTTLE(get_logger(), *get_clock(), 5000, "Received NavSatFix with no fix.");
+    RCLCPP_WARN_THROTTLE(get_logger(), *get_clock(), 1000, "Received NavSatFix with no fix.");
     return;
   }
 

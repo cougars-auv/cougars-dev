@@ -186,6 +186,25 @@
       longitude: -111.90721
       altitude: 1412.0
 
+/**/dvl_a50_twist_node:
+  ros__parameters:
+    # --- Node Settings ---
+    timeout_threshold: 0.5 # [s]
+
+    simulate_dropout: false
+    dropout_frequency: 0.033 # [Hz] Frequency of the dropout cycle (1/30).
+    dropout_duration: 5.0 # [s] Duration of the dropout.
+
+    # TURTLMap-based FOM covariance calculation
+    use_fom_covariance: false
+    fom_covariance_scale: 4.0
+
+    # --- ROS Topics and Frames ---
+    input_topic: "dvl/data"
+    output_topic: "dvl/twist"
+
+    use_parameter_frame: true
+
 /auv0/**:
   ros__parameters:
     prior:

@@ -72,18 +72,6 @@ def generate_launch_description():
             ),
             Node(
                 package="sensor_bridge",
-                executable="dvl_twist_converter",
-                name="dvl_twist_converter_node",
-                parameters=[
-                    params_file,
-                    {
-                        "use_sim_time": use_sim_time,
-                        "dvl_frame": dvl_link_frame,
-                    },
-                ],
-            ),
-            Node(
-                package="sensor_bridge",
                 executable="dvl_odom_converter",
                 name="dvl_odom_converter_node",
                 parameters=[
