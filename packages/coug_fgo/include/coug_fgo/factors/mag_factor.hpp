@@ -14,7 +14,7 @@
 
 /**
  * @file mag_factor.hpp
- * @brief GTSAM factor for magnetometer yaw-only measurements with a lever arm.
+ * @brief GTSAM factor for magnetometer measurements with a lever arm.
  * @author Nelson Durrant
  * @date Jan 2026
  */
@@ -35,87 +35,64 @@ namespace coug_fgo::factors
 {
 
 /**
- * @class MagYawFactorArm
- * @brief GTSAM factor for magnetometer yaw-only measurements with a lever arm.
+ * @class MagFactorArm
+ * @brief GTSAM factor for 3D magnetometer measurements with a lever arm.
  *
- * This factor constrains the yaw orientation of the AUV based on magnetometer measurements,
+ * This factor constrains the 3D orientation of the AUV based on magnetometer measurements,
  * accounting for the rotation between the AUV base and the sensor.
  */
-class MagYawFactorArm : public gtsam::NoiseModelFactor1<gtsam::Pose3>
+class MagFactorArm : public gtsam::NoiseModelFactor1<gtsam::Pose3>
 {
-  gtsam::Point3 reference_field_;
+  gtsam::Point3 measured_field_sensor_;
+  gtsam::Point3 reference_field_world_;
   gtsam::Rot3 base_R_sensor_;
-  gtsam::Point3 measured_field_;
-  double ref_yaw_;
 
 public:
   /**
-   * @brief Constructor for MagYawFactorArm.
+   * @brief Constructor for MagFactorArm.
    * @param pose_key GTSAM key for the AUV pose.
    * @param measured_field The measured magnetic field vector (sensor frame).
    * @param reference_field The reference magnetic field vector (world frame).
    * @param base_R_sensor The static rotation from base to sensor.
-   * @param noise_model The noise model for the measurement (1D).
+   * @param noise_model The noise model for the measurement (Dimension must be 3).
    */
-  MagYawFactorArm(
+  MagFactorArm(
     gtsam::Key pose_key, const gtsam::Point3 & measured_field,
     const gtsam::Point3 & reference_field,
     const gtsam::Rot3 & base_R_sensor, const gtsam::SharedNoiseModel & noise_model)
   : NoiseModelFactor1<gtsam::Pose3>(noise_model, pose_key),
-    reference_field_(reference_field),
-    base_R_sensor_(base_R_sensor),
-    measured_field_(measured_field)
+    measured_field_sensor_(measured_field),
+    reference_field_world_(reference_field),
+    base_R_sensor_(base_R_sensor)
   {
-    ref_yaw_ = std::atan2(reference_field_.y(), reference_field_.x());
   }
 
   /**
    * @brief Evaluates the error and Jacobians for the factor.
    * @param pose The AUV pose estimate.
    * @param H Optional Jacobian matrix.
-   * @return The 1D error vector (yaw).
+   * @return The 3D error vector (predicted - measured) in the sensor frame.
    */
   gtsam::Vector evaluateError(
     const gtsam::Pose3 & pose,
     boost::optional<gtsam::Matrix &> H = boost::none) const override
   {
-    // Predict the magnetic field measurement
-    gtsam::Point3 b_base = base_R_sensor_.rotate(measured_field_);
+    // Predict the magnetic field in the body and sensor frames
+    gtsam::Matrix33 H_unrotate_body;
+    gtsam::Point3 predicted_field_body =
+      pose.rotation().unrotate(reference_field_world_, H ? &H_unrotate_body : 0);
+    gtsam::Point3 predicted_field_sensor = base_R_sensor_.unrotate(predicted_field_body);
 
-    gtsam::Matrix33 H_rot;
-    gtsam::Point3 b_world = pose.rotation().rotate(b_base, H ? &H_rot : 0);
-
-    double measured_yaw = std::atan2(b_world.y(), b_world.x());
-
-    // 1D yaw residual
-    double error = measured_yaw - ref_yaw_;
-    while (error > M_PI) {
-      error -= 2.0 * M_PI;
-    }
-    while (error < -M_PI) {
-      error += 2.0 * M_PI;
-    }
+    // 3D magnetic field residual
+    gtsam::Vector3 error = predicted_field_sensor - measured_field_sensor_;
 
     if (H) {
-      // Jacobian with respect to pose (1x6)
-      H->setZero(1, 6);
-
-      double r2 = b_world.x() * b_world.x() + b_world.y() * b_world.y();
-      double inv_r2 = (r2 > 1e-9) ? (1.0 / r2) : 0.0;
-      double d_yaw_dx = -b_world.y() * inv_r2;
-      double d_yaw_dy = b_world.x() * inv_r2;
-
-      gtsam::Matrix13 J_atan;
-      J_atan << d_yaw_dx, d_yaw_dy, 0.0;
-
-      gtsam::Matrix13 J_rot = J_atan * H_rot;
-
-      (*H)(0, 0) = J_rot(0, 0);
-      (*H)(0, 1) = J_rot(0, 1);
-      (*H)(0, 2) = J_rot(0, 2);
+      // Jacobian with respect to pose (3x6)
+      H->setZero(3, 6);
+      H->block<3, 3>(0, 0) = base_R_sensor_.inverse().matrix() * H_unrotate_body;
     }
 
-    return gtsam::Vector1(error);
+    return error;
   }
 };
 

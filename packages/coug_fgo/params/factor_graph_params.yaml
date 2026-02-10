@@ -189,9 +189,9 @@ factor_graph_node:
       type: bool
       default_value: false
     parameter_covariance:
-      magnetic_field_noise_sigma:
-        type: double
-        default_value: 0.003
+      magnetic_field_noise_sigmas:
+        type: double_array
+        default_value: [0.003, 0.003, 0.003]
     reference_field:
       type: double_array
       default_value: [0.07857, 0.41316, -0.90726]

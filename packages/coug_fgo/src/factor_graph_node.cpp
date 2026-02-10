@@ -44,7 +44,7 @@ using coug_fgo::factors::DvlFactor;
 using coug_fgo::factors::DvlPreintegratedFactor;
 using coug_fgo::factors::Gps2dFactorArm;
 using coug_fgo::factors::AhrsYawFactorArm;
-using coug_fgo::factors::MagYawFactorArm;
+using coug_fgo::factors::MagFactorArm;
 using coug_fgo::factors::AuvDynamicsFactorArm;
 using coug_fgo::factors::ConstantVelocityFactor;
 using coug_fgo::utils::toGtsam;
@@ -474,7 +474,7 @@ gtsam::Rot3 FactorGraphNode::computeInitialOrientation()
       params_.mag.reference_field[1],
       params_.mag.reference_field[0]);
 
-    yaw = measured_yaw - ref_yaw;
+    yaw = ref_yaw - measured_yaw;
   }
 
   RCLCPP_DEBUG(get_logger(), "Initial orientation: %f %f %f", roll, pitch, yaw);
@@ -582,7 +582,7 @@ void FactorGraphNode::addPriorFactors(gtsam::NonlinearFactorGraph & graph, gtsam
         params_.mag.reference_field[1] * params_.mag.reference_field[1]);
 
       double mag_sigma_norm = params_.mag.use_parameter_covariance ?
-        params_.mag.parameter_covariance.magnetic_field_noise_sigma :
+        params_.mag.parameter_covariance.magnetic_field_noise_sigmas[0] :
         std::sqrt(toGtsam(initial_mag_->magnetic_field_covariance)(0, 0));
 
       prior_pose_sigmas(2) = mag_sigma_norm / h_mag;
@@ -919,20 +919,14 @@ void FactorGraphNode::addMagFactor(
     params_.mag.reference_field[1],
     params_.mag.reference_field[2]);
 
-  gtsam::Vector1 mag_sigma;
-  double h_mag = std::sqrt(ref_vec.x() * ref_vec.x() + ref_vec.y() * ref_vec.y());
-
+  gtsam::SharedNoiseModel mag_noise;
   if (params_.mag.use_parameter_covariance) {
-    mag_sigma << params_.mag.parameter_covariance.magnetic_field_noise_sigma / h_mag;
+    mag_noise = gtsam::noiseModel::Diagonal::Sigmas(
+      toGtsam(params_.mag.parameter_covariance.magnetic_field_noise_sigmas));
   } else {
-    if (h_mag > 1e-6) {
-      double sigma_norm = sqrt(mag_msg->magnetic_field_covariance[0]);
-      mag_sigma << sigma_norm / h_mag;
-    } else {
-      mag_sigma << params_.mag.parameter_covariance.magnetic_field_noise_sigma / h_mag;
-    }
+    gtsam::Matrix33 mag_cov = toGtsam(mag_msg->magnetic_field_covariance);
+    mag_noise = gtsam::noiseModel::Gaussian::Covariance(mag_cov);
   }
-  gtsam::SharedNoiseModel mag_noise = gtsam::noiseModel::Isotropic::Sigma(1, mag_sigma(0));
 
   if (params_.mag.robust_kernel == "Huber") {
     mag_noise = gtsam::noiseModel::Robust::Create(
@@ -944,7 +938,7 @@ void FactorGraphNode::addMagFactor(
 
   RCLCPP_DEBUG(get_logger(), "Adding mag factor at step %zu", current_step_);
 
-  graph.emplace_shared<MagYawFactorArm>(
+  graph.emplace_shared<MagFactorArm>(
     X(current_step_), toGtsam(mag_msg->magnetic_field), ref_vec,
     toGtsam(mag_to_dvl_tf_.transform.rotation), mag_noise);
 }

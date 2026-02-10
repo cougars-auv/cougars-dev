@@ -86,7 +86,7 @@
       use_parameter_frame: false
       use_parameter_covariance: false
       parameter_covariance:
-        magnetic_field_noise_sigma: 0.003 # [normalized] Magnetic field uncertainty sigma.
+        magnetic_field_noise_sigmas: [0.003, 0.003, 0.003] # [normalized] Magnetic field uncertainty sigmas.
       # https://www.ngdc.noaa.gov/geomag/calculators/magcalc.shtml#igrfwmm
       # WMMHR-2025 (40.2406 N, 111.741 W, 2026-01-23)
       # North: 20,842.3 nT, East: 3,963.4 nT, Vertical: 45,767.8 nT
@@ -214,6 +214,7 @@
 
     gps:
       enable_gps: false
+      enable_gps_init_only: true
 
     mag:
       enable_mag: false
