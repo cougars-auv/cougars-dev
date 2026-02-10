@@ -1,5 +1,5 @@
 #!/bin/bash
-# Created by Nelson Durrant, Feb 2026
+# Created by Nelson Durrant, Jan 2026
 
 hook_name="$1"
 shift

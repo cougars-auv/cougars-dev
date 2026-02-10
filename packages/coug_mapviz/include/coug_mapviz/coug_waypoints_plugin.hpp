@@ -16,7 +16,7 @@
  * @file coug_waypoints_plugin.hpp
  * @brief MapViz plugin for multi-agent waypoint mission planning.
  * @author Nelson Durrant
- * @date Feb 2026
+ * @date Jan 2026
  */
 
 #pragma once

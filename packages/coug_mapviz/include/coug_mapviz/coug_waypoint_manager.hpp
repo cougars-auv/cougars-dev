@@ -16,7 +16,7 @@
  * @file coug_waypoint_manager.hpp
  * @brief MapViz plugin helper, manages waypoint storage and file I/O.
  * @author Nelson Durrant
- * @date Feb 2026
+ * @date Jan 2026
  */
 
 #pragma once

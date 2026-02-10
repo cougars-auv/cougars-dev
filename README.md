@@ -67,6 +67,13 @@ CoUGARs is a low-cost, configurable AUV platform designed for multi-agent autono
     cd ~/coug_ws && colcon build
     cd ~/scripts && ./bag_launch.sh <bag_name>
     ```
+
+  - To simply visualize the playback without launching any new nodes, use `./viz_launch.sh <bag_name>`.
+  
+    ```bash
+    cd ~/scripts && ./viz_launch.sh <bag_name>
+    ```
+
 --
 
 ## Contributing

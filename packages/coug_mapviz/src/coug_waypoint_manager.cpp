@@ -16,7 +16,7 @@
  * @file coug_waypoint_manager.cpp
  * @brief Implementation of the CougWaypointManager.
  * @author Nelson Durrant
- * @date Feb 2026
+ * @date Jan 2026
  */
 
 #include <coug_mapviz/coug_waypoint_manager.hpp>
