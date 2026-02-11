@@ -12,6 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# --- Cache Stage ---
+FROM ubuntu:22.04 AS cacher
+
+WORKDIR /tmp/packages
+COPY packages .
+RUN find . -type f \! -name "package.xml" \! -name "*.repos" -delete
+
+# --- Main Stage ---
 FROM snelsondurrant/cougars:gtsam
 
 ARG DEBIAN_FRONTEND=noninteractive
@@ -33,11 +41,6 @@ RUN apt update && apt install -y --no-install-recommends \
     ros-${ROS_DISTRO}-rosbag2-storage-mcap \
     && rm -rf /var/lib/apt/lists/*
 
-RUN mkdir -p /home/frostlab-docker/coug_ws/src \
-    && chown -R frostlab-docker:frostlab-docker /home/frostlab-docker/coug_ws
-WORKDIR /home/frostlab-docker/coug_ws/src
-COPY --chown=frostlab-docker:frostlab-docker packages .
-
 # Install Python dependencies
 USER frostlab-docker
 ENV PATH="$PATH:/home/frostlab-docker/.local/bin"
@@ -52,7 +55,14 @@ RUN git clone https://github.com/tmux-plugins/tpm /home/frostlab-docker/.tmux/pl
 COPY --chown=frostlab-docker:frostlab-docker docker/.tmux.conf /home/frostlab-docker/.tmux.conf
 RUN /home/frostlab-docker/.tmux/plugins/tpm/bin/install_plugins
 
+USER root
+RUN mkdir -p /home/frostlab-docker/coug_ws/src \
+    && chown -R frostlab-docker:frostlab-docker /home/frostlab-docker/coug_ws
+WORKDIR /home/frostlab-docker/coug_ws/src
+COPY --from=cacher --chown=frostlab-docker:frostlab-docker /tmp/packages .
+
 # Install custom ROS package dependencies (rosdep)
+USER frostlab-docker
 RUN vcs import . < cougars.repos \
     && vcs custom --git --args submodule update --init --recursive \
     && rosdep update \
