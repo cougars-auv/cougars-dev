@@ -65,7 +65,6 @@ def generate_launch_description():
                 package="imu_filter_madgwick",
                 executable="imu_filter_madgwick_node",
                 name="imu_filter_madgwick_node",
-                condition=IfCondition(LaunchConfiguration("compare")),
                 parameters=[
                     params_file,
                     {
@@ -82,7 +81,6 @@ def generate_launch_description():
                 package="robot_localization",
                 executable="ekf_node",
                 name="ekf_filter_node_odom",
-                condition=IfCondition(LaunchConfiguration("compare")),
                 parameters=[
                     params_file,
                     {
