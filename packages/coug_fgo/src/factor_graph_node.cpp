@@ -1269,22 +1269,12 @@ void FactorGraphNode::publishGlobalOdom(
   gtsam::Matrix cov_to_pub = pose_covariance;
 
   if (params_.publish_pose_cov) {
-    gtsam::Pose3 T_base_dvl = toGtsam(dvl_to_base_tf_.transform);
-
-    // Account for DVL lever arm
-    gtsam::Matrix Ad = T_base_dvl.AdjointMap();
-    gtsam::Matrix cov_base = Ad * pose_covariance * Ad.transpose();
-
-    gtsam::Rot3 R_map_base = current_pose.rotation();
+    gtsam::Rot3 R_map_dvl = current_pose.rotation();
     gtsam::Matrix66 Rot = gtsam::Matrix66::Zero();
-    Rot.block<3, 3>(0, 0) = R_map_base.matrix();
-    Rot.block<3, 3>(3, 3) = R_map_base.matrix();
+    Rot.block<3, 3>(0, 0) = R_map_dvl.matrix();
+    Rot.block<3, 3>(3, 3) = R_map_dvl.matrix();
 
-    cov_to_pub = Rot * cov_base * Rot.transpose();
-
-    // Numerical stability adjustments
-    cov_to_pub = 0.5 * (cov_to_pub + cov_to_pub.transpose());
-    cov_to_pub += 1e-6 * gtsam::Matrix::Identity(6, 6);
+    cov_to_pub = Rot * pose_covariance * Rot.transpose();
   }
 
   odom_msg.pose.covariance = toPoseCovarianceMsg(gtsam::Matrix66(cov_to_pub));
