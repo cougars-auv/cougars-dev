@@ -52,7 +52,7 @@ class DvlConverterNode(Node):
             self.get_parameter("noise_sigma").get_parameter_value().double_value
         )
 
-        # From the DVLSensor.h file
+        # From DVLSensor.h
         elevation_rad = math.radians(22.5)
         self.sin_elev = math.sin(elevation_rad)
         self.cos_elev = math.cos(elevation_rad)

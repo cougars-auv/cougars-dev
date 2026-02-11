@@ -66,7 +66,6 @@ class MagConverterNode(Node):
         """
         msg.header.frame_id = self.mag_frame
 
-        # HoloOcean doesn't add noise, so we add it ourselves
         msg.magnetic_field.x += random.gauss(0, self.noise_sigma)
         msg.magnetic_field.y += random.gauss(0, self.noise_sigma)
         msg.magnetic_field.z += random.gauss(0, self.noise_sigma)

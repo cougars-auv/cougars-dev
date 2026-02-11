@@ -74,7 +74,6 @@ class DepthConverterNode(Node):
 
         msg.pose.covariance[14] = self.noise_sigma * self.noise_sigma
 
-        # HoloOcean doesn't add noise, so we add it ourselves
         msg.pose.pose.position.z += random.gauss(0, self.noise_sigma)
 
         self.publisher.publish(msg)

@@ -70,7 +70,6 @@ class ImuConverterNode(Node):
         """
         msg.header.frame_id = self.imu_frame
 
-        # HoloOcean doesn't add noise, so we add it ourselves
         msg.linear_acceleration.x += random.gauss(0, self.accel_noise_sigma)
         msg.linear_acceleration.y += random.gauss(0, self.accel_noise_sigma)
         msg.linear_acceleration.z += random.gauss(0, self.accel_noise_sigma)

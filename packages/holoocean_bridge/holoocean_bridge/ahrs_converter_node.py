@@ -108,7 +108,6 @@ class AhrsConverterNode(Node):
         pitch_rad = math.radians(pitch_deg)
         yaw_rad = math.radians(yaw_deg)
 
-        # HoloOcean doesn't add noise, so we add it ourselves
         roll_rad += random.gauss(0, self.roll_pitch_noise_sigma)
         pitch_rad += random.gauss(0, self.roll_pitch_noise_sigma)
         yaw_rad += random.gauss(0, self.yaw_noise_sigma)

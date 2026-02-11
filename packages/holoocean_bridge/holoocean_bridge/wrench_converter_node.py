@@ -55,6 +55,16 @@ class WrenchConverterNode(Node):
         )
         self.publisher = self.create_publisher(WrenchStamped, output_topic, 10)
 
+        # From BlueROV2.h
+        self.geo_factor = 0.70710678
+
+        # From actuator.py
+        rho = 1026.0
+        d_prop = 0.14
+        t_prop = 0.1
+        kt_0 = 0.4566
+        self.prop_const = (1.0 - t_prop) * rho * pow(d_prop, 4) * kt_0
+
         self.get_logger().info(
             f"Wrench converter started. Listening on {agent_topic} and {control_topic}, "
             f"publishing on {output_topic}."
@@ -68,10 +78,8 @@ class WrenchConverterNode(Node):
         """
         cmd = msg.command
 
-        # From the BlueROV2.cpp file
-        GEO_FACTOR = 0.70710678
-        fwd = (cmd[4] + cmd[5] + cmd[6] + cmd[7]) * GEO_FACTOR
-        lat = (cmd[4] - cmd[5] + cmd[6] - cmd[7]) * GEO_FACTOR
+        fwd = (cmd[4] + cmd[5] + cmd[6] + cmd[7]) * self.geo_factor
+        lat = (cmd[4] - cmd[5] + cmd[6] - cmd[7]) * self.geo_factor
         vert = cmd[0] + cmd[1] + cmd[2] + cmd[3]
 
         wrench_msg = WrenchStamped()
@@ -91,19 +99,11 @@ class WrenchConverterNode(Node):
         """
         thruster_rpm = msg.cs[3]
 
-        # From the fossen_dynamics/actuator.py file
-        rho = 1026.0
-        D_prop = 0.14
-        t_prop = 0.1
-        KT_0 = 0.4566
-
         n_rps = thruster_rpm / 60.0
         abs_n_rps = abs(n_rps)
 
         # IMPORTANT! Assuming advance velocity is 0 and no spool up/down delays
-        X_prop = rho * pow(D_prop, 4) * KT_0 * abs_n_rps * n_rps
-
-        force_x = (1.0 - t_prop) * X_prop
+        force_x = self.prop_const * abs_n_rps * n_rps
 
         wrench_msg = WrenchStamped()
         wrench_msg.header.stamp = self.get_clock().now().to_msg()
