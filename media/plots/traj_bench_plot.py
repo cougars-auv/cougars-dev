@@ -17,7 +17,6 @@ COLORS = {
     "UKF": "#C44E52",
     "IEKF": "#8172B2",
     "DVL": "#FFC107",
-    "GT": "black",
 }
 
 NAME_MAPPING = {
@@ -30,10 +29,10 @@ NAME_MAPPING = {
 }
 
 METRICS_CONFIG = [
-    ("metrics_ape_trans.csv", "APE Translation RMSE (m)", "ape_trans"),
-    ("metrics_ape_rot.csv", "APE Rotation RMSE (deg)", "ape_rot"),
-    ("metrics_rpe_trans.csv", "RPE Translation RMSE (m/m)", "rpe_trans"),
-    ("metrics_rpe_rot.csv", "RPE Rotation RMSE (deg/m)", "rpe_rot"),
+    ("benchmark_ape_trans.csv", "APE Translation RMSE (m)", "ape_trans"),
+    ("benchmark_ape_rot.csv", "APE Rotation RMSE (deg)", "ape_rot"),
+    ("benchmark_rpe_trans.csv", "RPE Translation RMSE (m/m)", "rpe_trans"),
+    ("benchmark_rpe_rot.csv", "RPE Rotation RMSE (deg/m)", "rpe_rot"),
 ]
 
 from evo.tools.settings import SETTINGS
@@ -50,7 +49,7 @@ sns.set_context("paper")
 
 def load_data(bags_dir):
     data_store = {cfg[0]: [] for cfg in METRICS_CONFIG}
-    files = glob.glob(os.path.join(bags_dir, "**", "metrics_*.csv"), recursive=True)
+    files = glob.glob(os.path.join(bags_dir, "**", "benchmark_*.csv"), recursive=True)
 
     print(f"Found {len(files)} metric files.")
 
@@ -139,10 +138,10 @@ def main():
         print(f"Error: {bags_dir} does not exist.")
         return
 
-    print("Loading metrics data...")
+    print("Loading benchmark data...")
     data = load_data(bags_dir)
 
-    print("Generating metrics plots...")
+    print("Generating benchmark plots...")
     generate_plots(data, bags_dir)
     print("Done.")
 

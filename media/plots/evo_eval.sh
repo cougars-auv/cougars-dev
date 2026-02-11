@@ -1,7 +1,7 @@
 #!/bin/bash
 # Created by Nelson Durrant, Jan 2026
 #
-# Generates APE/RPE metrics for FGO evaluation
+# Generates APE/RPE benchmarks for FGO evaluation
 #
 # Usage:
 #   ./evo_eval.sh <bag_name> [evo_args...]
@@ -95,25 +95,25 @@ for agent in "${AGENTS[@]}"; do
         done
     done
 
-    print_info "Exporting ${agent} metrics..."
-    if [ ! -f "$bag_path/evo/${agent}/metrics_ape_trans.csv" ]; then
-        evo_res "$bag_path/evo/${agent}"/*/ape_trans_part.zip --save_table "$bag_path/evo/${agent}/metrics_ape_trans.csv"
+    print_info "Exporting ${agent} benchmark..."
+    if [ ! -f "$bag_path/evo/${agent}/benchmark_ape_trans.csv" ]; then
+        evo_res "$bag_path/evo/${agent}"/*/ape_trans_part.zip --save_table "$bag_path/evo/${agent}/benchmark_ape_trans.csv"
     else
-        print_warning "Skipping APE trans metrics for ${agent} (already exists)"
+        print_warning "Skipping APE trans benchmark for ${agent} (already exists)"
     fi
-    if [ ! -f "$bag_path/evo/${agent}/metrics_ape_rot.csv" ]; then
-        evo_res "$bag_path/evo/${agent}"/*/ape_angle_deg.zip  --save_table "$bag_path/evo/${agent}/metrics_ape_rot.csv"
+    if [ ! -f "$bag_path/evo/${agent}/benchmark_ape_rot.csv" ]; then
+        evo_res "$bag_path/evo/${agent}"/*/ape_angle_deg.zip  --save_table "$bag_path/evo/${agent}/benchmark_ape_rot.csv"
     else
-        print_warning "Skipping APE rot metrics for ${agent} (already exists)"
+        print_warning "Skipping APE rot benchmark for ${agent} (already exists)"
     fi
-    if [ ! -f "$bag_path/evo/${agent}/metrics_rpe_trans.csv" ]; then
-        evo_res "$bag_path/evo/${agent}"/*/rpe_trans_part.zip --save_table "$bag_path/evo/${agent}/metrics_rpe_trans.csv"
+    if [ ! -f "$bag_path/evo/${agent}/benchmark_rpe_trans.csv" ]; then
+        evo_res "$bag_path/evo/${agent}"/*/rpe_trans_part.zip --save_table "$bag_path/evo/${agent}/benchmark_rpe_trans.csv"
     else
-        print_warning "Skipping RPE trans metrics for ${agent} (already exists)"
+        print_warning "Skipping RPE trans benchmark for ${agent} (already exists)"
     fi
-    if [ ! -f "$bag_path/evo/${agent}/metrics_rpe_rot.csv" ]; then
-        evo_res "$bag_path/evo/${agent}"/*/rpe_angle_deg.zip  --save_table "$bag_path/evo/${agent}/metrics_rpe_rot.csv"
+    if [ ! -f "$bag_path/evo/${agent}/benchmark_rpe_rot.csv" ]; then
+        evo_res "$bag_path/evo/${agent}"/*/rpe_angle_deg.zip  --save_table "$bag_path/evo/${agent}/benchmark_rpe_rot.csv"
     else
-        print_warning "Skipping RPE rot metrics for ${agent} (already exists)"
+        print_warning "Skipping RPE rot benchmark for ${agent} (already exists)"
     fi
 done

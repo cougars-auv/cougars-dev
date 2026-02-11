@@ -30,4 +30,4 @@ done
 print_info "Generating plots..."
 
 python3 traj_plot.py
-python3 metrics_plot.py
+python3 traj_bench_plot.py
