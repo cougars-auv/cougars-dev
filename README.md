@@ -8,7 +8,7 @@ CoUGARs is a low-cost, configurable AUV platform designed for multi-agent autono
 
 --
 
-## Get Started
+## 🚀 Get Started
 
 <img src=".github/assets/welcome.gif" width="400">
 
@@ -76,7 +76,7 @@ CoUGARs is a low-cost, configurable AUV platform designed for multi-agent autono
 
 --
 
-## Contributing
+## 🤝 Contributing
 
 - **Create a Branch:** Create a new branch using the format `name/feature` (e.g., `nelson/repo-docs`).
 
@@ -92,7 +92,7 @@ CoUGARs is a low-cost, configurable AUV platform designed for multi-agent autono
 
 --
 
-## Citations
+## 📚 Citations
 
 Please cite our relevant publications if you find this repository useful for your research:
 
