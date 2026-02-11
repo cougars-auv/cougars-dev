@@ -17,7 +17,7 @@ name: Docker CI
 on:
   push:
     branches: ["main"]
-    paths: &ci_paths
+    paths:
       - ".github/workflows/docker_ci.yml"
       - "docker/gtsam/Dockerfile"
       - "docker/Dockerfile"
@@ -26,9 +26,6 @@ on:
       - "docker/.tmux.conf"
       - "packages/cougars.repos"
       - "packages/**/package.xml"
-  pull_request:
-    branches: ["main"]
-    paths: *ci_paths
 
 jobs:
   changes:
@@ -76,7 +73,7 @@ jobs:
           context: "{{defaultContext}}"
           file: docker/gtsam/Dockerfile
           platforms: linux/amd64,linux/arm64
-          push: ${{ github.event_name != 'pull_request' }}
+          push: true
           tags: snelsondurrant/cougars:gtsam
           cache-from: type=registry,ref=snelsondurrant/cougars:buildcache-gtsam
           cache-to: type=registry,ref=snelsondurrant/cougars:buildcache-gtsam,mode=max
@@ -107,7 +104,7 @@ jobs:
           context: "{{defaultContext}}"
           file: docker/Dockerfile
           platforms: linux/amd64,linux/arm64
-          push: ${{ github.event_name != 'pull_request' }}
+          push: true
           tags: snelsondurrant/cougars:latest
           cache-from: type=registry,ref=snelsondurrant/cougars:buildcache-latest
           cache-to: type=registry,ref=snelsondurrant/cougars:buildcache-latest,mode=max
