@@ -7,10 +7,6 @@
   <maintainer email="snelsondurrant@gmail.com">Nelson Durrant</maintainer>
   <license>Apache-2.0</license>
 
-  <depend>rclpy</depend>
-  <depend>geometry_msgs</depend>
-  <depend>nav_msgs</depend>
-
   <exec_depend>rviz2</exec_depend>
 
   <test_depend>ament_copyright</test_depend>

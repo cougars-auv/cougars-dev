@@ -53,12 +53,6 @@ def launch_setup(context, *args, **kwargs):
             arguments=["-d", rviz_config_file],
             parameters=[{"use_sim_time": use_sim_time}],
         ),
-        Node(
-            package="coug_rviz",
-            executable="odom_to_path",
-            name="odom_to_path_node",
-            parameters=[{"use_sim_time": use_sim_time}],
-        ),
     ]
 
 

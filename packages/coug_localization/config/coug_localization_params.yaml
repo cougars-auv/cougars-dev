@@ -10,7 +10,7 @@
     ros__parameters:
       frequency: 30.0
       two_d_mode: false
-      publish_tf: false
+      publish_tf: true
       print_diagnostics: true
 
       twist0: dvl/twist
@@ -41,7 +41,7 @@
       publish_tf: false # Published by FGO instead
       print_diagnostics: true
 
-      odom0: odometry/local_ekf
+      odom0: odometry/local
       odom0_config: [false, false, false, # X, Y, Z
                      false, false, false, # Roll, Pitch, Yaw
                      true,  true,  true,  # Vx, Vy, Vz
@@ -88,7 +88,7 @@
       publish_tf: false # Published by FGO instead
       print_diagnostics: true
 
-      odom0: odometry/local_ekf
+      odom0: odometry/local
       odom0_config: [false, false, false, # X, Y, Z
                      false, false, false, # Roll, Pitch, Yaw
                      true,  true,  true,  # Vx, Vy, Vz

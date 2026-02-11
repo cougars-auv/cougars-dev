@@ -26,8 +26,6 @@ setup(
         ],
     },
     entry_points={
-        "console_scripts": [
-            "odom_to_path = coug_rviz.odom_to_path_node:main",
-        ],
+        "console_scripts": [],
     },
 )
