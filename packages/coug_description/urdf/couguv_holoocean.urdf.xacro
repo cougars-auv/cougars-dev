@@ -8,132 +8,120 @@
   @date Jan 2026
   -->
 
-  <!-- AUV constants-->
   <xacro:property name="base_radius" value="0.06"/>
   <xacro:property name="base_length" value="1.2"/>
+  <xacro:property name="enclosure_length" value="0.5"/>
+
   <xacro:property name="handle_height" value="0.07"/>
   <xacro:property name="handle_width" value="0.04"/>
   <xacro:property name="handle_length" value="0.15"/>
+
   <xacro:property name="tray_height" value="0.02"/>
   <xacro:property name="tray_width" value="0.05"/>
   <xacro:property name="tray_length" value="0.38"/>
+
   <!-- How far back the fins are from the middle -->
   <xacro:property name="fin_offset" value="0.375"/>
   <xacro:property name="fin_height" value="0.09"/>
   <xacro:property name="fin_width" value="0.015"/>
   <xacro:property name="fin_length" value="0.09"/>
 
-  <material name="White">
-    <color rgba="1 1 1 1"/>
-  </material>
+  <material name="White"><color rgba="1 1 1 1"/></material>
+  <material name="Blue"><color rgba="0.196 0.6 0.8 1"/></material>
+  <material name="Gray"><color rgba="0.5 0.5 0.5 1"/></material>
+  <material name="Acrylic"><color rgba="0.9 0.9 0.9 0.5"/></material>
 
-  <material name="Blue">
-    <color rgba="0.196 0.6 0.8 1"/>
-  </material>
+  <!-- Helpful macros -->
+  <xacro:macro name="add_box" params="name color xyz size">
+    <joint name="${name}_joint" type="fixed">
+      <parent link="base_link"/> <child link="${name}_link"/> <origin xyz="${xyz}"/>
+    </joint>
+    <link name="${name}_link">
+      <visual>
+        <geometry><box size="${size}"/></geometry>
+        <material name="${color}"/>
+      </visual>
+    </link>
+  </xacro:macro>
 
-  <material name="Gray">
-    <color rgba="0.5 0.5 0.5 1"/>
-  </material>
+  <xacro:macro name="add_sphere" params="name color xyz radius">
+    <joint name="${name}_joint" type="fixed">
+      <parent link="base_link"/> <child link="${name}_link"/> <origin xyz="${xyz}"/>
+    </joint>
+    <link name="${name}_link">
+      <visual>
+        <geometry><sphere radius="${radius}"/></geometry>
+        <material name="${color}"/>
+      </visual>
+    </link>
+  </xacro:macro>
 
-  <!-- Function to generate fins -->
-  <xacro:macro name="fin_macro" params="prefix rpy_str">
-    <joint name="${prefix}_fin_joint" type="revolute"> <parent link="base_link"/>
-      <child link="${prefix}_fin_link"/>
-      <origin xyz="${-fin_offset} 0 0" rpy="${rpy_str}"/>
+  <xacro:macro name="add_cylinder" params="name color xyz rpy radius length">
+    <joint name="${name}_joint" type="fixed">
+      <parent link="base_link"/> <child link="${name}_link"/> <origin xyz="${xyz}" rpy="${rpy}"/>
+    </joint>
+    <link name="${name}_link">
+      <visual>
+        <geometry><cylinder radius="${radius}" length="${length}"/></geometry>
+        <material name="${color}"/>
+      </visual>
+    </link>
+  </xacro:macro>
+
+  <xacro:macro name="fin_macro" params="prefix rpy">
+    <joint name="${prefix}_fin_joint" type="revolute">
+      <parent link="base_link"/> <child link="${prefix}_fin_link"/>
+      <origin xyz="${-fin_offset} 0 0" rpy="${rpy}"/>
       <axis xyz="0 0 1"/>
       <limit lower="${-pi/4}" upper="${pi/4}" effort="10.0" velocity="1.0"/>
     </joint>
-
     <link name="${prefix}_fin_link">
       <visual>
-        <origin xyz="${-fin_length/2} 0 ${base_radius+fin_height/2}" rpy="0 0 0"/>
-        <geometry>
-          <box size="${fin_length} ${fin_width} ${fin_height}"/>
-        </geometry>
+        <origin xyz="${-fin_length/2} 0 ${base_radius+fin_height/2}"/>
+        <geometry><box size="${fin_length} ${fin_width} ${fin_height}"/></geometry>
         <material name="White"/>
       </visual>
-      </link>
+    </link>
   </xacro:macro>
 
-  <!-- Main AUV body -->
-  <link name="base_link">
-    <visual>
-      <origin xyz="0 0 0" rpy="0 ${pi/2} 0"/>
-      <geometry>
-        <cylinder radius="${base_radius}" length="${base_length-2*base_radius}"/>
-      </geometry>
-      <material name="Blue"/>
-    </visual>
-  </link>
+  <!-- Main AUV Body -->
+  <link name="base_link"/>
+  <xacro:add_cylinder name="clear_body" color="Acrylic"
+    xyz="0 0 0" rpy="0 ${pi/2} 0"
+    radius="${base_radius}" length="${enclosure_length}"/>
+
+  <xacro:add_cylinder name="front_body" color="Blue"
+    xyz="${(base_length - 2*base_radius - enclosure_length)/4 + enclosure_length/2} 0 0" rpy="0 ${pi/2} 0"
+    radius="${base_radius}" length="${(base_length - 2*base_radius - enclosure_length)/2}"/>
+
+  <xacro:add_cylinder name="back_body" color="Blue"
+    xyz="${-((base_length - 2*base_radius - enclosure_length)/4 + enclosure_length/2)} 0 0" rpy="0 ${pi/2} 0"
+    radius="${base_radius}" length="${(base_length - 2*base_radius - enclosure_length)/2}"/>
 
   <!-- Handle -->
-  <joint name="handle_joint" type="fixed">
-    <parent link="base_link"/>
-    <child link="handle_link"/>
-    <origin xyz="0 0 ${base_radius}" rpy="0 0 0"/>
-  </joint>
-  <link name="handle_link">
-    <visual>
-      <origin xyz="0 0 ${handle_height/2}" rpy="0 0 0"/>
-      <geometry>
-        <box size="${handle_length} ${handle_width} ${handle_height}"/>
-      </geometry>
-      <material name="White"/>
-    </visual>
-  </link>
+  <xacro:add_box name="handle" color="White"
+    xyz="0 0 ${base_radius + handle_height/2}"
+    size="${handle_length} ${handle_width} ${handle_height}"/>
 
-  <!-- Weight tray -->
-  <joint name="tray_joint" type="fixed">
-    <parent link="base_link"/>
-    <child link="tray_link"/>
-    <origin xyz="0 0 -${base_radius}" rpy="0 0 0"/>
-  </joint>
-  <link name="tray_link">
-    <visual>
-      <origin xyz="0 0 ${-tray_height/2}" rpy="0 0 0"/>
-      <geometry>
-        <box size="${tray_length} ${tray_width} ${tray_height}"/>
-      </geometry>
-      <material name="White"/>
-    </visual>
-  </link>
+  <!-- Tray -->
+  <xacro:add_box name="tray" color="White"
+    xyz="0 0 ${-(base_radius + tray_height/2)}"
+    size="${tray_length} ${tray_width} ${tray_height}"/>
 
-  <!-- Front hull -->
-  <joint name="hull_joint" type="fixed">
-    <parent link="base_link"/>
-    <child link="hull_link"/>
-    <origin xyz="${(base_length-2*base_radius)/2} 0 0" rpy="0 0 0"/>
-  </joint>
-  <link name="hull_link">
-    <visual>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <geometry>
-        <sphere radius="${base_radius}"/>
-      </geometry>
-      <material name="Blue"/>
-    </visual>
-  </link>
+  <!-- Hull -->
+  <xacro:add_sphere name="hull" color="Blue"
+    xyz="${(base_length-2*base_radius)/2} 0 0"
+    radius="${base_radius}"/>
 
   <!-- Thruster -->
-  <joint name="thruster_joint" type="fixed">
-    <parent link="base_link"/>
-    <child link="thruster_link"/>
-     <origin xyz="${-(base_length-2*base_radius)/2} 0 0" rpy="0 0 0"/>
-  </joint>
-  <link name="thruster_link">
-    <visual>
-      <origin xyz="0 0 0" rpy="0 ${pi/2} 0"/>
-      <geometry>
-        <cylinder radius="${base_radius*0.9}" length="${2*base_radius}"/>
-      </geometry>
-      <material name="Gray"/>
-    </visual>
-  </link>
+  <xacro:add_cylinder name="thruster" color="Gray"
+    xyz="${-(base_length-2*base_radius)/2} 0 0" rpy="0 ${pi/2} 0"
+    radius="${base_radius*0.9}" length="${2*base_radius}"/>
 
   <!-- Fins -->
-  <xacro:fin_macro prefix="top"   rpy_str="0 0 0"/>
-  <xacro:fin_macro prefix="left"  rpy_str="${pi*2/3} 0 0"/>
-  <xacro:fin_macro prefix="right" rpy_str="${-pi*2/3} 0 0"/>
+  <xacro:fin_macro prefix="top"   rpy="0 0 0"/>
+  <xacro:fin_macro prefix="left"  rpy="${pi*2/3} 0 0"/>
+  <xacro:fin_macro prefix="right" rpy="${-pi*2/3} 0 0"/>
 
   <!-- NOTE: These are exact HoloOcean socket locations as of 2.0.1 -->
 
