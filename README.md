@@ -80,7 +80,7 @@ CoUGARs is a low-cost, configurable AUV platform designed for multi-agent autono
 
   > All code must pass linting checks before it can be merged. We recommend using `pre-commit` for code style and formatting during development. Set it up on your host machine using `pip install pre-commit && pre-commit install`.
   >
-  > If you need to add dependencies, update the `package.xml` or `Dockerfile` in your branch and test building the image locally using `docker compose -f docker/docker-compose.yaml up -d --build`. The CI will automatically build and push the new image to Docker Hub upon merge.
+  > If you need to add dependencies, update the `package.xml`, `Dockerfile`, `cougars.repos`, or `dependencies.repos` in your branch and test building the image locally using `docker compose -f docker/docker-compose.yaml up -d --build`. The CI will automatically build and push the new image to Docker Hub upon merge.
 
 - **Sync Frequently:** Regularly rebase your branch against `main` (or merge `main` into your branch) to prevent conflicts.
 
