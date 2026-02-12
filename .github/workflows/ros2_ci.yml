@@ -40,7 +40,6 @@ jobs:
       image: snelsondurrant/cougars:latest
       options: --user root
     steps:
-
       - name: Display trigger info
         if: github.event_name == 'repository_dispatch'
         run: |
@@ -53,44 +52,14 @@ jobs:
           key: ccache-${{ runner.os }}-${{ github.run_id }}
           restore-keys: |
             ccache-${{ runner.os }}-
-
       - name: Setup ROS 2 workspace
-        shell: bash
-        run: |
-          apt update && apt install -y ccache
-          mkdir -p coug_ws/src
-
-          vcs import coug_ws/src < packages/cougars.repos
-          if [ "${{ github.event_name }}" == "repository_dispatch" ]; then
-            REPO_NAME=$(echo "${{ github.event.client_payload.repo }}" | cut -d'/' -f2)
-            if [ -d "coug_ws/src/$REPO_NAME" ]; then
-              echo "Checking out $REPO_NAME @ ${{ github.event.client_payload.sha }}"
-              cd "coug_ws/src/$REPO_NAME" && git checkout "${{ github.event.client_payload.sha }}" && cd ../../..
-            fi
-          fi
-
-          cd coug_ws/src && vcs custom --git --args submodule update --init --recursive && cd ../..
-          rosdep update
-          rosdep install --from-paths coug_ws/src packages --ignore-src -y
-
+        uses: ./.github/actions/setup-ros2-workspace
+        with:
+          repos-file: 'packages/cougars.repos'
+          packages-path: 'packages'
+          trigger-repo: ${{ github.event.client_payload.repo }}
+          trigger-sha: ${{ github.event.client_payload.sha }}
       - name: Build and test
-        shell: bash
-        run: |
-          source /opt/ros/humble/setup.bash
-          cd coug_ws
-
-          export CCACHE_DIR=$(pwd)/.ccache
-          export CCACHE_SLOPPINESS=include_file_ctime,include_file_mtime
-          ccache -z
-          colcon build \
-            --base-paths src ../packages \
-            --cmake-args \
-            -DCMAKE_C_COMPILER_LAUNCHER=ccache \
-            -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
-            --event-handlers console_direct+
-          ccache -s
-
-          colcon test \
-            --base-paths ../packages \
-            --event-handlers console_direct+
-          colcon test-result --verbose
+        uses: ./.github/actions/build-test-ros2
+        with:
+          packages-path: 'packages'

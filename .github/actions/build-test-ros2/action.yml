@@ -1,0 +1,30 @@
+name: "build-test-ros2"
+description: "Build and test ROS 2 packages"
+inputs:
+  packages-path:
+    description: "Path to local packages"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - shell: bash
+      run: |
+        source /opt/ros/humble/setup.bash
+        cd coug_ws
+
+        export CCACHE_DIR=$(pwd)/.ccache
+        export CCACHE_SLOPPINESS=include_file_ctime,include_file_mtime
+        ccache -z
+        colcon build \
+          --base-paths src "../${{ inputs.packages-path }}" \
+          --cmake-args \
+          -DCMAKE_C_COMPILER_LAUNCHER=ccache \
+          -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
+          --event-handlers console_direct+
+        ccache -s
+
+        colcon test \
+          --base-paths "../${{ inputs.packages-path }}" \
+          --event-handlers console_direct+
+        colcon test-result --verbose

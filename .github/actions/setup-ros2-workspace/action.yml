@@ -1,0 +1,36 @@
+name: "setup-ros2-workspace"
+description: "Setup ROS 2 workspace"
+inputs:
+  repos-file:
+    description: "Path to the .repos file"
+    required: true
+  packages-path:
+    description: "Path to local packages"
+    required: true
+  trigger-repo:
+    description: "Repository that triggered the dispatch"
+    required: false
+  trigger-sha:
+    description: "SHA that triggered the dispatch"
+    required: false
+
+runs:
+  using: "composite"
+  steps:
+    - shell: bash
+      run: |
+        apt update && apt install -y ccache
+        mkdir -p coug_ws/src
+
+        vcs import coug_ws/src < "${{ inputs.repos-file }}"
+        if [ -n "${{ inputs.trigger-repo }}" ] && [ -n "${{ inputs.trigger-sha }}" ]; then
+          repo_name=$(echo "${{ inputs.trigger-repo }}" | cut -d'/' -f2)
+          if [ -d "coug_ws/src/$repo_name" ]; then
+            echo "Checking out $repo_name @ ${{ inputs.trigger-sha }}"
+            cd "coug_ws/src/$repo_name" && git checkout "${{ inputs.trigger-sha }}" && cd ../../..
+          fi
+        fi
+
+        cd coug_ws/src && vcs custom --git --args submodule update --init --recursive && cd ../..
+        rosdep update
+        rosdep install --from-paths coug_ws/src "${{ inputs.packages-path }}" --ignore-src -y
