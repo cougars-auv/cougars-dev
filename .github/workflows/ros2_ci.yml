@@ -40,68 +40,58 @@ jobs:
       image: snelsondurrant/cougars:latest
       options: --user root
     steps:
-      - name: Display trigger info
-        if: github.event_name == 'repository_dispatch'
+
+      - if: github.event_name == 'repository_dispatch'
         run: |
           echo "Trigger: ${{ github.event.client_payload.repo }}"
           echo "Trigger SHA: ${{ github.event.client_payload.sha }}"
-      - uses: actions/checkout@v6
-      - name: Cache ccache
-        uses: actions/cache@v5
+      - uses: actions/checkout@v4
         with:
-          path: coug_ws/.ccache
-          key: ccache-${{ runner.os }}-${{ matrix.runner }}-${{ github.sha }}
+          path: packages
+      - uses: actions/cache@v4
+        with:
+          path: ${{ github.workspace }}/coug_ws/.ccache
+          key: ccache-${{ runner.os }}-${{ github.run_id }}
           restore-keys: |
-            ccache-${{ runner.os }}-${{ matrix.runner }}-
-      - name: Install ccache
-        run: apt update && apt install -y ccache
-      - name: Setup workspace
+            ccache-${{ runner.os }}-
+
+      - name: Setup Workspace
+        shell: bash
         run: |
-          mkdir -p coug_ws/.ccache
+          apt update && apt install -y ccache
           mkdir -p coug_ws/src
-          cp -r packages/* coug_ws/src/
-          chown -R frostlab-docker:frostlab-docker .
-      - name: Save package list
-        run: |
-          su frostlab-docker << 'EOF'
-          set -e
-          source /opt/ros/humble/setup.bash
-          colcon list --names-only --base-paths coug_ws/src > coug_ws/packages_to_test.txt
-          EOF
-      - name: Install ROS dependencies
-        run: |
-          su frostlab-docker << 'EOF'
-          set -e
-          vcs import coug_ws/src < coug_ws/src/cougars.repos
-          cd coug_ws/src && vcs custom --git --args submodule update --init --recursive
+
+          vcs import coug_ws/src < packages/cougars.repos
+          if [ "${{ github.event_name }}" == "repository_dispatch" ]; then
+            REPO_NAME=$(echo "${{ github.event.client_payload.repo }}" | cut -d'/' -f2)
+            if [ -d "coug_ws/src/$REPO_NAME" ]; then
+              echo "Checking out $REPO_NAME @ ${{ github.event.client_payload.sha }}"
+              cd "coug_ws/src/$REPO_NAME" && git checkout "${{ github.event.client_payload.sha }}" && cd ../../..
+            fi
+          fi
+
+          cd coug_ws/src && vcs custom --git --args submodule update --init --recursive && cd ../..
           rosdep update
-          EOF
-          apt update
-          su frostlab-docker -c "rosdep install --from-paths coug_ws/src --ignore-src -y"
-      - name: Build workspace
+          rosdep install --from-paths coug_ws/src packages --ignore-src -y
+
+      - name: Build and Test
+        shell: bash
         run: |
-          su frostlab-docker << 'EOF'
-          set -e
           source /opt/ros/humble/setup.bash
           cd coug_ws
-          rm -rf build/ install/ log/
+
           export CCACHE_DIR=$(pwd)/.ccache
           export CCACHE_SLOPPINESS=include_file_ctime,include_file_mtime
           ccache -z
           colcon build \
+            --base-paths src ../packages \
             --cmake-args \
             -DCMAKE_C_COMPILER_LAUNCHER=ccache \
-            -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+            -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
+            --event-handlers console_direct+
           ccache -s
-          EOF
-      - name: Run tests
-        run: |
-          su frostlab-docker << 'EOF'
-          set -e
-          source /opt/ros/humble/setup.bash
-          cd coug_ws
+
           colcon test \
-            --packages-select $(cat packages_to_test.txt) \
+            --base-paths ../packages \
             --event-handlers console_direct+
           colcon test-result --verbose
-          EOF
