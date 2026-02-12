@@ -12,10 +12,7 @@ endif()
 # --- Dependencies ---
 find_package(ament_cmake_auto REQUIRED)
 ament_auto_find_build_dependencies()
-
 find_package(GTSAM REQUIRED)
-find_package(generate_parameter_library REQUIRED)
-find_package(rosidl_default_generators REQUIRED)
 
 # --- GTSAM & Eigen Setup ---
 get_target_property(GTSAM_TARGET_INC gtsam INTERFACE_INCLUDE_DIRECTORIES)
@@ -29,11 +26,6 @@ find_path(GTSAM_EIGEN_INCLUDE_DIR Eigen/Core
 generate_parameter_library(
   factor_graph_parameters
   "params/factor_graph_params.yaml"
-)
-
-rosidl_generate_interfaces(${PROJECT_NAME}
-  "msg/GraphMetrics.msg"
-  DEPENDENCIES std_msgs
 )
 
 generate_parameter_library(
@@ -65,8 +57,6 @@ target_link_libraries(factor_graph_component
   origin_manager_parameters
   dvl_a50_twist_parameters
 )
-rosidl_get_typesupport_target(cpp_typesupport_target "${PROJECT_NAME}" "rosidl_typesupport_cpp")
-target_link_libraries(factor_graph_component "${cpp_typesupport_target}")
 
 rclcpp_components_register_nodes(factor_graph_component
   "coug_fgo::FactorGraphNode"

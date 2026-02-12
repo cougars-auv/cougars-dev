@@ -56,7 +56,7 @@
 #include "coug_fgo/utils/dvl_preintegrator.hpp"
 #include "coug_fgo/utils/thread_safe_queue.hpp"
 #include <coug_fgo/factor_graph_parameters.hpp>
-#include <coug_fgo/msg/graph_metrics.hpp>
+#include <coug_fgo_msgs/msg/graph_metrics.hpp>
 
 
 namespace coug_fgo
@@ -408,7 +408,7 @@ protected:
   rclcpp::Publisher<nav_msgs::msg::Path>::SharedPtr smoothed_path_pub_;
   rclcpp::Publisher<geometry_msgs::msg::TwistWithCovarianceStamped>::SharedPtr velocity_pub_;
   rclcpp::Publisher<geometry_msgs::msg::TwistWithCovarianceStamped>::SharedPtr imu_bias_pub_;
-  rclcpp::Publisher<coug_fgo::msg::GraphMetrics>::SharedPtr graph_metrics_pub_;
+  rclcpp::Publisher<coug_fgo_msgs::msg::GraphMetrics>::SharedPtr graph_metrics_pub_;
 
   rclcpp::Subscription<sensor_msgs::msg::Imu>::SharedPtr imu_sub_;
   rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr gps_odom_sub_;

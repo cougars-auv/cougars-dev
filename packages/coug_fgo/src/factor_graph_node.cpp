@@ -83,8 +83,7 @@ void FactorGraphNode::setupRosInterfaces()
     create_publisher<geometry_msgs::msg::TwistWithCovarianceStamped>(params_.velocity_topic, 10);
   imu_bias_pub_ =
     create_publisher<geometry_msgs::msg::TwistWithCovarianceStamped>(params_.imu_bias_topic, 10);
-  graph_metrics_pub_ =
-    create_publisher<coug_fgo::msg::GraphMetrics>(params_.graph_metrics_topic, 10);
+  create_publisher<coug_fgo_msgs::msg::GraphMetrics>(params_.graph_metrics_topic, 10);
 
   // --- ROS Callback Groups ---
   sensor_cb_group_ = create_callback_group(rclcpp::CallbackGroupType::Reentrant);
@@ -1367,7 +1366,7 @@ void FactorGraphNode::publishImuBias(
 
 void FactorGraphNode::publishGraphMetrics(const rclcpp::Time & timestamp)
 {
-  coug_fgo::msg::GraphMetrics metrics_msg;
+  coug_fgo_msgs::msg::GraphMetrics metrics_msg;
   metrics_msg.header.stamp = timestamp;
 
   metrics_msg.opt_duration = last_opt_duration_.load();
