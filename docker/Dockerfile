@@ -20,26 +20,10 @@ COPY packages .
 RUN find . -type f \! -name "package.xml" \! -name "*.repos" -delete
 
 # --- Main Stage ---
-FROM ros:humble-ros-base
+FROM snelsondurrant/cougars:gtsam
 
 ARG DEBIAN_FRONTEND=noninteractive
 ARG TARGETARCH
-
-# Create the user
-RUN useradd -ms /bin/bash "frostlab-docker" \
-    && usermod -aG sudo "frostlab-docker" \
-    && echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers \
-    && echo "frostlab-docker:frostlab" | chpasswd
-
-# Install system dependencies
-RUN apt update && apt install -y --no-install-recommends \
-    # Install basic system utilities - Nelson Durrant, Jan 2026
-    curl wget git vim nano python3-pip python3-venv gosu procps \
-    # Install remote access utilities - Nelson Durrant, Jan 2026
-    openssh-server mosh tmux xclip \
-    # Install graphical utilities - Nelson Durrant, Jan 2026
-    x11-apps x11-utils x11-xserver-utils xauth \
-    && rm -rf /var/lib/apt/lists/*
 
 ENV RCUTILS_COLORIZED_OUTPUT=1
 
@@ -92,7 +76,7 @@ RUN echo "" >> /home/frostlab-docker/.bashrc \
     && echo "# Source ROS 2 environment" >> /home/frostlab-docker/.bashrc \
     && echo "source /opt/ros/humble/setup.bash" >> /home/frostlab-docker/.bashrc \
     && echo "[ -f /home/frostlab-docker/coug_ws/install/setup.bash ] \
-    && source /home/frostlab-docker/coug_ws/install/setup.bash" >> /home/frostlab-docker/.bashrc \
+        && source /home/frostlab-docker/coug_ws/install/setup.bash" >> /home/frostlab-docker/.bashrc \
     && echo "" >> /home/frostlab-docker/.bashrc \
     && echo "# Script tab completions" >> /home/frostlab-docker/.bashrc \
     && echo "[ -f /completions.sh ] && source /completions.sh" >> /home/frostlab-docker/.bashrc \
