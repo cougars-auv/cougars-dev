@@ -32,19 +32,21 @@ ENV ROS_BUILD_ARCH=$TARGETARCH
 
 # Install ROS packages
 USER root
-RUN apt update && apt install -y --no-install-recommends \
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
+    apt update && apt install -y --no-install-recommends \
     # Experimental DDS options - Nelson Durrant, Jan 2026
     ros-${ROS_DISTRO}-rmw-cyclonedds-cpp ros-${ROS_DISTRO}-rmw-zenoh-cpp \
     # Drive the AUV with a joystick or keyboard - Nelson Durrant, Jan 2026
     ros-${ROS_DISTRO}-joy ros-${ROS_DISTRO}-teleop-twist-joy ros-${ROS_DISTRO}-teleop-twist-keyboard \
     # Better rosbag2 storage format - Nelson Durrant, Jan 2026
-    ros-${ROS_DISTRO}-rosbag2-storage-mcap \
-    && rm -rf /var/lib/apt/lists/*
+    ros-${ROS_DISTRO}-rosbag2-storage-mcap
 
 # Install Python dependencies
 USER frostlab-docker
 ENV PATH="$PATH:/home/frostlab-docker/.local/bin"
-RUN pip3 install --upgrade --no-cache-dir \
+RUN --mount=type=cache,target=/home/frostlab-docker/.cache/pip,uid=1000,gid=1000 \
+    pip3 install --upgrade \
     # External repo management tool - Nelson Durrant, Jan 2026
     vcstool \
     # Terminal multiplexer - Nelson Durrant, Jan 2026
@@ -62,14 +64,18 @@ WORKDIR /home/frostlab-docker/coug_ws/src
 COPY --from=cacher --chown=frostlab-docker:frostlab-docker /tmp/packages .
 
 # Install local ROS package dependencies (rosdep)
-RUN apt update \
+USER root
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
+    apt update \
     && gosu frostlab-docker rosdep update \
-    && gosu frostlab-docker rosdep install --from-paths . --ignore-src -y \
-    && rm -rf /var/lib/apt/lists/*
+    && gosu frostlab-docker rosdep install --from-paths . --ignore-src -y
 
 # Install external ROS package dependencies (vcs, rosdep)
 ARG CACHE_VERSION=unknown
 RUN --mount=type=ssh \
+    --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
     export GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no" \
     && echo "CACHE_VERSION: $CACHE_VERSION" \
     && vcs import . < cougars.repos \
@@ -78,7 +84,6 @@ RUN --mount=type=ssh \
     && apt update \
     && gosu frostlab-docker rosdep update \
     && gosu frostlab-docker rosdep install --from-paths . --ignore-src -y \
-    && rm -rf /var/lib/apt/lists/* \
     && rm -rf ./*
 
 # Configure bash environment

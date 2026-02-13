@@ -77,7 +77,9 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: snelsondurrant/cougars:gtsam
-          cache-from: type=registry,ref=snelsondurrant/cougars:buildcache-gtsam
+          cache-from: |
+            type=registry,ref=snelsondurrant/cougars:buildcache-gtsam
+            type=registry,ref=snelsondurrant/cougars:gtsam
           cache-to: type=registry,ref=snelsondurrant/cougars:buildcache-gtsam,mode=max
 
   build-cougars:
@@ -110,5 +112,7 @@ jobs:
             default=${{ env.SSH_AUTH_SOCK }}
           build-args: |
             CACHE_VERSION=${{ github.event.client_payload.sha || github.sha }}
-          cache-from: type=registry,ref=snelsondurrant/cougars:buildcache-latest
+          cache-from: |
+            type=registry,ref=snelsondurrant/cougars:buildcache-latest
+            type=registry,ref=snelsondurrant/cougars:latest
           cache-to: type=registry,ref=snelsondurrant/cougars:buildcache-latest,mode=max

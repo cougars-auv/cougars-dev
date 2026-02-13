@@ -23,17 +23,20 @@ RUN useradd -ms /bin/bash "frostlab-docker" \
     && echo "frostlab-docker:frostlab" | chpasswd
 
 # Install system dependencies
-RUN apt update && apt install -y --no-install-recommends \
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
+    apt update && apt install -y --no-install-recommends \
     # Install basic system utilities - Nelson Durrant, Jan 2026
     curl wget git vim nano python3-pip python3-venv gosu procps ccache \
     # Install remote access utilities - Nelson Durrant, Jan 2026
     openssh-server mosh tmux xclip \
     # Install graphical utilities - Nelson Durrant, Jan 2026
-    x11-apps x11-utils x11-xserver-utils xauth \
-    && rm -rf /var/lib/apt/lists/*
+    x11-apps x11-utils x11-xserver-utils xauth
 
 # Install GTSAM (build from source for ARM)
-RUN apt update && apt install -y --no-install-recommends \
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
+    apt update && apt install -y --no-install-recommends \
     build-essential cmake libboost-dev libtbb-dev \
     libboost-serialization-dev \
     libboost-system-dev \
@@ -43,8 +46,7 @@ RUN apt update && apt install -y --no-install-recommends \
     libboost-date-time-dev \
     libboost-timer-dev \
     libboost-chrono-dev \
-    libboost-regex-dev \
-    && rm -rf /var/lib/apt/lists/*
+    libboost-regex-dev
 WORKDIR /home/frostlab-docker
 RUN git clone --depth 1 --branch 4.2.0 https://github.com/borglab/gtsam.git \
     && cd gtsam \
