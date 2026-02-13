@@ -46,7 +46,6 @@ runs:
           ssh-keyscan github.com >> ~/.ssh/known_hosts
           echo "Host github.com" >> ~/.ssh/config
           export GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no"
-          echo "GIT_SSH_COMMAND=$GIT_SSH_COMMAND"
         fi
 
         apt update && apt install -y ccache
