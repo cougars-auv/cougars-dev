@@ -93,7 +93,7 @@ RUN --mount=type=ssh \
     && chown -R frostlab-docker:frostlab-docker . \
     && apt update \
     && gosu frostlab-docker rosdep update \
-    && gosu frostlab-docker rosdep install --from-paths "${TRIGGER_REPO##*/}" --ignore-src -y; \
+    && gosu frostlab-docker rosdep install --from-paths . --ignore-src -y; \
     fi \
     && rm -rf ./*
 
