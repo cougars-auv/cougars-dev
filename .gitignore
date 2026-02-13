@@ -4,6 +4,7 @@
 **/build_isolated
 **/install_isolated
 **/devel_isolated
+core
 
 .mapproxy/*
 !.mapproxy/.gitkeep
@@ -23,10 +24,9 @@ packages/*
 !packages/cougars.repos
 
 __pycache__
-.vscode
 .venv
+.vscode
 .DS_Store
-core
 
 *.aux
 *.fdb_latexmk
