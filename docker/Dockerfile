@@ -62,18 +62,11 @@ RUN mkdir -p /home/frostlab-docker/coug_ws/src \
 WORKDIR /home/frostlab-docker/coug_ws/src
 COPY --from=cacher --chown=frostlab-docker:frostlab-docker /tmp/packages .
 
-# Install local ROS package dependencies (rosdep)
-USER root
-RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
-    --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
-    apt update \
-    && gosu frostlab-docker rosdep update \
-    && gosu frostlab-docker rosdep install --from-paths . --ignore-src -y
-
-# Install external ROS package dependencies (vcs, rosdep)
+# Install ROS package dependencies (rosdep)
 RUN --mount=type=ssh \
     --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
+    --mount=type=cache,target=/home/frostlab-docker/.ros/rosdep,uid=1000,gid=1000 \
     export GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no" \
     && vcs import . < cougars.repos \
     && vcs custom --git --args submodule update --init --recursive \
@@ -82,12 +75,13 @@ RUN --mount=type=ssh \
     && gosu frostlab-docker rosdep update \
     && gosu frostlab-docker rosdep install --from-paths . --ignore-src -y
 
-# Handle Docker CI triggered repository updates
+# Handle Docker CI triggers
 ARG TRIGGER_REPO=""
 ARG CACHE_BUST=1
 RUN --mount=type=ssh \
     --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
+    --mount=type=cache,target=/home/frostlab-docker/.ros/rosdep,uid=1000,gid=1000 \
     if [ -n "$TRIGGER_REPO" ]; then \
     export GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no" \
     && echo "TRIGGER_REPO: $TRIGGER_REPO" \
