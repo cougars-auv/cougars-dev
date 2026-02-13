@@ -31,6 +31,7 @@ cd /home/$USERNAME/coug_ws/src
 if wget -q --spider http://github.com; then
     if [ -f "cougars.repos" ]; then
         echo "Network found. Updating vcs repositories..."
+        export GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no"
         gosu $USERNAME vcs import . < cougars.repos
         gosu $USERNAME vcs custom --git --args submodule update --init --recursive
     fi

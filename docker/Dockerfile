@@ -85,7 +85,7 @@ RUN --mount=type=ssh \
     --mount=type=cache,target=/home/frostlab-docker/.ros/rosdep,uid=1000,gid=1000 \
     if [ -n "$TRIGGER_REPO" ]; then \
     export GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no" \
-    && git config --global --add safe.directory "*" \
+    && git config --system --add safe.directory "*" \
     && echo "TRIGGER_REPO: $TRIGGER_REPO" \
     && echo "CACHE_BUST: $CACHE_BUST" \
     && cd "${TRIGGER_REPO##*/}" \
