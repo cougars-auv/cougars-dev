@@ -7,7 +7,7 @@ windows:
     panes:
       - echo "Hello World"
       - shell_command:
-          - cd ~/coug_ws && colcon build
+          - cd ~/ros2_ws && colcon build
         suppress_history: false
       - shell_command:
           - echo "Hello World"

@@ -25,13 +25,13 @@ runs:
     - shell: bash
       run: |
         source /opt/ros/humble/setup.bash
-        cd coug_ws
-
-        export CCACHE_DIR=$(pwd)/.ccache
+        export CCACHE_DIR=$(pwd)/ros2_ws/.ccache
         export CCACHE_SLOPPINESS=include_file_ctime,include_file_mtime
         ccache -z
         colcon build \
-          --base-paths src "../${{ inputs.packages-path }}" \
+          --build-base ros2_ws/build \
+          --install-base ros2_ws/install \
+          --base-paths ros2_ws/src "${{ inputs.packages-path }}" \
           --cmake-args \
           -DCMAKE_C_COMPILER_LAUNCHER=ccache \
           -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
@@ -39,6 +39,8 @@ runs:
         ccache -s
 
         colcon test \
-          --base-paths "../${{ inputs.packages-path }}" \
+          --build-base ros2_ws/build \
+          --install-base ros2_ws/install \
+          --base-paths "${{ inputs.packages-path }}" \
           --event-handlers console_direct+
-        colcon test-result --verbose
+        colcon test-result --test-result-base ros2_ws/build --verbose

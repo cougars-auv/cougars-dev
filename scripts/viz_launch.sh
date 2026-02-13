@@ -14,7 +14,7 @@
 
 script_dir="$(dirname "$(readlink -f "$0")")"
 source "$script_dir/utils/common.sh"
-source "$script_dir/../coug_ws/install/setup.bash"
+source "$script_dir/../ros2_ws/install/setup.bash"
 
 if [ -z "$1" ]; then
     print_error "Usage: $0 <bag_name> [-m] [-d <seconds>] [-n <namespace>]"

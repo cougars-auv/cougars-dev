@@ -70,6 +70,12 @@ jobs:
         with:
           username: snelsondurrant
           password: ${{ secrets.DOCKER_TOKEN }}
+      - id: dotenv
+        shell: bash
+        run: |
+          if [ -f docker/.env ]; then
+            grep -v '^#' docker/.env | grep -v '^\s*$' | xargs -d '\n' echo >> "$GITHUB_OUTPUT"
+          fi
       - uses: docker/build-push-action@v6
         with:
           context: "{{defaultContext}}"
@@ -77,6 +83,8 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: snelsondurrant/cougars:gtsam
+          build-args: |
+            DOCKER_USER=${{ steps.dotenv.outputs.DOCKER_USER }}
           cache-from: |
             type=registry,ref=snelsondurrant/cougars:buildcache-gtsam
             type=registry,ref=snelsondurrant/cougars:gtsam

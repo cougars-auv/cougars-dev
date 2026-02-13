@@ -8,27 +8,21 @@
 set -e
 
 # Fix permission errors
-USERNAME=ue4
-target_uid=$(stat -c '%u' /home/$USERNAME/config)
-target_gid=$(stat -c '%g' /home/$USERNAME/config)
+DOCKER_USER=ue4
+target_uid=$(stat -c '%u' /home/$DOCKER_USER/config)
+target_gid=$(stat -c '%g' /home/$DOCKER_USER/config)
 
 if [ ! -z "$target_gid" ]; then
-    if [ "$target_gid" != "$(id -g $USERNAME)" ]; then
-        echo "Changing GID of $USERNAME to $target_gid..."
-        groupmod -o -g "$target_gid" $USERNAME
+    if [ "$target_gid" != "$(id -g $DOCKER_USER)" ]; then
+        echo "Changing GID of $DOCKER_USER to $target_gid..."
+        groupmod -o -g "$target_gid" $DOCKER_USER
     fi
 fi
 if [ ! -z "$target_uid" ]; then
-    if [ "$target_uid" != "$(id -u $USERNAME)" ]; then
-        echo "Changing UID of $USERNAME to $target_uid..."
-        usermod -o -u "$target_uid" $USERNAME
+    if [ "$target_uid" != "$(id -u $DOCKER_USER)" ]; then
+        echo "Changing UID of $DOCKER_USER to $target_uid..."
+        usermod -o -u "$target_uid" $DOCKER_USER
     fi
-fi
-
-# Source ROS environment
-source /opt/ros/humble/setup.bash
-if [ -f "/home/$USERNAME/ros2_ws/install/setup.bash" ]; then
-    source "/home/$USERNAME/ros2_ws/install/setup.bash"
 fi
 
 touch /tmp/ready

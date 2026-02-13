@@ -40,23 +40,18 @@ runs:
         ssh-private-key: ${{ inputs.ssh-key }}
     - shell: bash
       run: |
-        if [ -n "${{ inputs.ssh-key }}" ]; then
-          mkdir -p ~/.ssh
-          ssh-keyscan github.com >> ~/.ssh/known_hosts
-        fi
-
-        mkdir -p coug_ws/src
+        mkdir -p ros2_ws/src
         export GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no"
-        vcs import coug_ws/src < "${{ inputs.repos-file }}"
+        vcs import ros2_ws/src < "${{ inputs.repos-file }}"
         if [ -n "${{ inputs.trigger-repo }}" ] && [ -n "${{ inputs.trigger-sha }}" ]; then
           repo_name=$(echo "${{ inputs.trigger-repo }}" | cut -d'/' -f2)
-          if [ -d "coug_ws/src/$repo_name" ]; then
+          if [ -d "ros2_ws/src/$repo_name" ]; then
             echo "Checking out $repo_name @ ${{ inputs.trigger-sha }}"
-            cd "coug_ws/src/$repo_name" && git checkout "${{ inputs.trigger-sha }}" && cd ../../..
+            git -C "ros2_ws/src/$repo_name" checkout "${{ inputs.trigger-sha }}"
           fi
         fi
 
-        cd coug_ws/src && vcs custom --git --args submodule update --init --recursive && cd ../..
+        vcs custom --path ros2_ws/src --git --args submodule update --init --recursive
         apt update
         rosdep update
-        rosdep install --from-paths coug_ws/src "${{ inputs.packages-path }}" --ignore-src -y
+        rosdep install --from-paths ros2_ws/src "${{ inputs.packages-path }}" --ignore-src -y

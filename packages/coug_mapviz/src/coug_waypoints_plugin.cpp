@@ -243,7 +243,7 @@ void CougWaypointsPlugin::Clear()
 
 void CougWaypointsPlugin::SaveWaypoints()
 {
-  QString path = QDir::homePath() + "/coug_ws/src/coug_mapviz/waypoints";
+  QString path = QDir::homePath() + "/ros2_ws/src/coug_mapviz/waypoints";
   QDir dir(path);
   if (!dir.exists()) {
     dir.mkpath(".");
@@ -278,7 +278,7 @@ void CougWaypointsPlugin::SaveWaypoints()
 
 void CougWaypointsPlugin::LoadWaypoints()
 {
-  QString path = QDir::homePath() + "/coug_ws/src/coug_mapviz/waypoints";
+  QString path = QDir::homePath() + "/ros2_ws/src/coug_mapviz/waypoints";
   QString filename = QFileDialog::getOpenFileName(
     config_widget_, "Load Mission", path, "JSON Files (*.json)");
   if (filename.isEmpty()) {return;}

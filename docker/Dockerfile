@@ -42,9 +42,9 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     ros-${ROS_DISTRO}-rosbag2-storage-mcap
 
 # Install Python dependencies
-USER frostlab-docker
-ENV PATH="$PATH:/home/frostlab-docker/.local/bin"
-RUN --mount=type=cache,target=/home/frostlab-docker/.cache/pip,uid=1000,gid=1000 \
+USER $DOCKER_USER
+ENV PATH="$PATH:/home/$DOCKER_USER/.local/bin"
+RUN --mount=type=cache,target=/home/$DOCKER_USER/.cache/pip,uid=1000,gid=1000 \
     pip3 install --upgrade \
     # External repo management tool - Nelson Durrant, Jan 2026
     vcstool \
@@ -52,29 +52,29 @@ RUN --mount=type=cache,target=/home/frostlab-docker/.cache/pip,uid=1000,gid=1000
     tmuxp asciimatics Pillow
 
 # Install tmux plugins
-RUN git clone https://github.com/tmux-plugins/tpm /home/frostlab-docker/.tmux/plugins/tpm
-COPY --chown=frostlab-docker:frostlab-docker docker/.tmux.conf /home/frostlab-docker/.tmux.conf
-RUN /home/frostlab-docker/.tmux/plugins/tpm/bin/install_plugins
+RUN git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+COPY --chown=$DOCKER_USER:$DOCKER_USER docker/.tmux.conf /home/$DOCKER_USER/.tmux.conf
+RUN ~/.tmux/plugins/tpm/bin/install_plugins
 
 USER root
-RUN mkdir -p /home/frostlab-docker/coug_ws/src \
-    && chown -R frostlab-docker:frostlab-docker /home/frostlab-docker/coug_ws
-WORKDIR /home/frostlab-docker/coug_ws/src
-COPY --from=cacher --chown=frostlab-docker:frostlab-docker /tmp/packages .
+RUN mkdir -p /home/$DOCKER_USER/ros2_ws/src \
+    && chown -R $DOCKER_USER:$DOCKER_USER /home/$DOCKER_USER/ros2_ws
+WORKDIR /home/$DOCKER_USER/ros2_ws/src
+COPY --from=cacher --chown=$DOCKER_USER:$DOCKER_USER /tmp/packages .
 
 # Install ROS package dependencies (rosdep)
 RUN --mount=type=ssh \
     --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
-    --mount=type=cache,target=/home/frostlab-docker/.ros/rosdep,uid=1000,gid=1000 \
+    --mount=type=cache,target=/home/$DOCKER_USER/.ros/rosdep,uid=1000,gid=1000 \
     mkdir -p /etc/ssh && ssh-keyscan github.com >> /etc/ssh/ssh_known_hosts \
     && export GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no" \
     && vcs import . < cougars.repos \
     && vcs custom --git --args submodule update --init --recursive \
-    && chown -R frostlab-docker:frostlab-docker . \
+    && chown -R $DOCKER_USER:$DOCKER_USER . \
     && apt update \
-    && gosu frostlab-docker rosdep update \
-    && gosu frostlab-docker rosdep install --from-paths . --ignore-src -y
+    && gosu $DOCKER_USER rosdep update \
+    && gosu $DOCKER_USER rosdep install --from-paths . --ignore-src -y
 
 # Handle Docker CI triggers
 ARG TRIGGER_REPO=""
@@ -82,40 +82,40 @@ ARG CACHE_BUST=1
 RUN --mount=type=ssh \
     --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
-    --mount=type=cache,target=/home/frostlab-docker/.ros/rosdep,uid=1000,gid=1000 \
+    --mount=type=cache,target=/home/$DOCKER_USER/.ros/rosdep,uid=1000,gid=1000 \
     if [ -n "$TRIGGER_REPO" ]; then \
     export GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no" \
     && git config --system --add safe.directory "*" \
     && echo "TRIGGER_REPO: $TRIGGER_REPO" \
     && echo "CACHE_BUST: $CACHE_BUST" \
-    && cd "${TRIGGER_REPO##*/}" \
-    && git fetch --all && git reset --hard "@{u}" && git submodule update --init --recursive \
-    && cd .. \
-    && chown -R frostlab-docker:frostlab-docker . \
+    && git -C "${TRIGGER_REPO##*/}" fetch --all \
+    && git -C "${TRIGGER_REPO##*/}" reset --hard "@{u}" \
+    && git -C "${TRIGGER_REPO##*/}" submodule update --init --recursive \
+    && chown -R $DOCKER_USER:$DOCKER_USER . \
     && apt update \
-    && gosu frostlab-docker rosdep update \
-    && gosu frostlab-docker rosdep install --from-paths . --ignore-src -y; \
+    && gosu $DOCKER_USER rosdep update \
+    && gosu $DOCKER_USER rosdep install --from-paths . --ignore-src -y; \
     fi \
     && rm -rf ./*
 
 # Configure bash environment
-USER frostlab-docker
-RUN echo "" >> /home/frostlab-docker/.bashrc \
-    && echo "# Source ROS 2 environment" >> /home/frostlab-docker/.bashrc \
-    && echo "source /opt/ros/humble/setup.bash" >> /home/frostlab-docker/.bashrc \
-    && echo "[ -f /home/frostlab-docker/coug_ws/install/setup.bash ] \
-    && source /home/frostlab-docker/coug_ws/install/setup.bash" >> /home/frostlab-docker/.bashrc \
-    && echo "" >> /home/frostlab-docker/.bashrc \
-    && echo "# Script tab completions" >> /home/frostlab-docker/.bashrc \
-    && echo "[ -f /completions.sh ] && source /completions.sh" >> /home/frostlab-docker/.bashrc \
-    && touch /home/frostlab-docker/.hushlogin
+USER $DOCKER_USER
+RUN echo "" >> ~/.bashrc \
+    && echo "# Source ROS 2 environment" >> ~/.bashrc \
+    && echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc \
+    && echo "[ -f ~/ros2_ws/install/setup.bash ] \
+    && source ~/ros2_ws/install/setup.bash" >> ~/.bashrc \
+    && echo "" >> ~/.bashrc \
+    && echo "# Script tab completions" >> ~/.bashrc \
+    && echo "[ -f /completions.sh ] && source /completions.sh" >> ~/.bashrc \
+    && touch ~/.hushlogin
 
 USER root
 COPY docker/entrypoint.sh /entrypoint.sh
 COPY docker/completions.sh /completions.sh
 RUN chmod +x /entrypoint.sh /completions.sh
 
-WORKDIR /home/frostlab-docker
+WORKDIR /home/$DOCKER_USER
 
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["gosu", "frostlab-docker", "/bin/bash"]
+CMD ["gosu", "$DOCKER_USER", "/bin/bash"]

@@ -14,7 +14,7 @@
 
 script_dir="$(dirname "$(readlink -f "$0")")"
 source "$script_dir/utils/common.sh"
-source "$script_dir/../coug_ws/install/setup.bash"
+source "$script_dir/../ros2_ws/install/setup.bash"
 
 coug_share=$(ros2 pkg prefix coug_description --share)
 urdf="$coug_share/urdf/couguv_holoocean.urdf.xacro"
@@ -78,7 +78,7 @@ if [ -n "$bag_path" ]; then
     fi
 
     mkdir -p "$bag_path/config"
-    find -L ~/coug_ws/install -type f \( -path "*/config/*" -o -path "*/rviz/*" -o -path "*/mapviz/*" -o -path "*/plotjuggler/*" \) -exec cp {} "$bag_path/config/" \;
+    find -L ~/ros2_ws/install -type f \( -path "*/config/*" -o -path "*/rviz/*" -o -path "*/mapviz/*" -o -path "*/plotjuggler/*" \) -exec cp {} "$bag_path/config/" \;
 else
     ros2 launch coug_bringup sim.launch.py "${args[@]}"
 fi

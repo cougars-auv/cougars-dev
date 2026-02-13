@@ -48,10 +48,10 @@ CoUGARs is a low-cost, configurable AUV platform designed for multi-agent autono
     cd cougars-dev && ./holoocean/launch.sh
     ```
 
-  - Open a new terminal, attach to the `coug_dev` tmux window using `./deploy.sh dev`, build the `coug_ws` workspace, and launch the simulation stack using `./sim_launch.sh`.
+  - Open a new terminal, attach to the `coug_dev` tmux window using `./deploy.sh dev`, build the `ros2_ws` workspace, and launch the simulation stack using `./sim_launch.sh`.
 
     ```bash
-    cd ~/coug_ws && colcon build
+    cd ~/ros2_ws && colcon build
     cd ~/scripts && ./sim_launch.sh
     ```
 
@@ -59,10 +59,10 @@ CoUGARs is a low-cost, configurable AUV platform designed for multi-agent autono
 
   - On your host machine, copy your `rosbag2` bag into the `bags` folder at the root of the repository.
 
-  - Inside of the `coug_dev` tmux window, build the `coug_ws` workspace and launch the development stack using `./bag_launch.sh <bag_name>`. Provide the name of your bag as the script argument.
+  - Inside of the `coug_dev` tmux window, build the `ros2_ws` workspace and launch the development stack using `./bag_launch.sh <bag_name>`. Provide the name of your bag as the script argument.
 
     ```bash
-    cd ~/coug_ws && colcon build
+    cd ~/ros2_ws && colcon build
     cd ~/scripts && ./bag_launch.sh <bag_name>
     ```
 

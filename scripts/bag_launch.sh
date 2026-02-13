@@ -15,7 +15,7 @@
 
 script_dir="$(dirname "$(readlink -f "$0")")"
 source "$script_dir/utils/common.sh"
-source "$script_dir/../coug_ws/install/setup.bash"
+source "$script_dir/../ros2_ws/install/setup.bash"
 
 if [ -z "$1" ]; then
     print_error "Usage: $0 <bag_name> [-c] [-d <seconds>] [-r <bag_name>] [-n <namespace>]"
@@ -88,7 +88,7 @@ if [ -n "$record_bag_path" ]; then
     fi
 
     mkdir -p "$record_bag_path/config"
-    find -L ~/coug_ws/install -type f \( -path "*/config/*" -o -path "*/rviz/*" -o -path "*/mapviz/*" -o -path "*/plotjuggler/*" \) -exec cp {} "$record_bag_path/config/" \;
+    find -L ~/ros2_ws/install -type f \( -path "*/config/*" -o -path "*/rviz/*" -o -path "*/mapviz/*" -o -path "*/plotjuggler/*" \) -exec cp {} "$record_bag_path/config/" \;
 else
     ros2 launch coug_bringup bag.launch.py "${args[@]}"
 fi

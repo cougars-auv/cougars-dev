@@ -14,6 +14,7 @@ set -e
 
 script_dir="$(dirname "$(readlink -f "$0")")"
 source "$script_dir/scripts/utils/common.sh"
+source "$script_dir/docker/.env"
 
 profiles=""
 arch=$(uname -m)
@@ -42,18 +43,18 @@ case $session in
             && echo 'yes' || echo 'no')" != "yes" ]; do sleep 1; done
 
         # Check if a 'coug_$session' tmux session already exists
-        if ! docker exec --user frostlab-docker cougars-ct \
+        if ! docker exec --user $DOCKER_USER cougars-ct \
             tmux has-session -t coug_$session 2>/dev/null; then
 
             # If not, create a new 'coug_$session' tmux session
             print_warning "Creating a new 'coug_$session' tmux session..."
-            docker exec -it --user frostlab-docker cougars-ct \
-                tmuxp load -d /home/frostlab-docker/.tmuxp/coug_$session.yaml
+            docker exec -it --user $DOCKER_USER cougars-ct \
+                tmuxp load -d /home/$DOCKER_USER/.tmuxp/coug_$session.yaml
         fi
 
         # Attach to the 'coug_$session' tmux session
         print_info "Attaching to the 'coug_$session' tmux session..."
-        docker exec -it --user frostlab-docker cougars-ct \
+        docker exec -it --user $DOCKER_USER cougars-ct \
             tmux attach -t coug_$session
         ;;
     *)

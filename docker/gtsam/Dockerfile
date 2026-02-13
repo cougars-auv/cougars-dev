@@ -16,11 +16,14 @@ FROM ros:humble-ros-base
 
 ARG DEBIAN_FRONTEND=noninteractive
 
+ARG DOCKER_USER=frostlab-docker
+ENV DOCKER_USER=$DOCKER_USER
+
 # Create the user
-RUN useradd -ms /bin/bash "frostlab-docker" \
-    && usermod -aG sudo "frostlab-docker" \
+RUN useradd -ms /bin/bash "$DOCKER_USER" \
+    && usermod -aG sudo "$DOCKER_USER" \
     && echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers \
-    && echo "frostlab-docker:frostlab" | chpasswd
+    && echo "$DOCKER_USER:$DOCKER_USER" | chpasswd
 
 # Install system dependencies
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
@@ -47,21 +50,20 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     libboost-timer-dev \
     libboost-chrono-dev \
     libboost-regex-dev
-WORKDIR /home/frostlab-docker
+WORKDIR /home/$DOCKER_USER
 RUN git clone --depth 1 --branch 4.2.0 https://github.com/borglab/gtsam.git \
-    && cd gtsam \
-    && mkdir build && cd build \
-    && cmake .. \
+    && cmake -B gtsam/build -S gtsam \
     -DCMAKE_BUILD_TYPE=Release \
     -DGTSAM_BUILD_WITH_MARCH_NATIVE=OFF \
     -DGTSAM_BUILD_UNSTABLE=ON \
     -DGTSAM_BUILD_TESTS=OFF \
     -DGTSAM_BUILD_EXAMPLES_ALWAYS=OFF \
     -DGTSAM_WITH_TBB=ON \
-    && make -j$(nproc) \
-    && sudo make install \
+    -DCMAKE_C_COMPILER_LAUNCHER=ccache \
+    -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
+    && make -C gtsam/build -j$(nproc) \
+    && sudo make -C gtsam/build install \
     && sudo ldconfig \
-    && cd /home/frostlab-docker \
     && rm -rf gtsam
 
 CMD ["bash"]
