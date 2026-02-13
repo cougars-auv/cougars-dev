@@ -129,4 +129,4 @@ RUN chmod +x /entrypoint.sh /completions.sh
 WORKDIR /home/$DOCKER_USER
 
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["gosu", "$DOCKER_USER", "/bin/bash"]
+CMD gosu $DOCKER_USER /bin/bash
