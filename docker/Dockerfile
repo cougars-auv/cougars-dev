@@ -32,8 +32,10 @@ ENV DOCKER_USER=$DOCKER_USER
 ENV ROS_BUILD_ARCH=$TARGETARCH
 ENV RCUTILS_COLORIZED_OUTPUT=1
 
+ENV GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no"
+RUN git config --system --add safe.directory "*"
+
 # Install ROS packages
-USER root
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
     apt update && apt install -y --no-install-recommends \
@@ -70,10 +72,7 @@ RUN --mount=type=ssh \
     --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
     --mount=type=cache,target=/home/$DOCKER_USER/.ros/rosdep,uid=1000,gid=1000 \
-    git config --system --add safe.directory "*" \
-    && mkdir -p /etc/ssh && ssh-keyscan github.com >> /etc/ssh/ssh_known_hosts \
-    && export GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no" \
-    && vcs import . < cougars.repos \
+    vcs import . < cougars.repos \
     && vcs custom --git --args submodule update --init --recursive \
     && chown -R $DOCKER_USER:$DOCKER_USER . \
     && apt update \
@@ -88,8 +87,7 @@ RUN --mount=type=ssh \
     --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
     --mount=type=cache,target=/home/$DOCKER_USER/.ros/rosdep,uid=1000,gid=1000 \
     if [ -n "$TRIGGER_REPO" ]; then \
-        export GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no" \
-        && echo "TRIGGER_REPO: $TRIGGER_REPO" \
+        echo "TRIGGER_REPO: $TRIGGER_REPO" \
         && echo "CACHE_BUST: $CACHE_BUST" \
         && REPO_PATH=$(find . -maxdepth 4 -type d -name "${TRIGGER_REPO##*/}" | head -n 1) \
         && if [ -n "$REPO_PATH" ]; then \
