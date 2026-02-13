@@ -61,7 +61,13 @@ RUN mkdir -p /home/frostlab-docker/coug_ws/src \
 WORKDIR /home/frostlab-docker/coug_ws/src
 COPY --from=cacher --chown=frostlab-docker:frostlab-docker /tmp/packages .
 
-# Install custom ROS package dependencies (rosdep)
+# Install local ROS package dependencies (rosdep)
+RUN apt update \
+    && gosu frostlab-docker rosdep update \
+    && gosu frostlab-docker rosdep install --from-paths . --ignore-src -y \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install external ROS package dependencies (vcs, rosdep)
 ARG CACHE_VERSION=unknown
 RUN --mount=type=ssh \
     export GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no" \
@@ -69,8 +75,8 @@ RUN --mount=type=ssh \
     && vcs import . < cougars.repos \
     && vcs custom --git --args submodule update --init --recursive \
     && chown -R frostlab-docker:frostlab-docker . \
-    && gosu frostlab-docker rosdep update \
     && apt update \
+    && gosu frostlab-docker rosdep update \
     && gosu frostlab-docker rosdep install --from-paths . --ignore-src -y \
     && rm -rf /var/lib/apt/lists/* \
     && rm -rf ./*

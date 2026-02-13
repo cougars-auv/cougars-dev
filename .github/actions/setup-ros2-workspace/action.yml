@@ -47,9 +47,7 @@ runs:
           export GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no"
         fi
 
-        apt update && apt install -y ccache
         mkdir -p coug_ws/src
-
         export GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no"
         vcs import coug_ws/src < "${{ inputs.repos-file }}"
         if [ -n "${{ inputs.trigger-repo }}" ] && [ -n "${{ inputs.trigger-sha }}" ]; then
@@ -61,5 +59,6 @@ runs:
         fi
 
         cd coug_ws/src && vcs custom --git --args submodule update --init --recursive && cd ../..
+        apt update
         rosdep update
         rosdep install --from-paths coug_ws/src "${{ inputs.packages-path }}" --ignore-src -y

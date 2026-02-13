@@ -25,7 +25,7 @@ RUN useradd -ms /bin/bash "frostlab-docker" \
 # Install system dependencies
 RUN apt update && apt install -y --no-install-recommends \
     # Install basic system utilities - Nelson Durrant, Jan 2026
-    curl wget git vim nano python3-pip python3-venv gosu procps \
+    curl wget git vim nano python3-pip python3-venv gosu procps ccache \
     # Install remote access utilities - Nelson Durrant, Jan 2026
     openssh-server mosh tmux xclip \
     # Install graphical utilities - Nelson Durrant, Jan 2026
