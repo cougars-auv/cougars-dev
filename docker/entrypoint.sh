@@ -29,13 +29,11 @@ fi
 current_dir=$(pwd)
 cd /home/$DOCKER_USER/ros2_ws/src
 if wget -q --spider http://github.com; then
-    if [ -f "cougars.repos" ]; then
-        echo "Network found. Updating vcs repositories..."
-        export GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no"
-        vcs import . < cougars.repos
-        vcs custom --git --args submodule update --init --recursive
-        chown -R $DOCKER_USER:$DOCKER_USER .
-    fi
+    echo "Network found. Updating vcs repositories..."
+    export GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no"
+    vcs import . < cougars.repos
+    vcs custom --git --args submodule update --init --recursive
+    chown -R $DOCKER_USER:$DOCKER_USER .
 else
     echo "No network connection. Skipping vcs repository updates."
 fi
