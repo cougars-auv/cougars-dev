@@ -26,7 +26,7 @@ on:
       - ".github/workflows/ros2_ci.yml"
       - "packages/**"
   repository_dispatch:
-    types: [subrepo_ros2_update]
+    types: [ros2_dispatch]
 
 jobs:
   build-test:

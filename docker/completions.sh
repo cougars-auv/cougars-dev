@@ -16,7 +16,7 @@ _bag_tab_completion() {
         return 0
     fi
 
-    if [[ "$script_name" == *"bag_launch.sh"* ]]; then
+    if [[ "$script_name" == *"bag_launch.sh"* || "$script_name" == *"viz_launch.sh"* ]]; then
         if [[ -d "$bags_dir" ]]; then
             COMPREPLY=($(compgen -W "$(ls "$bags_dir")" -- "$cur"))
         fi
@@ -26,3 +26,4 @@ _bag_tab_completion() {
 
 complete -F _bag_tab_completion bag_launch.sh scripts/bag_launch.sh ./scripts/bag_launch.sh
 complete -F _bag_tab_completion sim_launch.sh scripts/sim_launch.sh ./scripts/sim_launch.sh
+complete -F _bag_tab_completion viz_launch.sh scripts/viz_launch.sh ./scripts/viz_launch.sh
