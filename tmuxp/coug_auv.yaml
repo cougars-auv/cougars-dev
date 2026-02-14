@@ -1,11 +1,11 @@
 # Created by Nelson Durrant, Feb 2026
-session_name: coug_base
+session_name: coug_auv
 start_directory: "~"
 windows:
   - window_name: main
     layout: main-vertical
     panes:
-      - echo "Base Station Config"
+      - echo "AUV Config"
       - shell_command:
           - cd ~/ros2_ws && colcon build
         suppress_history: false

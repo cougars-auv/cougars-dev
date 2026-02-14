@@ -25,5 +25,10 @@ if [ ! -z "$target_uid" ]; then
     fi
 fi
 
+find "/home/$DOCKER_USER" \
+    -maxdepth 1 \
+    -not -user "$DOCKER_USER" \
+    -exec chown -R $DOCKER_USER:$DOCKER_USER {} + 2>/dev/null || true
+
 touch /tmp/ready
 exec "$@"

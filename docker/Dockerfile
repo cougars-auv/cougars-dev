@@ -52,14 +52,17 @@ RUN useradd -ms /bin/bash "$DOCKER_USER" \
     && mkdir -p /home/$DOCKER_USER/ros2_ws/src \
     && chown -R $DOCKER_USER:$DOCKER_USER /home/$DOCKER_USER
 
-# Set up SSH on port 2222
-RUN mkdir -p /var/run/sshd \
-    && ssh-keygen -A \
-    && sed -i 's/#Port 22/Port 2222/' /etc/ssh/sshd_config \
-    && sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/' /etc/ssh/sshd_config \
-    && sed -i 's/#PubkeyAuthentication yes/PubkeyAuthentication yes/' /etc/ssh/sshd_config \
+# Set up SSH
+RUN mkdir -p /var/run/sshd && ssh-keygen -A \
+    && echo "Port 2222" >> /etc/ssh/sshd_config \
     && echo "StrictModes no" >> /etc/ssh/sshd_config \
-    && echo "Host *\n\tStrictHostKeyChecking no\n\tUserKnownHostsFile /dev/null" >> /etc/ssh/ssh_config
+    && echo "AuthorizedKeysFile /home/$DOCKER_USER/.ssh/authorized_keys /home/$DOCKER_USER/.ssh_internal/authorized_keys" >> /etc/ssh/sshd_config \
+    && mkdir -p /home/$DOCKER_USER/.ssh_internal \
+    && ssh-keygen -t ed25519 -f /home/$DOCKER_USER/.ssh_internal/id_ed25519 -N "" \
+    && cp /home/$DOCKER_USER/.ssh_internal/id_ed25519.pub /home/$DOCKER_USER/.ssh_internal/authorized_keys \
+    && chown -R $DOCKER_USER:$DOCKER_USER /home/$DOCKER_USER/.ssh_internal \
+    && chmod 700 /home/$DOCKER_USER/.ssh_internal \
+    && chmod 600 /home/$DOCKER_USER/.ssh_internal/*
 
 # Install Python dependencies
 USER $DOCKER_USER

@@ -25,12 +25,17 @@ if [ ! -z "$target_uid" ]; then
     fi
 fi
 
+find "/home/$DOCKER_USER" \
+    -maxdepth 1 \
+    -not -user "$DOCKER_USER" \
+    -exec chown -R $DOCKER_USER:$DOCKER_USER {} + 2>/dev/null || true
+
 # Install external ROS packages (vcs)
 git config --system --add safe.directory "*"
 if curl -s --head https://github.com | grep "200" > /dev/null; then
     echo "Network found. Updating vcs repositories..."
-    gosu $DOCKER_USER vcs import ~/ros2_ws/src < ~/ros2_ws/src/cougars.repos
-    gosu $DOCKER_USER vcs custom ~/ros2_ws/src --git --args submodule update --init --recursive
+    gosu $DOCKER_USER vcs import /home/$DOCKER_USER/ros2_ws/src < /home/$DOCKER_USER/ros2_ws/src/cougars.repos
+    gosu $DOCKER_USER vcs custom /home/$DOCKER_USER/ros2_ws/src --git --args submodule update --init --recursive
 else
     echo "No network connection. Skipping vcs repository updates."
 fi
@@ -38,8 +43,6 @@ fi
 # Start the SSH server
 if [ -x /usr/sbin/sshd ]; then
     echo "Starting SSH server on port 2222..."
-    mkdir -p /var/run/sshd
-    ssh-keygen -A
     /usr/sbin/sshd
 fi
 
