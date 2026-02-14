@@ -9,6 +9,7 @@ set -e
 
 # Skip GitHub Actions
 if [ "$CI" = "true" ] || [ "$GITHUB_ACTIONS" = "true" ]; then
+    echo "Running in GitHub Actions. Skipping..."
     exec "$@"
 fi
 
@@ -43,7 +44,7 @@ fi
 
 # Install external ROS packages (vcs)
 git config --system --add safe.directory "*"
-if curl -s --head https://github.com | grep "200" > /dev/null; then
+if curl -s --head --connect-timeout 5 https://github.com | grep "200" > /dev/null; then
     echo "Network found. Updating vcs repositories..."
     gosu $DOCKER_USER vcs import /home/$DOCKER_USER/ros2_ws/src < /home/$DOCKER_USER/ros2_ws/src/cougars.repos
     gosu $DOCKER_USER vcs custom /home/$DOCKER_USER/ros2_ws/src --git --args submodule update --init --recursive
