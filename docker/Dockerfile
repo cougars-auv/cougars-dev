@@ -42,11 +42,19 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     # ROS Packages
     ros-${ROS_DISTRO}-rmw-cyclonedds-cpp ros-${ROS_DISTRO}-rmw-zenoh-cpp \
     ros-${ROS_DISTRO}-joy ros-${ROS_DISTRO}-teleop-twist-joy ros-${ROS_DISTRO}-teleop-twist-keyboard \
-    ros-${ROS_DISTRO}-rosbag2-storage-mcap
+    ros-${ROS_DISTRO}-rosbag2-storage-mcap \
+    # Docker CLI
+    ca-certificates gnupg lsb-release \
+    && mkdir -p /etc/apt/keyrings \
+    && curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg \
+    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo $VERSION_CODENAME) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null \
+    && apt update && apt install -y docker-ce-cli
 
 # Create user
 RUN useradd -ms /bin/bash "$DOCKER_USER" \
     && usermod -aG sudo "$DOCKER_USER" \
+    && groupadd docker || true \
+    && usermod -aG docker "$DOCKER_USER" \
     && echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers \
     && echo "$DOCKER_USER:$DOCKER_USER" | chpasswd \
     && mkdir -p /home/$DOCKER_USER/ros2_ws/src \
