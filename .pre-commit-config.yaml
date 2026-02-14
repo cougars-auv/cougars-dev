@@ -16,7 +16,7 @@ repos:
       - id: black
 
   - repo: https://github.com/cougars-auv/coug-hooks
-    rev: main
+    rev: v1.0.0
     hooks:
       - id: ament_uncrustify
         files: ^packages/.*\.(h\+\+|h|hh|hxx|hpp|cuh|c|cc|cpp|cxx|cu)$

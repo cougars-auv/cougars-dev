@@ -17,7 +17,6 @@ FROM ubuntu:22.04 AS cacher
 
 WORKDIR /tmp/packages
 COPY packages .
-# Flattened find command for readability
 RUN find . -type f \! \( -name "package.xml" -o -name "*.repos" \) -delete
 
 # --- Main Stage ---
@@ -25,81 +24,67 @@ FROM snelsondurrant/cougars:gtsam
 
 ARG DEBIAN_FRONTEND=noninteractive
 ARG TARGETARCH
-
 ARG DOCKER_USER=frostlab-docker
-ENV DOCKER_USER=$DOCKER_USER
 
-# Used to skip building architecture-incompatible packages
-ENV ROS_BUILD_ARCH=$TARGETARCH
-ENV RCUTILS_COLORIZED_OUTPUT=1
-
-# Create the user
-RUN useradd -ms /bin/bash "$DOCKER_USER" \
-    && usermod -aG sudo "$DOCKER_USER" \
-    && echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers \
-    && echo "$DOCKER_USER:$DOCKER_USER" | chpasswd
+ENV DOCKER_USER=$DOCKER_USER \
+    ROS_BUILD_ARCH=$TARGETARCH \
+    RCUTILS_COLORIZED_OUTPUT=1 \
+    PATH="$PATH:/home/$DOCKER_USER/.local/bin"
 
 # Install system dependencies
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
     apt update && apt install -y --no-install-recommends \
-    gosu procps curl wget vim nano \
-    python3-pip python3-venv \
+    # Utilities
+    gosu procps curl wget vim nano python3-pip python3-venv \
     openssh-server mosh tmux xclip \
     x11-apps x11-utils x11-xserver-utils xauth \
+    # ROS Packages
     ros-${ROS_DISTRO}-rmw-cyclonedds-cpp ros-${ROS_DISTRO}-rmw-zenoh-cpp \
     ros-${ROS_DISTRO}-joy ros-${ROS_DISTRO}-teleop-twist-joy ros-${ROS_DISTRO}-teleop-twist-keyboard \
     ros-${ROS_DISTRO}-rosbag2-storage-mcap
 
+# Create user
+RUN useradd -ms /bin/bash "$DOCKER_USER" \
+    && usermod -aG sudo "$DOCKER_USER" \
+    && echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers \
+    && echo "$DOCKER_USER:$DOCKER_USER" | chpasswd \
+    && mkdir -p /home/$DOCKER_USER/ros2_ws/src \
+    && chown -R $DOCKER_USER:$DOCKER_USER /home/$DOCKER_USER
+
 # Set up SSH on port 2222
 RUN mkdir -p /var/run/sshd \
+    && ssh-keygen -A \
     && sed -i 's/#Port 22/Port 2222/' /etc/ssh/sshd_config \
-    && mkdir -p /home/$DOCKER_USER/.ssh \
-    && echo "Host *\n\tStrictHostKeyChecking no\n\tUserKnownHostsFile /dev/null" > /home/$DOCKER_USER/.ssh/config \
-    && chown -R $DOCKER_USER:$DOCKER_USER /home/$DOCKER_USER/.ssh \
-    && chmod 600 /home/$DOCKER_USER/.ssh/config
+    && echo "Host *\n\tStrictHostKeyChecking no\n\tUserKnownHostsFile /dev/null" >> /etc/ssh/ssh_config
 
 # Install Python dependencies
 USER $DOCKER_USER
-ENV PATH="$PATH:/home/$DOCKER_USER/.local/bin"
 RUN --mount=type=cache,target=/home/$DOCKER_USER/.cache/pip,uid=1000,gid=1000 \
-    pip3 install --upgrade \
-    # External repo management tool - Nelson Durrant, Jan 2026
-    vcstool \
-    # Terminal multiplexer - Nelson Durrant, Jan 2026
-    tmuxp asciimatics Pillow
+    pip3 install --upgrade vcstool tmuxp asciimatics Pillow
 
 # Install tmux plugins
 RUN git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 COPY --chown=$DOCKER_USER:$DOCKER_USER docker/.tmux.conf /home/$DOCKER_USER/.tmux.conf
 RUN ~/.tmux/plugins/tpm/bin/install_plugins || true
 
-# Prepare workspace
-USER root
-RUN mkdir -p /home/$DOCKER_USER/ros2_ws/src \
-    && chown -R $DOCKER_USER:$DOCKER_USER /home/$DOCKER_USER/ros2_ws
+# Configure bash environment
+RUN mkdir -p ~/.ssh && chmod 700 ~/.ssh \
+    && echo 'source /opt/ros/humble/setup.bash' >> ~/.bashrc \
+    && echo '[ -f ~/ros2_ws/install/setup.bash ] && source ~/ros2_ws/install/setup.bash' >> ~/.bashrc \
+    && echo '[ -f /completions.sh ] && source /completions.sh' >> ~/.bashrc \
+    && touch ~/.hushlogin
+
+# Install ROS dependencies (rosdep)
 WORKDIR /home/$DOCKER_USER/ros2_ws/src
 COPY --from=cacher --chown=$DOCKER_USER:$DOCKER_USER /tmp/packages .
-
-# Install dependencies from assembled packages
-USER $DOCKER_USER
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
     --mount=type=cache,target=/home/$DOCKER_USER/.ros/rosdep,uid=1000,gid=1000 \
-    sudo apt-get update \
+    sudo apt update \
     && rosdep update \
     && rosdep install --from-paths . --ignore-src -y \
     && rm -rf ./*
-
-# Configure bash environment
-RUN echo "" >> ~/.bashrc \
-    && echo "# Source ROS 2 environment" >> ~/.bashrc \
-    && echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc \
-    && echo "[ -f ~/ros2_ws/install/setup.bash ] && source ~/ros2_ws/install/setup.bash" >> ~/.bashrc \
-    && echo "" >> ~/.bashrc \
-    && echo "# Script tab completions" >> ~/.bashrc \
-    && echo "[ -f /completions.sh ] && source /completions.sh" >> ~/.bashrc \
-    && touch ~/.hushlogin
 
 USER root
 COPY docker/entrypoint.sh /entrypoint.sh
@@ -107,6 +92,5 @@ COPY docker/completions.sh /completions.sh
 RUN chmod +x /entrypoint.sh /completions.sh
 
 WORKDIR /home/$DOCKER_USER
-
 ENTRYPOINT ["/entrypoint.sh"]
 CMD gosu $DOCKER_USER /bin/bash

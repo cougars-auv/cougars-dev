@@ -40,6 +40,8 @@ services:
     container_name: cougars-ct
     user: root
     network_mode: host
+    ipc: host
+    pid: host
     environment:
       - DISPLAY=$DISPLAY
       - QT_X11_NO_MITSHM=1
