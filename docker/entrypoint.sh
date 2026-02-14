@@ -7,7 +7,7 @@
 
 set -e
 
-# Fix permission errors
+# Fix permissions
 DOCKER_USER=${DOCKER_USER}
 target_uid=$(stat -c '%u' /home/$DOCKER_USER/ros2_ws/src)
 target_gid=$(stat -c '%g' /home/$DOCKER_USER/ros2_ws/src)
@@ -25,24 +25,22 @@ if [ ! -z "$target_uid" ]; then
     fi
 fi
 
-# Install vcs-defined external packages
-current_dir=$(pwd)
-cd /home/$DOCKER_USER/ros2_ws/src
-if wget -q --spider http://github.com; then
+# Install external ROS packages (vcs)
+git config --system --add safe.directory "*"
+if curl -s --head https://github.com | grep "200" > /dev/null; then
     echo "Network found. Updating vcs repositories..."
-    export GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no"
-    vcs import . < cougars.repos
-    vcs custom --git --args submodule update --init --recursive
-    chown -R $DOCKER_USER:$DOCKER_USER .
+    gosu $DOCKER_USER vcs import ~/ros2_ws/src < ~/ros2_ws/src/cougars.repos
+    gosu $DOCKER_USER vcs custom ~/ros2_ws/src --git --args submodule update --init --recursive
 else
     echo "No network connection. Skipping vcs repository updates."
 fi
-cd $current_dir
 
-# Start SSH server
+# Start the SSH server
 if [ -x /usr/sbin/sshd ]; then
     echo "Starting SSH server on port 2222..."
-    sudo /usr/sbin/sshd
+    mkdir -p /var/run/sshd
+    ssh-keygen -A
+    /usr/sbin/sshd
 fi
 
 touch /tmp/ready

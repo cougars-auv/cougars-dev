@@ -7,7 +7,7 @@
 
 set -e
 
-# Fix permission errors
+# Fix permissions
 DOCKER_USER=ue4
 target_uid=$(stat -c '%u' /home/$DOCKER_USER/config)
 target_gid=$(stat -c '%g' /home/$DOCKER_USER/config)
