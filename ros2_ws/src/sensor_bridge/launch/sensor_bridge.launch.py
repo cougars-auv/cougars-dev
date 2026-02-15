@@ -16,7 +16,7 @@ import os
 from launch import LaunchDescription
 from launch_ros.actions import Node
 from launch.actions import DeclareLaunchArgument
-from launch.substitutions import LaunchConfiguration, PythonExpression
+from launch.substitutions import LaunchConfiguration, PythonExpression, PathJoinSubstitution, EnvironmentVariable
 
 
 def generate_launch_description():
@@ -27,12 +27,8 @@ def generate_launch_description():
     fleet_params = os.path.join(
         os.path.expanduser("~"), "config", "fleet", "sensor_bridge_params.yaml"
     )
-    auv_params = PythonExpression(
-        [
-            "os.path.join(os.path.expanduser('~'), 'config', '",
-            auv_ns,
-            "' + '_params.yaml')",
-        ]
+    auv_params = PathJoinSubstitution(
+        [EnvironmentVariable("HOME"), "config", PythonExpression(["'", auv_ns, "' + '_params.yaml'"])]
     )
 
     dvl_link_frame = PythonExpression(

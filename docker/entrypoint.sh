@@ -22,8 +22,8 @@ fi
 
 # Fix permissions
 DOCKER_USER=${DOCKER_USER}
-target_uid=$(stat -c '%u' /home/$DOCKER_USER/ros2_ws/src)
-target_gid=$(stat -c '%g' /home/$DOCKER_USER/ros2_ws/src)
+target_uid=$(stat -c '%u' /home/$DOCKER_USER/ros2_ws)
+target_gid=$(stat -c '%g' /home/$DOCKER_USER/ros2_ws)
 
 if [ ! -z "$target_gid" ]; then
     if [ "$target_gid" != "$(id -g $DOCKER_USER)" ]; then
