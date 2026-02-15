@@ -53,7 +53,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     libboost-timer1.74.0 \
     libboost-chrono1.74.0 \
     libboost-regex1.74.0 \
-    libtbb12
+    libtbb-dev libtbb12
 
 COPY --from=builder /usr/local /usr/local
 RUN ldconfig
