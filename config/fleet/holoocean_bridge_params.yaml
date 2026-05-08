@@ -1,0 +1,88 @@
+/**:
+  imu_converter_node:
+    ros__parameters:
+      imu_input_topic: "IMUSensor"
+      ahrs_input_topic: "RotationSensor"
+      output_topic: "imu/data"
+      bias_topic: "imu_bias"
+
+      accel_noise_sigmas: [0.0078, 0.0078, 0.0078] # [m/s^2] Accelerometer measurement noise sigmas.
+      gyro_noise_sigmas: [0.0012, 0.0012, 0.0012] # [rad/s] Gyroscope measurement noise sigmas.
+      ahrs_noise_sigmas: [0.00349, 0.00349, 0.01745] # [rad] AHRS orientation uncertainty sigmas [roll, pitch, yaw].
+      accel_bias_rw_sigmas: [1.05e-5, 1.05e-5, 1.05e-5] # [m/s^2/√s] Continuous-time accel bias random walk spectral density sigmas.
+      gyro_bias_rw_sigmas: [3.91e-6, 3.91e-6, 3.91e-6] # [rad/s/√s] Continuous-time gyro bias random walk spectral density sigmas.
+
+  gps_converter_node:
+    ros__parameters:
+      input_topic: "GPSSensor"
+      output_topic: "gps/fix"
+
+      origin_latitude: 40.33940
+      origin_longitude: -111.90721
+      origin_altitude: 1412.0
+
+      noise_sigmas: [0.015, 0.015, 0.025] # [m] GPS position uncertainty sigmas [east, north, up].
+
+  depth_converter_node:
+    ros__parameters:
+      input_topic: "DepthSensor"
+      output_topic: "odometry/depth"
+
+      noise_sigma: 0.02 # [m] Depth sensor Z-position uncertainty sigma.
+
+  mag_converter_node:
+    ros__parameters:
+      input_topic: "MagnetometerSensor"
+      output_topic: "imu/mag"
+
+      noise_sigmas: [0.003, 0.003, 0.003] # [normalized] Magnetic field uncertainty sigmas.
+
+  dvl_converter_node:
+    ros__parameters:
+      input_topic: "DVLSensorVelocity"
+      output_topic: "dvl/data"
+
+      noise_sigmas: [0.02, 0.02, 0.02] # [m/s] DVL body-velocity uncertainty sigmas.
+
+  stereo_converter_node:
+    ros__parameters:
+      front_input_topic: "RGBCameraFront"
+      back_input_topic: "RGBCameraBack"
+      front_output_topic: "stereo/front/image_raw"
+      back_output_topic: "stereo/back/image_raw"
+      front_stereo_info_topic: "stereo/front/camera_info"
+      back_stereo_info_topic: "stereo/back/camera_info"
+
+  wrench_converter_node:
+    ros__parameters:
+      agent_topic: "/command/agent"
+      control_topic: "ControlCommand"
+      velocity_topic: "VelocitySensor"
+      wrench_raw_topic: "cmd_wrench_raw"
+      wrench_topic: "cmd_wrench"
+
+  truth_converter_node:
+    ros__parameters:
+      input_topic: "DynamicsSensorOdom"
+      output_topic: "odometry/truth"
+
+      publish_tf: false # Whether to publish the map->base_link transform
+
+  fin_state_publisher_node:
+    ros__parameters:
+      input_topic: "ControlCommand"
+      output_topic: "joint_states"
+
+  cmd_vel_converter_node:
+    ros__parameters:
+      input_topic: "cmd_vel_out"
+      output_topic: "/command/agent"
+
+  hsd_converter_node:
+    ros__parameters:
+      heading_topic: "heading"
+      speed_topic: "speed"
+      depth_topic: "depth"
+      output_heading_topic: "/heading"
+      output_speed_topic: "/speed"
+      output_depth_topic: "/depth"

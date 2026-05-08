@@ -1,0 +1,64 @@
+# Copyright (c) 2026 BYU FROST Lab
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+FROM snelsondurrant/cougars:base
+
+ARG DEBIAN_FRONTEND=noninteractive \
+  DOCKER_USER=frostlab-docker
+
+SHELL [ "/bin/bash", "-c" ]
+
+ENV DOCKER_USER=${DOCKER_USER} \
+  OVERLAY_WS=/home/${DOCKER_USER}/cougars-dev/ros2_ws \
+  CONFIG_FOLDER=/home/${DOCKER_USER}/cougars-dev/config \
+  GUM_CHOOSE_HEADER_FOREGROUND="0" \
+  GUM_CHOOSE_CURSOR_FOREGROUND="75" \
+  GUM_CHOOSE_SELECTED_FOREGROUND="75" \
+  GUM_SPIN_SPINNER_FOREGROUND="75" \
+  GUM_FILTER_INDICATOR_FOREGROUND="75"\
+  GUM_FILTER_MATCH_FOREGROUND="75" \
+  GUM_INPUT_CURSOR_FOREGROUND="75"
+
+# Rename the default ubuntu user
+RUN groupmod -n "${DOCKER_USER}" ubuntu \
+  && usermod -l "${DOCKER_USER}" -d /home/${DOCKER_USER} -m ubuntu \
+  && usermod -aG sudo "${DOCKER_USER}" \
+  && echo "%sudo ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers \
+  && echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> /home/${DOCKER_USER}/.bashrc \
+  && echo "[ -f ${OVERLAY_WS}/install/setup.bash ] && source ${OVERLAY_WS}/install/setup.bash" >> /home/${DOCKER_USER}/.bashrc \
+  && touch /home/${DOCKER_USER}/.hushlogin \
+  && chown -R ${DOCKER_USER}:${DOCKER_USER} /home/${DOCKER_USER}
+
+WORKDIR ${OVERLAY_WS}
+
+# Install development tools
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+  --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
+  echo 'deb [trusted=yes] https://repo.charm.sh/apt/ /' | sudo tee /etc/apt/sources.list.d/charm.list \
+  && apt-get update && apt-get install -y --no-install-recommends \
+  python3-pip python3-venv pipx gum ros-${ROS_DISTRO}-rqt* \
+  cm-super dvipng texlive-latex-base texlive-latex-extra texlive-publishers texlive-science \
+  mosh x11-apps x11-utils x11-xserver-utils xauth
+
+# Install Python development tools
+USER ${DOCKER_USER}
+RUN --mount=type=cache,target=/home/${DOCKER_USER}/.cache/pip,uid=1000,gid=1000 \
+  pip3 install --break-system-packages vcstool pre-commit tmuxp \
+  daft-pgm pandas seaborn scienceplots rosbags tqdm \
+  evo optuna optuna-dashboard
+
+USER root
+
+ENTRYPOINT [ "/entrypoint.sh" ]
+CMD [ "/bin/bash" ]

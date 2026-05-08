@@ -1,0 +1,43 @@
+ci:
+  autofix_commit_msg: "🐡 [pre-commit.ci] autofix"
+  autoupdate_commit_msg: "🪼 [pre-commit.ci] autoupdate"
+  autoupdate_schedule: monthly
+  submodules: false
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+        exclude: \.md$
+      - id: end-of-file-fixer
+      - id: mixed-line-ending
+      - id: check-added-large-files
+        args: ["--maxkb=10000"]
+      - id: check-yaml
+      - id: check-json
+      - id: check-xml
+      - id: check-toml
+      - id: check-symlinks
+      - id: forbid-submodules
+
+  - repo: https://github.com/python-jsonschema/check-jsonschema
+    rev: 0.37.0
+    hooks:
+      - id: check-github-workflows
+        args: ["--verbose"]
+      - id: check-dependabot
+        args: ["--verbose"]
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.15.6
+    hooks:
+      - id: ruff
+        args: [ --fix ]
+      - id: ruff-format
+
+  - repo: https://github.com/pre-commit/mirrors-clang-format
+    rev: v22.1.1
+    hooks:
+      - id: clang-format
+        types_or: [c++, c]

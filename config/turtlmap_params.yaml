@@ -1,0 +1,58 @@
+/turtlmap/**:
+  ros__parameters:
+    base:
+      parameter_tf:
+        position: [-0.11247, 0.00146, -0.04147]
+        orientation: [1.0, 0.0, 0.0, 0.0]
+
+    imu:
+      parameter_tf:
+        position: [-0.11247, 0.00146, -0.04147]
+        orientation: [-0.5, 0.5, -0.5, 0.5]
+      use_parameter_covariance: true
+      parameter_covariance:
+        accel_noise_sigmas: [0.003878, 0.003878, 0.003878]
+        gyro_noise_sigmas: [0.001380, 0.001380, 0.001380]
+      accel_bias_rw_sigmas: [0.006204, 0.006204, 0.006204]
+      gyro_bias_rw_sigmas: [0.000613, 0.000613, 0.000613]
+      gravity: [0.0, 0.0, -9.81]
+
+    gps:
+      enable_gps: false
+
+    depth:
+      parameter_tf:
+        position: [-0.11247, 0.00146, -0.04147]
+        orientation: [1.0, 0.0, 0.0, 0.0]
+      use_parameter_covariance: true
+      parameter_covariance:
+        position_z_noise_sigma: 0.005
+
+    mag:
+      enable_mag: false
+
+    ahrs:
+      enable_ahrs: true
+      parameter_tf:
+        position: [-0.11247, 0.00146, -0.04147]
+        orientation: [-0.5, 0.5, -0.5, 0.5]
+      use_parameter_covariance: true
+      parameter_covariance:
+        orientation_noise_sigmas: [0.00349, 0.00349, 0.01745]
+
+    dvl:
+      parameter_tf:
+        position: [0.0, 0.0, 0.0]
+        orientation: [0.0, 0.0, 0.0, 1.0]
+
+    prior:
+      use_parameter_priors: false
+
+/turtlmap/fluid_pressure_odom_node:
+  ros__parameters:
+    atmospheric_pressure: 99339.996
+
+/turtlmap/dvl_a50_twist_node:
+  ros__parameters:
+    use_fom_covariance: true
+    fom_covariance_scale: 4.0

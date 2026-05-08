@@ -1,0 +1,422 @@
+/**:
+  ros__parameters:
+    # --- Node Settings ---
+    publish_global_tf: true # Publish the map -> odom transform.
+    publish_smoothed_path: true # Publish the full smoothed path for visualization.
+    publish_velocity: true # Publish the estimated velocity (at the target frame in the map frame).
+    publish_imu_bias: true # Publish the estimated IMU biases (accel + gyro).
+    publish_diagnostics: true # Publish diagnostic information.
+    publish_graph_metrics: true # Publish high-frequency timing and graph metadata.
+
+    # These are computationally expensive to calculate, so disable if not needed.
+    publish_pose_cov: true # Publish the pose covariance along with the pose.
+    publish_velocity_cov: false # Publish the velocity covariance along with the velocity.
+    publish_imu_bias_cov: false # Publish the IMU bias covariance along with the bias.
+
+    # --- GTSAM Smoother Settings ---
+    #
+    # Solver Types:
+    # - "IncrementalFixedLagSmoother": Incremental fixed-lag smoothing. (default)
+    # - "ISAM2": Incremental full trajectory smoothing.
+    # - "LevenbergMarquardt": Batch full trajectory smoothing.
+
+    solver_type: "IncrementalFixedLagSmoother"
+    max_update_rate: -1.0 # Maximum keyframe rate (in Hz). -1.0 for no limit.
+    max_opt_rate: -1.0 # Maximum optimization rate (in Hz). -1.0 for no limit.
+    smoother_lag: 20.0 # The time window (in seconds) of past states to smooth over.
+    relinearize_threshold: 0.1 # Lower values are more accurate but slower.
+    relinearize_skip: 1 # Number of updates to skip between relinearizations.
+
+    # --- Keyframe Settings ---
+    #
+    # Keyframe Sources:
+    # - "DVL": Trigger keyframes when DVL data arrives. (default)
+    # - "Depth": Trigger keyframes when depth data arrives.
+    # - "Timer": Trigger keyframes periodically at keyframe_timer_hz.
+    # - "None": Disable the keyframe trigger block.
+
+    keyframe_source: "DVL"
+    backup_keyframe_source: "Depth" # Fallback source if the primary source drops out.
+    keyframe_timeout: 0.5 # [s] Time before determining the primary source has dropped out.
+    keyframe_timer_hz: 10.0 # [Hz] Period of the periodic timer (if "Timer" is used).
+
+    # --- ROS Topics and Frames ---
+    imu_topic: "imu/data"
+    gps_odom_topic: "odometry/gps"
+    depth_odom_topic: "odometry/depth"
+    mag_topic: "imu/mag"
+    ahrs_topic: "imu/data"
+    dvl_topic: "dvl/twist"
+    wrench_topic: "cmd_wrench"
+    global_odom_topic: "odometry/global"
+    smoothed_path_topic: "smoothed_path"
+    velocity_topic: "~/velocity" # At the target frame in the map frame.
+    # Topic for the IMU bias. Published as a TwistWithCovarianceStamped,
+    # where 'linear' holds accelerometer bias and 'angular' holds gyroscope bias.
+    imu_bias_topic: "~/imu_bias"
+    graph_metrics_topic: "~/metrics"
+
+    # --- Factor Settings ---
+    #
+    # Robust Kernels:
+    # - "None": Standard Least Squares (Gaussian). Sensitive to outliers. (default)
+    # - "Huber": Linear penalty for large errors. Good general robustness. (k=1.345 standard)
+    # - "Tukey": Ignores large errors completely. Best for sensors with distinct 'bad' readings. (k=4.685 standard)
+
+    base:
+      use_parameter_tf: false
+      parameter_tf: # Relative to the target frame.
+        position: [-0.475, 0.0, -0.035] # [x, y, z]
+        orientation: [1.0, 0.0, 0.0, 0.0] # [qx, qy, qz, qw]
+
+    imu:
+      use_parameter_frame: false
+      use_parameter_tf: false
+      parameter_tf: # Relative to the target frame.
+        position: [0.0, 0.0, 0.0] # [x, y, z]
+        orientation: [0.0, 0.0, 0.0, 1.0] # [qx, qy, qz, qw]
+      covariance_scalar: 1.0 # Applies to both sensor-reported and parameter_covariance values.
+      use_parameter_covariance: false
+      parameter_covariance:
+        accel_noise_sigmas: [0.0078, 0.0078, 0.0078] # [m/s^2] Accelerometer measurement noise sigmas.
+        gyro_noise_sigmas: [0.0012, 0.0012, 0.0012] # [rad/s] Gyroscope measurement noise sigmas.
+      accel_bias_rw_sigmas: [0.000105, 0.000105, 0.000105] # [m/s^2/√s] Continuous-time spectral density sigmas for accelerometer bias random walk.
+      gyro_bias_rw_sigmas: [0.0000391, 0.0000391, 0.0000391] # [rad/s/√s] Continuous-time spectral density sigmas for gyroscope bias random walk.
+      integration_covariance: 0.00001 # A small covariance for the integration process itself.
+      gravity: [0.0, 0.0, -9.8] # [m/s^2]
+      diagnostic_timeout: 1.0 # [s]
+
+    gps:
+      enable_gps: true
+      enable_gps_init_only: false
+      use_parameter_frame: false
+      use_parameter_tf: false
+      parameter_tf: # Relative to the target frame.
+        position: [-0.475, 0.0, -0.035] # [x, y, z]
+        orientation: [1.0, 0.0, 0.0, 0.0] # [qx, qy, qz, qw]
+      covariance_scalar: 1.0 # Applies to both sensor-reported and parameter_covariance values.
+      use_parameter_covariance: false
+      parameter_covariance:
+        position_noise_sigmas: [0.015, 0.015] # [m] GPS position uncertainty sigmas.
+      diagnostic_timeout: 2.0 # [s]
+      robust_kernel: "None"
+      robust_k: 1.345
+
+    depth:
+      enable_depth: true
+      enable_depth_init_only: false
+      use_parameter_frame: false
+      use_parameter_tf: false
+      parameter_tf: # Relative to the target frame.
+        position: [-0.325, 0.0, -0.053] # [x, y, z]
+        orientation: [1.0, 0.0, 0.0, 0.0] # [qx, qy, qz, qw]
+      covariance_scalar: 1.0 # Applies to both sensor-reported and parameter_covariance values.
+      use_parameter_covariance: false
+      parameter_covariance:
+        position_z_noise_sigma: 0.02 # [m] Depth sensor Z-position uncertainty sigma.
+      diagnostic_timeout: 1.0 # [s]
+      robust_kernel: "None"
+      robust_k: 1.345
+
+    mag:
+      enable_mag: true
+      enable_mag_init_only: false
+      use_parameter_frame: false
+      use_parameter_tf: false
+      parameter_tf: # Relative to the target frame.
+        position: [0.0, 0.0, 0.0] # [x, y, z]
+        orientation: [0.0, 0.0, 0.0, 1.0] # [qx, qy, qz, qw]
+      covariance_scalar: 1.0 # Applies to both sensor-reported and parameter_covariance values.
+      use_parameter_covariance: false
+      parameter_covariance:
+        magnetic_field_noise_sigmas: [0.003, 0.003, 0.003] # [normalized] Magnetic field uncertainty sigmas.
+      # https://www.ngdc.noaa.gov/geomag/calculators/magcalc.shtml#igrfwmm
+      # WMMHR-2025 (40.2406 N, 111.741 W, 2026-01-23)
+      # North: 20,842.3 nT, East: 3,963.4 nT, Vertical: 45,767.8 nT
+      # NED: [X, Y, Z] -> ENU: [Y, X, -Z]
+      reference_field: [0.07857, 0.41316, -0.90726] # [normalized]
+      diagnostic_timeout: 1.0 # [s]
+      robust_kernel: "None"
+      robust_k: 1.345
+
+    ahrs:
+      enable_ahrs: false
+      enable_ahrs_init_only: false
+      use_parameter_frame: false
+      use_parameter_tf: false
+      parameter_tf: # Relative to the target frame.
+        position: [0.0, 0.0, 0.0] # [x, y, z]
+        orientation: [0.0, 0.0, 0.0, 1.0] # [qx, qy, qz, qw]
+      covariance_scalar: 1.0 # Applies to both sensor-reported and parameter_covariance values.
+      use_parameter_covariance: false
+      parameter_covariance:
+        orientation_noise_sigmas: [0.00349, 0.00349, 0.01745] # [rad] AHRS orientation uncertainty sigmas [roll, pitch, yaw].
+      # https://www.ngdc.noaa.gov/geomag/calculators/magcalc.shtml#declination
+      mag_declination_radians: 0.0
+      diagnostic_timeout: 1.0 # [s]
+      robust_kernel: "None"
+      robust_k: 1.345
+
+    dvl:
+      enable_dvl: true
+      enable_dvl_init_only: false
+      use_parameter_frame: false
+      use_parameter_tf: false
+      parameter_tf: # Relative to the target frame.
+        position: [0.0, 0.0, 0.0] # [x, y, z]
+        orientation: [0.0, 0.0, 0.0, 1.0] # [qx, qy, qz, qw]
+      covariance_scalar: 1.0 # Applies to both sensor-reported and parameter_covariance values.
+      use_parameter_covariance: false
+      parameter_covariance:
+        velocity_noise_sigmas: [0.02, 0.02, 0.02] # [m/s] DVL body-velocity uncertainty sigmas.
+      diagnostic_timeout: 0.25 # [s]
+      robust_kernel: "None"
+      robust_k: 1.345
+
+    const_vel:
+      enable_const_vel: false
+      enable_const_vel_dropout_only: false
+      covariance_scalar: 1.0 # Scales the prediction noise sigmas.
+      prediction_noise_sigmas: [0.001, 0.001, 0.001] # [m/s/sqrt(s)] Velocity prediction uncertainty sigmas.
+
+    dynamics:
+      enable_dynamics: false
+      enable_dynamics_dropout_only: false
+      use_parameter_frame: false
+      use_parameter_tf: false
+      parameter_tf: # Relative to the target frame.
+        position: [-0.475, 0.0, -0.035] # [x, y, z]
+        orientation: [1.0, 0.0, 0.0, 0.0] # [qx, qy, qz, qw]
+      covariance_scalar: 1.0 # Scales the prediction noise sigmas.
+      prediction_noise_sigmas: [0.1, 0.1, 0.1] # Model prediction uncertainty sigmas.
+      mass: [31.87, 60.46, 60.46] # [kg] Mass of the vehicle (diagonal)
+      linear_drag: [1.59, 3.02, 3.02] # Linear drag coefficient (diagonal)
+      quad_drag: [6.11, 196.13, 196.13] # Quadratic drag coefficient (diagonal)
+      diagnostic_timeout: 1.0 # [s]
+      robust_kernel: "None"
+      robust_k: 1.345
+
+    # --- Initial State Priors ---
+    prior:
+      initialization_duration: 5.0 # [s] Time duration to collect and average data before initializing.
+
+      # If true, forces the initial state to be set by the values below.
+      # The parameter priors should be set at the base frame with respect to the map frame.
+      use_parameter_priors: true
+      parameter_priors:
+        initial_position: [0.0, 0.0, 0.0] # [m]
+        initial_orientation: [0.0, 0.0, 0.0] # [rad]
+        initial_velocity: [0.0, 0.0, 0.0] # [m/s] (at target frame)
+        initial_accel_bias: [0.0, 0.0, 0.0] # [m/s^2]
+        initial_gyro_bias: [0.0, 0.0, 0.0] # [rad/s]
+        initial_position_sigmas: [0.001, 0.001, 0.001] # [m] Initial position uncertainty.
+        initial_orientation_sigmas: [0.001, 0.001, 0.001] # [rad] Initial yaw uncertainty.
+        initial_velocity_sigmas: [0.001, 0.001, 0.001] # [m/s] Initial velocity uncertainty.
+      initial_accel_bias_sigmas: [0.01, 0.01, 0.01] # [m/s^2] Initial accelerometer bias uncertainty.
+      initial_gyro_bias_sigmas: [0.001, 0.001, 0.001] # [rad/s] Initial gyroscope bias uncertainty.
+
+    # --- Comparison Methods ---
+    comparison:
+      # TURTLMap-based loosely-coupled DVL preintegration implementation
+      enable_loose_dvl_preintegration: false
+      # AQUA-SLAM-based tightly-coupled DVL preintegration implementation
+      enable_tight_dvl_preintegration: false
+
+/**/dvl_a50_twist_node:
+  ros__parameters:
+    # --- Node Settings ---
+    publish_diagnostics: true # Publish diagnostic information.
+    diagnostic_timeout: 0.5 # [s]
+
+    simulate_dropout: false
+    dropout_frequency: 0.033 # [Hz] Frequency of the dropout cycle (1/30).
+    dropout_duration: 5.0 # [s] Duration of the dropout.
+
+    fom_valid_threshold: 0.02 # Below this is considered a valid velocity measurement.
+    # TURTLMap-based FOM covariance calculation
+    use_fom_covariance: false
+    fom_covariance_scale: 4.0
+
+    # --- ROS Topics and Frames ---
+    input_topic: "dvl/data"
+    output_topic: "dvl/twist"
+
+    use_parameter_frame: true
+
+/**/dvl_a50_odom_node:
+  ros__parameters:
+    # --- Node Settings ---
+    publish_diagnostics: true # Publish diagnostic information.
+    diagnostic_timeout: 0.5 # [s]
+
+    # --- ROS Topics and Frames ---
+    input_topic: "dvl/position"
+    output_topic: "odometry/dvl"
+
+    use_parameter_frame: true
+    publish_local_tf: false # Whether to publish the dvl_odom->base_link transform
+
+/**/fluid_pressure_odom_node:
+  ros__parameters:
+    # --- Node Settings ---
+    publish_diagnostics: true # Publish diagnostic information.
+    diagnostic_timeout: 0.5 # [s]
+
+    atmospheric_pressure: 101325.0 # [Pa]
+    water_density: 997.0 # [kg/m^3]
+    gravity: 9.81 # [m/s^2]
+
+    # --- ROS Topics and Frames ---
+    input_topic: "depth/pressure"
+    output_topic: "odometry/depth"
+
+    use_parameter_frame: false
+
+/**/navsat_odom_node:
+  ros__parameters:
+    # --- Node Settings ---
+    publish_diagnostics: true # Publish diagnostic information.
+    diagnostic_timeout: 1.0 # [s]
+
+    set_origin: true # Whether this node owns and publishes the ENU origin.
+    origin_pub_rate: 1.0 # [Hz] Rate to republish the origin.
+
+    use_parameter_origin: true
+    origin_latitude: 40.33940 # [deg]
+    origin_longitude: -111.90721 # [deg]
+    origin_altitude: 1412.0 # [m]
+
+    # --- ROS Topics and Frames ---
+    input_topic: "gps/fix"
+    output_topic: "odometry/gps"
+    origin_topic: "/origin"
+
+    use_parameter_child_frame: false
+
+/**/gps_to_truth_relay:
+  ros__parameters:
+    input_topic: "odometry/gps"
+    output_topic: "odometry/truth"
+
+# --- Robot Localization Pipeline ---
+/**/ekf_filter_node_odom:
+  ros__parameters:
+    frequency: 30.0
+    two_d_mode: false
+    publish_tf: true
+    print_diagnostics: true
+
+    twist0: dvl/twist
+    twist0_config: [false, false, false, # X, Y, Z
+                    false, false, false, # Roll, Pitch, Yaw
+                    true,  true,  true,  # Vx, Vy, Vz
+                    false, false, false, # Vroll, Vpitch, Vyaw
+                    false, false, false] # Ax, Ay, Az
+    twist0_queue_size: 5
+
+    imu0: imu/data
+    imu0_config: [false, false, false, # X, Y, Z
+                  false, false, false, # Roll, Pitch, Yaw
+                  false, false, false, # Vx, Vy, Vz
+                  true,  true,  true,  # Vroll, Vpitch, Vyaw
+                  true,  true,  true]  # Ax, Ay, Az
+    imu0_differential: false
+    imu0_relative: true
+    imu0_queue_size: 15
+    imu0_remove_gravitational_acceleration: true
+
+    use_control: false
+
+/**/ekf_filter_node_map:
+  ros__parameters:
+    frequency: 30.0
+    two_d_mode: false
+    publish_tf: false # Published by FGO instead
+    print_diagnostics: true
+
+    odom0: odometry/local
+    odom0_config: [false, false, false, # X, Y, Z
+                    false, false, false, # Roll, Pitch, Yaw
+                    true,  true,  true,  # Vx, Vy, Vz
+                    true,  true,  true,  # Vroll, Vpitch, Vyaw
+                    false, false, false] # Ax, Ay, Az
+    odom0_queue_size: 10
+    odom0_differential: false
+    odom0_relative: false
+
+    odom1: odometry/depth
+    odom1_config: [false, false, true,  # X, Y, Z
+                    false, false, false, # Roll, Pitch, Yaw
+                    false, false, false, # Vx, Vy, Vz
+                    false, false, false, # Vroll, Vpitch, Vyaw
+                    false, false, false] # Ax, Ay, Az
+    odom1_queue_size: 5
+    odom1_differential: false
+    odom1_relative: false # Absolute depth in the map frame.
+
+    odom2: odometry/gps
+    odom2_config: [true,  true,  false, # X, Y, Z
+                    false, false, false, # Roll, Pitch, Yaw
+                    false, false, false, # Vx, Vy, Vz
+                    false, false, false, # Vroll, Vpitch, Vyaw
+                    false, false, false] # Ax, Ay, Az
+    odom2_queue_size: 5
+    odom2_differential: false
+    odom2_relative: false # Absolute GPS position in the map frame.
+
+    imu0: imu/data
+    imu0_config: [false, false, false, # X, Y, Z
+                  true,  true,  true,  # Roll, Pitch, Yaw
+                  false, false, false, # Vx, Vy, Vz
+                  false, false, false, # Vroll, Vpitch, Vyaw
+                  false, false, false] # Ax, Ay, Az
+    imu0_queue_size: 15
+    imu0_differential: false
+    imu0_relative: false # Absolute orientation in the map frame.
+
+/**/ukf_filter_node_map:
+  ros__parameters:
+    frequency: 30.0
+    two_d_mode: false
+    publish_tf: false # Published by FGO instead
+    print_diagnostics: true
+
+    odom0: odometry/local
+    odom0_config: [false, false, false, # X, Y, Z
+                    false, false, false, # Roll, Pitch, Yaw
+                    true,  true,  true,  # Vx, Vy, Vz
+                    true,  true,  true,  # Vroll, Vpitch, Vyaw
+                    false, false, false] # Ax, Ay, Az
+    odom0_queue_size: 10
+    odom0_differential: false
+    odom0_relative: false
+
+    odom1: odometry/depth
+    odom1_config: [false, false, true,  # X, Y, Z
+                    false, false, false, # Roll, Pitch, Yaw
+                    false, false, false, # Vx, Vy, Vz
+                    false, false, false, # Vroll, Vpitch, Vyaw
+                    false, false, false] # Ax, Ay, Az
+    odom1_queue_size: 5
+    odom1_differential: false
+    odom1_relative: false # Absolute depth in the map frame.
+
+    odom2: odometry/gps
+    odom2_config: [true,  true,  false, # X, Y, Z
+                    false, false, false, # Roll, Pitch, Yaw
+                    false, false, false, # Vx, Vy, Vz
+                    false, false, false, # Vroll, Vpitch, Vyaw
+                    false, false, false] # Ax, Ay, Az
+    odom2_queue_size: 5
+    odom2_differential: false
+    odom2_relative: false # Absolute GPS position in the map frame.
+
+    imu0: imu/data
+    imu0_config: [false, false, false, # X, Y, Z
+                  true,  true,  true,  # Roll, Pitch, Yaw
+                  false, false, false, # Vx, Vy, Vz
+                  false, false, false, # Vroll, Vpitch, Vyaw
+                  false, false, false] # Ax, Ay, Az
+    imu0_queue_size: 15
+    imu0_differential: false
+    imu0_relative: false # Absolute orientation in the map frame.

@@ -1,0 +1,11 @@
+session_name: auv-launch
+start_directory: "~/cougars-dev"
+windows:
+  - window_name: main
+    panes:
+      - shell_command:
+          - sudo systemctl restart cougars.service && sudo journalctl -u cougars.service -f
+        enter: false
+      - shell_command:
+          - vcs custom -n --args pull base main
+        enter: false

@@ -1,0 +1,63 @@
+# Copyright (c) 2026 BYU FROST Lab
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+ARG ROS_DISTRO=jazzy
+
+# --- Build Stage ---
+FROM ubuntu:24.04 AS builder
+
+ARG DEBIAN_FRONTEND=noninteractive
+
+SHELL [ "/bin/bash", "-c" ]
+
+# Install build tools
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+  --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
+  apt-get update && apt-get install -y --no-install-recommends \
+  build-essential cmake git ca-certificates ccache \
+  libtbb-dev
+
+# Build GTSAM
+WORKDIR /tmp/gtsam-build
+RUN --mount=type=cache,target=/root/.ccache \
+  ccache -z \
+  && git clone --depth 1 --branch 4.3a1 https://github.com/borglab/gtsam.git . \
+  && cmake -B build -S . \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DGTSAM_BUILD_WITH_MARCH_NATIVE=OFF \
+  -DGTSAM_BUILD_UNSTABLE=ON \
+  -DGTSAM_BUILD_TESTS=OFF \
+  -DGTSAM_BUILD_EXAMPLES_ALWAYS=OFF \
+  -DGTSAM_WITH_TBB=ON \
+  -DGTSAM_USE_BOOST_FEATURES=OFF \
+  -DGTSAM_ENABLE_BOOST_SERIALIZATION=OFF \
+  -DCMAKE_C_COMPILER_LAUNCHER=ccache \
+  -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
+  && make -C build -j$(nproc) \
+  && make -C build install \
+  && ccache -s
+
+# --- Main Stage ---
+FROM ros:${ROS_DISTRO}-ros-base
+
+ARG DEBIAN_FRONTEND=noninteractive
+
+# Install runtime dependencies
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+  --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
+  apt-get update && apt-get install -y --no-install-recommends \
+  libtbb-dev libtbb12
+
+COPY --from=builder /usr/local /usr/local
+RUN ldconfig

@@ -1,0 +1,13 @@
+[Unit]
+Description=CoUGARs
+Requires=docker.service
+After=docker.service
+
+[Service]
+WorkingDirectory=/home/frostlab/cougars-dev
+ExecStart=docker compose up --build
+ExecStop=docker compose down
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

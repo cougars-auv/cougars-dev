@@ -1,0 +1,83 @@
+# Copyright (c) 2026 BYU FROST Lab
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: ROS 2 Build & Test
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - ".github/workflows/ros2_build_and_test.yml"
+      - "ros2_ws/src/**"
+      - "cougars.repos"
+  pull_request:
+    branches: [ "main" ]
+    paths:
+      - ".github/workflows/ros2_build_and_test.yml"
+      - "ros2_ws/src/**"
+      - "cougars.repos"
+  repository_dispatch:
+    types: [ ros2_dispatch ]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-test:
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [ ubuntu-24.04, ubuntu-24.04-arm ]
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v4
+        with:
+          path: ${{ github.workspace }}/.ccache
+          key: ccache-${{ github.repository }}-${{ matrix.runner }}-${{ github.run_id }}
+          restore-keys: |
+            ccache-${{ github.repository }}-${{ matrix.runner }}-
+      - uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_KEY }}
+      - uses: ros-industrial/industrial_ci@master
+        env:
+          DOCKER_IMAGE: snelsondurrant/cougars:base
+          DOCKER_PULL: true
+          UPSTREAM_WORKSPACE: cougars.repos
+          TARGET_WORKSPACE: ros2_ws
+          CCACHE_DIR: ${{ github.workspace }}/.ccache
+          BASEDIR: ${{ github.workspace }}/.work
+          TARGET_CMAKE_ARGS: >
+            -DCMAKE_BUILD_TYPE=${{ matrix.runner == 'ubuntu-24.04' && 'Debug' ||
+            'Release' }} -DCMAKE_CXX_FLAGS="${{ matrix.runner == 'ubuntu-24.04'
+            && '--coverage' || '' }}" -DCMAKE_C_FLAGS="${{ matrix.runner ==
+            'ubuntu-24.04' && '--coverage' || '' }}"
+          AFTER_SETUP_UPSTREAM_WORKSPACE: |
+            git config --global --add safe.directory "*"
+            vcs custom -n --git --args submodule update --init --recursive
+      - if: matrix.runner == 'ubuntu-24.04'
+        run: |
+          sudo apt-get update && sudo apt-get install -y lcov
+          lcov --capture --directory ${{ github.workspace }}/.work/target_ws/build --output-file coverage.info --ignore-errors mismatch,gcov,source,empty
+          lcov --remove coverage.info '/usr/*' '/opt/*' '*/test/*' '*/tests/*' '*/install/*' '*/build/*' --output-file coverage.info --ignore-errors mismatch,gcov,unused,empty
+          sed -i "s|${{ github.workspace }}/.work/target_ws/src|${{ github.workspace }}/ros2_ws/src|g" coverage.info
+      - if: matrix.runner == 'ubuntu-24.04'
+        uses: codecov/codecov-action@v5
+        with:
+          files: coverage.info
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: false

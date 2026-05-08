@@ -1,0 +1,207 @@
+# Copyright (c) 2026 BYU FROST Lab
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: Docker Build
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - ".github/workflows/docker_build.yml"
+      - ".docker/Dockerfile.gtsam"
+      - ".docker/Dockerfile.base"
+      - ".docker/Dockerfile.dev"
+      - ".docker/entrypoint.sh"
+      - "cougars.repos"
+      - "**/package.xml"
+  repository_dispatch:
+    types: [ docker_dispatch ]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check-changes:
+    runs-on: ubuntu-24.04
+    outputs:
+      gtsam: ${{ steps.filter.outputs.gtsam }}
+      base: ${{ steps.filter.outputs.base }}
+      dev: ${{ steps.filter.outputs.dev }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            gtsam:
+              - ".github/workflows/docker_build.yml"
+              - ".docker/Dockerfile.gtsam"
+            base:
+              - ".github/workflows/docker_build.yml"
+              - ".docker/Dockerfile.base"
+              - ".docker/entrypoint.sh"
+              - "cougars.repos"
+              - "**/package.xml"
+            dev:
+              - ".github/workflows/docker_build.yml"
+              - ".docker/Dockerfile.dev"
+
+  build-gtsam:
+    needs: check-changes
+    if: |
+      github.event_name != 'repository_dispatch' &&
+      needs.check-changes.outputs.gtsam == 'true'
+    strategy:
+      matrix:
+        include:
+          - runner: ubuntu-24.04
+            arch: amd64
+          - runner: ubuntu-24.04-arm
+            arch: arm64
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          username: snelsondurrant
+          password: ${{ secrets.DOCKER_TOKEN }}
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: .docker/Dockerfile.gtsam
+          platforms: linux/${{ matrix.arch }}
+          push: true
+          tags: snelsondurrant/cougars:gtsam-${{ matrix.arch }}
+          provenance: false
+          cache-from: |
+            type=gha,scope=gtsam-${{ matrix.arch }}
+            type=registry,ref=snelsondurrant/cougars:buildcache-gtsam-${{ matrix.arch }}
+          cache-to: |
+            type=gha,mode=max,scope=gtsam-${{ matrix.arch }}
+            type=registry,ref=snelsondurrant/cougars:buildcache-gtsam-${{ matrix.arch }},mode=max
+
+  manifest-gtsam:
+    needs: build-gtsam
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          username: snelsondurrant
+          password: ${{ secrets.DOCKER_TOKEN }}
+      - run: |
+          docker buildx imagetools create -t snelsondurrant/cougars:gtsam \
+            snelsondurrant/cougars:gtsam-amd64 \
+            snelsondurrant/cougars:gtsam-arm64
+
+  build-base:
+    needs: [ check-changes, build-gtsam, manifest-gtsam ]
+    if: |
+      !failure() && !cancelled() &&
+      (github.event_name == 'repository_dispatch' ||
+       needs.check-changes.outputs.gtsam == 'true' ||
+       needs.check-changes.outputs.base == 'true')
+    strategy:
+      matrix:
+        include:
+          - runner: ubuntu-24.04
+            arch: amd64
+          - runner: ubuntu-24.04-arm
+            arch: arm64
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_KEY }}
+      - run: |
+          sudo apt-get update && sudo apt-get install -y python3-pip
+          pip3 install --user vcstool
+          echo "${HOME}/.local/bin" >> ${GITHUB_PATH}
+          vcs import ros2_ws/src < cougars.repos
+          vcs custom -n --git --args submodule update --init --recursive
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          username: snelsondurrant
+          password: ${{ secrets.DOCKER_TOKEN }}
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: .docker/Dockerfile.base
+          platforms: linux/${{ matrix.arch }}
+          pull: true
+          push: true
+          tags: snelsondurrant/cougars:base-${{ matrix.arch }}
+          provenance: false
+          cache-from: |
+            type=gha,scope=base-${{ matrix.arch }}
+            type=registry,ref=snelsondurrant/cougars:buildcache-base-${{ matrix.arch }}
+          cache-to: |
+            type=gha,mode=max,scope=base-${{ matrix.arch }}
+            type=registry,ref=snelsondurrant/cougars:buildcache-base-${{ matrix.arch }},mode=max
+
+  manifest-base:
+    needs: [ check-changes, build-base ]
+    if: |
+      !failure() && !cancelled() &&
+      (github.event_name == 'repository_dispatch' ||
+       needs.check-changes.outputs.gtsam == 'true' ||
+       needs.check-changes.outputs.base == 'true')
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          username: snelsondurrant
+          password: ${{ secrets.DOCKER_TOKEN }}
+      - run: |
+          docker buildx imagetools create -t snelsondurrant/cougars:base \
+            snelsondurrant/cougars:base-amd64 \
+            snelsondurrant/cougars:base-arm64
+
+  build-dev:
+    needs: [ check-changes, build-base, manifest-base ]
+    if: |
+      !failure() && !cancelled() &&
+      (github.event_name == 'repository_dispatch' ||
+       needs.check-changes.outputs.gtsam == 'true' ||
+       needs.check-changes.outputs.base == 'true' ||
+       needs.check-changes.outputs.dev == 'true')
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          username: snelsondurrant
+          password: ${{ secrets.DOCKER_TOKEN }}
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: .docker/Dockerfile.dev
+          platforms: linux/amd64
+          pull: true
+          push: true
+          tags: snelsondurrant/cougars:dev
+          provenance: false
+          cache-from: |
+            type=gha,scope=dev-amd64
+            type=registry,ref=snelsondurrant/cougars:buildcache-dev-amd64
+          cache-to: |
+            type=gha,mode=max,scope=dev-amd64
+            type=registry,ref=snelsondurrant/cougars:buildcache-dev-amd64,mode=max

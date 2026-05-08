@@ -1,0 +1,29 @@
+/coug1sim/**:
+  ros__parameters:
+    prior:
+      parameter_priors:
+        initial_position: [0.0, 20.0, 0.0]
+
+/coug1sim/dvl_a50_odom_node:
+  ros__parameters:
+    publish_diagnostics: false
+
+/coug1sim/fluid_pressure_odom_node:
+  ros__parameters:
+    publish_diagnostics: false
+
+/coug1sim/ekf_filter_node_map:
+  ros__parameters:
+    initial_state: [0.0, 20.0, 0.0,
+                    0.0, 0.0, 0.0,
+                    0.0, 0.0, 0.0,
+                    0.0, 0.0, 0.0,
+                    0.0, 0.0, 0.0]
+
+/coug1sim/ukf_filter_node_map:
+  ros__parameters:
+    initial_state: [0.0, 20.0, 0.0,
+                    0.0, 0.0, 0.0,
+                    0.0, 0.0, 0.0,
+                    0.0, 0.0, 0.0,
+                    0.0, 0.0, 0.0]

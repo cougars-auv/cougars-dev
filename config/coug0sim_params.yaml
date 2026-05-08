@@ -1,0 +1,7 @@
+/coug0sim/dvl_a50_odom_node:
+  ros__parameters:
+    publish_diagnostics: false
+
+/coug0sim/fluid_pressure_odom_node:
+  ros__parameters:
+    publish_diagnostics: false

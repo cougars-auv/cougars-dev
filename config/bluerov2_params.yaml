@@ -1,0 +1,66 @@
+/bluerov2/**:
+  ros__parameters:
+    base:
+      parameter_tf:
+        position: [0.27161, -0.10886, -0.01984]
+        orientation: [1.0, 0.0, 0.0, 0.0]
+
+    imu:
+      parameter_tf:
+        position: [0.27161, -0.10886, -0.01984]
+        orientation: [1.0, 0.0, 0.0, 0.0]
+      gravity: [0.0, 0.0, -9.81]
+
+    gps:
+      enable_gps: false
+      parameter_tf:
+        position: [0.15391, 0.09837, -0.42003]
+        orientation: [1.0, 0.0, 0.0, 0.0]
+
+    depth:
+      parameter_tf:
+        position: [0.27161, -0.10886, -0.01984]
+        orientation: [1.0, 0.0, 0.0, 0.0]
+
+    mag:
+      enable_mag: false
+      use_parameter_covariance: true
+      parameter_tf:
+        position: [0.27161, -0.10886, -0.01984]
+        orientation: [1.0, 0.0, 0.0, 0.0]
+
+    ahrs:
+      enable_ahrs: true
+      parameter_tf:
+        position: [0.27161, -0.10886, -0.01984]
+        orientation: [1.0, 0.0, 0.0, 0.0]
+
+    dvl:
+      parameter_tf:
+        position: [0.0, 0.0, 0.0]
+        orientation: [0.0, 0.0, 0.0, 1.0]
+
+    dynamics:
+      parameter_tf:
+        position: [0.27161, -0.10886, -0.01984]
+        orientation: [1.0, 0.0, 0.0, 0.0]
+
+    prior:
+      use_parameter_priors: false
+
+/bluerov2/fluid_pressure_odom_node:
+  ros__parameters:
+    publish_diagnostics: false
+
+/**/navsat_odom_node:
+  ros__parameters:
+    use_parameter_origin: false
+    use_parameter_child_frame: true
+
+/bluerov2/ekf_filter_node_map:
+  ros__parameters:
+    odom2: odometry/gps_null
+
+/bluerov2/ukf_filter_node_map:
+  ros__parameters:
+    odom2: odometry/gps_null
