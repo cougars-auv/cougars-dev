@@ -30,7 +30,7 @@
     <img src=".github/assets/holoocean.gif" width="400">
   </p>
 
-  - Build a runtime image for [HoloOcean-ROS](https://github.com/snelsondurrant/holoocean-ros/tree/main/docker/runtime) on `snelsondurrant`'s fork. When prompted to run `./build_container.sh`, specify the branch `nelson/fgo-dev` using `./build_container.sh -b nelson/fgo-dev`.
+  - Build a runtime image for [HoloOcean-ROS](https://github.com/cougars-auv/holoocean-ros/tree/main/docker/runtime) on the `cougars-auv` organization's fork. When prompted to run `./build_container.sh`, specify the branch `nelson/fgo-dev` using `./build_container.sh -b nelson/fgo-dev`.
 
   - Open the `cougars-dev` repository in VSCode and use the Command Palette (`Ctrl + Shift + P`) to select "Dev Containers: Reopen in Container." When prompted to choose a `devcontainer.json` file, click `CoUGARs Dev (HoloOcean)`.
 
