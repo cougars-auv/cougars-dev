@@ -28,7 +28,7 @@ COPY ros2_ws/src ${OVERLAY_WS}/src
 WORKDIR ${OVERLAY_WS}
 RUN --mount=type=cache,target=${OVERLAY_WS}/build \
   --mount=type=cache,target=${OVERLAY_WS}/log \
-  source /opt/ros/${ROS_DISTRO}/setup.sh && \
+  source /opt/ros/${ROS_DISTRO}/setup.bash && \
   colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release
 
 RUN echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> /root/.bashrc \

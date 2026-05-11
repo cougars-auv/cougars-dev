@@ -5,8 +5,8 @@ After=docker.service
 
 [Service]
 WorkingDirectory=/home/frostlab/cougars-dev
-ExecStart=docker compose up --build
-ExecStop=docker compose down
+ExecStart=/usr/bin/docker compose up --build
+ExecStop=/usr/bin/docker compose down
 Restart=on-failure
 
 [Install]

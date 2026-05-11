@@ -7,5 +7,5 @@ windows:
           - sudo systemctl restart cougars.service && sudo journalctl -u cougars.service -f
         enter: false
       - shell_command:
-          - vcs custom -n --args pull base main
+          - vcs custom -n --args sh -c 'git pull base $(git branch --show-current)'
         enter: false

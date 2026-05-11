@@ -36,7 +36,7 @@ services:
     restart: unless-stopped
 
   router:
-    image: snelsondurrant/cougars:runtime
+    image: snelsondurrant/cougars:base
     container_name: router-ct
     network_mode: host
     ipc: host
