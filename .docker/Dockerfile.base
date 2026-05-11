@@ -58,6 +58,9 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
   && rosdep install --from-paths . --ignore-src -y \
   && rm -rf ./*
 
+# Install GeographicLib datasets required by MAVROS
+RUN /opt/ros/${ROS_DISTRO}/lib/mavros/install_geographiclib_datasets.sh
+
 COPY .docker/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 

@@ -15,8 +15,9 @@
   <exec_depend>coug_active_fgo</exec_depend>
   <exec_depend>coug_visual_dvl</exec_depend>
   <exec_depend>holoocean_bridge</exec_depend>
-  <exec_depend>sbg_driver</exec_depend>
+  <exec_depend>mavros</exec_depend>
   <exec_depend>ntrip_client</exec_depend>
+  <exec_depend>sbg_driver</exec_depend>
 
   <test_depend>python3-pytest</test_depend>
 
