@@ -11,6 +11,7 @@ bags/*
 coug_active_fgo
 coug_description
 coug_fgo
+coug_interfaces
 coug_mapviz
 coug_navigation
 coug_rqt

@@ -11,6 +11,10 @@ repositories:
     type: git
     url: git@github.com:cougars-auv/coug_fgo.git
     version: main
+  coug_interfaces:
+    type: git
+    url: git@github.com:cougars-auv/coug_interfaces.git
+    version: main
   coug_mapviz:
     type: git
     url: git@github.com:cougars-auv/coug_mapviz.git

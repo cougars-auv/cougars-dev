@@ -34,6 +34,7 @@
         }
       },
       "extensions": [
+        "Anthropic.claude-code",
         "charliermarsh.ruff",
         "docker.docker",
         "eamodio.gitlens",
