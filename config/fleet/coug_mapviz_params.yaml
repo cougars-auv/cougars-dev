@@ -1,3 +1,9 @@
+mapviz:
+  ros__parameters:
+    # --- ROS Topics ---
+    waypoint_topic: "waypoints"
+    waypoints_map_topic: "waypoints_map"
+
 initialize_origin:
   ros__parameters:
     local_xy_origin: "auto"
