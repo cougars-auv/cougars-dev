@@ -48,14 +48,6 @@
       parameter_priors:
         initial_position_sigmas: [0.001, 0.001, 1.0]
 
-/blue0sim/dvl_a50_odom_node:
-  ros__parameters:
-    publish_diagnostics: false
-
-/blue0sim/fluid_pressure_odom_node:
-  ros__parameters:
-    publish_diagnostics: false
-
 /blue0sim/global_costmap:
   global_costmap:
     ros__parameters:

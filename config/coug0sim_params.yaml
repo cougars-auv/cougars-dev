@@ -1,7 +1,3 @@
-/coug0sim/dvl_a50_odom_node:
+/coug0sim/bt_helm_node:
   ros__parameters:
-    publish_diagnostics: false
-
-/coug0sim/fluid_pressure_odom_node:
-  ros__parameters:
-    publish_diagnostics: false
+    publish_groot2: true

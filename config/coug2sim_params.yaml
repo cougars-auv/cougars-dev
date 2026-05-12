@@ -4,14 +4,6 @@
       parameter_priors:
         initial_position: [0.0, 40.0, 0.0]
 
-/coug2sim/dvl_a50_odom_node:
-  ros__parameters:
-    publish_diagnostics: false
-
-/coug2sim/fluid_pressure_odom_node:
-  ros__parameters:
-    publish_diagnostics: false
-
 /coug2sim/ekf_filter_node_map:
   ros__parameters:
     initial_state: [0.0, 40.0, 0.0,
@@ -27,3 +19,8 @@
                     0.0, 0.0, 0.0,
                     0.0, 0.0, 0.0,
                     0.0, 0.0, 0.0]
+
+/coug2sim/bt_helm_node:
+  ros__parameters:
+    publish_groot2: true
+    groot2_port: 1671

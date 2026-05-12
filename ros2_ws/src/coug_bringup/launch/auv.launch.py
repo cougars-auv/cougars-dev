@@ -48,8 +48,8 @@ def generate_launch_description() -> LaunchDescription:
     coug_des_launch_dir = os.path.join(coug_des_dir, "launch")
     coug_fgo_dir = get_package_share_directory("coug_fgo")
     coug_fgo_launch_dir = os.path.join(coug_fgo_dir, "launch")
-    coug_nav_dir = get_package_share_directory("coug_navigation")
-    coug_nav_launch_dir = os.path.join(coug_nav_dir, "launch")
+    coug_helm_dir = get_package_share_directory("coug_helm")
+    coug_helm_launch_dir = os.path.join(coug_helm_dir, "launch")
     coug_active_fgo_dir = get_package_share_directory("coug_active_fgo")
     coug_active_fgo_launch_dir = os.path.join(coug_active_fgo_dir, "launch")
     coug_viz_dvl_dir = get_package_share_directory("coug_visual_dvl")
@@ -78,9 +78,9 @@ def generate_launch_description() -> LaunchDescription:
         }.items(),
     )
 
-    coug_nav_cmd = IncludeLaunchDescription(
+    coug_helm_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            os.path.join(coug_nav_launch_dir, "coug_navigation.launch.py")
+            os.path.join(coug_helm_launch_dir, "coug_helm.launch.py")
         ),
         launch_arguments={
             "use_sim_time": use_sim_time,
@@ -149,7 +149,7 @@ def generate_launch_description() -> LaunchDescription:
                     PushRosNamespace(auv_ns),
                     coug_des_cmd,
                     coug_fgo_cmd,
-                    coug_nav_cmd,
+                    coug_helm_cmd,
                     coug_active_fgo_cmd,
                     coug_viz_dvl_cmd,
                 ]
