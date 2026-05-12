@@ -26,9 +26,19 @@
   depth_converter_node:
     ros__parameters:
       input_topic: "DepthSensor"
-      output_topic: "odometry/depth"
+      output_topic: "odometry/depth_null"
 
       noise_sigma: 0.02 # [m] Depth sensor Z-position uncertainty sigma.
+
+  pressure_converter_node:
+    ros__parameters:
+      input_topic: "DepthSensor"
+      output_topic: "depth/pressure"
+
+      water_density: 997.0 # [kg/m^3]
+      gravity: 9.81 # [m/s^2]
+      atmospheric_pressure: 101325.0 # [Pa]
+      noise_sigma: 195.61 # [Pa]
 
   mag_converter_node:
     ros__parameters:
