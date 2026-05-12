@@ -54,6 +54,11 @@
 
       noise_sigmas: [0.02, 0.02, 0.02] # [m/s] DVL body-velocity uncertainty sigmas.
 
+  dvl_odom_converter_node:
+    ros__parameters:
+      input_topic: "DynamicsSensorOdom"
+      output_topic: "dvl/position"
+
   stereo_converter_node:
     ros__parameters:
       front_input_topic: "RGBCameraFront"
