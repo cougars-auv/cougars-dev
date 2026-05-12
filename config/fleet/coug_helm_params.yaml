@@ -4,10 +4,16 @@
       # --- Node Settings ---
       tick_rate_ms: 50 # [ms] Behavior tree tick interval.
 
-      # Waypoint reached if distance < capture_radius (direct hit).
-      capture_radius: 25.0 # [m]
-      # Waypoint reached if distance < slip_radius AND distance > prev_distance (overshoot).
-      slip_radius: 50.0 # [m] (typically 2x capture_radius)
+      # Waypoint reached if normalized ellipse distance < 1.0 (direct hit).
+      capture_radius: [25.0, 2.0] # [m] [horizontal, vertical]
+      surface_capture_radius: [1000.0, 0.5] # [m]
+      home_capture_radius: [25.0, 0.5] # [m]
+
+      # Waypoint reached if overshoot detected within slip ellipse.
+      slip_radius: [50.0, 4.0] # [m] [horizontal, vertical] (typically 2x capture_radius)
+      surface_slip_radius: [1000.0, 0.5] # [m]
+      home_slip_radius: [50.0, 0.5] # [m]
+
       desired_speed_rpm: 1500.0 # [RPM] Constant thruster speed to command when moving.
       odom_timeout_sec: 2.0 # [s] Time to wait for odometry before stopping.
 
