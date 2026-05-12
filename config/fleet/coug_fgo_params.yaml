@@ -251,7 +251,7 @@
 
     # --- ROS Topics and Frames ---
     input_topic: "dvl/position"
-    output_topic: "odometry/dvl"
+    output_topic: "odometry/dvl_ned"
 
     use_parameter_frame: true
     publish_local_tf: false # Whether to publish the dvl_odom->base_link transform
@@ -292,6 +292,16 @@
     origin_topic: "/origin"
 
     use_parameter_child_frame: false
+
+/**/imu_ned_to_enu_node:
+  ros__parameters:
+    input_topic: "imu/data_ned"
+    output_topic: "imu/data"
+
+/**/odom_ned_to_enu_node:
+  ros__parameters:
+    input_topic: "odometry/dvl_ned"
+    output_topic: "odometry/dvl"
 
 /**/gps_to_truth_relay:
   ros__parameters:
