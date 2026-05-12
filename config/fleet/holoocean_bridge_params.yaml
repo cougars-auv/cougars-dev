@@ -80,9 +80,7 @@
 
   hsd_converter_node:
     ros__parameters:
-      heading_topic: "heading"
-      speed_topic: "speed"
-      depth_topic: "depth"
+      hsd_topic: "cmd_hsd"
       output_heading_topic: "/heading"
       output_speed_topic: "/speed"
       output_depth_topic: "/depth"

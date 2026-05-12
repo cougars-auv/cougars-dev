@@ -27,6 +27,4 @@
       origin_topic: "/origin"
       waypoint_topic: "waypoints"
       odom_topic: "odometry/global"
-      heading_topic: "heading"
-      speed_topic: "speed"
-      depth_topic: "depth"
+      hsd_topic: "cmd_hsd"
