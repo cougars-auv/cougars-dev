@@ -49,5 +49,5 @@ repositories:
     version: seatrac-ros2-main/seatrac_interfaces
   dvl_msgs:
     type: zip
-    url: https://github.com/paagutie/dvl_msgs/archive/refs/heads/main.zip
-    version: dvl_msgs-main
+    url: https://github.com/paagutie/dvl_msgs/archive/refs/heads/master.zip
+    version: dvl_msgs-master
