@@ -45,7 +45,7 @@ repositories:
     version: holoocean-ros-main/holoocean_interfaces
   seatrac_interfaces
     type: zip
-    url: https://github.com/BYU-FRoSt-Lab/seatrac-ros2/archive/refs/heads/main.zip
+    url: https://github.com/BYU-FROST-Lab/seatrac-ros2/archive/refs/heads/main.zip
     version: seatrac-ros2-main/seatrac_interfaces
   dvl_msgs:
     type: zip
