@@ -113,8 +113,23 @@ def launch_setup(context, *args, **kwargs) -> list:
             executable="static_transform_publisher",
             name="map_to_holoocean_transform",
             arguments=[
+                "--frame-id",
+                "map",
+                "--child-frame-id",
+                "holoocean_global_frame",
+            ],
+            parameters=[{"use_sim_time": use_sim_time}],
+        )
+    )
+
+    actions.append(
+        Node(
+            package="tf2_ros",
+            executable="static_transform_publisher",
+            name="map_to_base_station_transform",
+            arguments=[
                 "--x",
-                "0",
+                "-5",
                 "--y",
                 "0",
                 "--z",
@@ -128,7 +143,7 @@ def launch_setup(context, *args, **kwargs) -> list:
                 "--frame-id",
                 "map",
                 "--child-frame-id",
-                "holoocean_global_frame",
+                "base_station",
             ],
             parameters=[{"use_sim_time": use_sim_time}],
         )

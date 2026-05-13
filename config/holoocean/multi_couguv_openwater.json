@@ -6,8 +6,8 @@
   "ticks_per_sec": 200,
   "frames_per_sec": false,
   "agents": [
-        {
-      "agent_name": "base",
+    {
+      "agent_name": "base_station",
       "agent_type": "CougUV",
       "sensors": [
         {
