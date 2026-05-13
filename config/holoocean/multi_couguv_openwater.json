@@ -6,10 +6,64 @@
   "ticks_per_sec": 200,
   "frames_per_sec": false,
   "agents": [
+        {
+      "agent_name": "base",
+      "agent_type": "CougUV",
+      "sensors": [
+        {
+          "sensor_type": "AcousticBeaconSensor",
+          "socket": "COM",
+          "location": [
+            0,
+            0,
+            0
+          ],
+          "configuration": {
+            "id": 0
+          }
+        },
+        {
+          "sensor_type": "DynamicsSensor",
+          "configuration": {
+            "UseCOM": true,
+            "UseRPY": false
+          }
+        }
+      ],
+      "fossen_model": "torpedo",
+      "control_mode": "depthHeadingAutopilot",
+      "control_scheme": 1,
+      "location": [
+        -5.1,
+        0,
+        -0.1
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "actuator": {
+        "fin_count": 3,
+        "fin_offset_deg": 90.0
+      }
+    },
     {
       "agent_name": "coug0sim",
       "agent_type": "CougUV",
       "sensors": [
+        {
+          "sensor_type": "AcousticBeaconSensor",
+          "socket": "AcousticModemSocket",
+          "location": [
+            0,
+            0,
+            0
+          ],
+          "configuration": {
+            "id": 1
+          }
+        },
         {
           "sensor_type": "IMUSensor",
           "socket": "IMUSocket",
@@ -98,6 +152,18 @@
       "agent_type": "CougUV",
       "sensors": [
         {
+          "sensor_type": "AcousticBeaconSensor",
+          "socket": "AcousticModemSocket",
+          "location": [
+            0,
+            0,
+            0
+          ],
+          "configuration": {
+            "id": 2
+          }
+        },
+        {
           "sensor_type": "IMUSensor",
           "socket": "IMUSocket",
           "Hz": 200,
@@ -184,6 +250,18 @@
       "agent_name": "coug2sim",
       "agent_type": "CougUV",
       "sensors": [
+        {
+          "sensor_type": "AcousticBeaconSensor",
+          "socket": "AcousticModemSocket",
+          "location": [
+            0,
+            0,
+            0
+          ],
+          "configuration": {
+            "id": 3
+          }
+        },
         {
           "sensor_type": "IMUSensor",
           "socket": "IMUSocket",
