@@ -169,7 +169,7 @@ def generate_launch_description() -> LaunchDescription:
             ),
             DeclareLaunchArgument(
                 "agent_list",
-                default_value="[[auv0, bluerov2.urdf.xacro]]",
+                default_value="[[auv0, auv.urdf.xacro]]",
                 description=(
                     "YAML list of [auv_ns, auv_urdf] pairs "
                     "(e.g. '[[coug0sim, couguv_holoocean.urdf.xacro], "
