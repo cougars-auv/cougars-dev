@@ -292,6 +292,29 @@
 
     use_parameter_child_frame: false
 
+/**/seatrac_x150_imu_node:
+  ros__parameters:
+    # --- Node Settings ---
+    publish_diagnostics: true # Publish diagnostic information.
+    diagnostic_timeout: 0.5 # [s]
+
+    accel_noise_sigmas: [0.0078, 0.0078, 0.0078] # [m/s^2] Accelerometer measurement noise sigmas.
+    gyro_noise_sigmas: [0.0012, 0.0012, 0.0012] # [rad/s] Gyroscope measurement noise sigmas.
+    orientation_noise_sigmas: [0.00349, 0.00349, 0.01745] # [rad] Orientation uncertainty sigmas [roll, pitch, yaw].
+    magnetic_field_noise_sigmas: [0.003, 0.003, 0.003] # [normalized] Magnetic field uncertainty sigmas.
+
+    # --- ROS Topics and Frames ---
+    input_topic: "modem_status"
+    imu_output_topic: "seatrac/imu/data_ned"
+    mag_output_topic: "seatrac/imu/mag"
+
+    use_parameter_frame: false
+
+/**/seatrac_imu_ned_to_enu_node:
+  ros__parameters:
+    input_topic: "seatrac/imu/data_ned"
+    output_topic: "seatrac/imu/data"
+
 /**/imu_ned_to_enu_node:
   ros__parameters:
     input_topic: "imu/data_ned"
