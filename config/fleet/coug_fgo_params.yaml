@@ -254,7 +254,6 @@
     output_topic: "odometry/dvl_ned"
 
     use_parameter_frame: true
-    publish_local_tf: false # Whether to publish the dvl_odom->base_link transform
 
 /**/fluid_pressure_odom_node:
   ros__parameters:
@@ -302,6 +301,8 @@
   ros__parameters:
     input_topic: "odometry/dvl_ned"
     output_topic: "odometry/dvl"
+
+    publish_tf: false # Whether to publish the odom->base_link transform
 
 /**/gps_to_truth_relay:
   ros__parameters:
