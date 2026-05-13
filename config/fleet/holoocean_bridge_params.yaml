@@ -99,3 +99,9 @@
       output_heading_topic: "/heading"
       output_speed_topic: "/speed"
       output_depth_topic: "/depth"
+
+  modem_status_converter_node:
+    ros__parameters:
+      imu_input_topic: "imu/data"
+      mag_input_topic: "imu/mag"
+      output_topic: "modem/status"
