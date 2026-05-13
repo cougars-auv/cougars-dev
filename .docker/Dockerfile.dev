@@ -47,7 +47,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
   --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
   echo 'deb [trusted=yes] https://repo.charm.sh/apt/ /' | sudo tee /etc/apt/sources.list.d/charm.list \
   && apt-get update && apt-get install -y --no-install-recommends \
-  python3-pip python3-venv pipx gum ros-${ROS_DISTRO}-rqt* \
+  gpsd chrony python3-pip python3-venv pipx gum ros-${ROS_DISTRO}-rqt* \
   cm-super dvipng texlive-latex-base texlive-latex-extra texlive-publishers texlive-science \
   mosh x11-apps x11-utils x11-xserver-utils xauth
 
