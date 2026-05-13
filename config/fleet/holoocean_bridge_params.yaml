@@ -104,4 +104,4 @@
     ros__parameters:
       imu_input_topic: "imu/data"
       mag_input_topic: "imu/mag"
-      output_topic: "modem/status"
+      output_topic: "modem_status"
