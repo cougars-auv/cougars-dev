@@ -3,7 +3,7 @@
     ros__parameters:
       fgo_odom_topic: "odometry/global"
       fgo_vel_topic: "factor_graph_node/velocity"
-      fgo_bias_topic: "factor_graph_node/imu_bias"
+      fgo_bias_topic: "factor_graph_node/imu/bias"
       norm_trace_topic: "~/norm_trace"
 
   waypoint_nav2_node:
@@ -99,7 +99,7 @@
 
           fgo_odom_topic: "odometry/global"
           fgo_vel_topic: "factor_graph_node/velocity"
-          fgo_bias_topic: "factor_graph_node/imu_bias"
+          fgo_bias_topic: "factor_graph_node/imu/bias"
 
           # IMU preintegration parameters
           accel_noise_sigmas: [0.0078, 0.0078, 0.0078] # [m/s^2/√Hz]

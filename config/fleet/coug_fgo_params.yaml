@@ -53,7 +53,7 @@
     velocity_topic: "~/velocity" # At the target frame in the map frame.
     # Topic for the IMU bias. Published as a TwistWithCovarianceStamped,
     # where 'linear' holds accelerometer bias and 'angular' holds gyroscope bias.
-    imu_bias_topic: "~/imu_bias"
+    imu_bias_topic: "~/imu/bias"
     graph_metrics_topic: "~/metrics"
 
     # --- Factor Settings ---
@@ -268,7 +268,7 @@
     fallback_depth_noise_sigma: 0.02 # [m]
 
     # --- ROS Topics and Frames ---
-    input_topic: "depth/pressure"
+    input_topic: "pressure"
     output_topic: "odometry/depth"
 
     use_parameter_child_frame: false

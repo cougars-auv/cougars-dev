@@ -90,14 +90,14 @@ def launch_setup(context, *args, **kwargs) -> list:
                 f"{auv_ns}/imu/nav_sat_fix:=/{auv_ns}/gps/fix",
                 f"{auv_ns}/shallow/depth_data:=/{auv_ns}/odometry/depth",
                 # FROST Lab CougUV bags
-                f"/pressure/data:=/{auv_ns}/depth/pressure",
+                f"/pressure/data:=/{auv_ns}/pressure",
                 f"/fix:=/{auv_ns}/gps/fix",
                 f"/dvl/position:=/{auv_ns}/dvl/position",
                 f"/modem_status:=/{auv_ns}/modem_status",
                 # TURTLMap bags
                 f"/dvl/data:=/{auv_ns}/dvl/data",
                 f"/nav/filtered_imu/data:=/{auv_ns}/imu/data_ned",
-                f"/BlueROV/pressure2_fluid:=/{auv_ns}/depth/pressure",
+                f"/BlueROV/pressure2_fluid:=/{auv_ns}/pressure",
                 # AQUA-SLAM bags
                 f"/apriltag_slam/GT:=/{auv_ns}/odometry/truth",
                 f"/aqua_slam/pose:=/{auv_ns}/odometry/global_aqs",

@@ -4,7 +4,7 @@
       imu_input_topic: "IMUSensor"
       ahrs_input_topic: "RotationSensor"
       output_topic: "imu/data"
-      bias_topic: "imu_bias"
+      bias_topic: "imu/bias"
 
       accel_noise_sigmas: [0.0078, 0.0078, 0.0078] # [m/s^2] Accelerometer measurement noise sigmas.
       gyro_noise_sigmas: [0.0012, 0.0012, 0.0012] # [rad/s] Gyroscope measurement noise sigmas.
@@ -33,7 +33,7 @@
   pressure_converter_node:
     ros__parameters:
       input_topic: "DepthSensor"
-      output_topic: "depth/pressure"
+      output_topic: "pressure"
 
       water_density: 997.0 # [kg/m^3]
       gravity: 9.81 # [m/s^2]
