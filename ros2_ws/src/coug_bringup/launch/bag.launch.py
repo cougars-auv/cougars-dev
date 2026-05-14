@@ -37,6 +37,7 @@ def launch_setup(context, *args, **kwargs) -> list:
 
     use_sim_time = LaunchConfiguration("use_sim_time")
     start_delay = LaunchConfiguration("start_delay")
+    playback_rate = LaunchConfiguration("playback_rate")
     agent_list = LaunchConfiguration("agent_list")
     play_bag_path = LaunchConfiguration("play_bag_path")
     record_bag_path = LaunchConfiguration("record_bag_path")
@@ -80,6 +81,8 @@ def launch_setup(context, *args, **kwargs) -> list:
                 "play",
                 play_bag_path_str,
                 "--clock",
+                "--rate",
+                playback_rate,
                 "--start-offset",
                 start_delay,
                 "--remap",
@@ -190,6 +193,11 @@ def generate_launch_description() -> LaunchDescription:
                 "record_bag_path",
                 default_value="",
                 description="Path to record rosbag (if empty, no recording)",
+            ),
+            DeclareLaunchArgument(
+                "playback_rate",
+                default_value="1.0",
+                description="Bag playback rate multiplier (e.g. 0.5 for half speed, 2.0 for double)",
             ),
             DeclareLaunchArgument(
                 "compare",
