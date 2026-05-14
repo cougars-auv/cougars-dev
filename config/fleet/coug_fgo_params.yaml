@@ -241,7 +241,7 @@
     input_topic: "dvl/data"
     output_topic: "dvl/twist"
 
-    use_parameter_frame: true
+    use_parameter_frame: false
 
 /**/dvl_a50_odom_node:
   ros__parameters:
@@ -253,7 +253,7 @@
     input_topic: "dvl/position"
     output_topic: "odometry/dvl_ned"
 
-    use_parameter_frame: true
+    use_parameter_frame: false
 
 /**/fluid_pressure_odom_node:
   ros__parameters:
@@ -264,6 +264,8 @@
     atmospheric_pressure: 101325.0 # [Pa]
     water_density: 997.0 # [kg/m^3]
     gravity: 9.81 # [m/s^2]
+
+    fallback_depth_noise_sigma: 0.02 # [m]
 
     # --- ROS Topics and Frames ---
     input_topic: "depth/pressure"
@@ -302,6 +304,8 @@
     gyro_noise_sigmas: [0.0012, 0.0012, 0.0012] # [rad/s] Gyroscope measurement noise sigmas.
     orientation_noise_sigmas: [0.00349, 0.00349, 0.01745] # [rad] Orientation uncertainty sigmas [roll, pitch, yaw].
     magnetic_field_noise_sigmas: [0.003, 0.003, 0.003] # [normalized] Magnetic field uncertainty sigmas.
+    # https://www.ngdc.noaa.gov/geomag/calculators/magcalc.shtml#declination
+    mag_declination_radians: 0.0
 
     # --- ROS Topics and Frames ---
     input_topic: "modem_status"

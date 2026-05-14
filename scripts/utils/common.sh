@@ -6,6 +6,7 @@ declare -A AGENTS=(
   ["turtlmap"]="turtlmap.urdf.xacro"
   ["aquaslam"]="aquaslam.urdf.xacro"
   ["aquaslam_wt"]="aquaslam_wt.urdf.xacro"
+  ["coug2"]="couguv.urdf.xacro"
   ["blue0sim"]="bluerov2_holoocean.urdf.xacro"
   ["coug0sim"]="couguv_holoocean.urdf.xacro"
   ["coug1sim"]="couguv_holoocean.urdf.xacro"
