@@ -43,5 +43,5 @@
                     false, false, false] # Ax, Ay, Az
     odom0_differential: true
 
-    odom2: odometry/gps
+    # odom2: odometry/gps_null
     imu0: seatrac/imu/data
