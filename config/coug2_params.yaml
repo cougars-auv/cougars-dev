@@ -8,7 +8,7 @@
 
 /coug2/fluid_pressure_odom_node:
   ros__parameters:
-    atmospheric_pressure: 101325.0
+    atmospheric_pressure: 82777.0 # Deer Creek Reservoir (~1673 m elevation)
     water_density: 997.0
     gravity: 9.81
 
@@ -21,10 +21,7 @@
 
 /coug2/seatrac_x150_imu_node:
   ros__parameters:
-    accel_noise_sigmas: [0.0078, 0.0078, 0.0078]
-    gyro_noise_sigmas: [0.0012, 0.0012, 0.0012]
     orientation_noise_sigmas: [0.00349, 0.00349, 0.01745]
-    magnetic_field_noise_sigmas: [0.003, 0.003, 0.003]
     # https://www.ngdc.noaa.gov/geomag/calculators/magcalc.shtml#declination
     mag_declination_radians: 0.188 # 10.77 degrees
 
