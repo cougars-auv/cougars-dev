@@ -12,7 +12,7 @@
     water_density: 997.0
     gravity: 9.81
 
-    use_parameter_frame: true
+    use_parameter_child_frame: true
 
 /coug2/navsat_odom_node:
   ros__parameters:

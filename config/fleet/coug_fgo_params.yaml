@@ -271,7 +271,7 @@
     input_topic: "depth/pressure"
     output_topic: "odometry/depth"
 
-    use_parameter_frame: false
+    use_parameter_child_frame: false
 
 /**/navsat_odom_node:
   ros__parameters:
