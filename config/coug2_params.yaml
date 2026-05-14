@@ -27,10 +27,6 @@
 
     use_parameter_frame: true
 
-/coug2/odom_ned_to_enu_node:
-  ros__parameters:
-    publish_tf: true
-
 /coug2/ekf_filter_node_map:
   ros__parameters:
     publish_tf: true

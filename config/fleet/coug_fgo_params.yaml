@@ -329,7 +329,9 @@
     input_topic: "odometry/dvl_ned"
     output_topic: "odometry/dvl"
 
-    publish_tf: false # Whether to publish the odom->base_link transform
+/**/odom_to_tf_node:
+  ros__parameters:
+    input_topic: "odometry/dvl"
 
 /**/gps_to_truth_relay:
   ros__parameters:
