@@ -12,6 +12,8 @@
     water_density: 997.0
     gravity: 9.81
 
+    max_pressure_delta: 9780.0 # [Pa] ~1 m depth jump
+
     use_parameter_child_frame: true
 
 /coug2/navsat_odom_node:

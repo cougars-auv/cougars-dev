@@ -266,6 +266,7 @@
     gravity: 9.81 # [m/s^2]
 
     fallback_depth_noise_sigma: 0.02 # [m]
+    max_pressure_delta: 0.0 # [Pa]
 
     # --- ROS Topics and Frames ---
     input_topic: "pressure"
