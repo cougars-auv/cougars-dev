@@ -79,9 +79,9 @@ def generate_launch_description() -> LaunchDescription:
         condition=IfCondition(NotEqualsSubstitution(auv_ns, "coug2")),
     )
 
-    couguv_cmd = IncludeLaunchDescription(
+    coug_fgo_simple_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            os.path.join(coug_fgo_launch_dir, "couguv.launch.py")
+            os.path.join(coug_fgo_launch_dir, "coug_fgo_simple.launch.py")
         ),
         launch_arguments={
             "use_sim_time": use_sim_time,
@@ -162,7 +162,7 @@ def generate_launch_description() -> LaunchDescription:
                     PushRosNamespace(auv_ns),
                     coug_des_cmd,
                     coug_fgo_cmd,
-                    couguv_cmd,
+                    coug_fgo_simple_cmd,
                     coug_helm_cmd,
                     coug_active_fgo_cmd,
                     coug_viz_dvl_cmd,
