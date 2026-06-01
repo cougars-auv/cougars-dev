@@ -22,7 +22,7 @@ repos:
       - id: forbid-submodules
 
   - repo: https://github.com/python-jsonschema/check-jsonschema
-    rev: 0.37.0
+    rev: 0.37.2
     hooks:
       - id: check-github-workflows
         args: ["--verbose"]
@@ -30,14 +30,14 @@ repos:
         args: ["--verbose"]
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.15.6
+    rev: v0.15.15
     hooks:
       - id: ruff
         args: [ --fix ]
       - id: ruff-format
 
   - repo: https://github.com/pre-commit/mirrors-clang-format
-    rev: v22.1.1
+    rev: v22.1.5
     hooks:
       - id: clang-format
         types_or: [c++, c]
