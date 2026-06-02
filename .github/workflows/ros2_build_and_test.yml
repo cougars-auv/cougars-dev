@@ -43,14 +43,14 @@ jobs:
         runner: [ ubuntu-24.04, ubuntu-24.04-arm ]
     runs-on: ${{ matrix.runner }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/cache@v4
+      - uses: actions/checkout@v6
+      - uses: actions/cache@v5
         with:
           path: ${{ github.workspace }}/.ccache
           key: ccache-${{ github.repository }}-${{ matrix.runner }}-${{ github.run_id }}
           restore-keys: |
             ccache-${{ github.repository }}-${{ matrix.runner }}-
-      - uses: webfactory/ssh-agent@v0.9.0
+      - uses: webfactory/ssh-agent@v0.10.0
         with:
           ssh-private-key: ${{ secrets.SSH_KEY }}
       - uses: ros-industrial/industrial_ci@master
@@ -76,7 +76,7 @@ jobs:
           lcov --remove coverage.info '/usr/*' '/opt/*' '*/test/*' '*/tests/*' '*/install/*' '*/build/*' --output-file coverage.info --ignore-errors mismatch,gcov,unused,empty
           sed -i "s|${{ github.workspace }}/.work/target_ws/src|${{ github.workspace }}/ros2_ws/src|g" coverage.info
       - if: matrix.runner == 'ubuntu-24.04'
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v6
         with:
           files: coverage.info
           token: ${{ secrets.CODECOV_TOKEN }}
