@@ -15,7 +15,7 @@
 ARG ROS_DISTRO=jazzy
 
 # --- Build Stage ---
-FROM ubuntu:24.04 AS builder
+FROM ubuntu:26.04 AS builder
 
 ARG DEBIAN_FRONTEND=noninteractive
 
