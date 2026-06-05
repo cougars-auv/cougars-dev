@@ -119,8 +119,8 @@ def generate_launch_description() -> LaunchDescription:
                 default_value="[[auv0, auv.urdf.xacro]]",
                 description=(
                     "YAML list of [auv_ns, auv_urdf] pairs "
-                    "(e.g. '[[coug0sim, couguv_holoocean.urdf.xacro], "
-                    "[coug1sim, couguv_holoocean.urdf.xacro]]')"
+                    "(e.g. '[[coug1sim, couguv_holoocean.urdf.xacro], "
+                    "[coug2sim, couguv_holoocean.urdf.xacro]]')"
                 ),
             ),
             OpaqueFunction(function=launch_setup),

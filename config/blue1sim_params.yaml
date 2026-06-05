@@ -1,4 +1,4 @@
-/blue0sim/**:
+/blue1sim/**:
   ros__parameters:
     base:
       parameter_tf:
@@ -48,14 +48,14 @@
       parameter_priors:
         initial_position_sigmas: [0.001, 0.001, 1.0]
 
-/blue0sim/global_costmap:
+/blue1sim/global_costmap:
   global_costmap:
     ros__parameters:
       global_frame: "map"
-      robot_base_frame: "blue0sim/base_link"
+      robot_base_frame: "blue1sim/base_link"
 
-/blue0sim/local_costmap:
+/blue1sim/local_costmap:
   local_costmap:
     ros__parameters:
-      global_frame: "blue0sim/odom"
-      robot_base_frame: "blue0sim/base_link"
+      global_frame: "blue1sim/odom"
+      robot_base_frame: "blue1sim/base_link"

@@ -23,8 +23,13 @@ from launch.actions import (
     ExecuteProcess,
     OpaqueFunction,
 )
+from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration
+from launch.substitutions import (
+    LaunchConfiguration,
+    PathJoinSubstitution,
+    EnvironmentVariable,
+)
 from launch_ros.actions import Node, PushRosNamespace
 
 
@@ -35,6 +40,7 @@ def launch_setup(context, *args, **kwargs) -> list:
     record_bag_path = LaunchConfiguration("record_bag_path")
     compare = LaunchConfiguration("compare")
     add_noise = LaunchConfiguration("add_noise")
+    base_station = LaunchConfiguration("base_station")
 
     agent_list_str = context.perform_substitution(agent_list)
     record_bag_path_str = context.perform_substitution(record_bag_path)
@@ -45,6 +51,9 @@ def launch_setup(context, *args, **kwargs) -> list:
     coug_bringup_launch_dir = os.path.join(coug_bringup_dir, "launch")
     holo_bridge_dir = get_package_share_directory("holoocean_bridge")
     holo_bridge_launch_dir = os.path.join(holo_bridge_dir, "launch")
+    fleet_params = PathJoinSubstitution(
+        [EnvironmentVariable("CONFIG_FOLDER"), "fleet", "holoocean_bridge_params.yaml"]
+    )
 
     actions = []
 
@@ -123,6 +132,28 @@ def launch_setup(context, *args, **kwargs) -> list:
     )
 
     actions.append(
+        GroupAction(
+            actions=[
+                PushRosNamespace("base_station"),
+                Node(
+                    package="holoocean_bridge",
+                    executable="modem_converter",
+                    name="modem_converter_node",
+                    parameters=[
+                        fleet_params,
+                        {
+                            "use_sim_time": use_sim_time,
+                            "beacon_id": 0,
+                            "modem_frame": "base_station",
+                        },
+                    ],
+                ),
+            ],
+            condition=IfCondition(base_station),
+        )
+    )
+
+    actions.append(
         Node(
             package="tf2_ros",
             executable="static_transform_publisher",
@@ -146,6 +177,7 @@ def launch_setup(context, *args, **kwargs) -> list:
                 "base_station",
             ],
             parameters=[{"use_sim_time": use_sim_time}],
+            condition=IfCondition(base_station),
         )
     )
 
@@ -162,11 +194,11 @@ def generate_launch_description() -> LaunchDescription:
             ),
             DeclareLaunchArgument(
                 "agent_list",
-                default_value="[[coug0sim, couguv_holoocean.urdf.xacro]]",
+                default_value="[[coug1sim, couguv_holoocean.urdf.xacro]]",
                 description=(
                     "YAML list of [auv_ns, auv_urdf] pairs "
-                    "(e.g. '[[coug0sim, couguv_holoocean.urdf.xacro], "
-                    "[coug1sim, couguv_holoocean.urdf.xacro]]')"
+                    "(e.g. '[[coug1sim, couguv_holoocean.urdf.xacro], "
+                    "[coug2sim, couguv_holoocean.urdf.xacro]]')"
                 ),
             ),
             DeclareLaunchArgument(
@@ -183,6 +215,11 @@ def generate_launch_description() -> LaunchDescription:
                 "add_noise",
                 default_value="true",
                 description="Whether to add noise to sensor data",
+            ),
+            DeclareLaunchArgument(
+                "base_station",
+                default_value="true",
+                description="Launch base station converters",
             ),
             OpaqueFunction(function=launch_setup),
         ]

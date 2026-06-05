@@ -2,12 +2,12 @@
   "name": "bluerov2_openwater",
   "package_name": "Ocean",
   "world": "OpenWater",
-  "main_agent": "blue0sim",
+  "main_agent": "blue1sim",
   "ticks_per_sec": 200,
   "frames_per_sec": false,
   "agents": [
     {
-      "agent_name": "blue0sim",
+      "agent_name": "blue1sim",
       "agent_type": "BlueROV2",
       "sensors": [
         {
@@ -65,8 +65,16 @@
           "sensor_name": "RGBCameraFront",
           "sensor_type": "RGBCamera",
           "socket": "DVLSocket",
-          "location": [0.1, 0.0, 0.0],
-          "rotation": [0.0, 90.0, 0.0],
+          "location": [
+            0.1,
+            0.0,
+            0.0
+          ],
+          "rotation": [
+            0.0,
+            90.0,
+            0.0
+          ],
           "Hz": 20,
           "ros_publish": true
         },
@@ -74,8 +82,16 @@
           "sensor_name": "RGBCameraBack",
           "sensor_type": "RGBCamera",
           "socket": "DVLSocket",
-          "location": [-0.1, 0.0, 0.0],
-          "rotation": [0.0, 90.0, 0.0],
+          "location": [
+            -0.1,
+            0.0,
+            0.0
+          ],
+          "rotation": [
+            0.0,
+            90.0,
+            0.0
+          ],
           "Hz": 20,
           "ros_publish": true
         },

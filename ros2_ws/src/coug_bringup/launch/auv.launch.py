@@ -118,7 +118,7 @@ def generate_launch_description() -> LaunchDescription:
             "auv_ns": auv_ns,
         }.items(),
         condition=IfCondition(
-            NotEqualsSubstitution(LaunchConfiguration("auv_ns"), "blue0sim")
+            NotEqualsSubstitution(LaunchConfiguration("auv_ns"), "blue1sim")
         ),
     )
 
@@ -131,7 +131,7 @@ def generate_launch_description() -> LaunchDescription:
             "auv_ns": auv_ns,
         }.items(),
         condition=IfCondition(
-            EqualsSubstitution(LaunchConfiguration("auv_ns"), "blue0sim")
+            EqualsSubstitution(LaunchConfiguration("auv_ns"), "blue1sim")
         ),
     )
 
@@ -144,7 +144,7 @@ def generate_launch_description() -> LaunchDescription:
             "auv_ns": auv_ns,
         }.items(),
         condition=IfCondition(
-            EqualsSubstitution(LaunchConfiguration("auv_ns"), "blue0sim")
+            EqualsSubstitution(LaunchConfiguration("auv_ns"), "blue1sim")
         ),
     )
 

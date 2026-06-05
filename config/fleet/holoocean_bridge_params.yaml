@@ -105,3 +105,12 @@
       imu_input_topic: "imu/data"
       mag_input_topic: "imu/mag"
       output_topic: "modem_status"
+
+  modem_converter_node:
+    ros__parameters:
+      beacon_rec_topic: "AcousticBeaconSensor"
+      beacon_send_topic: "/acoustic_beacon_send"
+      modem_rec_topic: "modem_rec"
+      modem_send_topic: "modem_send"
+      modem_cmd_update_topic: "modem_cmd_update"
+      beacon_id: 1

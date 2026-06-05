@@ -8,10 +8,10 @@ declare -A AGENTS=(
   ["aquaslam_wt"]="aquaslam_wt.urdf.xacro"
   ["coug2_dvldr"]="couguv.urdf.xacro"
   ["coug2_ekf"]="couguv.urdf.xacro"
-  ["blue0sim"]="bluerov2_holoocean.urdf.xacro"
-  ["coug0sim"]="couguv_holoocean.urdf.xacro"
+  ["blue1sim"]="bluerov2_holoocean.urdf.xacro"
   ["coug1sim"]="couguv_holoocean.urdf.xacro"
   ["coug2sim"]="couguv_holoocean.urdf.xacro"
+  ["coug3sim"]="couguv_holoocean.urdf.xacro"
 )
 
 agents_yaml() {

@@ -38,6 +38,7 @@
         "ms-toolsai.jupyter",
         "ms-vscode.cpptools",
         "nonanonno.vscode-ros2",
+        "openai.chatgpt",
         "redhat.vscode-xml",
         "redhat.vscode-yaml",
         "twxs.cmake"

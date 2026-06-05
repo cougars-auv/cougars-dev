@@ -8,7 +8,7 @@ source "$(dirname "$0")/utils/common.sh"
 # agent_ns=$(printf "%s\n" "${!AGENTS[@]}" | sort | gum filter --placeholder "Select an agent to drive..." || exit 0)
 # [ -z "${agent_ns}" ] && exit 0
 
-agent_ns="blue0sim"
+agent_ns="blue1sim"
 
 # --- Launch ---
 ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args \

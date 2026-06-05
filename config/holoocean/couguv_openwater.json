@@ -2,7 +2,7 @@
   "name": "couguv_openwater",
   "package_name": "Ocean",
   "world": "OpenWater",
-  "main_agent": "coug0sim",
+  "main_agent": "coug1sim",
   "ticks_per_sec": 200,
   "frames_per_sec": false,
   "agents": [
@@ -49,7 +49,7 @@
       }
     },
     {
-      "agent_name": "coug0sim",
+      "agent_name": "coug1sim",
       "agent_type": "CougUV",
       "sensors": [
         {
@@ -62,7 +62,8 @@
           ],
           "configuration": {
             "id": 1
-          }
+          },
+          "ros_publish": true
         },
         {
           "sensor_type": "IMUSensor",

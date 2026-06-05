@@ -1,3 +1,0 @@
-/coug0sim/bt_helm_node:
-  ros__parameters:
-    publish_groot2: true
