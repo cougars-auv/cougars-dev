@@ -1,12 +1,12 @@
-/coug2_dvl/dvl_a50_twist_node:
+/coug2_dvldr/dvl_a50_twist_node:
   ros__parameters:
     use_parameter_frame: true
 
-/coug2_dvl/dvl_a50_odom_node:
+/coug2_dvldr/dvl_a50_odom_node:
   ros__parameters:
     use_parameter_frame: true
 
-/coug2_dvl/fluid_pressure_odom_node:
+/coug2_dvldr/fluid_pressure_odom_node:
   ros__parameters:
     atmospheric_pressure: 82777.0 # Deer Creek Reservoir (~1673 m elevation)
     water_density: 997.0
@@ -16,12 +16,12 @@
 
     use_parameter_child_frame: true
 
-/coug2_dvl/navsat_odom_node:
+/coug2_dvldr/navsat_odom_node:
   ros__parameters:
     use_parameter_origin: false
     use_parameter_child_frame: true
 
-/coug2_dvl/seatrac_x150_imu_node:
+/coug2_dvldr/seatrac_x150_imu_node:
   ros__parameters:
     orientation_noise_sigmas: [0.00349, 0.00349, 0.01745]
     # https://www.ngdc.noaa.gov/geomag/calculators/magcalc.shtml#declination
@@ -29,7 +29,7 @@
 
     use_parameter_frame: true
 
-/coug2_dvl/ekf_filter_node_map:
+/coug2_dvldr/ekf_filter_node_map:
   ros__parameters:
     publish_tf: true
 

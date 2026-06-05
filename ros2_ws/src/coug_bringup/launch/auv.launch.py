@@ -79,22 +79,22 @@ def generate_launch_description() -> LaunchDescription:
         }.items(),
         condition=IfCondition(
             AndSubstitution(
-                NotEqualsSubstitution(auv_ns, "coug2_dvl"),
+                NotEqualsSubstitution(auv_ns, "coug2_dvldr"),
                 NotEqualsSubstitution(auv_ns, "coug2_ekf"),
             )
         ),
     )
 
-    coug_fgo_dvl_cmd = IncludeLaunchDescription(
+    coug_fgo_dvldr_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            os.path.join(coug_fgo_launch_dir, "coug_fgo_dvl.launch.py")
+            os.path.join(coug_fgo_launch_dir, "coug_fgo_dvldr.launch.py")
         ),
         launch_arguments={
             "use_sim_time": use_sim_time,
             "auv_ns": auv_ns,
             "set_origin": set_origin,
         }.items(),
-        condition=IfCondition(EqualsSubstitution(auv_ns, "coug2_dvl")),
+        condition=IfCondition(EqualsSubstitution(auv_ns, "coug2_dvldr")),
     )
 
     coug_fgo_ekf_cmd = IncludeLaunchDescription(
@@ -180,7 +180,7 @@ def generate_launch_description() -> LaunchDescription:
                     PushRosNamespace(auv_ns),
                     coug_des_cmd,
                     coug_fgo_cmd,
-                    coug_fgo_dvl_cmd,
+                    coug_fgo_dvldr_cmd,
                     coug_fgo_ekf_cmd,
                     coug_helm_cmd,
                     coug_active_fgo_cmd,
