@@ -18,7 +18,9 @@ import signal
 import subprocess
 from datetime import datetime
 
+import diagnostic_updater
 import rclpy
+from diagnostic_msgs.msg import DiagnosticStatus
 from rclpy.node import Node
 
 from coug_interfaces.srv import BagRecord
@@ -48,7 +50,14 @@ class BagRecorderNode(Node):
 
         self.create_service(BagRecord, "bag_record", self._bag_record_callback)
 
-        self.get_logger().info("Bag recorder ready.")
+        ns = self.get_namespace()
+        clean_ns = "" if ns == "/" else ns
+        self.updater = diagnostic_updater.Updater(self)
+        self.updater.setHardwareID(f"{clean_ns}/bag_recorder_node")
+        prefix = f"[{clean_ns}] " if clean_ns else ""
+        self.updater.add(f"{prefix}Recording Status", self._check_recording_status)
+
+        self.get_logger().info(f"Bag recorder started. Saving to {self.bag_dir}.")
 
     def _bag_record_callback(
         self, request: BagRecord.Request, response: BagRecord.Response
@@ -105,6 +114,18 @@ class BagRecorderNode(Node):
             self.get_logger().info("Bag recording stopped.")
 
         return response
+
+    def _check_recording_status(
+        self, stat: diagnostic_updater.DiagnosticStatusWrapper
+    ) -> diagnostic_updater.DiagnosticStatusWrapper:
+        if self.bag_process is not None and self.bag_process.poll() is None:
+            stat.summary(DiagnosticStatus.OK, "Recording in progress.")
+            stat.add(
+                "Bag Path", os.path.basename(self.bag_path) if self.bag_path else ""
+            )
+        else:
+            stat.summary(DiagnosticStatus.OK, "Idle.")
+        return stat
 
     def _save_config(self) -> None:
         if self.bag_path is None or not os.path.isdir(self.bag_path):
