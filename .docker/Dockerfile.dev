@@ -21,7 +21,8 @@ SHELL [ "/bin/bash", "-c" ]
 
 ENV DOCKER_USER=${DOCKER_USER} \
   OVERLAY_WS=/home/${DOCKER_USER}/cougars-dev/ros2_ws \
-  CONFIG_FOLDER=/home/${DOCKER_USER}/cougars-dev/config \
+  CONFIG_DIR=/home/${DOCKER_USER}/cougars-dev/config \
+  BAGS_DIR=/home/${DOCKER_USER}/cougars-dev/bags \
   GUM_CHOOSE_HEADER_FOREGROUND="0" \
   GUM_CHOOSE_CURSOR_FOREGROUND="75" \
   GUM_CHOOSE_SELECTED_FOREGROUND="75" \

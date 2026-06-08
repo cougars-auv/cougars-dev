@@ -1,6 +1,4 @@
 #!/bin/bash
-BAG_DIR="${HOME}/cougars-dev/bags"
-
 declare -A AGENTS=(
   ["bluerov2"]="bluerov2.urdf.xacro"
   ["turtlmap"]="turtlmap.urdf.xacro"

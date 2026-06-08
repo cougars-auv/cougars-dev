@@ -7,6 +7,8 @@
   <maintainer email="snelsondurrant@gmail.com">snelsondurrant</maintainer>
   <license>Apache-2.0</license>
 
+  <exec_depend>rclpy</exec_depend>
+  <exec_depend>coug_interfaces</exec_depend>
   <exec_depend>coug_description</exec_depend>
   <exec_depend>coug_fgo</exec_depend>
   <exec_depend condition="$ROS_BUILD_ARCH == 'amd64'">coug_mapviz</exec_depend>

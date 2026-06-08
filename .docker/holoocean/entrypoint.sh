@@ -2,8 +2,8 @@
 set -e
 
 # Match UID/GID to local user
-target_uid=$(stat -c '%u' "${CONFIG_FOLDER}")
-target_gid=$(stat -c '%g' "${CONFIG_FOLDER}")
+target_uid=$(stat -c '%u' "${CONFIG_DIR}")
+target_gid=$(stat -c '%g' "${CONFIG_DIR}")
 
 if [ -n "${target_gid}" ]; then
   groupmod -o -g "${target_gid}" "${DOCKER_USER}"

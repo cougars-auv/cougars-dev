@@ -32,9 +32,9 @@ fi
 if [[ "${options}" == *"Record rosbag"* ]]; then
   suffix=$(gum input --placeholder "Set bag suffix..." || echo "")
   if [ -n "${suffix}" ]; then
-    record_bag_path="${BAG_DIR}/${suffix}$(date +'_%Y-%m-%d-%H-%M-%S')"
+    record_bag_path="${BAGS_DIR}/${suffix}$(date +'_%Y-%m-%d-%H-%M-%S')"
   else
-    record_bag_path="${BAG_DIR}/rosbag$(date +'_%Y-%m-%d-%H-%M-%S')"
+    record_bag_path="${BAGS_DIR}/rosbag$(date +'_%Y-%m-%d-%H-%M-%S')"
   fi
 fi
 

@@ -1,0 +1,125 @@
+# Copyright (c) 2026 BYU FROST Lab
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import os
+import signal
+import subprocess
+from datetime import datetime
+
+import rclpy
+from rclpy.node import Node
+
+from coug_interfaces.srv import BagRecord
+
+
+class BagRecorderNode(Node):
+    """
+    Starts and stops a rosbag recording triggered by a service call.
+
+    :author: Nelson Durrant
+    :date: June 2026
+    """
+
+    def __init__(self) -> None:
+        super().__init__("bag_recorder_node")
+
+        self.declare_parameter("auv_ns", "auv")
+        self.declare_parameter(
+            "bag_dir",
+            os.environ.get("BAGS_DIR", os.path.expanduser("~/cougars-dev/bags")),
+        )
+
+        self.auv_ns = self.get_parameter("auv_ns").get_parameter_value().string_value
+        self.bag_dir = self.get_parameter("bag_dir").get_parameter_value().string_value
+        self.bag_process: subprocess.Popen | None = None
+
+        self.create_service(BagRecord, "bag_record", self._bag_record_callback)
+
+        self.get_logger().info("Bag recorder ready.")
+
+    def _bag_record_callback(
+        self, request: BagRecord.Request, response: BagRecord.Response
+    ) -> BagRecord.Response:
+        """
+        Handle a bag recording start or stop request.
+
+        :param request: BagRecord request with start flag and bag prefix.
+        :param response: BagRecord response with success flag and message.
+        """
+        if self.bag_process is not None and self.bag_process.poll() is not None:
+            self.bag_process = None
+
+        if request.start:
+            if self.bag_process is not None:
+                response.success = False
+                response.message = "Recording already in progress"
+                return response
+
+            base = request.prefix if request.prefix else "rosbag"
+            timestamp = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+            path = os.path.join(self.bag_dir, f"{base}_{self.auv_ns}_{timestamp}")
+            self.bag_process = subprocess.Popen(
+                [
+                    "ros2",
+                    "bag",
+                    "record",
+                    "-a",
+                    "-o",
+                    path,
+                    "--storage",
+                    "mcap",
+                    "--exclude-topics",
+                    "/clock",
+                ]
+            )
+            response.success = True
+            response.message = f"Recording started: {path}"
+            self.get_logger().info(f"Bag recording started: {path}")
+        else:
+            if self.bag_process is None:
+                response.success = False
+                response.message = "No recording in progress"
+                return response
+
+            self.bag_process.send_signal(signal.SIGINT)
+            self.bag_process.wait()
+            self.bag_process = None
+            response.success = True
+            response.message = "Recording stopped"
+            self.get_logger().info("Bag recording stopped.")
+
+        return response
+
+    def destroy_node(self) -> None:
+        if self.bag_process is not None:
+            self.bag_process.send_signal(signal.SIGINT)
+            self.bag_process.wait()
+        super().destroy_node()
+
+
+def main(args: list[str] | None = None) -> None:
+    rclpy.init(args=args)
+    bag_recorder_node = BagRecorderNode()
+    try:
+        rclpy.spin(bag_recorder_node)
+    except KeyboardInterrupt:
+        pass
+    finally:
+        bag_recorder_node.destroy_node()
+        if rclpy.ok():
+            rclpy.shutdown()
+
+
+if __name__ == "__main__":
+    main()

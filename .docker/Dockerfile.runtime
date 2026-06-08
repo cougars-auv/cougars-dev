@@ -20,7 +20,8 @@ SHELL [ "/bin/bash", "-c" ]
 
 ENV DOCKER_USER=root \
   OVERLAY_WS=/ros2_ws \
-  CONFIG_FOLDER=/config
+  CONFIG_DIR=/config \
+  BAGS_DIR=/bags
 
 COPY ros2_ws/src ${OVERLAY_WS}/src
 
@@ -34,7 +35,7 @@ RUN --mount=type=cache,target=${OVERLAY_WS}/build \
 RUN echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> /root/.bashrc \
   && echo "[ -f ${OVERLAY_WS}/install/setup.bash ] && source ${OVERLAY_WS}/install/setup.bash" >> /root/.bashrc
 
-COPY config ${CONFIG_FOLDER}
+COPY config ${CONFIG_DIR}
 
 ENTRYPOINT [ "/entrypoint.sh" ]
 CMD [ "/bin/bash" ]

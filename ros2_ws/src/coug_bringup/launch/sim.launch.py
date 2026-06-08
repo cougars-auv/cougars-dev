@@ -52,7 +52,7 @@ def launch_setup(context, *args, **kwargs) -> list:
     holo_bridge_dir = get_package_share_directory("holoocean_bridge")
     holo_bridge_launch_dir = os.path.join(holo_bridge_dir, "launch")
     fleet_params = PathJoinSubstitution(
-        [EnvironmentVariable("CONFIG_FOLDER"), "fleet", "holoocean_bridge_params.yaml"]
+        [EnvironmentVariable("CONFIG_DIR"), "fleet", "holoocean_bridge_params.yaml"]
     )
 
     actions = []

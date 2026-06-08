@@ -25,6 +25,8 @@ setup(
         ],
     },
     entry_points={
-        "console_scripts": [],
+        "console_scripts": [
+            "bag_recorder = coug_bringup.bag_recorder_node:main",
+        ],
     },
 )

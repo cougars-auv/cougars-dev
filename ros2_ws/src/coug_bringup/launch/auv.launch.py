@@ -25,7 +25,7 @@ from launch.substitutions import (
     LaunchConfiguration,
     PathJoinSubstitution,
 )
-from launch_ros.actions import PushRosNamespace
+from launch_ros.actions import Node, PushRosNamespace
 from launch_ros.substitutions import FindPackageShare
 
 
@@ -148,6 +148,15 @@ def generate_launch_description() -> LaunchDescription:
         ),
     )
 
+    bag_recorder_cmd = Node(
+        package="coug_bringup",
+        executable="bag_recorder",
+        name="bag_recorder_node",
+        parameters=[
+            {"use_sim_time": use_sim_time, "auv_ns": auv_ns},
+        ],
+    )
+
     return LaunchDescription(
         [
             DeclareLaunchArgument(
@@ -178,6 +187,7 @@ def generate_launch_description() -> LaunchDescription:
             GroupAction(
                 actions=[
                     PushRosNamespace(auv_ns),
+                    bag_recorder_cmd,
                     coug_des_cmd,
                     coug_fgo_cmd,
                     coug_fgo_dvldr_cmd,
