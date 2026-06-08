@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import os
+import shutil
 import signal
 import subprocess
 from datetime import datetime
@@ -42,6 +43,7 @@ class BagRecorderNode(Node):
 
         self.auv_ns = self.get_parameter("auv_ns").get_parameter_value().string_value
         self.bag_dir = self.get_parameter("bag_dir").get_parameter_value().string_value
+        self.bag_path: str | None = None
         self.bag_process: subprocess.Popen | None = None
 
         self.create_service(BagRecord, "bag_record", self._bag_record_callback)
@@ -69,6 +71,7 @@ class BagRecorderNode(Node):
             base = request.prefix if request.prefix else "rosbag"
             timestamp = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
             path = os.path.join(self.bag_dir, f"{base}_{self.auv_ns}_{timestamp}")
+            self.bag_path = path
             self.bag_process = subprocess.Popen(
                 [
                     "ros2",
@@ -95,16 +98,30 @@ class BagRecorderNode(Node):
             self.bag_process.send_signal(signal.SIGINT)
             self.bag_process.wait()
             self.bag_process = None
+            self._save_config()
+            self.bag_path = None
             response.success = True
             response.message = "Recording stopped"
             self.get_logger().info("Bag recording stopped.")
 
         return response
 
+    def _save_config(self) -> None:
+        if self.bag_path is None or not os.path.isdir(self.bag_path):
+            return
+
+        config_dir = os.environ.get("CONFIG_DIR", "")
+        if config_dir and os.path.isdir(config_dir):
+            dest = os.path.join(self.bag_path, "config")
+            shutil.copytree(config_dir, dest, dirs_exist_ok=True)
+            self.get_logger().info(f"Config saved to {dest}")
+
     def destroy_node(self) -> None:
         if self.bag_process is not None:
             self.bag_process.send_signal(signal.SIGINT)
             self.bag_process.wait()
+            self.bag_process = None
+            self._save_config()
         super().destroy_node()
 
 
