@@ -21,8 +21,7 @@ SHELL [ "/bin/bash", "-c" ]
 
 ENV DOCKER_USER=ue4 \
   OVERLAY_WS=/home/ue4/ros2_ws \
-  CONFIG_DIR=/home/ue4/config \
-  BAG_DIR=/home/ue4/bags
+  CONFIG_DIR=/home/ue4/config
 
 WORKDIR ${OVERLAY_WS}
 
