@@ -1,0 +1,28 @@
+/**:
+  base_comms_node:
+    ros__parameters:
+      # --- Seatrac Beacon IDs ---
+      beacon_ids:
+        coug1sim: 1
+        coug2sim: 2
+        coug3sim: 3
+
+      # --- ROS Topics ---
+      start_service: "base/start"
+      stop_service: "base/stop"
+      surface_service: "base/surface"
+      home_service: "base/home"
+
+      publish_diagnostics: true # Publish diagnostic information.
+      diagnostic_timeout: 30.0 # [s]
+
+  auv_comms_node:
+    ros__parameters:
+      # --- ROS Topics ---
+      start_service: "start"
+      stop_service: "stop"
+      surface_service: "surface"
+      home_service: "home"
+
+      publish_diagnostics: true # Publish diagnostic information.
+      diagnostic_timeout: 30.0 # [s]

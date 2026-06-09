@@ -32,6 +32,8 @@ def launch_setup(context, *args, **kwargs) -> list:
     agent_list_str = agent_list.perform(context)
     auv_ns = yaml.safe_load(agent_list_str)[0][0]
 
+    coug_comms_dir = get_package_share_directory("coug_comms")
+    coug_comms_launch_dir = os.path.join(coug_comms_dir, "launch")
     coug_fgo_dir = get_package_share_directory("coug_fgo")
     coug_fgo_launch_dir = os.path.join(coug_fgo_dir, "launch")
     coug_active_fgo_dir = get_package_share_directory("coug_active_fgo")
@@ -42,6 +44,16 @@ def launch_setup(context, *args, **kwargs) -> list:
     coug_mapviz_launch_dir = os.path.join(coug_mapviz_dir, "launch")
     coug_rqt_dir = get_package_share_directory("coug_rqt")
     coug_rqt_launch_dir = os.path.join(coug_rqt_dir, "launch")
+
+    coug_comms_base_cmd = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(coug_comms_launch_dir, "coug_comms_base.launch.py")
+        ),
+        launch_arguments={
+            "use_sim_time": use_sim_time,
+            "agent_list": agent_list,
+        }.items(),
+    )
 
     coug_fgo_viz_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
@@ -98,6 +110,7 @@ def launch_setup(context, *args, **kwargs) -> list:
     )
 
     return [
+        coug_comms_base_cmd,
         coug_fgo_viz_cmd,
         # coug_active_fgo_viz_cmd,
         # coug_visual_dvl_viz_cmd,

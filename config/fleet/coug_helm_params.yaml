@@ -28,3 +28,8 @@
       waypoint_topic: "waypoints"
       odom_topic: "odometry/global"
       hsd_topic: "cmd_hsd"
+
+      start_service: "start"
+      stop_service: "stop"
+      surface_service: "surface"
+      home_service: "home"

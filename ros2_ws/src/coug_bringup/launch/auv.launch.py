@@ -24,6 +24,7 @@ from launch.substitutions import (
     NotEqualsSubstitution,
     LaunchConfiguration,
     PathJoinSubstitution,
+    EnvironmentVariable,
 )
 from launch_ros.actions import Node, PushRosNamespace
 from launch_ros.substitutions import FindPackageShare
@@ -45,8 +46,18 @@ def generate_launch_description() -> LaunchDescription:
         ]
     )
 
+    fleet_params = PathJoinSubstitution(
+        [
+            EnvironmentVariable("CONFIG_DIR"),
+            "fleet",
+            "coug_bringup_params.yaml",
+        ]
+    )
+
     coug_des_dir = get_package_share_directory("coug_description")
     coug_des_launch_dir = os.path.join(coug_des_dir, "launch")
+    coug_comms_dir = get_package_share_directory("coug_comms")
+    coug_comms_launch_dir = os.path.join(coug_comms_dir, "launch")
     coug_fgo_dir = get_package_share_directory("coug_fgo")
     coug_fgo_launch_dir = os.path.join(coug_fgo_dir, "launch")
     coug_helm_dir = get_package_share_directory("coug_helm")
@@ -63,6 +74,16 @@ def generate_launch_description() -> LaunchDescription:
         launch_arguments={
             "use_sim_time": use_sim_time,
             "urdf_file": urdf_file,
+            "auv_ns": auv_ns,
+        }.items(),
+    )
+
+    coug_comms_auv_cmd = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(coug_comms_launch_dir, "coug_comms_auv.launch.py")
+        ),
+        launch_arguments={
+            "use_sim_time": use_sim_time,
             "auv_ns": auv_ns,
         }.items(),
     )
@@ -153,7 +174,11 @@ def generate_launch_description() -> LaunchDescription:
         executable="bag_recorder",
         name="bag_recorder_node",
         parameters=[
-            {"use_sim_time": use_sim_time, "auv_ns": auv_ns},
+            fleet_params,
+            {
+                "use_sim_time": use_sim_time,
+                "auv_ns": auv_ns,
+            },
         ],
     )
 
@@ -188,6 +213,7 @@ def generate_launch_description() -> LaunchDescription:
                 actions=[
                     PushRosNamespace(auv_ns),
                     bag_recorder_cmd,
+                    coug_comms_auv_cmd,
                     coug_des_cmd,
                     coug_fgo_cmd,
                     coug_fgo_dvldr_cmd,

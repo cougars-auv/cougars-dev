@@ -1,0 +1,4 @@
+/**:
+  bag_recorder_node:
+    ros__parameters:
+      bag_record_service: "bag_record"

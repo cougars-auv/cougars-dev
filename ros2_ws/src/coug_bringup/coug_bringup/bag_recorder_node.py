@@ -42,13 +42,17 @@ class BagRecorderNode(Node):
             "bag_dir",
             os.environ.get("BAGS_DIR", os.path.expanduser("~/cougars-dev/bags")),
         )
+        self.declare_parameter("bag_record_service", "bag_record")
 
         self.auv_ns = self.get_parameter("auv_ns").get_parameter_value().string_value
         self.bag_dir = self.get_parameter("bag_dir").get_parameter_value().string_value
+        bag_record_service = (
+            self.get_parameter("bag_record_service").get_parameter_value().string_value
+        )
         self.bag_path: str | None = None
         self.bag_process: subprocess.Popen | None = None
 
-        self.create_service(BagRecord, "bag_record", self._bag_record_callback)
+        self.create_service(BagRecord, bag_record_service, self._bag_record_callback)
 
         ns = self.get_namespace()
         clean_ns = "" if ns == "/" else ns

@@ -1,0 +1,20 @@
+auv_comms_node:
+  start_service:
+    type: string
+    default_value: "start"
+  stop_service:
+    type: string
+    default_value: "stop"
+  surface_service:
+    type: string
+    default_value: "surface"
+  home_service:
+    type: string
+    default_value: "home"
+
+  publish_diagnostics:
+    type: bool
+    default_value: false
+  diagnostic_timeout:
+    type: double
+    default_value: 30.0

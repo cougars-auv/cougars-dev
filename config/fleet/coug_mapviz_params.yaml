@@ -4,6 +4,11 @@ mapviz:
     waypoint_topic: "waypoints"
     waypoints_map_topic: "waypoints_map"
 
+    start_service: "base/start"
+    stop_service: "base/stop"
+    surface_service: "base/surface"
+    home_service: "base/home"
+
 initialize_origin:
   ros__parameters:
     local_xy_origin: "auto"

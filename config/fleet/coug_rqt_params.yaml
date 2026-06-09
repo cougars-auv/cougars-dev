@@ -1,0 +1,5 @@
+/**:
+  rqt_gui:
+    ros__parameters:
+      # --- ROS Topics ---
+      bag_record_service: "bag_record"
