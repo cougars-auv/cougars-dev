@@ -50,6 +50,7 @@
 
 /turtlmap/fluid_pressure_odom_node:
   ros__parameters:
+    pressure_scale: 100.0 # IMPORTANT! Pressure is in hPa, not Pa
     atmospheric_pressure: 99339.996
 
 /turtlmap/dvl_a50_twist_node:

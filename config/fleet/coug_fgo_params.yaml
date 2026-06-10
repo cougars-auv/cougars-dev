@@ -261,6 +261,7 @@
     publish_diagnostics: true # Publish diagnostic information.
     diagnostic_timeout: 0.5 # [s]
 
+    pressure_scale: 1.0
     atmospheric_pressure: 101325.0 # [Pa]
     water_density: 997.0 # [kg/m^3]
     gravity: 9.81 # [m/s^2]
