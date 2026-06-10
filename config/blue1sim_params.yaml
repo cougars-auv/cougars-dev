@@ -1,5 +1,8 @@
 /blue1sim/**:
   ros__parameters:
+    publish_velocity_cov: true
+    publish_imu_bias_cov: true
+
     base:
       parameter_tf:
         position: [0.0, 0.1, 0.1]

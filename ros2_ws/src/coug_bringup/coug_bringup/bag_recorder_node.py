@@ -108,9 +108,7 @@ class BagRecorderNode(Node):
                 response.message = "Not recording"
                 return response
 
-            self.bag_process.send_signal(signal.SIGINT)
-            self.bag_process.wait()
-            self.bag_process = None
+            self._stop_bag_process()
             self._save_config()
             self.bag_path = None
             response.success = True
@@ -131,6 +129,16 @@ class BagRecorderNode(Node):
             stat.summary(DiagnosticStatus.OK, "Idle.")
         return stat
 
+    def _stop_bag_process(self) -> None:
+        self.bag_process.send_signal(signal.SIGINT)
+        try:
+            self.bag_process.wait(timeout=10)
+        except subprocess.TimeoutExpired:
+            self.get_logger().error("Bag recorder did not stop cleanly. Killing it.")
+            self.bag_process.kill()
+            self.bag_process.wait()
+        self.bag_process = None
+
     def _save_config(self) -> None:
         if self.bag_path is None or not os.path.isdir(self.bag_path):
             return
@@ -143,9 +151,7 @@ class BagRecorderNode(Node):
 
     def destroy_node(self) -> None:
         if self.bag_process is not None:
-            self.bag_process.send_signal(signal.SIGINT)
-            self.bag_process.wait()
-            self.bag_process = None
+            self._stop_bag_process()
             self._save_config()
         super().destroy_node()
 
