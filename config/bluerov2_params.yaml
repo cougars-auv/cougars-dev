@@ -48,6 +48,14 @@
     prior:
       use_parameter_priors: false
 
+/bluerov2/fluid_pressure_odom_node:
+  ros__parameters:
+    atmospheric_pressure: 86039.8 # Utah Lake (~1358 m elevation)
+    water_density: 997.0
+    gravity: 9.81
+
+    max_pressure_delta: 9780.0 # [Pa] ~1 m depth jump
+
 /bluerov2/navsat_odom_node:
   ros__parameters:
     use_parameter_origin: false

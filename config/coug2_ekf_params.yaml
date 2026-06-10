@@ -8,7 +8,7 @@
 
 /coug2_ekf/fluid_pressure_odom_node:
   ros__parameters:
-    atmospheric_pressure: 82777.0 # Deer Creek Reservoir (~1673 m elevation)
+    atmospheric_pressure: 82776.2 # Deer Creek Reservoir (~1673 m elevation)
     water_density: 997.0
     gravity: 9.81
 

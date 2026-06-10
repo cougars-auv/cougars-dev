@@ -91,7 +91,7 @@ def launch_setup(context, *args, **kwargs) -> list:
                 # FROST Lab BlueROV2 bags
                 f"{auv_ns}/dvl/twist:=/{auv_ns}/dvl/twist_discard",
                 f"{auv_ns}/imu/nav_sat_fix:=/{auv_ns}/gps/fix",
-                f"{auv_ns}/shallow/depth_data:=/{auv_ns}/odometry/depth",
+                f"{auv_ns}/shallow/pressure/data:=/{auv_ns}/pressure",
                 # FROST Lab CougUV bags
                 f"/pressure/data:=/{auv_ns}/pressure",
                 f"/fix:=/{auv_ns}/gps/fix",
