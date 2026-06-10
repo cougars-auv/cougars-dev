@@ -1,30 +1,31 @@
-/coug3sim/**:
-  ros__parameters:
-    prior:
-      parameter_priors:
-        initial_position: [0.0, 40.0, 0.0]
+/coug3sim:
+  "**":
+    ros__parameters:
+      prior:
+        parameter_priors:
+          initial_position: [0.0, 40.0, 0.0]
 
-/coug3sim/ekf_filter_node_map:
-  ros__parameters:
-    initial_state: [0.0, 40.0, 0.0,
-                    0.0, 0.0, 0.0,
-                    0.0, 0.0, 0.0,
-                    0.0, 0.0, 0.0,
-                    0.0, 0.0, 0.0]
+  ekf_filter_node_map:
+    ros__parameters:
+      initial_state: [0.0, 40.0, 0.0,
+                      0.0, 0.0, 0.0,
+                      0.0, 0.0, 0.0,
+                      0.0, 0.0, 0.0,
+                      0.0, 0.0, 0.0]
 
-/coug3sim/ukf_filter_node_map:
-  ros__parameters:
-    initial_state: [0.0, 40.0, 0.0,
-                    0.0, 0.0, 0.0,
-                    0.0, 0.0, 0.0,
-                    0.0, 0.0, 0.0,
-                    0.0, 0.0, 0.0]
+  ukf_filter_node_map:
+    ros__parameters:
+      initial_state: [0.0, 40.0, 0.0,
+                      0.0, 0.0, 0.0,
+                      0.0, 0.0, 0.0,
+                      0.0, 0.0, 0.0,
+                      0.0, 0.0, 0.0]
 
-/coug3sim/bt_helm_node:
-  ros__parameters:
-    publish_groot2: true
-    groot2_port: 1671
+  bt_helm_node:
+    ros__parameters:
+      publish_groot2: true
+      groot2_port: 1671
 
-/coug3sim/modem_converter_node:
-  ros__parameters:
-    beacon_id: 3
+  modem_converter_node:
+    ros__parameters:
+      beacon_id: 3

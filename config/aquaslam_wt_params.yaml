@@ -1,62 +1,63 @@
-/aquaslam_wt/**:
-  ros__parameters:
-    base:
-      parameter_tf:
-        position: [0.157385, 0.015834, -0.192631]
-        orientation: [0.999525, 0.026447, 0.011547, 0.010780]
+/aquaslam_wt:
+  "**":
+    ros__parameters:
+      base:
+        parameter_tf:
+          position: [0.157385, 0.015834, -0.192631]
+          orientation: [0.999525, 0.026447, 0.011547, 0.010780]
 
-    imu:
-      parameter_tf:
-        position: [-0.078676, 0.070853, -0.057919]
-        orientation: [-0.493746, 0.474857, 0.537891, 0.491324]
-      use_parameter_covariance: true
-      parameter_covariance:
-        accel_noise_sigmas: [0.000196, 0.000196, 0.000196]
-        gyro_noise_sigmas: [0.0000873, 0.0000873, 0.0000873]
-      accel_bias_rw_sigmas: [0.000392, 0.000392, 0.000392]
-      gyro_bias_rw_sigmas: [0.0000388, 0.0000388, 0.0000388]
-      gravity: [0.0, 0.0, -9.81]
+      imu:
+        parameter_tf:
+          position: [-0.078676, 0.070853, -0.057919]
+          orientation: [-0.493746, 0.474857, 0.537891, 0.491324]
+        use_parameter_covariance: true
+        parameter_covariance:
+          accel_noise_sigmas: [0.000196, 0.000196, 0.000196]
+          gyro_noise_sigmas: [0.0000873, 0.0000873, 0.0000873]
+        accel_bias_rw_sigmas: [0.000392, 0.000392, 0.000392]
+        gyro_bias_rw_sigmas: [0.0000388, 0.0000388, 0.0000388]
+        gravity: [0.0, 0.0, -9.81]
 
-    gps:
-      enable_gps: false
+      gps:
+        enable_gps: false
 
-    depth:
-      parameter_tf:
-        position: [-0.078676, 0.070853, -0.057919]
-        orientation: [1.0, 0.0, 0.0, 0.0]
-      use_parameter_covariance: true
-      parameter_covariance:
-        position_z_noise_sigma: 0.005
+      depth:
+        parameter_tf:
+          position: [-0.078676, 0.070853, -0.057919]
+          orientation: [1.0, 0.0, 0.0, 0.0]
+        use_parameter_covariance: true
+        parameter_covariance:
+          position_z_noise_sigma: 0.005
 
-    mag:
-      enable_mag: false
+      mag:
+        enable_mag: false
 
-    ahrs:
-      enable_ahrs: false
-      parameter_tf:
-        position: [-0.078676, 0.070853, -0.057919]
-        orientation: [-0.493746, 0.474857, 0.537891, 0.491324]
-      use_parameter_covariance: true
-      parameter_covariance:
-        orientation_noise_sigmas: [0.00349, 0.00349, 0.01745]
+      ahrs:
+        enable_ahrs: false
+        parameter_tf:
+          position: [-0.078676, 0.070853, -0.057919]
+          orientation: [-0.493746, 0.474857, 0.537891, 0.491324]
+        use_parameter_covariance: true
+        parameter_covariance:
+          orientation_noise_sigmas: [0.00349, 0.00349, 0.01745]
 
-    dvl:
-      parameter_tf:
-        position: [0.0, 0.0, 0.0]
-        orientation: [0.0, 0.0, 0.0, 1.0]
+      dvl:
+        parameter_tf:
+          position: [0.0, 0.0, 0.0]
+          orientation: [0.0, 0.0, 0.0, 1.0]
 
-    prior:
-      use_parameter_priors: false
+      prior:
+        use_parameter_priors: false
 
-/aquaslam_wt/dvl_a50_twist_node:
-  ros__parameters:
-    use_fom_covariance: true
-    fom_covariance_scale: 4.0
+  dvl_a50_twist_node:
+    ros__parameters:
+      use_fom_covariance: true
+      fom_covariance_scale: 4.0
 
-/aquaslam_wt/ekf_filter_node_map:
-  ros__parameters:
-    imu0: imu/data_null
+  ekf_filter_node_map:
+    ros__parameters:
+      imu0: imu/data_null
 
-/aquaslam_wt/ukf_filter_node_map:
-  ros__parameters:
-    imu0: imu/data_null
+  ukf_filter_node_map:
+    ros__parameters:
+      imu0: imu/data_null

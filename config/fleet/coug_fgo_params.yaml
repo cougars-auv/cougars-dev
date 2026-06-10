@@ -222,243 +222,243 @@
       # AQUA-SLAM-based tightly-coupled DVL preintegration implementation
       enable_tight_dvl_preintegration: false
 
-/**/dvl_a50_twist_node:
-  ros__parameters:
-    # --- Node Settings ---
-    publish_diagnostics: true # Publish diagnostic information.
-    diagnostic_timeout: 0.5 # [s]
+  dvl_a50_twist_node:
+    ros__parameters:
+      # --- Node Settings ---
+      publish_diagnostics: true # Publish diagnostic information.
+      diagnostic_timeout: 0.5 # [s]
 
-    simulate_dropout: false
-    dropout_frequency: 0.033 # [Hz] Frequency of the dropout cycle (1/30).
-    dropout_duration: 5.0 # [s] Duration of the dropout.
+      simulate_dropout: false
+      dropout_frequency: 0.033 # [Hz] Frequency of the dropout cycle (1/30).
+      dropout_duration: 5.0 # [s] Duration of the dropout.
 
-    fom_valid_threshold: 0.02 # Below this is considered a valid velocity measurement.
-    # TURTLMap-based FOM covariance calculation
-    use_fom_covariance: false
-    fom_covariance_scale: 4.0
+      fom_valid_threshold: 0.02 # Below this is considered a valid velocity measurement.
+      # TURTLMap-based FOM covariance calculation
+      use_fom_covariance: false
+      fom_covariance_scale: 4.0
 
-    # --- ROS Topics and Frames ---
-    input_topic: "dvl/data"
-    output_topic: "dvl/twist"
+      # --- ROS Topics and Frames ---
+      input_topic: "dvl/data"
+      output_topic: "dvl/twist"
 
-    use_parameter_frame: false
+      use_parameter_frame: false
 
-/**/dvl_a50_odom_node:
-  ros__parameters:
-    # --- Node Settings ---
-    publish_diagnostics: true # Publish diagnostic information.
-    diagnostic_timeout: 0.5 # [s]
+  dvl_a50_odom_node:
+    ros__parameters:
+      # --- Node Settings ---
+      publish_diagnostics: true # Publish diagnostic information.
+      diagnostic_timeout: 0.5 # [s]
 
-    # --- ROS Topics and Frames ---
-    input_topic: "dvl/position"
-    output_topic: "odometry/dvl_ned"
+      # --- ROS Topics and Frames ---
+      input_topic: "dvl/position"
+      output_topic: "odometry/dvl_ned"
 
-    use_parameter_frame: false
+      use_parameter_frame: false
 
-/**/fluid_pressure_odom_node:
-  ros__parameters:
-    # --- Node Settings ---
-    publish_diagnostics: true # Publish diagnostic information.
-    diagnostic_timeout: 0.5 # [s]
+  fluid_pressure_odom_node:
+    ros__parameters:
+      # --- Node Settings ---
+      publish_diagnostics: true # Publish diagnostic information.
+      diagnostic_timeout: 0.5 # [s]
 
-    pressure_scale: 1.0
-    atmospheric_pressure: 101325.0 # [Pa]
-    water_density: 997.0 # [kg/m^3]
-    gravity: 9.81 # [m/s^2]
+      pressure_scale: 1.0
+      atmospheric_pressure: 101325.0 # [Pa]
+      water_density: 997.0 # [kg/m^3]
+      gravity: 9.81 # [m/s^2]
 
-    fallback_depth_noise_sigma: 0.02 # [m]
-    max_pressure_delta: 0.0 # [Pa]
+      fallback_depth_noise_sigma: 0.02 # [m]
+      max_pressure_delta: 0.0 # [Pa]
 
-    # --- ROS Topics and Frames ---
-    input_topic: "pressure"
-    output_topic: "odometry/depth"
+      # --- ROS Topics and Frames ---
+      input_topic: "pressure"
+      output_topic: "odometry/depth"
 
-    use_parameter_child_frame: false
+      use_parameter_child_frame: false
 
-/**/navsat_odom_node:
-  ros__parameters:
-    # --- Node Settings ---
-    publish_diagnostics: true # Publish diagnostic information.
-    diagnostic_timeout: 1.0 # [s]
+  navsat_odom_node:
+    ros__parameters:
+      # --- Node Settings ---
+      publish_diagnostics: true # Publish diagnostic information.
+      diagnostic_timeout: 1.0 # [s]
 
-    set_origin: true # Whether this node owns and publishes the ENU origin.
-    origin_pub_rate: 1.0 # [Hz] Rate to republish the origin.
+      set_origin: true # Whether this node owns and publishes the ENU origin.
+      origin_pub_rate: 1.0 # [Hz] Rate to republish the origin.
 
-    use_parameter_origin: true
-    origin_latitude: 40.33940 # [deg]
-    origin_longitude: -111.90721 # [deg]
-    origin_altitude: 1412.0 # [m]
+      use_parameter_origin: true
+      origin_latitude: 40.33940 # [deg]
+      origin_longitude: -111.90721 # [deg]
+      origin_altitude: 1412.0 # [m]
 
-    # --- ROS Topics and Frames ---
-    input_topic: "gps/fix"
-    output_topic: "odometry/gps"
-    origin_topic: "/origin"
+      # --- ROS Topics and Frames ---
+      input_topic: "gps/fix"
+      output_topic: "odometry/gps"
+      origin_topic: "/origin"
 
-    use_parameter_child_frame: false
+      use_parameter_child_frame: false
 
-/**/seatrac_x150_imu_node:
-  ros__parameters:
-    # --- Node Settings ---
-    publish_diagnostics: true # Publish diagnostic information.
-    diagnostic_timeout: 0.5 # [s]
+  seatrac_x150_imu_node:
+    ros__parameters:
+      # --- Node Settings ---
+      publish_diagnostics: true # Publish diagnostic information.
+      diagnostic_timeout: 0.5 # [s]
 
-    accel_noise_sigmas: [0.0078, 0.0078, 0.0078] # [m/s^2] Accelerometer measurement noise sigmas.
-    gyro_noise_sigmas: [0.0012, 0.0012, 0.0012] # [rad/s] Gyroscope measurement noise sigmas.
-    orientation_noise_sigmas: [0.00349, 0.00349, 0.01745] # [rad] Orientation uncertainty sigmas [roll, pitch, yaw].
-    magnetic_field_noise_sigmas: [0.003, 0.003, 0.003] # [normalized] Magnetic field uncertainty sigmas.
-    # https://www.ngdc.noaa.gov/geomag/calculators/magcalc.shtml#declination
-    mag_declination_radians: 0.0
+      accel_noise_sigmas: [0.0078, 0.0078, 0.0078] # [m/s^2] Accelerometer measurement noise sigmas.
+      gyro_noise_sigmas: [0.0012, 0.0012, 0.0012] # [rad/s] Gyroscope measurement noise sigmas.
+      orientation_noise_sigmas: [0.00349, 0.00349, 0.01745] # [rad] Orientation uncertainty sigmas [roll, pitch, yaw].
+      magnetic_field_noise_sigmas: [0.003, 0.003, 0.003] # [normalized] Magnetic field uncertainty sigmas.
+      # https://www.ngdc.noaa.gov/geomag/calculators/magcalc.shtml#declination
+      mag_declination_radians: 0.0
 
-    # --- ROS Topics and Frames ---
-    input_topic: "modem_status"
-    imu_output_topic: "seatrac/imu/data_ned"
-    mag_output_topic: "seatrac/imu/mag"
+      # --- ROS Topics and Frames ---
+      input_topic: "modem_status"
+      imu_output_topic: "seatrac/imu/data_ned"
+      mag_output_topic: "seatrac/imu/mag"
 
-    use_parameter_frame: false
+      use_parameter_frame: false
 
-/**/seatrac_imu_ned_to_enu_node:
-  ros__parameters:
-    input_topic: "seatrac/imu/data_ned"
-    output_topic: "seatrac/imu/data"
+  seatrac_imu_ned_to_enu_node:
+    ros__parameters:
+      input_topic: "seatrac/imu/data_ned"
+      output_topic: "seatrac/imu/data"
 
-/**/imu_ned_to_enu_node:
-  ros__parameters:
-    input_topic: "imu/data_ned"
-    output_topic: "imu/data"
+  imu_ned_to_enu_node:
+    ros__parameters:
+      input_topic: "imu/data_ned"
+      output_topic: "imu/data"
 
-/**/odom_ned_to_enu_node:
-  ros__parameters:
-    input_topic: "odometry/dvl_ned"
-    output_topic: "odometry/dvl"
+  odom_ned_to_enu_node:
+    ros__parameters:
+      input_topic: "odometry/dvl_ned"
+      output_topic: "odometry/dvl"
 
-/**/odom_to_tf_node:
-  ros__parameters:
-    input_topic: "odometry/dvl"
+  odom_to_tf_node:
+    ros__parameters:
+      input_topic: "odometry/dvl"
 
-/**/gps_to_truth_relay:
-  ros__parameters:
-    input_topic: "odometry/gps"
-    output_topic: "odometry/truth"
+  gps_to_truth_relay:
+    ros__parameters:
+      input_topic: "odometry/gps"
+      output_topic: "odometry/truth"
 
-# --- Robot Localization Pipeline ---
-/**/ekf_filter_node_odom:
-  ros__parameters:
-    frequency: 30.0
-    two_d_mode: false
-    publish_tf: true
-    print_diagnostics: true
+  # --- Robot Localization Pipeline ---
+  ekf_filter_node_odom:
+    ros__parameters:
+      frequency: 30.0
+      two_d_mode: false
+      publish_tf: true
+      print_diagnostics: true
 
-    twist0: dvl/twist
-    twist0_config: [false, false, false, # X, Y, Z
+      twist0: dvl/twist
+      twist0_config: [false, false, false, # X, Y, Z
+                      false, false, false, # Roll, Pitch, Yaw
+                      true,  true,  true,  # Vx, Vy, Vz
+                      false, false, false, # Vroll, Vpitch, Vyaw
+                      false, false, false] # Ax, Ay, Az
+      twist0_queue_size: 5
+
+      imu0: imu/data
+      imu0_config: [false, false, false, # X, Y, Z
                     false, false, false, # Roll, Pitch, Yaw
-                    true,  true,  true,  # Vx, Vy, Vz
-                    false, false, false, # Vroll, Vpitch, Vyaw
-                    false, false, false] # Ax, Ay, Az
-    twist0_queue_size: 5
-
-    imu0: imu/data
-    imu0_config: [false, false, false, # X, Y, Z
-                  false, false, false, # Roll, Pitch, Yaw
-                  false, false, false, # Vx, Vy, Vz
-                  true,  true,  true,  # Vroll, Vpitch, Vyaw
-                  true,  true,  true]  # Ax, Ay, Az
-    imu0_queue_size: 15
-    imu0_differential: false
-    imu0_relative: false
-    imu0_remove_gravitational_acceleration: true
-
-    use_control: false
-
-/**/ekf_filter_node_map:
-  ros__parameters:
-    frequency: 30.0
-    two_d_mode: false
-    publish_tf: false # Published by FGO instead
-    print_diagnostics: true
-
-    odom0: odometry/local
-    odom0_config: [false, false, false, # X, Y, Z
-                    false, false, false, # Roll, Pitch, Yaw
-                    true,  true,  true,  # Vx, Vy, Vz
+                    false, false, false, # Vx, Vy, Vz
                     true,  true,  true,  # Vroll, Vpitch, Vyaw
-                    false, false, false] # Ax, Ay, Az
-    odom0_queue_size: 10
-    odom0_differential: false
-    odom0_relative: false
+                    true,  true,  true]  # Ax, Ay, Az
+      imu0_queue_size: 15
+      imu0_differential: false
+      imu0_relative: false
+      imu0_remove_gravitational_acceleration: true
 
-    odom1: odometry/depth
-    odom1_config: [false, false, true,  # X, Y, Z
-                    false, false, false, # Roll, Pitch, Yaw
+      use_control: false
+
+  ekf_filter_node_map:
+    ros__parameters:
+      frequency: 30.0
+      two_d_mode: false
+      publish_tf: false # Published by FGO instead
+      print_diagnostics: true
+
+      odom0: odometry/local
+      odom0_config: [false, false, false, # X, Y, Z
+                      false, false, false, # Roll, Pitch, Yaw
+                      true,  true,  true,  # Vx, Vy, Vz
+                      true,  true,  true,  # Vroll, Vpitch, Vyaw
+                      false, false, false] # Ax, Ay, Az
+      odom0_queue_size: 10
+      odom0_differential: false
+      odom0_relative: false
+
+      odom1: odometry/depth
+      odom1_config: [false, false, true,  # X, Y, Z
+                      false, false, false, # Roll, Pitch, Yaw
+                      false, false, false, # Vx, Vy, Vz
+                      false, false, false, # Vroll, Vpitch, Vyaw
+                      false, false, false] # Ax, Ay, Az
+      odom1_queue_size: 5
+      odom1_differential: false
+      odom1_relative: false # Absolute depth in the map frame.
+
+      odom2: odometry/gps
+      odom2_config: [true,  true,  false, # X, Y, Z
+                      false, false, false, # Roll, Pitch, Yaw
+                      false, false, false, # Vx, Vy, Vz
+                      false, false, false, # Vroll, Vpitch, Vyaw
+                      false, false, false] # Ax, Ay, Az
+      odom2_queue_size: 5
+      odom2_differential: false
+      odom2_relative: false # Absolute GPS position in the map frame.
+
+      imu0: imu/data
+      imu0_config: [false, false, false, # X, Y, Z
+                    true,  true,  true,  # Roll, Pitch, Yaw
                     false, false, false, # Vx, Vy, Vz
                     false, false, false, # Vroll, Vpitch, Vyaw
                     false, false, false] # Ax, Ay, Az
-    odom1_queue_size: 5
-    odom1_differential: false
-    odom1_relative: false # Absolute depth in the map frame.
+      imu0_queue_size: 15
+      imu0_differential: false
+      imu0_relative: false # Absolute orientation in the map frame.
 
-    odom2: odometry/gps
-    odom2_config: [true,  true,  false, # X, Y, Z
-                    false, false, false, # Roll, Pitch, Yaw
+  ukf_filter_node_map:
+    ros__parameters:
+      frequency: 30.0
+      two_d_mode: false
+      publish_tf: false # Published by FGO instead
+      print_diagnostics: true
+
+      odom0: odometry/local
+      odom0_config: [false, false, false, # X, Y, Z
+                      false, false, false, # Roll, Pitch, Yaw
+                      true,  true,  true,  # Vx, Vy, Vz
+                      true,  true,  true,  # Vroll, Vpitch, Vyaw
+                      false, false, false] # Ax, Ay, Az
+      odom0_queue_size: 10
+      odom0_differential: false
+      odom0_relative: false
+
+      odom1: odometry/depth
+      odom1_config: [false, false, true,  # X, Y, Z
+                      false, false, false, # Roll, Pitch, Yaw
+                      false, false, false, # Vx, Vy, Vz
+                      false, false, false, # Vroll, Vpitch, Vyaw
+                      false, false, false] # Ax, Ay, Az
+      odom1_queue_size: 5
+      odom1_differential: false
+      odom1_relative: false # Absolute depth in the map frame.
+
+      odom2: odometry/gps
+      odom2_config: [true,  true,  false, # X, Y, Z
+                      false, false, false, # Roll, Pitch, Yaw
+                      false, false, false, # Vx, Vy, Vz
+                      false, false, false, # Vroll, Vpitch, Vyaw
+                      false, false, false] # Ax, Ay, Az
+      odom2_queue_size: 5
+      odom2_differential: false
+      odom2_relative: false # Absolute GPS position in the map frame.
+
+      imu0: imu/data
+      imu0_config: [false, false, false, # X, Y, Z
+                    true,  true,  true,  # Roll, Pitch, Yaw
                     false, false, false, # Vx, Vy, Vz
                     false, false, false, # Vroll, Vpitch, Vyaw
                     false, false, false] # Ax, Ay, Az
-    odom2_queue_size: 5
-    odom2_differential: false
-    odom2_relative: false # Absolute GPS position in the map frame.
-
-    imu0: imu/data
-    imu0_config: [false, false, false, # X, Y, Z
-                  true,  true,  true,  # Roll, Pitch, Yaw
-                  false, false, false, # Vx, Vy, Vz
-                  false, false, false, # Vroll, Vpitch, Vyaw
-                  false, false, false] # Ax, Ay, Az
-    imu0_queue_size: 15
-    imu0_differential: false
-    imu0_relative: false # Absolute orientation in the map frame.
-
-/**/ukf_filter_node_map:
-  ros__parameters:
-    frequency: 30.0
-    two_d_mode: false
-    publish_tf: false # Published by FGO instead
-    print_diagnostics: true
-
-    odom0: odometry/local
-    odom0_config: [false, false, false, # X, Y, Z
-                    false, false, false, # Roll, Pitch, Yaw
-                    true,  true,  true,  # Vx, Vy, Vz
-                    true,  true,  true,  # Vroll, Vpitch, Vyaw
-                    false, false, false] # Ax, Ay, Az
-    odom0_queue_size: 10
-    odom0_differential: false
-    odom0_relative: false
-
-    odom1: odometry/depth
-    odom1_config: [false, false, true,  # X, Y, Z
-                    false, false, false, # Roll, Pitch, Yaw
-                    false, false, false, # Vx, Vy, Vz
-                    false, false, false, # Vroll, Vpitch, Vyaw
-                    false, false, false] # Ax, Ay, Az
-    odom1_queue_size: 5
-    odom1_differential: false
-    odom1_relative: false # Absolute depth in the map frame.
-
-    odom2: odometry/gps
-    odom2_config: [true,  true,  false, # X, Y, Z
-                    false, false, false, # Roll, Pitch, Yaw
-                    false, false, false, # Vx, Vy, Vz
-                    false, false, false, # Vroll, Vpitch, Vyaw
-                    false, false, false] # Ax, Ay, Az
-    odom2_queue_size: 5
-    odom2_differential: false
-    odom2_relative: false # Absolute GPS position in the map frame.
-
-    imu0: imu/data
-    imu0_config: [false, false, false, # X, Y, Z
-                  true,  true,  true,  # Roll, Pitch, Yaw
-                  false, false, false, # Vx, Vy, Vz
-                  false, false, false, # Vroll, Vpitch, Vyaw
-                  false, false, false] # Ax, Ay, Az
-    imu0_queue_size: 15
-    imu0_differential: false
-    imu0_relative: false # Absolute orientation in the map frame.
+      imu0_queue_size: 15
+      imu0_differential: false
+      imu0_relative: false # Absolute orientation in the map frame.
