@@ -86,6 +86,7 @@ def generate_launch_description() -> LaunchDescription:
             "use_sim_time": use_sim_time,
             "auv_ns": auv_ns,
         }.items(),
+        condition=IfCondition(NotEqualsSubstitution(auv_ns, "blue1sim")),
     )
 
     coug_fgo_cmd = IncludeLaunchDescription(
@@ -138,9 +139,7 @@ def generate_launch_description() -> LaunchDescription:
             "use_sim_time": use_sim_time,
             "auv_ns": auv_ns,
         }.items(),
-        condition=IfCondition(
-            NotEqualsSubstitution(LaunchConfiguration("auv_ns"), "blue1sim")
-        ),
+        condition=IfCondition(NotEqualsSubstitution(auv_ns, "blue1sim")),
     )
 
     coug_active_fgo_cmd = IncludeLaunchDescription(
@@ -151,9 +150,7 @@ def generate_launch_description() -> LaunchDescription:
             "use_sim_time": use_sim_time,
             "auv_ns": auv_ns,
         }.items(),
-        condition=IfCondition(
-            EqualsSubstitution(LaunchConfiguration("auv_ns"), "blue1sim")
-        ),
+        condition=IfCondition(EqualsSubstitution(auv_ns, "blue1sim")),
     )
 
     coug_viz_dvl_cmd = IncludeLaunchDescription(
@@ -164,9 +161,7 @@ def generate_launch_description() -> LaunchDescription:
             "use_sim_time": use_sim_time,
             "auv_ns": auv_ns,
         }.items(),
-        condition=IfCondition(
-            EqualsSubstitution(LaunchConfiguration("auv_ns"), "blue1sim")
-        ),
+        condition=IfCondition(EqualsSubstitution(auv_ns, "blue1sim")),
     )
 
     bag_recorder_cmd = Node(

@@ -9,6 +9,7 @@
 
   <exec_depend>rclpy</exec_depend>
   <exec_depend>diagnostic_updater</exec_depend>
+  <exec_depend>diagnostic_common_diagnostics</exec_depend>
   <exec_depend>coug_interfaces</exec_depend>
   <exec_depend>coug_description</exec_depend>
   <exec_depend>coug_fgo</exec_depend>

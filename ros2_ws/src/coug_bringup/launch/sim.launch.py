@@ -181,6 +181,33 @@ def launch_setup(context, *args, **kwargs) -> list:
         )
     )
 
+    actions.append(
+        Node(
+            package="diagnostic_common_diagnostics",
+            executable="cpu_monitor.py",
+            name="cpu_monitor",
+            parameters=[{"use_sim_time": use_sim_time}],
+        )
+    )
+
+    actions.append(
+        Node(
+            package="diagnostic_common_diagnostics",
+            executable="hd_monitor.py",
+            name="hd_monitor",
+            parameters=[{"use_sim_time": use_sim_time}],
+        )
+    )
+
+    actions.append(
+        Node(
+            package="diagnostic_common_diagnostics",
+            executable="ram_monitor.py",
+            name="ram_monitor",
+            parameters=[{"use_sim_time": use_sim_time}],
+        )
+    )
+
     return actions
 
 
