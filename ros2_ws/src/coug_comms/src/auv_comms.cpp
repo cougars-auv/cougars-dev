@@ -183,9 +183,9 @@ void AuvCommsNode::checkAuvCommsStatus(diagnostic_updater::DiagnosticStatusWrapp
   stat.add("Time Since Last (s)", time_since);
 
   if (last_cmd_time_ == 0.0) {
-    stat.mergeSummary(diagnostic_msgs::msg::DiagnosticStatus::WARN, "Waiting for first command.");
+    stat.mergeSummary(diagnostic_msgs::msg::DiagnosticStatus::OK, "Waiting for first command.");
   } else if (time_since > params_.diagnostic_timeout) {
-    stat.mergeSummary(diagnostic_msgs::msg::DiagnosticStatus::ERROR, "Base station is offline.");
+    stat.mergeSummary(diagnostic_msgs::msg::DiagnosticStatus::WARN, "Base station is offline.");
   }
 }
 

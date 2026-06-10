@@ -156,10 +156,10 @@ void BaseCommsNode::checkAgentStatus(diagnostic_updater::DiagnosticStatusWrapper
   stat.add("Last ACK Success", a.last_ack_success);
 
   if (a.last_ack_time == 0.0) {
-    stat.mergeSummary(diagnostic_msgs::msg::DiagnosticStatus::WARN,
+    stat.mergeSummary(diagnostic_msgs::msg::DiagnosticStatus::OK,
                       "Waiting for first ACK from " + a.name + ".");
   } else if (time_since > params_.diagnostic_timeout) {
-    stat.mergeSummary(diagnostic_msgs::msg::DiagnosticStatus::ERROR, a.name + " is offline.");
+    stat.mergeSummary(diagnostic_msgs::msg::DiagnosticStatus::WARN, a.name + " is offline.");
   }
 }
 
