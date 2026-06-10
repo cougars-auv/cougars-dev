@@ -109,11 +109,41 @@ void AuvCommsNode::callService(rclcpp::Client<std_srvs::srv::Trigger>::SharedPtr
     sendAck(ack_id, false, src_id, transport);
     return;
   }
+  auto responded = std::make_shared<bool>(false);
+  auto timer_holder = std::make_shared<rclcpp::TimerBase::SharedPtr>();
+  *timer_holder = create_wall_timer(
+      std::chrono::duration<double>(params_.service_timeout),
+      [this, timer_holder, responded, ack_id, src_id, transport]() {
+        if (*timer_holder) {
+          (*timer_holder)->cancel();
+          timer_holder->reset();
+        }
+        if (!*responded) {
+          *responded = true;
+          RCLCPP_WARN(get_logger(), "Service timed out for ack 0x%02x — sending NACK",
+                      static_cast<uint8_t>(ack_id));
+          sendAck(ack_id, false, src_id, transport);
+        }
+      });
+
   client->async_send_request(
       std::make_shared<std_srvs::srv::Trigger::Request>(),
-      [this, ack_id, src_id,
+      [this, timer_holder, responded, ack_id, src_id,
        transport](rclcpp::Client<std_srvs::srv::Trigger>::SharedFuture future) {
-        const bool success = future.get()->success;
+        if (*timer_holder) {
+          (*timer_holder)->cancel();
+          timer_holder->reset();
+        }
+        if (*responded) {
+          return;
+        }
+        *responded = true;
+        bool success = false;
+        try {
+          success = future.get()->success;
+        } catch (const std::exception& e) {
+          RCLCPP_ERROR(get_logger(), "Service call failed: %s", e.what());
+        }
         RCLCPP_INFO(get_logger(), "Service ack 0x%02x: %s", static_cast<uint8_t>(ack_id),
                     success ? "success" : "failure");
         sendAck(ack_id, success, src_id, transport);

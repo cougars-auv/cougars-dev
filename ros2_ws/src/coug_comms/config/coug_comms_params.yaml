@@ -18,6 +18,9 @@
 
   auv_comms_node:
     ros__parameters:
+      # --- Node Settings ---
+      service_timeout: 10.0 # [s]
+
       # --- ROS Topics ---
       start_service: "start"
       stop_service: "stop"

@@ -12,6 +12,10 @@ auv_comms_node:
     type: string
     default_value: "home"
 
+  service_timeout:
+    type: double
+    default_value: 10.0
+
   publish_diagnostics:
     type: bool
     default_value: false
