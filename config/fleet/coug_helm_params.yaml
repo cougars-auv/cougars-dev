@@ -14,9 +14,7 @@
       surface_slip_radius: [1000.0, 0.5] # [m]
       home_slip_radius: [50.0, 0.5] # [m]
 
-      desired_speed_rpm: 1500.0 # [RPM] Constant thruster speed to command when moving.
       odom_timeout_sec: 2.0 # [s] Time to wait for odometry before stopping.
-
       publish_diagnostics: true # Publish diagnostic information.
 
       # --- Groot2 Connection ---
