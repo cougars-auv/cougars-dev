@@ -1,7 +1,7 @@
 /coug2_dvldr:
   coug_description_launch:
     ros__parameters:
-      urdf_file: couguv.urdf.xacro
+      urdf_file: "couguv.urdf.xacro"
 
   dvl_a50_twist_node:
     ros__parameters:
@@ -38,7 +38,7 @@
     ros__parameters:
       publish_tf: true
 
-      odom0: odometry/dvl
+      odom0: "odometry/dvl"
       odom0_config: [true,  true, false,  # X, Y, Z
                       true,  true,  true,  # Roll, Pitch, Yaw
                       false, false, false, # Vx, Vy, Vz
@@ -47,4 +47,4 @@
       odom0_differential: true
 
       # odom2: odometry/gps_null
-      imu0: seatrac/imu/data
+      imu0: "seatrac/imu/data"

@@ -1,7 +1,7 @@
 /bluerov2:
   coug_description_launch:
     ros__parameters:
-      urdf_file: bluerov2.urdf.xacro
+      urdf_file: "bluerov2.urdf.xacro"
 
   "**":
     ros__parameters:
@@ -68,8 +68,8 @@
 
   ekf_filter_node_map:
     ros__parameters:
-      odom2: odometry/gps_null
+      odom2: "odometry/gps_null"
 
   ukf_filter_node_map:
     ros__parameters:
-      odom2: odometry/gps_null
+      odom2: "odometry/gps_null"

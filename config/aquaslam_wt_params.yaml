@@ -1,7 +1,7 @@
 /aquaslam_wt:
   coug_description_launch:
     ros__parameters:
-      urdf_file: aquaslam_wt.urdf.xacro
+      urdf_file: "aquaslam_wt.urdf.xacro"
 
   "**":
     ros__parameters:
@@ -60,8 +60,8 @@
 
   ekf_filter_node_map:
     ros__parameters:
-      imu0: imu/data_null
+      imu0: "imu/data_null"
 
   ukf_filter_node_map:
     ros__parameters:
-      imu0: imu/data_null
+      imu0: "imu/data_null"

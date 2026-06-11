@@ -1,4 +1,4 @@
 /**:
   coug_description_launch:
     ros__parameters:
-      urdf_file: couguv_holoocean.urdf.xacro
+      urdf_file: "couguv_holoocean.urdf.xacro"

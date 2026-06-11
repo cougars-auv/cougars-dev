@@ -348,7 +348,7 @@
       publish_tf: true
       print_diagnostics: true
 
-      twist0: dvl/twist
+      twist0: "dvl/twist"
       twist0_config: [false, false, false, # X, Y, Z
                       false, false, false, # Roll, Pitch, Yaw
                       true,  true,  true,  # Vx, Vy, Vz
@@ -356,7 +356,7 @@
                       false, false, false] # Ax, Ay, Az
       twist0_queue_size: 5
 
-      imu0: imu/data
+      imu0: "imu/data"
       imu0_config: [false, false, false, # X, Y, Z
                     false, false, false, # Roll, Pitch, Yaw
                     false, false, false, # Vx, Vy, Vz
@@ -376,7 +376,7 @@
       publish_tf: false # Published by FGO instead
       print_diagnostics: true
 
-      odom0: odometry/local
+      odom0: "odometry/local"
       odom0_config: [false, false, false, # X, Y, Z
                       false, false, false, # Roll, Pitch, Yaw
                       true,  true,  true,  # Vx, Vy, Vz
@@ -386,7 +386,7 @@
       odom0_differential: false
       odom0_relative: false
 
-      odom1: odometry/depth
+      odom1: "odometry/depth"
       odom1_config: [false, false, true,  # X, Y, Z
                       false, false, false, # Roll, Pitch, Yaw
                       false, false, false, # Vx, Vy, Vz
@@ -396,7 +396,7 @@
       odom1_differential: false
       odom1_relative: false # Absolute depth in the map frame.
 
-      odom2: odometry/gps
+      odom2: "odometry/gps"
       odom2_config: [true,  true,  false, # X, Y, Z
                       false, false, false, # Roll, Pitch, Yaw
                       false, false, false, # Vx, Vy, Vz
@@ -406,7 +406,7 @@
       odom2_differential: false
       odom2_relative: false # Absolute GPS position in the map frame.
 
-      imu0: imu/data
+      imu0: "imu/data"
       imu0_config: [false, false, false, # X, Y, Z
                     true,  true,  true,  # Roll, Pitch, Yaw
                     false, false, false, # Vx, Vy, Vz
@@ -423,7 +423,7 @@
       publish_tf: false # Published by FGO instead
       print_diagnostics: true
 
-      odom0: odometry/local
+      odom0: "odometry/local"
       odom0_config: [false, false, false, # X, Y, Z
                       false, false, false, # Roll, Pitch, Yaw
                       true,  true,  true,  # Vx, Vy, Vz
@@ -433,7 +433,7 @@
       odom0_differential: false
       odom0_relative: false
 
-      odom1: odometry/depth
+      odom1: "odometry/depth"
       odom1_config: [false, false, true,  # X, Y, Z
                       false, false, false, # Roll, Pitch, Yaw
                       false, false, false, # Vx, Vy, Vz
@@ -443,7 +443,7 @@
       odom1_differential: false
       odom1_relative: false # Absolute depth in the map frame.
 
-      odom2: odometry/gps
+      odom2: "odometry/gps"
       odom2_config: [true,  true,  false, # X, Y, Z
                       false, false, false, # Roll, Pitch, Yaw
                       false, false, false, # Vx, Vy, Vz
@@ -453,7 +453,7 @@
       odom2_differential: false
       odom2_relative: false # Absolute GPS position in the map frame.
 
-      imu0: imu/data
+      imu0: "imu/data"
       imu0_config: [false, false, false, # X, Y, Z
                     true,  true,  true,  # Roll, Pitch, Yaw
                     false, false, false, # Vx, Vy, Vz
