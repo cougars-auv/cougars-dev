@@ -2,7 +2,7 @@
 set -e
 
 if [ -z "$1" ] || [ -z "$2" ]; then
-  echo "Usage: ./setup.sh <base-station-ip> <agent-ns> [set-origin]"
+  echo "Usage: ./setup.sh <base-station-ip> <agent-ns>"
   exit 1
 fi
 
@@ -10,7 +10,6 @@ cd "$(dirname "$0")"
 
 ip="$1"
 agent_ns="$2"
-set_origin="${3:-true}"
 
 if [ ! -f "config/${agent_ns}_params.yaml" ]; then
   echo "Error: unknown agent '${agent_ns}'"
@@ -32,7 +31,6 @@ git remote add base "git://${ip}/cougars-dev" 2>/dev/null || \
 cat > .env <<EOF
 ZENOH_ROUTER_IP=${ip}
 AUV_NS=${agent_ns}
-SET_ORIGIN=${set_origin}
 EOF
 
 sudo cp cougars.service /etc/systemd/system/

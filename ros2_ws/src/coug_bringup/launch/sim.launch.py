@@ -97,7 +97,6 @@ def launch_setup(context, *args, **kwargs) -> list:
                     "use_sim_time": use_sim_time,
                     "auv_ns": auv_ns,
                     "compare": compare,
-                    "set_origin": "true" if i == 0 else "false",
                 }.items(),
             )
         )

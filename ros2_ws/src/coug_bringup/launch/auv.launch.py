@@ -34,7 +34,6 @@ def generate_launch_description() -> LaunchDescription:
     use_sim_time = LaunchConfiguration("use_sim_time")
     auv_ns = LaunchConfiguration("auv_ns")
     compare = LaunchConfiguration("compare")
-    set_origin = LaunchConfiguration("set_origin")
 
     fleet_params = PathJoinSubstitution(
         [
@@ -86,7 +85,6 @@ def generate_launch_description() -> LaunchDescription:
             "use_sim_time": use_sim_time,
             "auv_ns": auv_ns,
             "compare": compare,
-            "set_origin": set_origin,
         }.items(),
         condition=IfCondition(
             AndSubstitution(
@@ -103,7 +101,6 @@ def generate_launch_description() -> LaunchDescription:
         launch_arguments={
             "use_sim_time": use_sim_time,
             "auv_ns": auv_ns,
-            "set_origin": set_origin,
         }.items(),
         condition=IfCondition(EqualsSubstitution(auv_ns, "coug2_dvldr")),
     )
@@ -115,7 +112,6 @@ def generate_launch_description() -> LaunchDescription:
         launch_arguments={
             "use_sim_time": use_sim_time,
             "auv_ns": auv_ns,
-            "set_origin": set_origin,
         }.items(),
         condition=IfCondition(EqualsSubstitution(auv_ns, "coug2_ekf")),
     )
@@ -182,11 +178,6 @@ def generate_launch_description() -> LaunchDescription:
                 "compare",
                 default_value="false",
                 description="Launch additional localization nodes if true",
-            ),
-            DeclareLaunchArgument(
-                "set_origin",
-                default_value="true",
-                description="Whether navsat_odom_node owns and publishes the ENU origin",
             ),
             GroupAction(
                 actions=[

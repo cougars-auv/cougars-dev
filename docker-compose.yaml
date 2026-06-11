@@ -61,4 +61,3 @@ services:
     command: >
       ros2 launch coug_bringup auv.launch.py
       auv_ns:=${AUV_NS}
-      set_origin:=${SET_ORIGIN}
