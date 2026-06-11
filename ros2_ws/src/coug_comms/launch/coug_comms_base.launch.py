@@ -31,8 +31,22 @@ def launch_setup(context, *args, **kwargs) -> list:
     agent_namespaces = yaml.safe_load(agent_list_str)
 
     config_dir = os.environ.get("CONFIG_DIR", "")
+
+    fleet_default_beacon_id = None
+    fleet_params_path = os.path.join(config_dir, "fleet", "coug_comms_params.yaml")
+    if os.path.isfile(fleet_params_path):
+        with open(fleet_params_path) as f:
+            fleet_config = yaml.safe_load(f) or {}
+        fleet_comms = (
+            fleet_config.get("/**", {})
+            .get("coug_comms_base_launch", {})
+            .get("ros__parameters", {})
+        )
+        fleet_default_beacon_id = fleet_comms.get("beacon_id")
+
     beacon_ids = {}
     for ns in agent_namespaces:
+        beacon_id = fleet_default_beacon_id
         agent_params_path = os.path.join(config_dir, f"{ns}_params.yaml")
         if os.path.isfile(agent_params_path):
             with open(agent_params_path) as f:
@@ -41,8 +55,9 @@ def launch_setup(context, *args, **kwargs) -> list:
             comms_params = ns_params.get("coug_comms_base_launch", {}).get(
                 "ros__parameters", {}
             )
-            if "beacon_id" in comms_params:
-                beacon_ids[ns] = comms_params["beacon_id"]
+            beacon_id = comms_params.get("beacon_id", beacon_id)
+        if beacon_id is not None:
+            beacon_ids[ns] = beacon_id
 
     fleet_params = PathJoinSubstitution(
         [
