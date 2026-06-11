@@ -176,16 +176,16 @@ void AuvCommsNode::sendAcousticAck(CmdId ack_id, bool success, uint8_t dest_id) 
 }
 
 void AuvCommsNode::checkAuvCommsStatus(diagnostic_updater::DiagnosticStatusWrapper& stat) {
-  stat.summary(diagnostic_msgs::msg::DiagnosticStatus::OK, "Command received.");
-
   double time_since =
       (last_cmd_time_ > 0.0) ? (this->get_clock()->now().seconds() - last_cmd_time_) : -1.0;
   stat.add("Time Since Last (s)", time_since);
 
   if (last_cmd_time_ == 0.0) {
-    stat.mergeSummary(diagnostic_msgs::msg::DiagnosticStatus::OK, "Waiting for first command.");
+    stat.summary(diagnostic_msgs::msg::DiagnosticStatus::OK, "Waiting for first command.");
   } else if (time_since > params_.diagnostic_timeout) {
-    stat.mergeSummary(diagnostic_msgs::msg::DiagnosticStatus::WARN, "Base station is offline.");
+    stat.summary(diagnostic_msgs::msg::DiagnosticStatus::WARN, "Base station is offline.");
+  } else {
+    stat.summary(diagnostic_msgs::msg::DiagnosticStatus::OK, "Command received.");
   }
 }
 

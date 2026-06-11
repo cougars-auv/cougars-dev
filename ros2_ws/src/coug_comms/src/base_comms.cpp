@@ -148,7 +148,6 @@ void BaseCommsNode::sendAcousticCmd(CmdId cmd, uint8_t dest_id) {
 void BaseCommsNode::checkAgentStatus(diagnostic_updater::DiagnosticStatusWrapper& stat,
                                      uint8_t beacon_id) {
   const AgentEntry& a = agents_.at(beacon_id);
-  stat.summary(diagnostic_msgs::msg::DiagnosticStatus::OK, "ACK received from " + a.name + ".");
 
   double time_since =
       (a.last_ack_time > 0.0) ? (this->get_clock()->now().seconds() - a.last_ack_time) : -1.0;
@@ -156,10 +155,12 @@ void BaseCommsNode::checkAgentStatus(diagnostic_updater::DiagnosticStatusWrapper
   stat.add("Last ACK Success", a.last_ack_success);
 
   if (a.last_ack_time == 0.0) {
-    stat.mergeSummary(diagnostic_msgs::msg::DiagnosticStatus::OK,
-                      "Waiting for first ACK from " + a.name + ".");
+    stat.summary(diagnostic_msgs::msg::DiagnosticStatus::OK,
+                 "Waiting for first ACK from " + a.name + ".");
   } else if (time_since > params_.diagnostic_timeout) {
-    stat.mergeSummary(diagnostic_msgs::msg::DiagnosticStatus::WARN, a.name + " is offline.");
+    stat.summary(diagnostic_msgs::msg::DiagnosticStatus::WARN, a.name + " is offline.");
+  } else {
+    stat.summary(diagnostic_msgs::msg::DiagnosticStatus::OK, "ACK received from " + a.name + ".");
   }
 }
 
