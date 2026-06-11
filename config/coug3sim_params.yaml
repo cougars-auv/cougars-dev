@@ -1,4 +1,8 @@
 /coug3sim:
+  coug_comms_base_launch:
+    ros__parameters:
+      beacon_id: 3
+
   "**":
     ros__parameters:
       prior:
@@ -25,10 +29,6 @@
     ros__parameters:
       publish_groot2: true
       groot2_port: 1671
-
-  coug_comms_base_launch:
-    ros__parameters:
-      beacon_id: 3
 
   modem_converter_node:
     ros__parameters:
