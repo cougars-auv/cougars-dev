@@ -1,4 +1,8 @@
 /blue1sim:
+  coug_description_launch:
+    ros__parameters:
+      urdf_file: bluerov2_holoocean.urdf.xacro
+
   "**":
     ros__parameters:
       publish_velocity_cov: true

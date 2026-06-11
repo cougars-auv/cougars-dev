@@ -2,16 +2,15 @@
 set -e
 
 source ${OVERLAY_WS}/install/setup.bash
-source "$(dirname "$0")/utils/common.sh"
 
 # --- Selection ---
 bag_name=$(cd "${BAGS_DIR}" && find . -maxdepth 3 -name "metadata.yaml" -exec dirname {} \; | sed 's|^\./||' | sort -r | gum filter --placeholder "Select a bag to play..." || exit 0)
 [ -z "${bag_name}" ] && exit 0
 bag_path="${BAGS_DIR}/${bag_name}"
 
-agent_ns=$(printf "%s\n" "${!AGENTS[@]}" | sort | gum filter --placeholder "Select an agent to launch..." || exit 0)
+agent_ns=$(basename -a "${CONFIG_DIR}"/*_params.yaml | sed 's/_params.yaml$//' | sort | gum filter --placeholder "Select an agent to launch..." || exit 0)
 [ -z "${agent_ns}" ] && exit 0
-agent_list=$(agents_yaml "${agent_ns}")
+agent_list="[${agent_ns}]"
 
 # --- Options ---
 options=$(gum choose --no-limit --header "Select options:" "Record rosbag" "Set start delay" "Set playback rate" "Launch comparison methods") || exit 0

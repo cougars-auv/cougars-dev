@@ -27,24 +27,14 @@ from launch.substitutions import (
     EnvironmentVariable,
 )
 from launch_ros.actions import Node, PushRosNamespace
-from launch_ros.substitutions import FindPackageShare
 
 
 def generate_launch_description() -> LaunchDescription:
 
     use_sim_time = LaunchConfiguration("use_sim_time")
-    auv_urdf = LaunchConfiguration("auv_urdf")
     auv_ns = LaunchConfiguration("auv_ns")
     compare = LaunchConfiguration("compare")
     set_origin = LaunchConfiguration("set_origin")
-
-    urdf_file = PathJoinSubstitution(
-        [
-            FindPackageShare("coug_description"),
-            "urdf",
-            auv_urdf,
-        ]
-    )
 
     fleet_params = PathJoinSubstitution(
         [
@@ -73,7 +63,6 @@ def generate_launch_description() -> LaunchDescription:
         ),
         launch_arguments={
             "use_sim_time": use_sim_time,
-            "urdf_file": urdf_file,
             "auv_ns": auv_ns,
         }.items(),
     )
@@ -183,11 +172,6 @@ def generate_launch_description() -> LaunchDescription:
                 "use_sim_time",
                 default_value="false",
                 description="Use simulation/rosbag clock if true",
-            ),
-            DeclareLaunchArgument(
-                "auv_urdf",
-                default_value="couguv_holoocean.urdf.xacro",
-                description="URDF filename in coug_description/urdf",
             ),
             DeclareLaunchArgument(
                 "auv_ns",

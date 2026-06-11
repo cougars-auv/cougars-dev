@@ -1,4 +1,8 @@
 /aquaslam_wt:
+  coug_description_launch:
+    ros__parameters:
+      urdf_file: aquaslam_wt.urdf.xacro
+
   "**":
     ros__parameters:
       base:

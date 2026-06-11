@@ -27,8 +27,7 @@ def launch_setup(context, *args, **kwargs) -> list:
     use_sim_time = LaunchConfiguration("use_sim_time")
     agent_list_str = LaunchConfiguration("agent_list").perform(context)
 
-    agent_tuples = yaml.safe_load(agent_list_str)
-    agent_namespaces = [t[0] for t in agent_tuples]
+    agent_namespaces = yaml.safe_load(agent_list_str)
 
     fleet_params = PathJoinSubstitution(
         [
@@ -65,11 +64,10 @@ def generate_launch_description() -> LaunchDescription:
             ),
             DeclareLaunchArgument(
                 "agent_list",
-                default_value="[[auv0, auv.urdf.xacro]]",
+                default_value="[auv0]",
                 description=(
-                    "YAML list of [auv_ns, auv_urdf] pairs "
-                    "(e.g. '[[coug1sim, couguv_holoocean.urdf.xacro], "
-                    "[coug2sim, couguv_holoocean.urdf.xacro]]')"
+                    "YAML list of AUV namespaces "
+                    "(e.g. '[coug1sim]' or '[coug1sim, coug2sim]')"
                 ),
             ),
             OpaqueFunction(function=launch_setup),

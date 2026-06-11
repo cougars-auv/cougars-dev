@@ -1,4 +1,8 @@
 /coug2_ekf:
+  coug_description_launch:
+    ros__parameters:
+      urdf_file: couguv.urdf.xacro
+
   dvl_a50_twist_node:
     ros__parameters:
       use_parameter_frame: true

@@ -47,7 +47,7 @@ def launch_setup(context, *args, **kwargs) -> list:
     play_bag_path_str = context.perform_substitution(play_bag_path)
     record_bag_path_str = context.perform_substitution(record_bag_path)
 
-    [(auv_ns, auv_urdf)] = yaml.safe_load(agent_list_str)
+    [auv_ns] = yaml.safe_load(agent_list_str)
 
     coug_bringup_dir = get_package_share_directory("coug_bringup")
     coug_bringup_launch_dir = os.path.join(coug_bringup_dir, "launch")
@@ -150,7 +150,6 @@ def launch_setup(context, *args, **kwargs) -> list:
             ),
             launch_arguments={
                 "use_sim_time": use_sim_time,
-                "auv_urdf": auv_urdf,
                 "auv_ns": auv_ns,
                 "compare": compare,
             }.items(),
@@ -177,11 +176,10 @@ def generate_launch_description() -> LaunchDescription:
             ),
             DeclareLaunchArgument(
                 "agent_list",
-                default_value="[[auv0, auv.urdf.xacro]]",
+                default_value="[auv0]",
                 description=(
-                    "YAML list of [auv_ns, auv_urdf] pairs "
-                    "(e.g. '[[coug1sim, couguv_holoocean.urdf.xacro], "
-                    "[coug2sim, couguv_holoocean.urdf.xacro]]')"
+                    "YAML list of AUV namespaces "
+                    "(e.g. '[coug1sim]' or '[coug1sim, coug2sim]')"
                 ),
             ),
             DeclareLaunchArgument(

@@ -30,7 +30,7 @@ def launch_setup(context, *args, **kwargs) -> list:
     use_sim_time = LaunchConfiguration("use_sim_time")
     agent_list = LaunchConfiguration("agent_list")
     agent_list_str = agent_list.perform(context)
-    auv_ns = yaml.safe_load(agent_list_str)[0][0]
+    auv_ns = yaml.safe_load(agent_list_str)[0]
 
     coug_comms_dir = get_package_share_directory("coug_comms")
     coug_comms_launch_dir = os.path.join(coug_comms_dir, "launch")
@@ -129,11 +129,10 @@ def generate_launch_description() -> LaunchDescription:
             ),
             DeclareLaunchArgument(
                 "agent_list",
-                default_value="[[auv0, auv.urdf.xacro]]",
+                default_value="[auv0]",
                 description=(
-                    "YAML list of [auv_ns, auv_urdf] pairs "
-                    "(e.g. '[[coug1sim, couguv_holoocean.urdf.xacro], "
-                    "[coug2sim, couguv_holoocean.urdf.xacro]]')"
+                    "YAML list of AUV namespaces "
+                    "(e.g. '[coug1sim]' or '[coug1sim, coug2sim]')"
                 ),
             ),
             OpaqueFunction(function=launch_setup),

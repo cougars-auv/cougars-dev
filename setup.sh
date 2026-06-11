@@ -7,17 +7,15 @@ if [ -z "$1" ] || [ -z "$2" ]; then
 fi
 
 cd "$(dirname "$0")"
-source "scripts/utils/common.sh"
 
 ip="$1"
 agent_ns="$2"
 set_origin="${3:-true}"
 
-if [ -z "${AGENTS[${agent_ns}]}" ]; then
+if [ ! -f "config/${agent_ns}_params.yaml" ]; then
   echo "Error: unknown agent '${agent_ns}'"
   exit 1
 fi
-auv_urdf="${AGENTS[${agent_ns}]}"
 
 sed 's|git@github.com:|https://github.com/|g' cougars.repos | vcs import ros2_ws/src || true
 vcs custom -n --git --args submodule update --init --recursive
@@ -33,7 +31,6 @@ git remote add base "git://${ip}/cougars-dev" 2>/dev/null || \
 
 cat > .env <<EOF
 ZENOH_ROUTER_IP=${ip}
-AUV_URDF=${auv_urdf}
 AUV_NS=${agent_ns}
 SET_ORIGIN=${set_origin}
 EOF
