@@ -14,13 +14,10 @@
 
 services:
   dev:
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: all
-              capabilities: [gpu]
+    runtime: nvidia
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=all
 
   holoocean:
     image: frostlab/holoocean:2.0-runtime-ubuntu24.04-cuda12.9-ros-uid
@@ -33,16 +30,12 @@ services:
     pid: host
     depends_on:
       - router
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: all
-              capabilities: [gpu]
+    runtime: nvidia
     environment:
       - DISPLAY=${DISPLAY}
       - RMW_IMPLEMENTATION=rmw_zenoh_cpp
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=all
       - ROS_DOMAIN_ID=24
     volumes:
       - ../config:/home/ue4/config
