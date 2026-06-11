@@ -281,7 +281,7 @@
       publish_diagnostics: true # Publish diagnostic information.
       diagnostic_timeout: 1.0 # [s]
 
-      set_origin: true # Whether this node owns and publishes the ENU origin.
+      set_origin: false # Whether this node owns and publishes the ENU origin.
       origin_pub_rate: 1.0 # [Hz] Rate to republish the origin.
 
       use_parameter_origin: true

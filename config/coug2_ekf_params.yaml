@@ -53,3 +53,8 @@
 
       # odom2: odometry/gps_null
       imu0: "seatrac/imu/data"
+
+/base_station:
+  navsat_odom_node:
+    ros__parameters:
+      use_parameter_origin: false

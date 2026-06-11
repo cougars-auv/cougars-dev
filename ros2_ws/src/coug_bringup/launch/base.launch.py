@@ -55,6 +55,16 @@ def launch_setup(context, *args, **kwargs) -> list:
         }.items(),
     )
 
+    coug_fgo_base_cmd = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(coug_fgo_launch_dir, "coug_fgo_base.launch.py")
+        ),
+        launch_arguments={
+            "use_sim_time": use_sim_time,
+            "agent_list": agent_list,
+        }.items(),
+    )
+
     coug_fgo_viz_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(coug_fgo_launch_dir, "coug_fgo_viz.launch.py")
@@ -111,6 +121,7 @@ def launch_setup(context, *args, **kwargs) -> list:
 
     return [
         coug_comms_base_cmd,
+        coug_fgo_base_cmd,
         coug_fgo_viz_cmd,
         # coug_active_fgo_viz_cmd,
         # coug_visual_dvl_viz_cmd,
