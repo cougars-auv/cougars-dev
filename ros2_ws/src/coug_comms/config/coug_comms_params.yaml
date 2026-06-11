@@ -1,12 +1,6 @@
 /**:
   base_comms_node:
     ros__parameters:
-      # --- Seatrac Beacon IDs ---
-      beacon_ids:
-        coug1sim: 1
-        coug2sim: 2
-        coug3sim: 3
-
       # --- ROS Topics ---
       start_service: "base/start"
       stop_service: "base/stop"

@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 import yaml
 from launch import LaunchDescription
 from launch_ros.actions import Node
@@ -28,6 +29,20 @@ def launch_setup(context, *args, **kwargs) -> list:
     agent_list_str = LaunchConfiguration("agent_list").perform(context)
 
     agent_namespaces = yaml.safe_load(agent_list_str)
+
+    config_dir = os.environ.get("CONFIG_DIR", "")
+    beacon_ids = {}
+    for ns in agent_namespaces:
+        agent_params_path = os.path.join(config_dir, f"{ns}_params.yaml")
+        if os.path.isfile(agent_params_path):
+            with open(agent_params_path) as f:
+                agent_params = yaml.safe_load(f) or {}
+            ns_params = agent_params.get(f"/{ns}", {})
+            comms_params = ns_params.get("coug_comms_base_launch", {}).get(
+                "ros__parameters", {}
+            )
+            if "beacon_id" in comms_params:
+                beacon_ids[ns] = comms_params["beacon_id"]
 
     fleet_params = PathJoinSubstitution(
         [
@@ -47,6 +62,7 @@ def launch_setup(context, *args, **kwargs) -> list:
                 fleet_params,
                 {
                     "agent_namespaces": agent_namespaces,
+                    "beacon_ids": beacon_ids,
                     "use_sim_time": use_sim_time,
                 },
             ],
