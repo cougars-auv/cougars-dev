@@ -141,7 +141,7 @@ def launch_setup(context, *args, **kwargs) -> list:
                         fleet_params,
                         {
                             "use_sim_time": use_sim_time,
-                            "beacon_id": 0,
+                            "beacon_id": 15,
                             "modem_frame": "base_station",
                         },
                     ],
