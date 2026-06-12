@@ -357,11 +357,13 @@
       twist0_queue_size: 5
 
       imu0: "imu/data"
+      # IMPORTANT! Acceleration fusion is disabled, robot_localization in ROS 2 Jazzy has a known
+      # bug with mishandling gravity removal for non-trivial IMU to base transformations.
       imu0_config: [false, false, false, # X, Y, Z
                     false, false, false, # Roll, Pitch, Yaw
                     false, false, false, # Vx, Vy, Vz
                     true,  true,  true,  # Vroll, Vpitch, Vyaw
-                    true,  true,  true]  # Ax, Ay, Az
+                    false, false, false] # Ax, Ay, Az
       imu0_queue_size: 15
       imu0_differential: false
       imu0_relative: false
