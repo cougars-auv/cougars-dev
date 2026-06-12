@@ -20,7 +20,8 @@
           ],
           "configuration": {
             "id": 0
-          }
+          },
+          "ros_publish": true
         },
         {
           "sensor_type": "DynamicsSensor",
