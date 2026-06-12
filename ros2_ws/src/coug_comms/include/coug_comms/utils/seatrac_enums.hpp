@@ -12,12 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef _DEF_SEATRAC_DRIVER_SEATRAC_ENUMS_H_
-#define _DEF_SEATRAC_DRIVER_SEATRAC_ENUMS_H_
+/**
+ * @file seatrac_enums.hpp
+ * @brief Shared enums for the Seatrac X150 driver.
+ * @author Clayton Smith
+ * @date Feb 2024
+ */
+
+#pragma once
 
 #include <cstdint>
-#include <iostream>
-#include <sstream>
 
 namespace coug_comms::utils {
 
@@ -251,216 +255,134 @@ enum CID_E : uint8_t {
                                 // of the packet data queue.
 };
 
+/**
+ * CST_E : Command Status Codes
+ *
+ * Command Status (CST) Codes are an enumeration (or set of defined constants)
+ * that are commonly used in Response  messages sent from the beacon to
+ * indicate if a command executed successfully,  or if not, what type of error
+ * occurred.  CST codes are always transmitted as a  UINT8 type.
+ *
+ * Different Response messages may only implement a subset of the constants
+ * below, as appropriate for their function.
+ */
+enum CST_E : uint8_t {
+  // General Status Codes
+  CST_OK = 0x00,            // Returned if a command or operation is completed
+                            // successful without error.
+  CST_FAIL = 0x01,          // Returned if a command or operation cannot be
+                            // completed.
+  CST_EEPROM_ERROR = 0x03,  // Returned if an error occurs while reading or
+                            // writing EEPROM data.
+
+  // Command Processor Status Codes
+  CST_CMD_PARAM_MISSING = 0x04,  // Returned if a command message is given
+                                 // that does not have enough defined fields
+                                 // for the specified CID code.
+  CST_CMD_PARAM_INVALID = 0x05,  // Returned if a data field in a message does
+                                 // not contain a valid or expected value.
+
+  // Firmware Programming Status Codes
+  CST_PROG_FLASH_ERROR = 0x0A,     // Returned if an error occurs while
+                                   // writing data into the processors flash
+                                   // memory.
+  CST_PROG_FIRMWARE_ERROR = 0x0B,  // Returned if firmware cannot be
+                                   // programmed due to incorrect firmware
+                                   // credentials or signature.
+  CST_PROG_SECTION_ERROR = 0x0C,   // Returned if the firmware cannot be
+                                   // programmed into the specified memory
+                                   // section.
+  CST_PROG_LENGTH_ERROR = 0x0D,    // Returned if the firmware length is too
+                                   // large to fit into the specified memory
+                                   // section, or not what the current
+                                   // operation is expecting.
+  CST_PROG_DATA_ERROR = 0x0E,      // Returned if there is an error decoding
+                                   // data in a firmware block.
+  CST_PROG_CHECKSUM_ERROR = 0x0F,  // Returned if the specified checksum for
+                                   // the firmware does not match the checksum
+                                   // computed prior to performing the update.
+
+  // Acoustic Transceiver Status Codes
+  CST_XCVR_BUSY = 0x30,           // Returned if the transceiver cannot
+                                  // perform a requested action as it is
+                                  // currently busy (i.e. transmitting a
+                                  // message).
+  CST_XCVR_ID_REJECTED = 0x31,    // Returned if the received message did not
+                                  // match the specified transceiver ID (and
+                                  // wasn t a Sent-To-All), and the message
+                                  // has been rejected.
+  CST_XCVR_CSUM_ERROR = 0x32,     // Returned if received acoustic message's
+                                  // checksum was invalid, and the message has
+                                  // been rejected.
+  CST_XCVR_LENGTH_ERROR = 0x33,   // Returned if an error occurred with
+                                  // message framing, meaning the end of the
+                                  // message has not been received within the
+                                  // expected time.
+  CST_XCVR_RESP_TIMEOUT = 0x34,   // Returned if the transceiver has sent a
+                                  // request message to a beacon, but no
+                                  // response has been returned within the
+                                  // allotted waiting period.
+  CST_XCVR_RESP_ERROR = 0x35,     // Returned if the transceiver has send a
+                                  // request message to a beacon, but an error
+                                  // occurred while receiving the response.
+  CST_XCVR_RESP_WRONG = 0x36,     // Returned if the transceiver has sent a
+                                  // request message to a beacon, but received
+                                  // an unexpected response from another
+                                  // beacon while waiting.
+  CST_XCVR_PLOAD_ERROR = 0x37,    // Returned by protocol payload decoders, if
+                                  // the payload can t be parsed correctly.
+  CST_XCVR_STATE_STOPPED = 0x3A,  // Indicates the transceiver is in a stopped state.
+  CST_XCVR_STATE_IDLE = 0x3B,     // Indicates the transceiver is in an idle
+                                  // state waiting for reception or
+                                  // transmission to start.
+  CST_XCVR_STATE_TX = 0x3C,       // Indicates the transceiver is in a
+                                  // transmitting states.
+  CST_XCVR_STATE_REQ = 0x3D,      // Indicates the transceiver is in a
+                                  // requesting state, having transmitted a
+                                  // message and is waiting for a response to
+                                  // be received.
+  CST_XCVR_STATE_RX = 0x3E,       // Indicates the transceiver is in a
+                                  // receiving state.
+  CST_XCVR_STATE_RESP = 0x3F,     // Indicates the transceiver is in a
+                                  // responding state, where a message is
+                                  // being composed and the "response time"
+                                  // period is being observed.
+
+  // DEX Protocol Status Codes
+  CST_DEX_SOCKET_ERROR = 0x70,       // Returned by the DEX protocol handler
+                                     // if an error occurred trying to open,
+                                     // close or access a specified socket ID.
+  CST_DEX_RX_SYNC = 0x71,            // Returned by the DEX protocol handler
+                                     // when receiver synchronisation has
+                                     // occurred with the socket master and
+                                     // data transfer is ready to commence.
+  CST_DEX_RX_DATA = 0x72,            // Returned by the DEX protocol handler
+                                     // when data has been received through a
+                                     // socket.
+  CST_DEX_RX_SEQ_ERROR = 0x73,       // Returned by the DEX protocol handler
+                                     // when data transfer synchronisation has
+                                     // been lost with the socket master.
+  CST_DEX_RX_MSG_ERROR = 0x74,       // Returned by the DEX protocol handler
+                                     // to indicate an unexpected acoustic
+                                     // message type with the DEX protocol has
+                                     // been received and cannot be processed.
+  CST_DEX_REQ_ERROR = 0x75,          // Returned by the DEX protocol handler
+                                     // to indicate a error has occurred while
+                                     // responding to a request (i.e. lack of
+                                     // data).
+  CST_DEX_RESP_TMO_ERROR = 0x76,     // Returned by the DEX protocol handler
+                                     // to indicate a timeout has occurred
+                                     // while waiting for a response back from
+                                     // a remote beacon with requested data.
+  CST_DEX_RESP_MSG_ERROR = 0x77,     // Returned by the DEX protocol handler
+                                     // to indicate an error has occurred
+                                     // while receiving response back from a
+                                     // remote beacon.
+  CST_DEX_RESP_REMOTE_ERROR = 0x78,  // Returned by the DEX protocol handler
+                                     // to indicate the remote beacon has
+                                     // encountered an error and cannot return
+                                     // the requested data or perform the
+                                     // required operation.
+};
+
 }  // namespace coug_comms::utils
-
-inline std::ostream& operator<<(std::ostream& os, coug_comms::utils::AMSGTYPE_E msgType) {
-  using namespace coug_comms::utils;
-  switch (msgType) {
-    default:
-      os << "Unknown CID : " << (uint8_t)msgType;
-      break;
-    case MSG_OWAY:
-      os << "MSG_OWAY";
-      break;
-    case MSG_OWAYU:
-      os << "MSG_OWAYU";
-      break;
-    case MSG_REQ:
-      os << "MSG_REQ";
-      break;
-    case MSG_RESP:
-      os << "MSG_RESP";
-      break;
-    case MSG_REQU:
-      os << "MSG_REQU";
-      break;
-    case MSG_RESPU:
-      os << "MSG_RESPU";
-      break;
-    case MSG_REQX:
-      os << "MSG_REQX";
-      break;
-    case MSG_RESPX:
-      os << "MSG_RESPX";
-      break;
-    case MSG_UNKNOWN:
-      os << "MSG_UNKNOWN";
-      break;
-  }
-  return os;
-}
-
-inline std::ostream& operator<<(std::ostream& os, const coug_comms::utils::BID_E& beaconId) {
-  if (beaconId == coug_comms::utils::BEACON_ALL)
-    os << "BEACON_ALL";
-  else if (beaconId <= 15)
-    os << "BEACON_" << (int)beaconId;
-  else
-    os << "BEACON_UNKNOWN";
-  return os;
-}
-
-inline std::ostream& operator<<(std::ostream& os, coug_comms::utils::CID_E cid) {
-  using namespace coug_comms::utils;
-  switch (cid) {
-    default:
-      os << "Unknown CID : " << (uint8_t)cid;
-      break;
-    case CID_SYS_ALIVE:
-      os << "CID_SYS_ALIVE";
-      break;
-    case CID_SYS_INFO:
-      os << "CID_SYS_INFO";
-      break;
-    case CID_SYS_REBOOT:
-      os << "CID_SYS_REBOOT";
-      break;
-    case CID_SYS_ENGINEERING:
-      os << "CID_SYS_ENGINEERING";
-      break;
-    case CID_PROG_INIT:
-      os << "CID_PROG_INIT";
-      break;
-    case CID_PROG_BLOCK:
-      os << "CID_PROG_BLOCK";
-      break;
-    case CID_PROG_UPDATE:
-      os << "CID_PROG_UPDATE";
-      break;
-    case CID_STATUS:
-      os << "CID_STATUS";
-      break;
-    case CID_STATUS_CFG_GET:
-      os << "CID_STATUS_CFG_GET";
-      break;
-    case CID_STATUS_CFG_SET:
-      os << "CID_STATUS_CFG_SET";
-      break;
-    case CID_SETTINGS_GET:
-      os << "CID_SETTINGS_GET";
-      break;
-    case CID_SETTINGS_SET:
-      os << "CID_SETTINGS_SET";
-      break;
-    case CID_SETTINGS_LOAD:
-      os << "CID_SETTINGS_LOAD";
-      break;
-    case CID_SETTINGS_SAVE:
-      os << "CID_SETTINGS_SAVE";
-      break;
-    case CID_SETTINGS_RESET:
-      os << "CID_SETTINGS_RESET";
-      break;
-    case CID_CAL_ACTION:
-      os << "CID_CAL_ACTION";
-      break;
-    case CID_AHRS_CAL_GET:
-      os << "CID_AHRS_CAL_GET";
-      break;
-    case CID_AHRS_CAL_SET:
-      os << "CID_AHRS_CAL_SET";
-      break;
-    case CID_XCVR_ANALYSE:
-      os << "CID_XCVR_ANALYSE";
-      break;
-    case CID_XCVR_TX_MSG:
-      os << "CID_XCVR_TX_MSG";
-      break;
-    case CID_XCVR_RX_ERR:
-      os << "CID_XCVR_RX_ERR";
-      break;
-    case CID_XCVR_RX_MSG:
-      os << "CID_XCVR_RX_MSG";
-      break;
-    case CID_XCVR_RX_REQ:
-      os << "CID_XCVR_RX_REQ";
-      break;
-    case CID_XCVR_RX_RESP:
-      os << "CID_XCVR_RX_RESP";
-      break;
-    case CID_XCVR_RX_UNHANDLED:
-      os << "CID_XCVR_RX_UNHANDLED";
-      break;
-    case CID_XCVR_USBL:
-      os << "CID_XCVR_USBL";
-      break;
-    case CID_XCVR_FIX:
-      os << "CID_XCVR_FIX";
-      break;
-    case CID_XCVR_STATUS:
-      os << "CID_XCVR_STATUS";
-      break;
-    case CID_PING_SEND:
-      os << "CID_PING_SEND";
-      break;
-    case CID_PING_REQ:
-      os << "CID_PING_REQ";
-      break;
-    case CID_PING_RESP:
-      os << "CID_PING_RESP";
-      break;
-    case CID_PING_ERROR:
-      os << "CID_PING_ERROR";
-      break;
-    case CID_ECHO_SEND:
-      os << "CID_ECHO_SEND";
-      break;
-    case CID_ECHO_REQ:
-      os << "CID_ECHO_REQ";
-      break;
-    case CID_ECHO_RESP:
-      os << "CID_ECHO_RESP";
-      break;
-    case CID_ECHO_ERROR:
-      os << "CID_ECHO_ERROR";
-      break;
-    case CID_NAV_QUERY_SEND:
-      os << "CID_NAV_QUERY_SEND";
-      break;
-    case CID_NAV_QUERY_REQ:
-      os << "CID_NAV_QUERY_REQ";
-      break;
-    case CID_NAV_QUERY_RESP:
-      os << "CID_NAV_QUERY_RESP";
-      break;
-    case CID_NAV_ERROR:
-      os << "CID_NAV_ERROR";
-      break;
-    case CID_NAV_QUEUE_SET:
-      os << "CID_NAV_QUEUE_SET";
-      break;
-    case CID_NAV_QUEUE_CLR:
-      os << "CID_NAV_QUEUE_CLR";
-      break;
-    case CID_NAV_QUEUE_STATUS:
-      os << "CID_NAV_QUEUE_STATUS";
-      break;
-    case CID_NAV_STATUS_SEND:
-      os << "CID_NAV_STATUS_SEND";
-      break;
-    case CID_NAV_STATUS_RECEIVE:
-      os << "CID_NAV_STATUS_RECEIVE";
-      break;
-    case CID_DAT_SEND:
-      os << "CID_DAT_SEND";
-      break;
-    case CID_DAT_RECEIVE:
-      os << "CID_DAT_RECEIVE";
-      break;
-    case CID_DAT_ERROR:
-      os << "CID_DAT_ERROR";
-      break;
-    case CID_DAT_QUEUE_SET:
-      os << "CID_DAT_QUEUE_SET";
-      break;
-    case CID_DAT_QUEUE_CLR:
-      os << "CID_DAT_QUEUE_CLR";
-      break;
-    case CID_DAT_QUEUE_STATUS:
-      os << "CID_DAT_QUEUE_STATUS";
-      break;
-  }
-  return os;
-}
-
-#endif  //_DEF_SEATRAC_DRIVER_SEATRAC_ENUMS_H_
