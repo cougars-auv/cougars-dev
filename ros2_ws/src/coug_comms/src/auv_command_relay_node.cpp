@@ -13,22 +13,21 @@
 // limitations under the License.
 
 /**
- * @file comms_types.hpp
- * @brief Transport types shared across coug_comms.
+ * @file auv_command_relay_node.cpp
+ * @brief Standalone executable for the AuvCommandRelayNode.
  * @author Nelson Durrant
  * @date June 2026
  */
 
-#pragma once
+#include <memory>
+#include <rclcpp/rclcpp.hpp>
 
-#include <cstdint>
+#include "coug_comms/auv_command_relay.hpp"
 
-namespace coug_comms::utils {
-
-enum class Transport : uint8_t {
-  ACOUSTIC = 0,
-  RADIO = 1,
-  WIFI = 2,
-};
-
-}  // namespace coug_comms::utils
+int main(int argc, char* argv[]) {
+  rclcpp::init(argc, argv);
+  auto node = std::make_shared<coug_comms::AuvCommandRelayNode>(rclcpp::NodeOptions());
+  rclcpp::spin(node);
+  rclcpp::shutdown();
+  return 0;
+}

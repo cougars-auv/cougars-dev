@@ -56,8 +56,8 @@ def generate_launch_description() -> LaunchDescription:
             ),
             Node(
                 package="coug_comms",
-                executable="auv_comms",
-                name="auv_comms_node",
+                executable="auv_command_relay",
+                name="auv_command_relay_node",
                 parameters=[
                     fleet_params,
                     auv_params,

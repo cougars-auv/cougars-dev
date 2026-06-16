@@ -113,4 +113,6 @@
       modem_rec_topic: "modem_rec"
       modem_send_topic: "modem_send"
       modem_cmd_update_topic: "modem_cmd_update"
+
+      send_delay_sec: 0.4
       beacon_id: 1

@@ -14,7 +14,7 @@
 
 /**
  * @file acomms_protocol.hpp
- * @brief Acoustic command protocol for coug_comms.
+ * @brief Shared acoustic command protocol for coug_comms.
  * @author Nelson Durrant
  * @date June 2026
  */
@@ -22,25 +22,40 @@
 #pragma once
 
 #include <cstdint>
+#include <string>
 
 namespace coug_comms::utils {
 
-// First byte of every acoustic command packet.
 enum class CmdId : uint8_t {
   CMD_START = 0x10,
   CMD_STOP = 0x11,
   CMD_SURFACE = 0x12,
   CMD_HOME = 0x13,
-  ACK_START = 0x20,
-  ACK_STOP = 0x21,
-  ACK_SURFACE = 0x22,
-  ACK_HOME = 0x23,
+  CMD_EMERGENCY_STOP = 0x20,
+  CMD_EMERGENCY_SURFACE = 0x21,
 };
 
-// Sent from AUV back to base after executing a command.
-struct __attribute__((packed)) AcousticAck {
-  uint8_t msg_id;
-  uint8_t success;
-};
+/**
+ * @brief Returns the human-readable name of a command.
+ * @param cmd The command to name.
+ * @return The command name, or "CMD_UNKNOWN" if unrecognized.
+ */
+inline std::string commandName(CmdId cmd) {
+  switch (cmd) {
+    case CmdId::CMD_START:
+      return "CMD_START";
+    case CmdId::CMD_STOP:
+      return "CMD_STOP";
+    case CmdId::CMD_SURFACE:
+      return "CMD_SURFACE";
+    case CmdId::CMD_HOME:
+      return "CMD_HOME";
+    case CmdId::CMD_EMERGENCY_STOP:
+      return "CMD_EMERGENCY_STOP";
+    case CmdId::CMD_EMERGENCY_SURFACE:
+      return "CMD_EMERGENCY_SURFACE";
+  }
+  return "CMD_UNKNOWN";
+}
 
 }  // namespace coug_comms::utils

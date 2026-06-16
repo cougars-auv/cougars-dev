@@ -29,6 +29,7 @@ def launch_setup(context, *args, **kwargs) -> list:
 
     use_sim_time = LaunchConfiguration("use_sim_time")
     agent_list = LaunchConfiguration("agent_list")
+    force_acomms = LaunchConfiguration("force_acomms")
     agent_list_str = agent_list.perform(context)
     auv_ns = yaml.safe_load(agent_list_str)[0]
 
@@ -52,6 +53,7 @@ def launch_setup(context, *args, **kwargs) -> list:
         launch_arguments={
             "use_sim_time": use_sim_time,
             "agent_list": agent_list,
+            "force_acomms": force_acomms,
         }.items(),
     )
 
@@ -145,6 +147,11 @@ def generate_launch_description() -> LaunchDescription:
                     "YAML list of AUV namespaces "
                     "(e.g. '[coug1sim]' or '[coug1sim, coug2sim]')"
                 ),
+            ),
+            DeclareLaunchArgument(
+                "force_acomms",
+                default_value="false",
+                description="Force acoustic comms over direct connections",
             ),
             OpaqueFunction(function=launch_setup),
         ]

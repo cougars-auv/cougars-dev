@@ -3,27 +3,37 @@
     ros__parameters:
       beacon_id: 0
 
-  base_comms_node:
+  base_command_relay_node:
     ros__parameters:
       # --- ROS Topics ---
+      modem_send_topic: "modem_send"
+
       start_service: "base/start"
       stop_service: "base/stop"
       surface_service: "base/surface"
       home_service: "base/home"
+      emergency_stop_service: "base/emergency_stop"
+      emergency_surface_service: "base/emergency_surface"
+
+      direct_start_service: "start"
+      direct_stop_service: "stop"
+      direct_surface_service: "surface"
+      direct_home_service: "home"
+      direct_emergency_stop_service: "emergency_stop"
+      direct_emergency_surface_service: "emergency_surface"
 
       publish_diagnostics: true # Publish diagnostic information.
-      diagnostic_timeout: 30.0 # [s]
 
-  auv_comms_node:
+  auv_command_relay_node:
     ros__parameters:
-      # --- Node Settings ---
-      service_timeout: 10.0 # [s]
-
       # --- ROS Topics ---
+      modem_rec_topic: "modem_rec"
+
       start_service: "start"
       stop_service: "stop"
       surface_service: "surface"
       home_service: "home"
+      emergency_stop_service: "emergency_stop"
+      emergency_surface_service: "emergency_surface"
 
       publish_diagnostics: true # Publish diagnostic information.
-      diagnostic_timeout: 30.0 # [s]

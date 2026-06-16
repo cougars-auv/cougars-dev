@@ -13,8 +13,8 @@
 // limitations under the License.
 
 /**
- * @file base_comms_node.cpp
- * @brief Standalone executable for the BaseCommsNode.
+ * @file base_command_relay_node.cpp
+ * @brief Standalone executable for the BaseCommandRelayNode.
  * @author Nelson Durrant
  * @date June 2026
  */
@@ -22,11 +22,11 @@
 #include <memory>
 #include <rclcpp/rclcpp.hpp>
 
-#include "coug_comms/base_comms.hpp"
+#include "coug_comms/base_command_relay.hpp"
 
 int main(int argc, char* argv[]) {
   rclcpp::init(argc, argv);
-  auto node = std::make_shared<coug_comms::BaseCommsNode>(rclcpp::NodeOptions());
+  auto node = std::make_shared<coug_comms::BaseCommandRelayNode>(rclcpp::NodeOptions());
   rclcpp::spin(node);
   rclcpp::shutdown();
   return 0;

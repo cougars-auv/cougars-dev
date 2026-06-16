@@ -41,6 +41,7 @@ def launch_setup(context, *args, **kwargs) -> list:
     compare = LaunchConfiguration("compare")
     add_noise = LaunchConfiguration("add_noise")
     base_station = LaunchConfiguration("base_station")
+    force_acomms = LaunchConfiguration("force_acomms")
 
     agent_list_str = context.perform_substitution(agent_list)
     record_bag_path_str = context.perform_substitution(record_bag_path)
@@ -83,6 +84,7 @@ def launch_setup(context, *args, **kwargs) -> list:
             launch_arguments={
                 "use_sim_time": use_sim_time,
                 "agent_list": agent_list_str,
+                "force_acomms": force_acomms,
             }.items(),
         )
     )
@@ -244,6 +246,11 @@ def generate_launch_description() -> LaunchDescription:
                 "base_station",
                 default_value="true",
                 description="Launch base station converters",
+            ),
+            DeclareLaunchArgument(
+                "force_acomms",
+                default_value="false",
+                description="Force acoustic comms over direct connections",
             ),
             OpaqueFunction(function=launch_setup),
         ]

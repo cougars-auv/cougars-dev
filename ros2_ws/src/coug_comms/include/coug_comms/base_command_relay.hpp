@@ -1,0 +1,137 @@
+// Copyright (c) 2026 BYU FROST Lab
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+/**
+ * @file base_command_relay.hpp
+ * @brief ROS 2 node for relaying base station commands to AUVs.
+ * @author Nelson Durrant
+ * @date June 2026
+ */
+
+#pragma once
+
+#include <diagnostic_updater/diagnostic_updater.hpp>
+#include <memory>
+#include <rclcpp/rclcpp.hpp>
+#include <seatrac_interfaces/msg/modem_send.hpp>
+#include <std_srvs/srv/trigger.hpp>
+#include <string>
+#include <unordered_map>
+#include <vector>
+
+#include "coug_comms/base_command_relay_parameters.hpp"
+#include "coug_comms/utils/acomms_protocol.hpp"
+
+namespace coug_comms {
+
+/**
+ * @class BaseCommandRelayNode
+ * @brief ROS 2 node for relaying base station commands to AUVs.
+ */
+class BaseCommandRelayNode : public rclcpp::Node {
+ protected:
+  /**
+   * @brief Service names and command ID for one relayable command type.
+   */
+  struct CommandSpec {
+    std::string relay_service;
+    std::string direct_service;
+    utils::CmdId cmd;
+  };
+
+  /**
+   * @brief Per-agent state: identity, hosted services, direct clients, and last activity.
+   */
+  struct AgentEntry {
+    std::string name;
+    uint8_t beacon_id;
+    std::vector<rclcpp::ServiceBase::SharedPtr> services;
+    std::unordered_map<uint8_t, rclcpp::Client<std_srvs::srv::Trigger>::SharedPtr> direct_clients;
+    std::string last_command;
+    std::string last_transport;
+  };
+
+ public:
+  /**
+   * @brief Constructs the node and sets up command relaying to AUVs.
+   * @param options The node options.
+   */
+  explicit BaseCommandRelayNode(const rclcpp::NodeOptions& options);
+
+ protected:
+  /**
+   * @brief Routes the command to the direct link, falling back to acoustics.
+   * @param cmd The command to send.
+   * @param beacon_id The target beacon ID.
+   * @param service The service the request arrived on.
+   * @param header The request header to respond to.
+   */
+  void handleCommandRequest(utils::CmdId cmd, uint8_t beacon_id,
+                            rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr service,
+                            std::shared_ptr<rmw_request_id_t> header);
+
+  /**
+   * @brief Sends the command over the agent's direct ROS link, responding to the Trigger
+   * asynchronously.
+   * @param cmd The command to send.
+   * @param agent The target agent.
+   * @param service The service the request arrived on.
+   * @param header The request header to respond to.
+   * @return True if a direct link was ready and the request was sent; false to fall back to
+   * acoustics.
+   */
+  bool directRelay(utils::CmdId cmd, const AgentEntry& agent,
+                   rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr service,
+                   std::shared_ptr<rmw_request_id_t> header);
+
+  /**
+   * @brief Sends the command over the seatrac modem (one-way) and responds that it was queued.
+   * @param cmd The command to send.
+   * @param beacon_id The target beacon ID.
+   * @param service The service the request arrived on.
+   * @param header The request header to respond to.
+   */
+  void acousticRelay(utils::CmdId cmd, uint8_t beacon_id,
+                     rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr service,
+                     std::shared_ptr<rmw_request_id_t> header);
+
+  /**
+   * @brief Creates command services, direct clients, and a diagnostic task for one agent.
+   * @param name The agent's ROS namespace.
+   * @param beacon_id The agent's acoustic beacon ID.
+   * @param diag_prefix Namespace prefix for diagnostic task labels.
+   */
+  void registerAgent(const std::string& name, uint8_t beacon_id, const std::string& diag_prefix);
+
+  /**
+   * @brief Diagnostic task reporting the last command relayed to one agent.
+   * @param stat The diagnostic status wrapper.
+   * @param beacon_id The agent's beacon ID.
+   */
+  void checkAgentStatus(diagnostic_updater::DiagnosticStatusWrapper& stat, uint8_t beacon_id);
+
+  // --- ROS Interfaces ---
+  rclcpp::Publisher<seatrac_interfaces::msg::ModemSend>::SharedPtr modem_send_pub_;
+  diagnostic_updater::Updater diagnostic_updater_;
+
+  // --- Parameters ---
+  std::shared_ptr<base_command_relay_node::ParamListener> param_listener_;
+  base_command_relay_node::Params params_;
+
+  // --- State ---
+  std::vector<CommandSpec> commands_;
+  std::unordered_map<uint8_t, AgentEntry> agents_;
+};
+
+}  // namespace coug_comms

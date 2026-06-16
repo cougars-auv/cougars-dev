@@ -14,11 +14,12 @@ case ${scenario} in
 esac
 
 # --- Options ---
-options=$(gum choose --no-limit --header "Select options:" "Record rosbag" "Launch comparison methods" "Disable sensor noise") || exit 0
+options=$(gum choose --no-limit --header "Select options:" "Record rosbag" "Launch comparison methods" "Disable sensor noise" "Acoustic comms") || exit 0
 
 compare="false"
 record_bag_path=""
 add_noise="true"
+force_acomms="false"
 
 if [[ "${options}" == *"Launch comparison methods"* ]]; then
   compare="true"
@@ -26,6 +27,10 @@ fi
 
 if [[ "${options}" == *"Disable sensor noise"* ]]; then
   add_noise="false"
+fi
+
+if [[ "${options}" == *"Acoustic comms"* ]]; then
+  force_acomms="true"
 fi
 
 if [[ "${options}" == *"Record rosbag"* ]]; then
@@ -43,6 +48,7 @@ args=(
   "compare:=${compare}"
   "add_noise:=${add_noise}"
   "base_station:=${base_station}"
+  "force_acomms:=${force_acomms}"
 )
 [ -n "${record_bag_path}" ] && args+=("record_bag_path:=${record_bag_path}")
 

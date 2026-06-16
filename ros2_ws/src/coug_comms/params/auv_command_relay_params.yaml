@@ -1,4 +1,8 @@
-auv_comms_node:
+auv_command_relay_node:
+  modem_rec_topic:
+    type: string
+    default_value: "modem_rec"
+
   start_service:
     type: string
     default_value: "start"
@@ -11,14 +15,13 @@ auv_comms_node:
   home_service:
     type: string
     default_value: "home"
-
-  service_timeout:
-    type: double
-    default_value: 10.0
+  emergency_stop_service:
+    type: string
+    default_value: "emergency_stop"
+  emergency_surface_service:
+    type: string
+    default_value: "emergency_surface"
 
   publish_diagnostics:
     type: bool
     default_value: false
-  diagnostic_timeout:
-    type: double
-    default_value: 30.0

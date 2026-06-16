@@ -1,0 +1,50 @@
+base_command_relay_node:
+  modem_send_topic:
+    type: string
+    default_value: "modem_send"
+
+  start_service:
+    type: string
+    default_value: "base/start"
+  stop_service:
+    type: string
+    default_value: "base/stop"
+  surface_service:
+    type: string
+    default_value: "base/surface"
+  home_service:
+    type: string
+    default_value: "base/home"
+  emergency_stop_service:
+    type: string
+    default_value: "base/emergency_stop"
+  emergency_surface_service:
+    type: string
+    default_value: "base/emergency_surface"
+
+  direct_start_service:
+    type: string
+    default_value: "start"
+  direct_stop_service:
+    type: string
+    default_value: "stop"
+  direct_surface_service:
+    type: string
+    default_value: "surface"
+  direct_home_service:
+    type: string
+    default_value: "home"
+  direct_emergency_stop_service:
+    type: string
+    default_value: "emergency_stop"
+  direct_emergency_surface_service:
+    type: string
+    default_value: "emergency_surface"
+
+  force_acomms:
+    type: bool
+    default_value: false
+
+  publish_diagnostics:
+    type: bool
+    default_value: false

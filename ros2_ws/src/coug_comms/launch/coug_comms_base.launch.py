@@ -26,6 +26,7 @@ from launch.substitutions import (
 
 def launch_setup(context, *args, **kwargs) -> list:
     use_sim_time = LaunchConfiguration("use_sim_time")
+    force_acomms = LaunchConfiguration("force_acomms")
     agent_list_str = LaunchConfiguration("agent_list").perform(context)
 
     agent_namespaces = yaml.safe_load(agent_list_str)
@@ -70,8 +71,8 @@ def launch_setup(context, *args, **kwargs) -> list:
     return [
         Node(
             package="coug_comms",
-            executable="base_comms",
-            name="base_comms_node",
+            executable="base_command_relay",
+            name="base_command_relay_node",
             namespace="base_station",
             parameters=[
                 fleet_params,
@@ -79,6 +80,7 @@ def launch_setup(context, *args, **kwargs) -> list:
                     "agent_namespaces": agent_namespaces,
                     "beacon_ids": beacon_ids,
                     "use_sim_time": use_sim_time,
+                    "force_acomms": force_acomms,
                 },
             ],
         ),
@@ -100,6 +102,11 @@ def generate_launch_description() -> LaunchDescription:
                     "YAML list of AUV namespaces "
                     "(e.g. '[coug1sim]' or '[coug1sim, coug2sim]')"
                 ),
+            ),
+            DeclareLaunchArgument(
+                "force_acomms",
+                default_value="false",
+                description="Force acoustic comms over direct connections",
             ),
             OpaqueFunction(function=launch_setup),
         ]
