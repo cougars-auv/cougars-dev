@@ -1,6 +1,8 @@
 rqt_gui:
   ros__parameters:
     # --- ROS Topics ---
+    config_command_topic: "dvl/config/command"
+
     bag_record_service: "bag_record"
     emergency_stop_service: "base/emergency_stop"
     emergency_surface_service: "base/emergency_surface"

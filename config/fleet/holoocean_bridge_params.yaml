@@ -51,6 +51,7 @@
     ros__parameters:
       input_topic: "DVLSensorVelocity"
       output_topic: "dvl/data"
+      config_command_topic: "dvl/config/command"
 
       noise_sigmas: [0.02, 0.02, 0.02] # [m/s] DVL body-velocity uncertainty sigmas.
 
