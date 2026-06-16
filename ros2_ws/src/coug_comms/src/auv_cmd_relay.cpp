@@ -97,39 +97,50 @@ void AuvCmdRelayNode::modemRecCallback(const seatrac_interfaces::msg::ModemRec::
 
 void AuvCmdRelayNode::callCommandService(rclcpp::Client<std_srvs::srv::Trigger>::SharedPtr client,
                                          CmdId cmd) {
-  last_command_ = utils::commandName(cmd);
+  const std::string command = utils::commandName(cmd);
   if (!client->service_is_ready()) {
-    RCLCPP_WARN(get_logger(), "Service not ready for %s", last_command_.c_str());
-    last_call_succeeded_ = false;
+    RCLCPP_WARN(get_logger(), "Service not ready for %s", command.c_str());
+    recordCommandResult(command, false);
     return;
   }
   client->async_send_request(
       std::make_shared<std_srvs::srv::Trigger::Request>(),
-      [this, cmd](rclcpp::Client<std_srvs::srv::Trigger>::SharedFuture future) {
+      [this, command](rclcpp::Client<std_srvs::srv::Trigger>::SharedFuture future) {
         bool success = false;
         try {
           success = future.get()->success;
         } catch (const std::exception& e) {
           RCLCPP_ERROR(get_logger(), "Service call failed: %s", e.what());
         }
-        last_call_succeeded_ = success;
-        RCLCPP_INFO(get_logger(), "Service for %s: %s", utils::commandName(cmd).c_str(),
+        recordCommandResult(command, success);
+        RCLCPP_INFO(get_logger(), "Service for %s: %s", command.c_str(),
                     success ? "success" : "failure");
       });
 }
 
+void AuvCmdRelayNode::recordCommandResult(const std::string& command, bool succeeded) {
+  command_history_.push_back({command, succeeded});
+  if (command_history_.size() > kMaxCommandHistory) {
+    command_history_.pop_front();
+  }
+}
+
 void AuvCmdRelayNode::checkBaseStatus(diagnostic_updater::DiagnosticStatusWrapper& stat) {
-  if (last_command_.empty()) {
+  if (command_history_.empty()) {
     stat.summary(diagnostic_msgs::msg::DiagnosticStatus::OK, "Waiting for first command.");
     return;
   }
 
-  stat.add("Last Command", last_command_);
-  stat.add("Service Call Succeeded", last_call_succeeded_);
-  if (last_call_succeeded_) {
-    stat.summary(diagnostic_msgs::msg::DiagnosticStatus::OK, last_command_ + " succeeded.");
+  size_t index = 1;
+  for (auto it = command_history_.rbegin(); it != command_history_.rend(); ++it) {
+    stat.add(std::to_string(index++), it->command + (it->succeeded ? ": succeeded" : ": failed"));
+  }
+
+  const CommandResult& latest = command_history_.back();
+  if (latest.succeeded) {
+    stat.summary(diagnostic_msgs::msg::DiagnosticStatus::OK, latest.command + " succeeded.");
   } else {
-    stat.summary(diagnostic_msgs::msg::DiagnosticStatus::WARN, last_command_ + " failed.");
+    stat.summary(diagnostic_msgs::msg::DiagnosticStatus::WARN, latest.command + " failed.");
   }
 }
 

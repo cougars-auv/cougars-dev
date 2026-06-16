@@ -42,6 +42,7 @@ namespace coug_comms {
 class BaseCmdRelayNode : public rclcpp::Node {
  protected:
   /**
+   * @struct CommandSpec
    * @brief Service names and command ID for one relayable command type.
    */
   struct CommandSpec {
@@ -51,6 +52,7 @@ class BaseCmdRelayNode : public rclcpp::Node {
   };
 
   /**
+   * @struct AgentEntry
    * @brief Per-agent state: identity, hosted services, direct clients, and last activity.
    */
   struct AgentEntry {

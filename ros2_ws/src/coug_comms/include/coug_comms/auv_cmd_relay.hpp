@@ -21,6 +21,7 @@
 
 #pragma once
 
+#include <deque>
 #include <diagnostic_updater/diagnostic_updater.hpp>
 #include <memory>
 #include <rclcpp/rclcpp.hpp>
@@ -61,7 +62,14 @@ class AuvCmdRelayNode : public rclcpp::Node {
                           utils::CmdId cmd);
 
   /**
-   * @brief Diagnostic task reporting the last command received and its service call result.
+   * @brief Records a command outcome in the rolling history, trimming to the last few.
+   * @param command The name of the command that was relayed.
+   * @param succeeded Whether the service call succeeded.
+   */
+  void recordCommandResult(const std::string& command, bool succeeded);
+
+  /**
+   * @brief Diagnostic task reporting the last few commands received and their results.
    * @param stat The diagnostic status wrapper.
    */
   void checkBaseStatus(diagnostic_updater::DiagnosticStatusWrapper& stat);
@@ -81,8 +89,16 @@ class AuvCmdRelayNode : public rclcpp::Node {
   auv_cmd_relay_node::Params params_;
 
   // --- State ---
-  std::string last_command_;
-  bool last_call_succeeded_{false};
+  /**
+   * @struct CommandResult
+   * @brief A single relayed command and whether its service call succeeded.
+   */
+  struct CommandResult {
+    std::string command;
+    bool succeeded;
+  };
+  static constexpr size_t kMaxCommandHistory = 5;
+  std::deque<CommandResult> command_history_;
 };
 
 }  // namespace coug_comms
