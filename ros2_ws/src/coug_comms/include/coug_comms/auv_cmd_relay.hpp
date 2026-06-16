@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /**
- * @file auv_command_relay.hpp
+ * @file auv_cmd_relay.hpp
  * @brief ROS 2 node for receiving base station commands on the AUV.
  * @author Nelson Durrant
  * @date June 2026
@@ -28,22 +28,22 @@
 #include <std_srvs/srv/trigger.hpp>
 #include <string>
 
-#include "coug_comms/auv_command_relay_parameters.hpp"
+#include "coug_comms/auv_cmd_relay_parameters.hpp"
 #include "coug_comms/utils/acomms_protocol.hpp"
 
 namespace coug_comms {
 
 /**
- * @class AuvCommandRelayNode
+ * @class AuvCmdRelayNode
  * @brief ROS 2 node for receiving base station commands on the AUV.
  */
-class AuvCommandRelayNode : public rclcpp::Node {
+class AuvCmdRelayNode : public rclcpp::Node {
  public:
   /**
    * @brief Constructs the node and sets up base station command reception.
    * @param options The node options.
    */
-  explicit AuvCommandRelayNode(const rclcpp::NodeOptions& options);
+  explicit AuvCmdRelayNode(const rclcpp::NodeOptions& options);
 
  protected:
   /**
@@ -77,8 +77,8 @@ class AuvCommandRelayNode : public rclcpp::Node {
   diagnostic_updater::Updater diagnostic_updater_;
 
   // --- Parameters ---
-  std::shared_ptr<auv_command_relay_node::ParamListener> param_listener_;
-  auv_command_relay_node::Params params_;
+  std::shared_ptr<auv_cmd_relay_node::ParamListener> param_listener_;
+  auv_cmd_relay_node::Params params_;
 
   // --- State ---
   std::string last_command_;

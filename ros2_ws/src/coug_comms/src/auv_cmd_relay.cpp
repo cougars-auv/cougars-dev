@@ -13,13 +13,13 @@
 // limitations under the License.
 
 /**
- * @file auv_command_relay.cpp
- * @brief Implementation of the AuvCommandRelayNode.
+ * @file auv_cmd_relay.cpp
+ * @brief Implementation of the AuvCmdRelayNode.
  * @author Nelson Durrant
  * @date June 2026
  */
 
-#include "coug_comms/auv_command_relay.hpp"
+#include "coug_comms/auv_cmd_relay.hpp"
 
 #include <rclcpp_components/register_node_macro.hpp>
 
@@ -27,18 +27,18 @@ namespace coug_comms {
 
 using utils::CmdId;
 
-AuvCommandRelayNode::AuvCommandRelayNode(const rclcpp::NodeOptions& options)
-    : Node("auv_command_relay_node", options), diagnostic_updater_(this) {
+AuvCmdRelayNode::AuvCmdRelayNode(const rclcpp::NodeOptions& options)
+    : Node("auv_cmd_relay_node", options), diagnostic_updater_(this) {
   RCLCPP_INFO(get_logger(), "Starting AUV Command Relay Node...");
 
   param_listener_ =
-      std::make_shared<auv_command_relay_node::ParamListener>(get_node_parameters_interface());
+      std::make_shared<auv_cmd_relay_node::ParamListener>(get_node_parameters_interface());
   params_ = param_listener_->get_params();
 
   // --- ROS Interfaces ---
   modem_rec_sub_ = create_subscription<seatrac_interfaces::msg::ModemRec>(
       params_.modem_rec_topic, rclcpp::SystemDefaultsQoS(),
-      std::bind(&AuvCommandRelayNode::modemRecCallback, this, std::placeholders::_1));
+      std::bind(&AuvCmdRelayNode::modemRecCallback, this, std::placeholders::_1));
 
   start_client_ = create_client<std_srvs::srv::Trigger>(params_.start_service);
   stop_client_ = create_client<std_srvs::srv::Trigger>(params_.stop_service);
@@ -52,17 +52,17 @@ AuvCommandRelayNode::AuvCommandRelayNode(const rclcpp::NodeOptions& options)
   if (params_.publish_diagnostics) {
     std::string ns = this->get_namespace();
     std::string clean_ns = (ns == "/") ? "" : ns;
-    diagnostic_updater_.setHardwareID(clean_ns + "/auv_command_relay_node");
+    diagnostic_updater_.setHardwareID(clean_ns + "/auv_cmd_relay_node");
 
     std::string prefix = clean_ns.empty() ? "" : "[" + clean_ns + "] ";
     std::string cmd_task = prefix + "Command Status";
-    diagnostic_updater_.add(cmd_task, this, &AuvCommandRelayNode::checkBaseStatus);
+    diagnostic_updater_.add(cmd_task, this, &AuvCmdRelayNode::checkBaseStatus);
   }
 
   RCLCPP_INFO(get_logger(), "Startup complete! Waiting for acoustic commands...");
 }
 
-void AuvCommandRelayNode::modemRecCallback(const seatrac_interfaces::msg::ModemRec::SharedPtr msg) {
+void AuvCmdRelayNode::modemRecCallback(const seatrac_interfaces::msg::ModemRec::SharedPtr msg) {
   if (!msg->local_flag || msg->packet_len < 1) return;
 
   const auto id = static_cast<CmdId>(msg->packet_data[0]);
@@ -95,8 +95,8 @@ void AuvCommandRelayNode::modemRecCallback(const seatrac_interfaces::msg::ModemR
   callCommandService(client, id);
 }
 
-void AuvCommandRelayNode::callCommandService(
-    rclcpp::Client<std_srvs::srv::Trigger>::SharedPtr client, CmdId cmd) {
+void AuvCmdRelayNode::callCommandService(rclcpp::Client<std_srvs::srv::Trigger>::SharedPtr client,
+                                         CmdId cmd) {
   last_command_ = utils::commandName(cmd);
   if (!client->service_is_ready()) {
     RCLCPP_WARN(get_logger(), "Service not ready for %s", last_command_.c_str());
@@ -118,7 +118,7 @@ void AuvCommandRelayNode::callCommandService(
       });
 }
 
-void AuvCommandRelayNode::checkBaseStatus(diagnostic_updater::DiagnosticStatusWrapper& stat) {
+void AuvCmdRelayNode::checkBaseStatus(diagnostic_updater::DiagnosticStatusWrapper& stat) {
   if (last_command_.empty()) {
     stat.summary(diagnostic_msgs::msg::DiagnosticStatus::OK, "Waiting for first command.");
     return;
@@ -135,4 +135,4 @@ void AuvCommandRelayNode::checkBaseStatus(diagnostic_updater::DiagnosticStatusWr
 
 }  // namespace coug_comms
 
-RCLCPP_COMPONENTS_REGISTER_NODE(coug_comms::AuvCommandRelayNode)
+RCLCPP_COMPONENTS_REGISTER_NODE(coug_comms::AuvCmdRelayNode)

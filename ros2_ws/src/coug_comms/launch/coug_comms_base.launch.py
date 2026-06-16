@@ -71,8 +71,8 @@ def launch_setup(context, *args, **kwargs) -> list:
     return [
         Node(
             package="coug_comms",
-            executable="base_command_relay",
-            name="base_command_relay_node",
+            executable="base_cmd_relay",
+            name="base_cmd_relay_node",
             namespace="base_station",
             parameters=[
                 fleet_params,

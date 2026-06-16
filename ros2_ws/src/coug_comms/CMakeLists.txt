@@ -17,19 +17,19 @@ find_package(generate_parameter_library REQUIRED)
 
 # --- Parameters ---
 generate_parameter_library(
-  base_command_relay_parameters
-  "params/base_command_relay_params.yaml"
+  base_cmd_relay_parameters
+  "params/base_cmd_relay_params.yaml"
 )
 
 generate_parameter_library(
-  auv_command_relay_parameters
-  "params/auv_command_relay_params.yaml"
+  auv_cmd_relay_parameters
+  "params/auv_cmd_relay_params.yaml"
 )
 
 # --- Component Library ---
 ament_auto_add_library(coug_comms_component SHARED
-  src/base_command_relay.cpp
-  src/auv_command_relay.cpp
+  src/base_cmd_relay.cpp
+  src/auv_cmd_relay.cpp
 )
 
 target_include_directories(coug_comms_component PUBLIC
@@ -37,21 +37,21 @@ target_include_directories(coug_comms_component PUBLIC
   $<INSTALL_INTERFACE:include>)
 
 target_link_libraries(coug_comms_component
-  base_command_relay_parameters
-  auv_command_relay_parameters
+  base_cmd_relay_parameters
+  auv_cmd_relay_parameters
 )
 
 rclcpp_components_register_nodes(coug_comms_component
-  "coug_comms::BaseCommandRelayNode"
-  "coug_comms::AuvCommandRelayNode"
+  "coug_comms::BaseCmdRelayNode"
+  "coug_comms::AuvCmdRelayNode"
 )
 
 # --- Executables ---
-ament_auto_add_executable(base_command_relay src/base_command_relay_node.cpp)
-target_link_libraries(base_command_relay coug_comms_component)
+ament_auto_add_executable(base_cmd_relay src/base_cmd_relay_node.cpp)
+target_link_libraries(base_cmd_relay coug_comms_component)
 
-ament_auto_add_executable(auv_command_relay src/auv_command_relay_node.cpp)
-target_link_libraries(auv_command_relay coug_comms_component)
+ament_auto_add_executable(auv_cmd_relay src/auv_cmd_relay_node.cpp)
+target_link_libraries(auv_cmd_relay coug_comms_component)
 
 # --- Testing ---
 if(BUILD_TESTING)

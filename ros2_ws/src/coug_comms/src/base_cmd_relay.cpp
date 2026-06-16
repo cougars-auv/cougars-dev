@@ -13,13 +13,13 @@
 // limitations under the License.
 
 /**
- * @file base_command_relay.cpp
- * @brief Implementation of the BaseCommandRelayNode.
+ * @file base_cmd_relay.cpp
+ * @brief Implementation of the BaseCmdRelayNode.
  * @author Nelson Durrant
  * @date June 2026
  */
 
-#include "coug_comms/base_command_relay.hpp"
+#include "coug_comms/base_cmd_relay.hpp"
 
 #include <rclcpp_components/register_node_macro.hpp>
 
@@ -31,12 +31,12 @@ using utils::CID_DAT_SEND;
 using utils::CmdId;
 using utils::MSG_OWAY;
 
-BaseCommandRelayNode::BaseCommandRelayNode(const rclcpp::NodeOptions& options)
-    : Node("base_command_relay_node", options), diagnostic_updater_(this) {
+BaseCmdRelayNode::BaseCmdRelayNode(const rclcpp::NodeOptions& options)
+    : Node("base_cmd_relay_node", options), diagnostic_updater_(this) {
   RCLCPP_INFO(get_logger(), "Starting Base Command Relay Node...");
 
   param_listener_ =
-      std::make_shared<base_command_relay_node::ParamListener>(get_node_parameters_interface());
+      std::make_shared<base_cmd_relay_node::ParamListener>(get_node_parameters_interface());
   params_ = param_listener_->get_params();
 
   this->declare_parameter<std::vector<std::string>>("agent_namespaces", std::vector<std::string>{});
@@ -62,7 +62,7 @@ BaseCommandRelayNode::BaseCommandRelayNode(const rclcpp::NodeOptions& options)
   if (params_.publish_diagnostics) {
     std::string ns = this->get_namespace();
     std::string clean_ns = (ns == "/") ? "" : ns;
-    diagnostic_updater_.setHardwareID(clean_ns + "/base_command_relay_node");
+    diagnostic_updater_.setHardwareID(clean_ns + "/base_cmd_relay_node");
     prefix = clean_ns.empty() ? "" : "[" + clean_ns + "] ";
   }
 
@@ -79,8 +79,8 @@ BaseCommandRelayNode::BaseCommandRelayNode(const rclcpp::NodeOptions& options)
   RCLCPP_INFO(get_logger(), "Startup complete! Waiting for commands...");
 }
 
-void BaseCommandRelayNode::registerAgent(const std::string& aname, uint8_t beacon_id,
-                                         const std::string& diag_prefix) {
+void BaseCmdRelayNode::registerAgent(const std::string& aname, uint8_t beacon_id,
+                                     const std::string& diag_prefix) {
   AgentEntry a;
   a.name = aname;
   a.beacon_id = beacon_id;
@@ -110,7 +110,7 @@ void BaseCommandRelayNode::registerAgent(const std::string& aname, uint8_t beaco
   RCLCPP_INFO(get_logger(), "Registered agent '%s' (beacon %d).", aname.c_str(), beacon_id);
 }
 
-void BaseCommandRelayNode::handleCommandRequest(
+void BaseCmdRelayNode::handleCommandRequest(
     CmdId cmd, uint8_t beacon_id, rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr service,
     std::shared_ptr<rmw_request_id_t> header) {
   AgentEntry& agent = agents_.at(beacon_id);
@@ -121,9 +121,9 @@ void BaseCommandRelayNode::handleCommandRequest(
   agent.last_transport = direct ? "DIRECT" : "ACOUSTIC";
 }
 
-bool BaseCommandRelayNode::directRelay(CmdId cmd, const AgentEntry& agent,
-                                       rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr service,
-                                       std::shared_ptr<rmw_request_id_t> header) {
+bool BaseCmdRelayNode::directRelay(CmdId cmd, const AgentEntry& agent,
+                                   rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr service,
+                                   std::shared_ptr<rmw_request_id_t> header) {
   auto client_it = agent.direct_clients.find(static_cast<uint8_t>(cmd));
   if (client_it == agent.direct_clients.end() || !client_it->second->service_is_ready()) {
     return false;
@@ -155,9 +155,9 @@ bool BaseCommandRelayNode::directRelay(CmdId cmd, const AgentEntry& agent,
   return true;
 }
 
-void BaseCommandRelayNode::acousticRelay(CmdId cmd, uint8_t beacon_id,
-                                         rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr service,
-                                         std::shared_ptr<rmw_request_id_t> header) {
+void BaseCmdRelayNode::acousticRelay(CmdId cmd, uint8_t beacon_id,
+                                     rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr service,
+                                     std::shared_ptr<rmw_request_id_t> header) {
   seatrac_interfaces::msg::ModemSend msg;
   msg.msg_id = CID_DAT_SEND;
   msg.dest_id = beacon_id;
@@ -173,8 +173,8 @@ void BaseCommandRelayNode::acousticRelay(CmdId cmd, uint8_t beacon_id,
   RCLCPP_INFO(get_logger(), "%s", res.message.c_str());
 }
 
-void BaseCommandRelayNode::checkAgentStatus(diagnostic_updater::DiagnosticStatusWrapper& stat,
-                                            uint8_t beacon_id) {
+void BaseCmdRelayNode::checkAgentStatus(diagnostic_updater::DiagnosticStatusWrapper& stat,
+                                        uint8_t beacon_id) {
   const AgentEntry& a = agents_.at(beacon_id);
 
   if (a.last_command.empty()) {
@@ -190,4 +190,4 @@ void BaseCommandRelayNode::checkAgentStatus(diagnostic_updater::DiagnosticStatus
 
 }  // namespace coug_comms
 
-RCLCPP_COMPONENTS_REGISTER_NODE(coug_comms::BaseCommandRelayNode)
+RCLCPP_COMPONENTS_REGISTER_NODE(coug_comms::BaseCmdRelayNode)

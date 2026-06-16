@@ -1,4 +1,4 @@
-base_command_relay_node:
+base_cmd_relay_node:
   modem_send_topic:
     type: string
     default_value: "modem_send"

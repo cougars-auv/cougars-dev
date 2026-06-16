@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /**
- * @file base_command_relay.hpp
+ * @file base_cmd_relay.hpp
  * @brief ROS 2 node for relaying base station commands to AUVs.
  * @author Nelson Durrant
  * @date June 2026
@@ -30,16 +30,16 @@
 #include <unordered_map>
 #include <vector>
 
-#include "coug_comms/base_command_relay_parameters.hpp"
+#include "coug_comms/base_cmd_relay_parameters.hpp"
 #include "coug_comms/utils/acomms_protocol.hpp"
 
 namespace coug_comms {
 
 /**
- * @class BaseCommandRelayNode
+ * @class BaseCmdRelayNode
  * @brief ROS 2 node for relaying base station commands to AUVs.
  */
-class BaseCommandRelayNode : public rclcpp::Node {
+class BaseCmdRelayNode : public rclcpp::Node {
  protected:
   /**
    * @brief Service names and command ID for one relayable command type.
@@ -67,7 +67,7 @@ class BaseCommandRelayNode : public rclcpp::Node {
    * @brief Constructs the node and sets up command relaying to AUVs.
    * @param options The node options.
    */
-  explicit BaseCommandRelayNode(const rclcpp::NodeOptions& options);
+  explicit BaseCmdRelayNode(const rclcpp::NodeOptions& options);
 
  protected:
   /**
@@ -126,8 +126,8 @@ class BaseCommandRelayNode : public rclcpp::Node {
   diagnostic_updater::Updater diagnostic_updater_;
 
   // --- Parameters ---
-  std::shared_ptr<base_command_relay_node::ParamListener> param_listener_;
-  base_command_relay_node::Params params_;
+  std::shared_ptr<base_cmd_relay_node::ParamListener> param_listener_;
+  base_cmd_relay_node::Params params_;
 
   // --- State ---
   std::vector<CommandSpec> commands_;

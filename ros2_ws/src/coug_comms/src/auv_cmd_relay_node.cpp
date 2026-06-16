@@ -13,8 +13,8 @@
 // limitations under the License.
 
 /**
- * @file auv_command_relay_node.cpp
- * @brief Standalone executable for the AuvCommandRelayNode.
+ * @file auv_cmd_relay_node.cpp
+ * @brief Standalone executable for the AuvCmdRelayNode.
  * @author Nelson Durrant
  * @date June 2026
  */
@@ -22,11 +22,11 @@
 #include <memory>
 #include <rclcpp/rclcpp.hpp>
 
-#include "coug_comms/auv_command_relay.hpp"
+#include "coug_comms/auv_cmd_relay.hpp"
 
 int main(int argc, char* argv[]) {
   rclcpp::init(argc, argv);
-  auto node = std::make_shared<coug_comms::AuvCommandRelayNode>(rclcpp::NodeOptions());
+  auto node = std::make_shared<coug_comms::AuvCmdRelayNode>(rclcpp::NodeOptions());
   rclcpp::spin(node);
   rclcpp::shutdown();
   return 0;

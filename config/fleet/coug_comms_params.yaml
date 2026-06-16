@@ -3,7 +3,7 @@
     ros__parameters:
       beacon_id: 0
 
-  base_command_relay_node:
+  base_cmd_relay_node:
     ros__parameters:
       # --- ROS Topics ---
       modem_send_topic: "modem_send"
@@ -24,7 +24,7 @@
 
       publish_diagnostics: true # Publish diagnostic information.
 
-  auv_command_relay_node:
+  auv_cmd_relay_node:
     ros__parameters:
       # --- ROS Topics ---
       modem_rec_topic: "modem_rec"
