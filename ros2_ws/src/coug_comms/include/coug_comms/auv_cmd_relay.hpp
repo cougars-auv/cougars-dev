@@ -97,7 +97,6 @@ class AuvCmdRelayNode : public rclcpp::Node {
     std::string command;
     bool succeeded;
   };
-  static constexpr size_t kMaxCommandHistory = 5;
   std::deque<CommandResult> command_history_;
 };
 

@@ -120,7 +120,7 @@ void AuvCmdRelayNode::callCommandService(rclcpp::Client<std_srvs::srv::Trigger>:
 
 void AuvCmdRelayNode::recordCommandResult(const std::string& command, bool succeeded) {
   command_history_.push_back({command, succeeded});
-  if (command_history_.size() > kMaxCommandHistory) {
+  if (command_history_.size() > static_cast<size_t>(params_.command_history_size)) {
     command_history_.pop_front();
   }
 }

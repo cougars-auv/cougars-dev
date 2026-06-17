@@ -23,6 +23,7 @@
       direct_emergency_surface_service: "emergency_surface"
 
       publish_diagnostics: true # Publish diagnostic information.
+      command_history_size: 5
 
   auv_cmd_relay_node:
     ros__parameters:
@@ -37,3 +38,4 @@
       emergency_surface_service: "emergency_surface"
 
       publish_diagnostics: true # Publish diagnostic information.
+      command_history_size: 5

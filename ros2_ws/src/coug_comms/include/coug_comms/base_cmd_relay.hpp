@@ -152,7 +152,6 @@ class BaseCmdRelayNode : public rclcpp::Node {
   base_cmd_relay_node::Params params_;
 
   // --- State ---
-  static constexpr size_t kMaxCommandHistory = 5;
   std::vector<CommandSpec> commands_;
   std::unordered_map<uint8_t, AgentEntry> agents_;
 };

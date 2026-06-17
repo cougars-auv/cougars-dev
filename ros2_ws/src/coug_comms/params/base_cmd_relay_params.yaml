@@ -51,3 +51,6 @@ base_cmd_relay_node:
   publish_diagnostics:
     type: bool
     default_value: false
+  command_history_size:
+    type: int
+    default_value: 5

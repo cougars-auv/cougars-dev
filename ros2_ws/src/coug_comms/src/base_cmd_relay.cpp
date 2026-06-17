@@ -194,7 +194,7 @@ void BaseCmdRelayNode::recordCommandResult(uint8_t beacon_id, const std::string&
                                            const std::string& transport, bool succeeded) {
   AgentEntry& a = agents_.at(beacon_id);
   a.command_history.push_back({command, transport, succeeded});
-  if (a.command_history.size() > kMaxCommandHistory) {
+  if (a.command_history.size() > static_cast<size_t>(params_.command_history_size)) {
     a.command_history.pop_front();
   }
 }
