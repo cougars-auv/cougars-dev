@@ -114,11 +114,28 @@ void BaseCmdRelayNode::handleCommandRequest(
     CmdId cmd, uint8_t beacon_id, rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr service,
     std::shared_ptr<rmw_request_id_t> header) {
   AgentEntry& agent = agents_.at(beacon_id);
-  const bool direct = !params_.force_acomms && directRelay(cmd, agent, service, header);
-  if (!direct) acousticRelay(cmd, beacon_id, service, header);
+  const std::string name = utils::commandName(cmd);
 
-  agent.last_command = utils::commandName(cmd);
-  agent.last_transport = direct ? "DIRECT" : "ACOUSTIC";
+  if (params_.enable_direct_comms) {
+    if (directRelay(cmd, agent, service, header)) {
+      agent.last_command = name;
+      agent.last_transport = "DIRECT";
+      return;
+    }
+  }
+
+  if (params_.enable_acoustic_comms) {
+    acousticRelay(cmd, beacon_id, service, header);
+    agent.last_command = name;
+    agent.last_transport = "ACOUSTIC";
+    return;
+  }
+
+  std_srvs::srv::Trigger::Response res;
+  res.success = false;
+  res.message = name + " failed: communications disabled";
+  service->send_response(*header, res);
+  RCLCPP_ERROR(get_logger(), "%s", res.message.c_str());
 }
 
 bool BaseCmdRelayNode::directRelay(CmdId cmd, const AgentEntry& agent,

@@ -19,7 +19,8 @@ options=$(gum choose --no-limit --header "Select options:" "Record rosbag" "Laun
 compare="false"
 record_bag_path=""
 add_noise="true"
-force_acomms="false"
+enable_direct_comms="true"
+enable_acoustic_comms="true"
 
 if [[ "${options}" == *"Launch comparison methods"* ]]; then
   compare="true"
@@ -30,7 +31,7 @@ if [[ "${options}" == *"Disable sensor noise"* ]]; then
 fi
 
 if [[ "${options}" == *"Acoustic comms"* ]]; then
-  force_acomms="true"
+  enable_direct_comms="false"
 fi
 
 if [[ "${options}" == *"Record rosbag"* ]]; then
@@ -48,7 +49,8 @@ args=(
   "compare:=${compare}"
   "add_noise:=${add_noise}"
   "base_station:=${base_station}"
-  "force_acomms:=${force_acomms}"
+  "enable_direct_comms:=${enable_direct_comms}"
+  "enable_acoustic_comms:=${enable_acoustic_comms}"
 )
 [ -n "${record_bag_path}" ] && args+=("record_bag_path:=${record_bag_path}")
 

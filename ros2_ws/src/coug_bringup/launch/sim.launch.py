@@ -41,7 +41,8 @@ def launch_setup(context, *args, **kwargs) -> list:
     compare = LaunchConfiguration("compare")
     add_noise = LaunchConfiguration("add_noise")
     base_station = LaunchConfiguration("base_station")
-    force_acomms = LaunchConfiguration("force_acomms")
+    enable_direct_comms = LaunchConfiguration("enable_direct_comms")
+    enable_acoustic_comms = LaunchConfiguration("enable_acoustic_comms")
 
     agent_list_str = context.perform_substitution(agent_list)
     record_bag_path_str = context.perform_substitution(record_bag_path)
@@ -84,7 +85,8 @@ def launch_setup(context, *args, **kwargs) -> list:
             launch_arguments={
                 "use_sim_time": use_sim_time,
                 "agent_list": agent_list_str,
-                "force_acomms": force_acomms,
+                "enable_direct_comms": enable_direct_comms,
+                "enable_acoustic_comms": enable_acoustic_comms,
             }.items(),
         )
     )
@@ -248,9 +250,14 @@ def generate_launch_description() -> LaunchDescription:
                 description="Launch base station simulation nodes",
             ),
             DeclareLaunchArgument(
-                "force_acomms",
-                default_value="false",
-                description="Force acoustic comms over direct connections",
+                "enable_direct_comms",
+                default_value="true",
+                description="Enable direct ROS service communications",
+            ),
+            DeclareLaunchArgument(
+                "enable_acoustic_comms",
+                default_value="true",
+                description="Enable acoustic communications",
             ),
             OpaqueFunction(function=launch_setup),
         ]

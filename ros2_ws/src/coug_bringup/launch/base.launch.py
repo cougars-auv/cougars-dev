@@ -29,7 +29,8 @@ def launch_setup(context, *args, **kwargs) -> list:
 
     use_sim_time = LaunchConfiguration("use_sim_time")
     agent_list = LaunchConfiguration("agent_list")
-    force_acomms = LaunchConfiguration("force_acomms")
+    enable_direct_comms = LaunchConfiguration("enable_direct_comms")
+    enable_acoustic_comms = LaunchConfiguration("enable_acoustic_comms")
     agent_list_str = agent_list.perform(context)
     auv_ns = yaml.safe_load(agent_list_str)[0]
 
@@ -53,7 +54,8 @@ def launch_setup(context, *args, **kwargs) -> list:
         launch_arguments={
             "use_sim_time": use_sim_time,
             "agent_list": agent_list,
-            "force_acomms": force_acomms,
+            "enable_direct_comms": enable_direct_comms,
+            "enable_acoustic_comms": enable_acoustic_comms,
         }.items(),
     )
 
@@ -149,9 +151,14 @@ def generate_launch_description() -> LaunchDescription:
                 ),
             ),
             DeclareLaunchArgument(
-                "force_acomms",
-                default_value="false",
-                description="Force acoustic comms over direct connections",
+                "enable_direct_comms",
+                default_value="true",
+                description="Enable direct ROS service communications",
+            ),
+            DeclareLaunchArgument(
+                "enable_acoustic_comms",
+                default_value="true",
+                description="Enable acoustic communications",
             ),
             OpaqueFunction(function=launch_setup),
         ]

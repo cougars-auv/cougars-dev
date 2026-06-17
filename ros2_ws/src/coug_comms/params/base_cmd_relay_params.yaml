@@ -41,9 +41,12 @@ base_cmd_relay_node:
     type: string
     default_value: "emergency_surface"
 
-  force_acomms:
+  enable_direct_comms:
     type: bool
-    default_value: false
+    default_value: true
+  enable_acoustic_comms:
+    type: bool
+    default_value: true
 
   publish_diagnostics:
     type: bool
