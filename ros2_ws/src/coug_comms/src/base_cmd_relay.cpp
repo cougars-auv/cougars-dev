@@ -117,40 +117,39 @@ void BaseCmdRelayNode::handleCommandRequest(
   const std::string name = utils::commandName(cmd);
 
   if (params_.enable_direct_comms) {
-    if (directRelay(cmd, agent, service, header)) {
-      agent.last_command = name;
-      agent.last_transport = "DIRECT";
+    if (directCommandRelay(cmd, agent, service, header)) {
       return;
     }
   }
 
   if (params_.enable_acoustic_comms) {
-    acousticRelay(cmd, beacon_id, service, header);
-    agent.last_command = name;
-    agent.last_transport = "ACOUSTIC";
+    acousticCommandRelay(cmd, beacon_id, service, header);
+    recordCommandResult(beacon_id, name, "ACOUSTIC", true);
     return;
   }
 
   std_srvs::srv::Trigger::Response res;
   res.success = false;
-  res.message = name + " failed: communications disabled";
+  res.message = name + " failed: comms disabled";
   service->send_response(*header, res);
   RCLCPP_ERROR(get_logger(), "%s", res.message.c_str());
+  recordCommandResult(beacon_id, name, "NONE", false);
 }
 
-bool BaseCmdRelayNode::directRelay(CmdId cmd, const AgentEntry& agent,
-                                   rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr service,
-                                   std::shared_ptr<rmw_request_id_t> header) {
+bool BaseCmdRelayNode::directCommandRelay(
+    CmdId cmd, const AgentEntry& agent, rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr service,
+    std::shared_ptr<rmw_request_id_t> header) {
   auto client_it = agent.direct_clients.find(static_cast<uint8_t>(cmd));
   if (client_it == agent.direct_clients.end() || !client_it->second->service_is_ready()) {
     return false;
   }
 
   const std::string label = utils::commandName(cmd);
+  const uint8_t beacon_id = agent.beacon_id;
   client_it->second->async_send_request(
       std::make_shared<std_srvs::srv::Trigger::Request>(),
       [this, service, header, label,
-       agent_name = agent.name](rclcpp::Client<std_srvs::srv::Trigger>::SharedFuture future) {
+       beacon_id](rclcpp::Client<std_srvs::srv::Trigger>::SharedFuture future) {
         bool success = false;
         try {
           success = future.get()->success;
@@ -160,7 +159,7 @@ bool BaseCmdRelayNode::directRelay(CmdId cmd, const AgentEntry& agent,
         std_srvs::srv::Trigger::Response res;
         res.success = success;
         if (success) {
-          res.message = label + " sent";
+          res.message = label + " succeeded";
           service->send_response(*header, res);
           RCLCPP_INFO(get_logger(), "%s", res.message.c_str());
         } else {
@@ -168,13 +167,14 @@ bool BaseCmdRelayNode::directRelay(CmdId cmd, const AgentEntry& agent,
           service->send_response(*header, res);
           RCLCPP_WARN(get_logger(), "%s", res.message.c_str());
         }
+        recordCommandResult(beacon_id, label, "DIRECT", success);
       });
   return true;
 }
 
-void BaseCmdRelayNode::acousticRelay(CmdId cmd, uint8_t beacon_id,
-                                     rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr service,
-                                     std::shared_ptr<rmw_request_id_t> header) {
+void BaseCmdRelayNode::acousticCommandRelay(
+    CmdId cmd, uint8_t beacon_id, rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr service,
+    std::shared_ptr<rmw_request_id_t> header) {
   seatrac_interfaces::msg::ModemSend msg;
   msg.msg_id = CID_DAT_SEND;
   msg.dest_id = beacon_id;
@@ -185,24 +185,43 @@ void BaseCmdRelayNode::acousticRelay(CmdId cmd, uint8_t beacon_id,
 
   std_srvs::srv::Trigger::Response res;
   res.success = true;
-  res.message = utils::commandName(cmd) + " queued";
+  res.message = utils::commandName(cmd) + " queued (acomms)";
   service->send_response(*header, res);
   RCLCPP_INFO(get_logger(), "%s", res.message.c_str());
+}
+
+void BaseCmdRelayNode::recordCommandResult(uint8_t beacon_id, const std::string& command,
+                                           const std::string& transport, bool succeeded) {
+  AgentEntry& a = agents_.at(beacon_id);
+  a.command_history.push_back({command, transport, succeeded});
+  if (a.command_history.size() > kMaxCommandHistory) {
+    a.command_history.pop_front();
+  }
 }
 
 void BaseCmdRelayNode::checkAgentStatus(diagnostic_updater::DiagnosticStatusWrapper& stat,
                                         uint8_t beacon_id) {
   const AgentEntry& a = agents_.at(beacon_id);
 
-  if (a.last_command.empty()) {
-    stat.summary(diagnostic_msgs::msg::DiagnosticStatus::OK, "No commands relayed.");
+  if (a.command_history.empty()) {
+    stat.summary(diagnostic_msgs::msg::DiagnosticStatus::OK, "Waiting for first command.");
     return;
   }
 
-  stat.add("Last Command", a.last_command);
-  stat.add("Transport", a.last_transport);
-  stat.summary(diagnostic_msgs::msg::DiagnosticStatus::OK,
-               "Last relayed " + a.last_command + " to " + a.name + ".");
+  size_t index = 1;
+  for (auto it = a.command_history.rbegin(); it != a.command_history.rend(); ++it) {
+    stat.add(std::to_string(index++), it->command + " (" + it->transport + ")" +
+                                          (it->succeeded ? ": succeeded" : ": failed"));
+  }
+
+  const CommandResult& latest = a.command_history.back();
+  if (latest.succeeded) {
+    stat.summary(diagnostic_msgs::msg::DiagnosticStatus::OK,
+                 latest.command + " to " + a.name + " succeeded.");
+  } else {
+    stat.summary(diagnostic_msgs::msg::DiagnosticStatus::ERROR,
+                 latest.command + " to " + a.name + " failed.");
+  }
 }
 
 }  // namespace coug_comms
