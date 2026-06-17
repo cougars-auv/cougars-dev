@@ -74,7 +74,6 @@ def generate_launch_description() -> LaunchDescription:
             "use_sim_time": use_sim_time,
             "auv_ns": auv_ns,
         }.items(),
-        condition=IfCondition(NotEqualsSubstitution(auv_ns, "blue1sim")),
     )
 
     coug_fgo_cmd = IncludeLaunchDescription(

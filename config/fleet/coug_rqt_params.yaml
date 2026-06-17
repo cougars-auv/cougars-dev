@@ -1,4 +1,4 @@
-rqt_gui:
+/**:
   ros__parameters:
     # --- ROS Topics ---
     config_command_topic: "dvl/config/command"

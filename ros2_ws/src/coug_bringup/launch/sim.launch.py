@@ -245,7 +245,7 @@ def generate_launch_description() -> LaunchDescription:
             DeclareLaunchArgument(
                 "base_station",
                 default_value="true",
-                description="Launch base station converters",
+                description="Launch base station simulation nodes",
             ),
             DeclareLaunchArgument(
                 "force_acomms",

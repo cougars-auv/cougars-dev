@@ -11,6 +11,19 @@
       "agent_type": "BlueROV2",
       "sensors": [
         {
+          "sensor_type": "AcousticBeaconSensor",
+          "socket": "COM",
+          "location": [
+            0,
+            0,
+            0
+          ],
+          "configuration": {
+            "id": 1
+          },
+          "ros_publish": true
+        },
+        {
           "sensor_type": "IMUSensor",
           "socket": "IMUSocket",
           "Hz": 200,
