@@ -99,7 +99,7 @@ void AuvCmdRelayNode::callCommandService(rclcpp::Client<std_srvs::srv::Trigger>:
                                          CmdId cmd) {
   const std::string command = utils::commandName(cmd);
   if (!client->service_is_ready()) {
-    RCLCPP_WARN(get_logger(), "Service not ready for %s", command.c_str());
+    RCLCPP_ERROR(get_logger(), "Service not available: %s", command.c_str());
     recordCommandResult(command, false);
     return;
   }
@@ -140,7 +140,7 @@ void AuvCmdRelayNode::checkBaseStatus(diagnostic_updater::DiagnosticStatusWrappe
   if (latest.succeeded) {
     stat.summary(diagnostic_msgs::msg::DiagnosticStatus::OK, latest.command + " succeeded.");
   } else {
-    stat.summary(diagnostic_msgs::msg::DiagnosticStatus::WARN, latest.command + " failed.");
+    stat.summary(diagnostic_msgs::msg::DiagnosticStatus::ERROR, latest.command + " failed.");
   }
 }
 
