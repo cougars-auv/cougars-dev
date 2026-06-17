@@ -30,7 +30,7 @@
 #include <string>
 
 #include "coug_comms/auv_cmd_relay_parameters.hpp"
-#include "coug_comms/utils/acomms_protocol.hpp"
+#include "coug_comms/utils/comms_protocol.hpp"
 
 namespace coug_comms {
 
@@ -56,10 +56,10 @@ class AuvCmdRelayNode : public rclcpp::Node {
   /**
    * @brief Calls a Trigger service and logs the outcome.
    * @param client The service client to call.
-   * @param cmd The command being executed (for logging).
+   * @param cmd The command message ID (for logging).
    */
   void callCommandService(rclcpp::Client<std_srvs::srv::Trigger>::SharedPtr client,
-                          utils::CmdId cmd);
+                          utils::MsgId cmd);
 
   /**
    * @brief Records a command outcome in the rolling history, trimming to the last few.

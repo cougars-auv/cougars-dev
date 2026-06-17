@@ -28,8 +28,8 @@
 namespace coug_comms {
 
 using utils::CID_DAT_SEND;
-using utils::CmdId;
 using utils::MSG_OWAY;
+using utils::MsgId;
 
 BaseCmdRelayNode::BaseCmdRelayNode(const rclcpp::NodeOptions& options)
     : Node("base_cmd_relay_node", options), diagnostic_updater_(this) {
@@ -47,14 +47,14 @@ BaseCmdRelayNode::BaseCmdRelayNode(const rclcpp::NodeOptions& options)
       params_.modem_send_topic, rclcpp::SystemDefaultsQoS());
 
   commands_ = {
-      {params_.start_service, params_.direct_start_service, CmdId::CMD_START},
-      {params_.stop_service, params_.direct_stop_service, CmdId::CMD_STOP},
-      {params_.surface_service, params_.direct_surface_service, CmdId::CMD_SURFACE},
-      {params_.home_service, params_.direct_home_service, CmdId::CMD_HOME},
+      {params_.start_service, params_.direct_start_service, MsgId::CMD_START},
+      {params_.stop_service, params_.direct_stop_service, MsgId::CMD_STOP},
+      {params_.surface_service, params_.direct_surface_service, MsgId::CMD_SURFACE},
+      {params_.home_service, params_.direct_home_service, MsgId::CMD_HOME},
       {params_.emergency_stop_service, params_.direct_emergency_stop_service,
-       CmdId::CMD_EMERGENCY_STOP},
+       MsgId::CMD_EMERGENCY_STOP},
       {params_.emergency_surface_service, params_.direct_emergency_surface_service,
-       CmdId::CMD_EMERGENCY_SURFACE},
+       MsgId::CMD_EMERGENCY_SURFACE},
   };
 
   // --- ROS Diagnostics ---
@@ -86,7 +86,7 @@ void BaseCmdRelayNode::registerAgent(const std::string& aname, uint8_t beacon_id
   a.beacon_id = beacon_id;
 
   for (const auto& spec : commands_) {
-    const CmdId cmd = spec.cmd;
+    const MsgId cmd = spec.cmd;
     a.services.push_back(create_service<std_srvs::srv::Trigger>(
         "/" + aname + "/" + spec.relay_service,
         [this, cmd, beacon_id](std::shared_ptr<rclcpp::Service<std_srvs::srv::Trigger>> service,
@@ -111,10 +111,10 @@ void BaseCmdRelayNode::registerAgent(const std::string& aname, uint8_t beacon_id
 }
 
 void BaseCmdRelayNode::handleCommandRequest(
-    CmdId cmd, uint8_t beacon_id, rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr service,
+    MsgId cmd, uint8_t beacon_id, rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr service,
     std::shared_ptr<rmw_request_id_t> header) {
   AgentEntry& agent = agents_.at(beacon_id);
-  const std::string name = utils::commandName(cmd);
+  const std::string name = utils::messageType(cmd);
 
   if (params_.enable_direct_comms) {
     if (directCommandRelay(cmd, agent, service, header)) {
@@ -137,14 +137,14 @@ void BaseCmdRelayNode::handleCommandRequest(
 }
 
 bool BaseCmdRelayNode::directCommandRelay(
-    CmdId cmd, const AgentEntry& agent, rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr service,
+    MsgId cmd, const AgentEntry& agent, rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr service,
     std::shared_ptr<rmw_request_id_t> header) {
   auto client_it = agent.direct_clients.find(static_cast<uint8_t>(cmd));
   if (client_it == agent.direct_clients.end() || !client_it->second->service_is_ready()) {
     return false;
   }
 
-  const std::string label = utils::commandName(cmd);
+  const std::string label = utils::messageType(cmd);
   const uint8_t beacon_id = agent.beacon_id;
   client_it->second->async_send_request(
       std::make_shared<std_srvs::srv::Trigger::Request>(),
@@ -173,7 +173,7 @@ bool BaseCmdRelayNode::directCommandRelay(
 }
 
 void BaseCmdRelayNode::acousticCommandRelay(
-    CmdId cmd, uint8_t beacon_id, rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr service,
+    MsgId cmd, uint8_t beacon_id, rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr service,
     std::shared_ptr<rmw_request_id_t> header) {
   seatrac_interfaces::msg::ModemSend msg;
   msg.msg_id = CID_DAT_SEND;
@@ -185,7 +185,7 @@ void BaseCmdRelayNode::acousticCommandRelay(
 
   std_srvs::srv::Trigger::Response res;
   res.success = true;
-  res.message = utils::commandName(cmd) + " queued (acomms)";
+  res.message = utils::messageType(cmd) + " queued (acomms)";
   service->send_response(*header, res);
   RCLCPP_INFO(get_logger(), "%s", res.message.c_str());
 }

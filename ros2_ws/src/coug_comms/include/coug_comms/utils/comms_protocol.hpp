@@ -13,8 +13,8 @@
 // limitations under the License.
 
 /**
- * @file acomms_protocol.hpp
- * @brief Shared acoustic command protocol for coug_comms.
+ * @file comms_protocol.hpp
+ * @brief Shared messaging protocol for radio and acoustic comms.
  * @author Nelson Durrant
  * @date June 2026
  */
@@ -26,36 +26,45 @@
 
 namespace coug_comms::utils {
 
-enum class CmdId : uint8_t {
-  CMD_START = 0x10,
-  CMD_STOP = 0x11,
-  CMD_SURFACE = 0x12,
-  CMD_HOME = 0x13,
-  CMD_EMERGENCY_STOP = 0x20,
-  CMD_EMERGENCY_SURFACE = 0x21,
+enum class MsgId : uint8_t {
+  CMD_START = 0x00,
+  CMD_STOP = 0x01,
+  CMD_SURFACE = 0x02,
+  CMD_HOME = 0x03,
+  CMD_EMERGENCY_STOP = 0x04,
+  CMD_EMERGENCY_SURFACE = 0x05,
+  MSG_KEY_CONTROL = 0x10,
+  MSG_ORIGIN = 0x11,
+  MSG_WAYPOINTS = 0x12,
 };
 
 /**
- * @brief Returns the human-readable name of a command.
- * @param cmd The command to name.
- * @return The command name, or "CMD_UNKNOWN" if unrecognized.
+ * @brief Returns the human-readable name of a message type.
+ * @param msg The message type to name.
+ * @return The message name, or "MSG_UNKNOWN" if unrecognized.
  */
-inline std::string commandName(CmdId cmd) {
-  switch (cmd) {
-    case CmdId::CMD_START:
+inline std::string messageType(MsgId msg) {
+  switch (msg) {
+    case MsgId::CMD_START:
       return "CMD_START";
-    case CmdId::CMD_STOP:
+    case MsgId::CMD_STOP:
       return "CMD_STOP";
-    case CmdId::CMD_SURFACE:
+    case MsgId::CMD_SURFACE:
       return "CMD_SURFACE";
-    case CmdId::CMD_HOME:
+    case MsgId::CMD_HOME:
       return "CMD_HOME";
-    case CmdId::CMD_EMERGENCY_STOP:
+    case MsgId::CMD_EMERGENCY_STOP:
       return "CMD_EMERGENCY_STOP";
-    case CmdId::CMD_EMERGENCY_SURFACE:
+    case MsgId::CMD_EMERGENCY_SURFACE:
       return "CMD_EMERGENCY_SURFACE";
+    case MsgId::MSG_KEY_CONTROL:
+      return "MSG_KEY_CONTROL";
+    case MsgId::MSG_ORIGIN:
+      return "MSG_ORIGIN";
+    case MsgId::MSG_WAYPOINTS:
+      return "MSG_WAYPOINTS";
   }
-  return "CMD_UNKNOWN";
+  return "MSG_UNKNOWN";
 }
 
 }  // namespace coug_comms::utils

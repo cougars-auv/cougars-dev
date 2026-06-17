@@ -32,7 +32,7 @@
 #include <vector>
 
 #include "coug_comms/base_cmd_relay_parameters.hpp"
-#include "coug_comms/utils/acomms_protocol.hpp"
+#include "coug_comms/utils/comms_protocol.hpp"
 
 namespace coug_comms {
 
@@ -44,12 +44,12 @@ class BaseCmdRelayNode : public rclcpp::Node {
  protected:
   /**
    * @struct CommandSpec
-   * @brief Service names and command ID for one relayable command type.
+   * @brief Service names and message ID for one relayable command type.
    */
   struct CommandSpec {
     std::string relay_service;
     std::string direct_service;
-    utils::CmdId cmd;
+    utils::MsgId cmd;
   };
 
   /**
@@ -84,37 +84,37 @@ class BaseCmdRelayNode : public rclcpp::Node {
  protected:
   /**
    * @brief Routes the command to the direct link, falling back to acoustics.
-   * @param cmd The command to send.
+   * @param cmd The message ID to send.
    * @param beacon_id The target beacon ID.
    * @param service The service the request arrived on.
    * @param header The request header to respond to.
    */
-  void handleCommandRequest(utils::CmdId cmd, uint8_t beacon_id,
+  void handleCommandRequest(utils::MsgId cmd, uint8_t beacon_id,
                             rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr service,
                             std::shared_ptr<rmw_request_id_t> header);
 
   /**
    * @brief Sends the command over the agent's direct ROS link, responding to the Trigger
    * asynchronously.
-   * @param cmd The command to send.
+   * @param cmd The message ID to send.
    * @param agent The target agent.
    * @param service The service the request arrived on.
    * @param header The request header to respond to.
    * @return True if a direct link was ready and the request was sent; false to fall back to
    * acoustics.
    */
-  bool directCommandRelay(utils::CmdId cmd, const AgentEntry& agent,
+  bool directCommandRelay(utils::MsgId cmd, const AgentEntry& agent,
                           rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr service,
                           std::shared_ptr<rmw_request_id_t> header);
 
   /**
    * @brief Sends the command over the seatrac modem (one-way) and responds that it was queued.
-   * @param cmd The command to send.
+   * @param cmd The message ID to send.
    * @param beacon_id The target beacon ID.
    * @param service The service the request arrived on.
    * @param header The request header to respond to.
    */
-  void acousticCommandRelay(utils::CmdId cmd, uint8_t beacon_id,
+  void acousticCommandRelay(utils::MsgId cmd, uint8_t beacon_id,
                             rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr service,
                             std::shared_ptr<rmw_request_id_t> header);
 

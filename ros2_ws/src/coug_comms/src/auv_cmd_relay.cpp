@@ -25,7 +25,7 @@
 
 namespace coug_comms {
 
-using utils::CmdId;
+using utils::MsgId;
 
 AuvCmdRelayNode::AuvCmdRelayNode(const rclcpp::NodeOptions& options)
     : Node("auv_cmd_relay_node", options), diagnostic_updater_(this) {
@@ -65,39 +65,39 @@ AuvCmdRelayNode::AuvCmdRelayNode(const rclcpp::NodeOptions& options)
 void AuvCmdRelayNode::modemRecCallback(const seatrac_interfaces::msg::ModemRec::SharedPtr msg) {
   if (!msg->local_flag || msg->packet_len < 1) return;
 
-  const auto id = static_cast<CmdId>(msg->packet_data[0]);
+  const auto id = static_cast<MsgId>(msg->packet_data[0]);
   rclcpp::Client<std_srvs::srv::Trigger>::SharedPtr client;
   switch (id) {
-    case CmdId::CMD_START:
+    case MsgId::CMD_START:
       client = start_client_;
       break;
-    case CmdId::CMD_STOP:
+    case MsgId::CMD_STOP:
       client = stop_client_;
       break;
-    case CmdId::CMD_SURFACE:
+    case MsgId::CMD_SURFACE:
       client = surface_client_;
       break;
-    case CmdId::CMD_HOME:
+    case MsgId::CMD_HOME:
       client = home_client_;
       break;
-    case CmdId::CMD_EMERGENCY_STOP:
+    case MsgId::CMD_EMERGENCY_STOP:
       client = emergency_stop_client_;
       break;
-    case CmdId::CMD_EMERGENCY_SURFACE:
+    case MsgId::CMD_EMERGENCY_SURFACE:
       client = emergency_surface_client_;
       break;
     default:
       return;
   }
 
-  RCLCPP_INFO(get_logger(), "Received %s from beacon %d", utils::commandName(id).c_str(),
+  RCLCPP_INFO(get_logger(), "Received %s from beacon %d", utils::messageType(id).c_str(),
               msg->src_id);
   callCommandService(client, id);
 }
 
 void AuvCmdRelayNode::callCommandService(rclcpp::Client<std_srvs::srv::Trigger>::SharedPtr client,
-                                         CmdId cmd) {
-  const std::string command = utils::commandName(cmd);
+                                         MsgId cmd) {
+  const std::string command = utils::messageType(cmd);
   if (!client->service_is_ready()) {
     RCLCPP_ERROR(get_logger(), "Service not available: %s", command.c_str());
     recordCommandResult(command, false);
