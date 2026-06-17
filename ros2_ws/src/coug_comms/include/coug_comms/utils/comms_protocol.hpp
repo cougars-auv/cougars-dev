@@ -27,15 +27,15 @@
 namespace coug_comms::utils {
 
 enum class MsgId : uint8_t {
-  CMD_START = 0x00,
-  CMD_STOP = 0x01,
-  CMD_SURFACE = 0x02,
-  CMD_HOME = 0x03,
-  CMD_EMERGENCY_STOP = 0x04,
-  CMD_EMERGENCY_SURFACE = 0x05,
-  MSG_KEY_CONTROL = 0x10,
-  MSG_ORIGIN = 0x11,
-  MSG_WAYPOINTS = 0x12,
+  CMD_START = 0x10,
+  CMD_STOP = 0x11,
+  CMD_SURFACE = 0x12,
+  CMD_HOME = 0x13,
+  CMD_EMERGENCY_STOP = 0x14,
+  CMD_EMERGENCY_SURFACE = 0x15,
+  MSG_KEY_CONTROL = 0x20,
+  MSG_ORIGIN = 0x21,
+  MSG_WAYPOINTS = 0x22,
 };
 
 /**
