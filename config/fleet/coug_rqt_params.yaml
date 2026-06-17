@@ -1,6 +1,5 @@
 /**:
   ros__parameters:
-    # --- ROS Topics ---
     config_command_topic: "dvl/config/command"
 
     bag_record_service: "bag_record"

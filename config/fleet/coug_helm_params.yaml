@@ -16,6 +16,7 @@
 
       odom_timeout_sec: 2.0 # [s] Time to wait for odometry before stopping.
       default_speed_rpm: 1500.0 # [RPM]
+
       publish_diagnostics: true # Publish diagnostic information.
 
       # --- Groot2 Connection ---

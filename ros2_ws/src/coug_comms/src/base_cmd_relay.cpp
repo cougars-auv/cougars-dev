@@ -103,7 +103,7 @@ void BaseCmdRelayNode::registerAgent(const std::string& aname, uint8_t beacon_id
   if (params_.publish_diagnostics) {
     diagnostic_updater_.add(diag_prefix + "Command Status (" + aname + ")",
                             [this, beacon_id](diagnostic_updater::DiagnosticStatusWrapper& stat) {
-                              checkAgentStatus(stat, beacon_id);
+                              checkCommandStatus(stat, beacon_id);
                             });
   }
 
@@ -199,8 +199,8 @@ void BaseCmdRelayNode::recordCommandResult(uint8_t beacon_id, const std::string&
   }
 }
 
-void BaseCmdRelayNode::checkAgentStatus(diagnostic_updater::DiagnosticStatusWrapper& stat,
-                                        uint8_t beacon_id) {
+void BaseCmdRelayNode::checkCommandStatus(diagnostic_updater::DiagnosticStatusWrapper& stat,
+                                          uint8_t beacon_id) {
   const AgentEntry& a = agents_.at(beacon_id);
 
   if (a.command_history.empty()) {

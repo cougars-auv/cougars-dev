@@ -72,7 +72,7 @@ class AuvCmdRelayNode : public rclcpp::Node {
    * @brief Diagnostic task reporting the last few commands received and their results.
    * @param stat The diagnostic status wrapper.
    */
-  void checkBaseStatus(diagnostic_updater::DiagnosticStatusWrapper& stat);
+  void checkCommandStatus(diagnostic_updater::DiagnosticStatusWrapper& stat);
 
   // --- ROS Interfaces ---
   rclcpp::Subscription<seatrac_interfaces::msg::ModemRec>::SharedPtr modem_rec_sub_;

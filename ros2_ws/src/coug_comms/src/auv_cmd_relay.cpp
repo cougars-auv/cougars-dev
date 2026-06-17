@@ -56,7 +56,7 @@ AuvCmdRelayNode::AuvCmdRelayNode(const rclcpp::NodeOptions& options)
 
     std::string prefix = clean_ns.empty() ? "" : "[" + clean_ns + "] ";
     std::string cmd_task = prefix + "Command Status";
-    diagnostic_updater_.add(cmd_task, this, &AuvCmdRelayNode::checkBaseStatus);
+    diagnostic_updater_.add(cmd_task, this, &AuvCmdRelayNode::checkCommandStatus);
   }
 
   RCLCPP_INFO(get_logger(), "Startup complete! Waiting for acoustic commands...");
@@ -125,7 +125,7 @@ void AuvCmdRelayNode::recordCommandResult(const std::string& command, bool succe
   }
 }
 
-void AuvCmdRelayNode::checkBaseStatus(diagnostic_updater::DiagnosticStatusWrapper& stat) {
+void AuvCmdRelayNode::checkCommandStatus(diagnostic_updater::DiagnosticStatusWrapper& stat) {
   if (command_history_.empty()) {
     stat.summary(diagnostic_msgs::msg::DiagnosticStatus::OK, "Waiting for first command.");
     return;
