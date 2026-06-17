@@ -33,9 +33,10 @@ enum class MsgId : uint8_t {
   CMD_HOME = 0x13,
   CMD_EMERGENCY_STOP = 0x14,
   CMD_EMERGENCY_SURFACE = 0x15,
-  MSG_KEY_CONTROL = 0x20,
-  MSG_ORIGIN = 0x21,
-  MSG_WAYPOINTS = 0x22,
+  REQ_STATUS = 0x20,
+  MSG_KEY_CONTROL = 0x30,
+  MSG_ORIGIN = 0x31,
+  MSG_WAYPOINTS = 0x32,
 };
 
 /**
@@ -57,6 +58,8 @@ inline std::string messageType(MsgId msg) {
       return "CMD_EMERGENCY_STOP";
     case MsgId::CMD_EMERGENCY_SURFACE:
       return "CMD_EMERGENCY_SURFACE";
+    case MsgId::REQ_STATUS:
+      return "REQ_STATUS";
     case MsgId::MSG_KEY_CONTROL:
       return "MSG_KEY_CONTROL";
     case MsgId::MSG_ORIGIN:
