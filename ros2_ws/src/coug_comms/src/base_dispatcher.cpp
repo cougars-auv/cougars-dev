@@ -98,6 +98,15 @@ void BaseDispatcherNode::registerAgent(const std::string& aname, uint8_t beacon_
         create_client<std_srvs::srv::Trigger>("/" + aname + "/" + spec.direct_service);
   }
 
+  if (params_.enable_direct_comms) {
+    a.direct_heartbeat_sub = create_subscription<coug_interfaces::msg::AgentStatus>(
+        "/" + aname + "/" + params_.direct_status_topic, rclcpp::SystemDefaultsQoS(),
+        [this, beacon_id](const coug_interfaces::msg::AgentStatus::SharedPtr) {
+          auto it = agents_.find(beacon_id);
+          if (it != agents_.end()) it->second.last_direct_heartbeat_sec = now().seconds();
+        });
+  }
+
   agents_.emplace(beacon_id, std::move(a));
 
   if (params_.publish_diagnostics) {
@@ -139,8 +148,12 @@ void BaseDispatcherNode::handleServiceRequest(
 bool BaseDispatcherNode::directServiceDispatch(
     MsgId cmd, const AgentEntry& agent, rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr service,
     std::shared_ptr<rmw_request_id_t> header) {
+  const bool direct_link_up =
+      agent.last_direct_heartbeat_sec > 0.0 &&
+      now().seconds() - agent.last_direct_heartbeat_sec < params_.direct_timeout_sec;
   auto client_it = agent.direct_clients.find(static_cast<uint8_t>(cmd));
-  if (client_it == agent.direct_clients.end() || !client_it->second->service_is_ready()) {
+  if (!direct_link_up || client_it == agent.direct_clients.end() ||
+      !client_it->second->service_is_ready()) {
     return false;
   }
 
@@ -202,6 +215,10 @@ void BaseDispatcherNode::recordServiceResult(uint8_t beacon_id, const std::strin
 void BaseDispatcherNode::checkAgentServiceStatus(diagnostic_updater::DiagnosticStatusWrapper& stat,
                                                  uint8_t beacon_id) {
   const AgentEntry& a = agents_.at(beacon_id);
+
+  double direct_heartbeat_age =
+      (a.last_direct_heartbeat_sec > 0.0) ? (now().seconds() - a.last_direct_heartbeat_sec) : -1.0;
+  stat.add("Time Since Direct Heartbeat (s)", direct_heartbeat_age);
 
   if (a.service_history.empty()) {
     stat.summary(diagnostic_msgs::msg::DiagnosticStatus::OK, "Waiting for first service.");

@@ -55,7 +55,7 @@ AuvStatusStagerNode::AuvStatusStagerNode(const rclcpp::NodeOptions& options)
     diagnostic_updater_.setHardwareID(clean_ns + "/auv_status_stager_node");
 
     std::string prefix = clean_ns.empty() ? "" : "[" + clean_ns + "] ";
-    diagnostic_updater_.add(prefix + "Status Staging", this, &AuvStatusStagerNode::checkStatus);
+    diagnostic_updater_.add(prefix + "Staging Status", this, &AuvStatusStagerNode::checkStatus);
   }
 
   RCLCPP_INFO(get_logger(), "Startup complete! Waiting for status updates...");

@@ -33,6 +33,7 @@
 
 #include "coug_comms/base_dispatcher_parameters.hpp"
 #include "coug_comms/utils/comms_protocol.hpp"
+#include "coug_interfaces/msg/agent_status.hpp"
 
 namespace coug_comms {
 
@@ -64,7 +65,7 @@ class BaseDispatcherNode : public rclcpp::Node {
 
   /**
    * @struct AgentEntry
-   * @brief Per-agent state: identity, hosted services, direct clients, and service history.
+   * @brief Per-agent state: identity, services, direct clients, service history, and heartbeat.
    */
   struct AgentEntry {
     std::string name;
@@ -72,6 +73,8 @@ class BaseDispatcherNode : public rclcpp::Node {
     std::vector<rclcpp::ServiceBase::SharedPtr> services;
     std::unordered_map<uint8_t, rclcpp::Client<std_srvs::srv::Trigger>::SharedPtr> direct_clients;
     std::deque<ServiceResult> service_history;
+    rclcpp::Subscription<coug_interfaces::msg::AgentStatus>::SharedPtr direct_heartbeat_sub;
+    double last_direct_heartbeat_sec = 0.0;
   };
 
  public:
@@ -94,14 +97,12 @@ class BaseDispatcherNode : public rclcpp::Node {
                             std::shared_ptr<rmw_request_id_t> header);
 
   /**
-   * @brief Sends the service over the agent's direct ROS link, responding to the Trigger
-   * asynchronously.
+   * @brief Sends the service over the agent's direct ROS link, responding asynchronously.
    * @param cmd The message ID to send.
    * @param agent The target agent.
    * @param service The service the request arrived on.
    * @param header The request header to respond to.
-   * @return True if a direct link was ready and the request was sent; false to fall back to
-   * acoustics.
+   * @return True if the direct link was live and the request was sent; false to fall back.
    */
   bool directServiceDispatch(utils::MsgId cmd, const AgentEntry& agent,
                              rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr service,
@@ -119,7 +120,8 @@ class BaseDispatcherNode : public rclcpp::Node {
                                std::shared_ptr<rmw_request_id_t> header);
 
   /**
-   * @brief Creates service servers, direct clients, and a diagnostic task for one agent.
+   * @brief Creates service servers, direct clients, a heartbeat subscription, and a diagnostic
+   * task.
    * @param name The agent's ROS namespace.
    * @param beacon_id The agent's acoustic beacon ID.
    * @param diag_prefix Namespace prefix for diagnostic task labels.
@@ -137,7 +139,7 @@ class BaseDispatcherNode : public rclcpp::Node {
                            const std::string& transport, bool succeeded);
 
   /**
-   * @brief Diagnostic task reporting the last few services relayed to one agent and their results.
+   * @brief Diagnostic task reporting an agent's heartbeat and the last few services relayed to it.
    * @param stat The diagnostic status wrapper.
    * @param beacon_id The agent's beacon ID.
    */

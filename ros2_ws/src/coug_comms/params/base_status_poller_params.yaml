@@ -3,6 +3,11 @@ base_status_poller_node:
   publish_diagnostics:
     type: bool
     default_value: false
+  diagnostic_timeout_sec:
+    type: double
+    default_value: 10.0
+    validation:
+      gt<>: [0.0]
 
   enable_direct_comms:
     type: bool
@@ -10,6 +15,11 @@ base_status_poller_node:
   enable_acoustic_comms:
     type: bool
     default_value: true
+  direct_timeout_sec:
+    type: double
+    default_value: 2.0
+    validation:
+      gt<>: [0.0]
 
   response_timeout_sec:
     type: double
@@ -43,7 +53,13 @@ base_status_poller_node:
     default_value: "modem_cmd_update"
     validation:
       not_empty<>: []
+
   status_topic:
+    type: string
+    default_value: "base/status"
+    validation:
+      not_empty<>: []
+  direct_status_topic:
     type: string
     default_value: "status"
     validation:

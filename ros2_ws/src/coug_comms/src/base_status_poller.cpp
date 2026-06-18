@@ -76,7 +76,7 @@ BaseStatusPollerNode::BaseStatusPollerNode(const rclcpp::NodeOptions& options)
 
   next_poll_allowed_ = now();
   tick_timer_ = create_wall_timer(std::chrono::duration<double>(params_.tick_period_sec),
-                                  std::bind(&BaseStatusPollerNode::onTick, this));
+                                  std::bind(&BaseStatusPollerNode::tickCallback, this));
 
   RCLCPP_INFO(get_logger(), "Startup complete! Polling agents for status...");
 }
@@ -87,14 +87,17 @@ void BaseStatusPollerNode::registerAgent(const std::string& aname, uint8_t beaco
   a.name = aname;
   a.beacon_id = beacon_id;
   a.status_pub = create_publisher<coug_interfaces::msg::AgentStatus>(
-      aname + "/" + params_.status_topic, rclcpp::SystemDefaultsQoS());
+      "/" + aname + "/" + params_.status_topic, rclcpp::SystemDefaultsQoS());
   a.last_response_time = now();
 
   if (params_.enable_direct_comms) {
     a.direct_sub = create_subscription<coug_interfaces::msg::AgentStatus>(
-        "/" + aname + "/" + params_.status_topic, rclcpp::SystemDefaultsQoS(),
+        "/" + aname + "/" + params_.direct_status_topic, rclcpp::SystemDefaultsQoS(),
         [this, beacon_id](const coug_interfaces::msg::AgentStatus::SharedPtr msg) {
-          directStatusCallback(beacon_id, msg);
+          auto it = agents_.find(beacon_id);
+          if (it == agents_.end()) return;
+          it->second.last_direct_heartbeat_sec = now().seconds();
+          publishStatus(it->second, *msg, "DIRECT");
         });
   }
 
@@ -102,18 +105,16 @@ void BaseStatusPollerNode::registerAgent(const std::string& aname, uint8_t beaco
   beacon_order_.push_back(beacon_id);
 
   if (params_.publish_diagnostics) {
-    diagnostic_updater_.add(diag_prefix + "Status Poll (" + aname + ")",
+    diagnostic_updater_.add(diag_prefix + "Polling Status (" + aname + ")",
                             [this, beacon_id](diagnostic_updater::DiagnosticStatusWrapper& stat) {
-                              checkAgentStatus(stat, beacon_id);
+                              checkAgentPollStatus(stat, beacon_id);
                             });
   }
 
   RCLCPP_INFO(get_logger(), "Registered agent '%s' (beacon %d).", aname.c_str(), beacon_id);
 }
 
-void BaseStatusPollerNode::onTick() {
-  // Backup timeout: fires if the modem never reports a TIMEOUT (see
-  // modemCmdUpdateCallback) and no response arrives in time.
+void BaseStatusPollerNode::tickCallback() {
   if (awaiting_response_ && (now() - request_time_).seconds() > params_.response_timeout_sec) {
     failPendingRequest("timed out (no modem report)");
   }
@@ -127,28 +128,29 @@ void BaseStatusPollerNode::pollNextIfReady() {
   AgentEntry& agent = agents_.at(beacon_order_[next_index_]);
   next_index_ = (next_index_ + 1) % beacon_order_.size();
 
-  if (params_.enable_direct_comms && directStatusPoll(agent)) {
-    next_poll_allowed_ = now() + rclcpp::Duration::from_seconds(params_.poll_period_sec);
+  const bool direct_link_up =
+      agent.last_direct_heartbeat_sec > 0.0 &&
+      now().seconds() - agent.last_direct_heartbeat_sec < params_.direct_timeout_sec;
+  if (params_.enable_direct_comms && direct_link_up) {
+    scheduleNextPoll();
     return;
   }
   if (params_.enable_acoustic_comms) {
-    acousticStatusPoll(agent);
+    sendAcousticPoll(agent);
     return;
   }
+  scheduleNextPoll();
+}
+
+void BaseStatusPollerNode::scheduleNextPoll() {
   next_poll_allowed_ = now() + rclcpp::Duration::from_seconds(params_.poll_period_sec);
 }
 
-bool BaseStatusPollerNode::directStatusPoll(AgentEntry& agent) {
-  // A live direct link relays status from directStatusCallback (push), so this
-  // agent does not need to be polled acoustically.
-  return agent.direct_sub && agent.direct_sub->get_publisher_count() > 0;
-}
-
-void BaseStatusPollerNode::acousticStatusPoll(AgentEntry& agent) {
+void BaseStatusPollerNode::sendAcousticPoll(AgentEntry& agent) {
   seatrac_interfaces::msg::ModemSend send;
   send.msg_id = CID_DAT_SEND;
   send.dest_id = agent.beacon_id;
-  send.msg_type = MSG_REQ;  // request a response (the agent's queued status)
+  send.msg_type = MSG_REQ;
   send.packet_len = 1;
   send.packet_data[0] = static_cast<uint8_t>(MsgId::REQ_STATUS);
   modem_send_pub_->publish(send);
@@ -156,12 +158,6 @@ void BaseStatusPollerNode::acousticStatusPoll(AgentEntry& agent) {
   awaiting_response_ = true;
   pending_beacon_ = agent.beacon_id;
   request_time_ = now();
-}
-
-void BaseStatusPollerNode::directStatusCallback(
-    uint8_t beacon_id, const coug_interfaces::msg::AgentStatus::SharedPtr msg) {
-  auto it = agents_.find(beacon_id);
-  if (it != agents_.end()) publishStatus(it->second, *msg, "DIRECT");
 }
 
 void BaseStatusPollerNode::publishStatus(AgentEntry& agent,
@@ -172,7 +168,6 @@ void BaseStatusPollerNode::publishStatus(AgentEntry& agent,
   agent.status_pub->publish(status);
 
   agent.responses++;
-  agent.last_ok = true;
   agent.last_transport = transport;
   agent.last_response_time = now();
 }
@@ -189,22 +184,18 @@ void BaseStatusPollerNode::modemRecCallback(
 
   coug_interfaces::msg::AgentStatus status;
   if (!utils::decodeStatus(msg->packet_data.data(), msg->packet_len, status)) {
-    // Addressed to us from the polled beacon but not a status response; keep
-    // waiting for the real one (or let it time out).
     return;
   }
 
   publishStatus(it->second, status, "ACOUSTIC");
 
   awaiting_response_ = false;
-  next_poll_allowed_ = now() + rclcpp::Duration::from_seconds(params_.poll_period_sec);
+  scheduleNextPoll();
   pollNextIfReady();
 }
 
 void BaseStatusPollerNode::modemCmdUpdateCallback(
     const seatrac_interfaces::msg::ModemCmdUpdate::SharedPtr msg) {
-  // The modem reports a response timeout for the beacon we are polling; abandon
-  // the request now instead of waiting out the backup timer in onTick().
   if (!awaiting_response_ || msg->target_id != pending_beacon_) return;
   if (msg->command_status_code != CST_XCVR_RESP_TIMEOUT) return;
 
@@ -214,39 +205,26 @@ void BaseStatusPollerNode::modemCmdUpdateCallback(
 
 void BaseStatusPollerNode::failPendingRequest(const char* reason) {
   RCLCPP_WARN(get_logger(), "Status request to beacon %d %s.", pending_beacon_, reason);
-  recordTimeout(pending_beacon_);
   awaiting_response_ = false;
-  next_poll_allowed_ = now() + rclcpp::Duration::from_seconds(params_.poll_period_sec);
+  scheduleNextPoll();
 }
 
-void BaseStatusPollerNode::recordTimeout(uint8_t beacon_id) {
-  auto it = agents_.find(beacon_id);
-  if (it == agents_.end()) return;
-  it->second.timeouts++;
-  it->second.last_ok = false;
-}
-
-void BaseStatusPollerNode::checkAgentStatus(diagnostic_updater::DiagnosticStatusWrapper& stat,
-                                            uint8_t beacon_id) {
+void BaseStatusPollerNode::checkAgentPollStatus(diagnostic_updater::DiagnosticStatusWrapper& stat,
+                                                uint8_t beacon_id) {
   const AgentEntry& a = agents_.at(beacon_id);
 
-  if (a.responses == 0 && a.timeouts == 0) {
-    stat.summary(diagnostic_msgs::msg::DiagnosticStatus::OK, "Waiting for first response.");
-    return;
-  }
+  double time_since = (a.responses > 0) ? (now() - a.last_response_time).seconds() : -1.0;
+  if (a.responses > 0) stat.add("Transport", a.last_transport);
+  stat.add("Time Since Last (s)", time_since);
 
-  stat.add("Responses", std::to_string(a.responses));
-  stat.add("Timeouts", std::to_string(a.timeouts));
-  if (a.responses > 0) {
-    stat.add("Transport", a.last_transport);
-    stat.add("Last response", std::to_string((now() - a.last_response_time).seconds()) + " s ago");
-  }
+  double direct_heartbeat_age =
+      (a.last_direct_heartbeat_sec > 0.0) ? (now().seconds() - a.last_direct_heartbeat_sec) : -1.0;
+  stat.add("Time Since Direct Heartbeat (s)", direct_heartbeat_age);
 
-  if (a.last_ok) {
-    stat.summary(diagnostic_msgs::msg::DiagnosticStatus::OK,
-                 "Receiving status from " + a.name + ".");
+  if (a.responses == 0 || time_since > params_.diagnostic_timeout_sec) {
+    stat.summary(diagnostic_msgs::msg::DiagnosticStatus::WARN, a.name + " is offline.");
   } else {
-    stat.summary(diagnostic_msgs::msg::DiagnosticStatus::WARN, "No response from " + a.name + ".");
+    stat.summary(diagnostic_msgs::msg::DiagnosticStatus::OK, a.name + " is online.");
   }
 }
 

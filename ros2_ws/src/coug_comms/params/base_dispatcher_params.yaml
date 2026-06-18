@@ -8,12 +8,18 @@ base_dispatcher_node:
     default_value: 5
     validation:
       gt<>: [0]
+
   enable_direct_comms:
     type: bool
     default_value: true
   enable_acoustic_comms:
     type: bool
     default_value: true
+  direct_timeout_sec:
+    type: double
+    default_value: 2.0
+    validation:
+      gt<>: [0.0]
 
   # --- ROS Topics and Services ---
   modem_send_topic:
@@ -53,6 +59,11 @@ base_dispatcher_node:
     validation:
       not_empty<>: []
 
+  direct_status_topic:
+    type: string
+    default_value: "status"
+    validation:
+      not_empty<>: []
   direct_start_service:
     type: string
     default_value: "start"
