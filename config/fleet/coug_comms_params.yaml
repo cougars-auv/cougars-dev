@@ -66,3 +66,19 @@
       # --- ROS Topics ---
       modem_send_topic: "modem_send"
       status_topic: "status"
+
+  base_status_extractor_node:
+    ros__parameters:
+      # --- ROS Topics ---
+      status_topic: "base/status"
+      odom_topic: "base/odometry/global"
+      depth_topic: "base/odometry/depth"
+      imu_topic: "base/imu/data"
+
+  auv_status_bundler_node:
+    ros__parameters:
+      # --- ROS Topics ---
+      status_topic: "status"
+      odom_topic: "odometry/global"
+      depth_topic: "odometry/depth"
+      imu_topic: "imu/data"

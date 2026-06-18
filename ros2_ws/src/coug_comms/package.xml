@@ -18,6 +18,8 @@
   <depend>seatrac_interfaces</depend>
   <depend>coug_interfaces</depend>
   <depend>geometry_msgs</depend>
+  <depend>nav_msgs</depend>
+  <depend>sensor_msgs</depend>
   <depend>eigen</depend>
 
   <test_depend>ament_cmake_gtest</test_depend>

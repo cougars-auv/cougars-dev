@@ -102,6 +102,19 @@ def launch_setup(context, *args, **kwargs) -> list:
                 },
             ],
         ),
+        Node(
+            package="coug_comms",
+            executable="base_status_extractor",
+            name="base_status_extractor_node",
+            namespace="base_station",
+            parameters=[
+                fleet_params,
+                {
+                    "agent_namespaces": agent_namespaces,
+                    "use_sim_time": use_sim_time,
+                },
+            ],
+        ),
     ]
 
 

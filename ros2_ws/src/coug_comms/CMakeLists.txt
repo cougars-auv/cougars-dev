@@ -37,12 +37,24 @@ generate_parameter_library(
   "params/auv_status_stager_params.yaml"
 )
 
+generate_parameter_library(
+  auv_status_bundler_parameters
+  "params/auv_status_bundler_params.yaml"
+)
+
+generate_parameter_library(
+  base_status_extractor_parameters
+  "params/base_status_extractor_params.yaml"
+)
+
 # --- Component Library ---
 ament_auto_add_library(coug_comms_component SHARED
   src/base_dispatcher.cpp
   src/auv_receiver.cpp
   src/base_status_poller.cpp
   src/auv_status_stager.cpp
+  src/auv_status_bundler.cpp
+  src/base_status_extractor.cpp
 )
 
 target_include_directories(coug_comms_component PUBLIC
@@ -54,6 +66,8 @@ target_link_libraries(coug_comms_component
   auv_receiver_parameters
   base_status_poller_parameters
   auv_status_stager_parameters
+  auv_status_bundler_parameters
+  base_status_extractor_parameters
   Eigen3::Eigen
 )
 
@@ -62,6 +76,8 @@ rclcpp_components_register_nodes(coug_comms_component
   "coug_comms::AuvReceiverNode"
   "coug_comms::BaseStatusPollerNode"
   "coug_comms::AuvStatusStagerNode"
+  "coug_comms::AuvStatusBundlerNode"
+  "coug_comms::BaseStatusExtractorNode"
 )
 
 # --- Executables ---
@@ -76,6 +92,12 @@ target_link_libraries(base_status_poller coug_comms_component)
 
 ament_auto_add_executable(auv_status_stager src/auv_status_stager_node.cpp)
 target_link_libraries(auv_status_stager coug_comms_component)
+
+ament_auto_add_executable(auv_status_bundler src/auv_status_bundler_node.cpp)
+target_link_libraries(auv_status_bundler coug_comms_component)
+
+ament_auto_add_executable(base_status_extractor src/base_status_extractor_node.cpp)
+target_link_libraries(base_status_extractor coug_comms_component)
 
 # --- Testing ---
 if(BUILD_TESTING)

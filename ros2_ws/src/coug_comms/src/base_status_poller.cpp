@@ -117,7 +117,7 @@ void BaseStatusPollerNode::registerAgent(const std::string& aname, uint8_t beaco
 
 void BaseStatusPollerNode::tickCallback() {
   if (awaiting_response_ && (now() - request_time_).seconds() > params_.response_timeout_sec) {
-    failPendingRequest("missed driver report, node-level response timeout.");
+    failPendingRequest("missed driver report, node-level response timeout");
   }
   pollNextIfReady();
 }
@@ -222,7 +222,7 @@ void BaseStatusPollerNode::modemCmdUpdateCallback(
   if (!awaiting_response_ || msg->target_id != pending_beacon_) return;
   if (msg->command_status_code != CST_XCVR_RESP_TIMEOUT) return;
 
-  failPendingRequest("driver-level response timeout.");
+  failPendingRequest("driver-level response timeout");
   pollNextIfReady();
 }
 

@@ -1,0 +1,22 @@
+base_status_extractor_node:
+  # --- ROS Topics ---
+  status_topic:
+    type: string
+    default_value: "base/status"
+    validation:
+      not_empty<>: []
+  odom_topic:
+    type: string
+    default_value: "extracted/odom"
+    validation:
+      not_empty<>: []
+  depth_topic:
+    type: string
+    default_value: "extracted/depth"
+    validation:
+      not_empty<>: []
+  imu_topic:
+    type: string
+    default_value: "extracted/imu"
+    validation:
+      not_empty<>: []

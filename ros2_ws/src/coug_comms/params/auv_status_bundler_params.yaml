@@ -1,0 +1,22 @@
+auv_status_bundler_node:
+  # --- ROS Topics ---
+  status_topic:
+    type: string
+    default_value: "status"
+    validation:
+      not_empty<>: []
+  odom_topic:
+    type: string
+    default_value: "odometry/filtered"
+    validation:
+      not_empty<>: []
+  depth_topic:
+    type: string
+    default_value: "odometry/depth"
+    validation:
+      not_empty<>: []
+  imu_topic:
+    type: string
+    default_value: "imu/data"
+    validation:
+      not_empty<>: []
