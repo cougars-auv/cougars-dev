@@ -7,7 +7,7 @@ auv_status_bundler_node:
       not_empty<>: []
   odom_topic:
     type: string
-    default_value: "odometry/filtered"
+    default_value: "odometry/global"
     validation:
       not_empty<>: []
   depth_topic:

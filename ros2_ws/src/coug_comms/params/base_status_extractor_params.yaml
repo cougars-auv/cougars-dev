@@ -7,16 +7,16 @@ base_status_extractor_node:
       not_empty<>: []
   odom_topic:
     type: string
-    default_value: "extracted/odom"
+    default_value: "base/odometry/global"
     validation:
       not_empty<>: []
   depth_topic:
     type: string
-    default_value: "extracted/depth"
+    default_value: "base/odometry/depth"
     validation:
       not_empty<>: []
   imu_topic:
     type: string
-    default_value: "extracted/imu"
+    default_value: "base/imu/data"
     validation:
       not_empty<>: []
