@@ -33,10 +33,10 @@ enum class MsgId : uint8_t {
   SRV_HOME = 0x13,
   SRV_EMERGENCY_STOP = 0x14,
   SRV_EMERGENCY_SURFACE = 0x15,
-  REQ_STATUS = 0x20,
-  MSG_KEY_CONTROL = 0x30,
-  MSG_ORIGIN = 0x31,
-  MSG_WAYPOINTS = 0x32,
+  MSG_KEY_CONTROL = 0x20,
+  MSG_ORIGIN = 0x21,
+  MSG_WAYPOINTS = 0x22,
+  REQ_STATUS = 0x30,
 };
 
 /**
@@ -58,14 +58,14 @@ inline std::string messageType(MsgId msg) {
       return "SRV_EMERGENCY_STOP";
     case MsgId::SRV_EMERGENCY_SURFACE:
       return "SRV_EMERGENCY_SURFACE";
-    case MsgId::REQ_STATUS:
-      return "REQ_STATUS";
     case MsgId::MSG_KEY_CONTROL:
       return "MSG_KEY_CONTROL";
     case MsgId::MSG_ORIGIN:
       return "MSG_ORIGIN";
     case MsgId::MSG_WAYPOINTS:
       return "MSG_WAYPOINTS";
+    case MsgId::REQ_STATUS:
+      return "REQ_STATUS";
   }
   return "MSG_UNKNOWN";
 }
