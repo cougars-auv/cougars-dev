@@ -75,6 +75,8 @@ void BaseStatusExtractorNode::statusCallback(
 
   nav_msgs::msg::Odometry odom_msg;
   odom_msg.header = msg->header;
+  odom_msg.header.frame_id = "map";
+  odom_msg.child_frame_id = aname + "/base_link";
   odom_msg.pose.pose = msg->local_odometry;
   odom_msg.pose.covariance = msg->odometry_covariance;
   it->second.odom_pub->publish(odom_msg);
