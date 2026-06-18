@@ -198,7 +198,7 @@ void BaseDispatcherNode::acousticServiceDispatch(
 
   std_srvs::srv::Trigger::Response res;
   res.success = true;
-  res.message = utils::messageType(cmd) + " queued (acomms)";
+  res.message = utils::messageType(cmd) + " queued";
   service->send_response(*header, res);
   RCLCPP_INFO(get_logger(), "%s", res.message.c_str());
 }
