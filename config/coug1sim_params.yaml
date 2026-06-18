@@ -1,8 +1,4 @@
 /coug1sim:
-  coug_comms_base_launch:
-    ros__parameters:
-      beacon_id: 1
-
   bt_helm_node:
     ros__parameters:
       publish_groot2: true

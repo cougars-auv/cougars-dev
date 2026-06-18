@@ -21,8 +21,8 @@
     # - "LevenbergMarquardt": Batch full trajectory smoothing.
 
     solver_type: "IncrementalFixedLagSmoother"
-    max_update_rate: -1.0 # Maximum keyframe rate (in Hz). -1.0 for no limit.
-    max_opt_rate: -1.0 # Maximum optimization rate (in Hz). -1.0 for no limit.
+    max_update_rate_hz: -1.0 # [Hz] Maximum keyframe rate. -1.0 for no limit.
+    max_opt_rate_hz: -1.0 # [Hz] Maximum optimization rate. -1.0 for no limit.
     smoother_lag: 20.0 # The time window (in seconds) of past states to smooth over.
     relinearize_threshold: 0.1 # Lower values are more accurate but slower.
     relinearize_skip: 1 # Number of updates to skip between relinearizations.
@@ -37,7 +37,7 @@
 
     keyframe_source: "DVL"
     backup_keyframe_source: "Depth" # Fallback source if the primary source drops out.
-    keyframe_timeout: 0.5 # [s] Time before determining the primary source has dropped out.
+    keyframe_timeout_sec: 0.5 # [s] Time before determining the primary source has dropped out.
     keyframe_timer_hz: 10.0 # [Hz] Period of the periodic timer (if "Timer" is used).
 
     # --- ROS Topics and Frames ---
@@ -84,7 +84,7 @@
       gyro_bias_rw_sigmas: [0.0000391, 0.0000391, 0.0000391] # [rad/s/√s] Continuous-time spectral density sigmas for gyroscope bias random walk.
       integration_covariance: 0.00001 # A small covariance for the integration process itself.
       gravity: [0.0, 0.0, -9.8] # [m/s^2]
-      diagnostic_timeout: 1.0 # [s]
+      diagnostic_timeout_sec: 1.0 # [s]
 
     gps:
       enable_gps: true
@@ -98,7 +98,7 @@
       use_parameter_covariance: false
       parameter_covariance:
         position_noise_sigmas: [0.015, 0.015] # [m] GPS position uncertainty sigmas.
-      diagnostic_timeout: 2.0 # [s]
+      diagnostic_timeout_sec: 2.0 # [s]
       robust_kernel: "None"
       robust_k: 1.345
 
@@ -114,7 +114,7 @@
       use_parameter_covariance: false
       parameter_covariance:
         position_z_noise_sigma: 0.02 # [m] Depth sensor Z-position uncertainty sigma.
-      diagnostic_timeout: 1.0 # [s]
+      diagnostic_timeout_sec: 1.0 # [s]
       robust_kernel: "None"
       robust_k: 1.345
 
@@ -135,7 +135,7 @@
       # North: 20,842.3 nT, East: 3,963.4 nT, Vertical: 45,767.8 nT
       # NED: [X, Y, Z] -> ENU: [Y, X, -Z]
       reference_field: [0.07857, 0.41316, -0.90726] # [normalized]
-      diagnostic_timeout: 1.0 # [s]
+      diagnostic_timeout_sec: 1.0 # [s]
       robust_kernel: "None"
       robust_k: 1.345
 
@@ -153,7 +153,7 @@
         orientation_noise_sigmas: [0.00349, 0.00349, 0.01745] # [rad] AHRS orientation uncertainty sigmas [roll, pitch, yaw].
       # https://www.ngdc.noaa.gov/geomag/calculators/magcalc.shtml#declination
       mag_declination_radians: 0.0
-      diagnostic_timeout: 1.0 # [s]
+      diagnostic_timeout_sec: 1.0 # [s]
       robust_kernel: "None"
       robust_k: 1.345
 
@@ -169,7 +169,7 @@
       use_parameter_covariance: false
       parameter_covariance:
         velocity_noise_sigmas: [0.02, 0.02, 0.02] # [m/s] DVL body-velocity uncertainty sigmas.
-      diagnostic_timeout: 0.25 # [s]
+      diagnostic_timeout_sec: 0.25 # [s]
       robust_kernel: "None"
       robust_k: 1.345
 
@@ -192,13 +192,13 @@
       mass: [31.87, 60.46, 60.46] # [kg] Mass of the vehicle (diagonal)
       linear_drag: [1.59, 3.02, 3.02] # Linear drag coefficient (diagonal)
       quad_drag: [6.11, 196.13, 196.13] # Quadratic drag coefficient (diagonal)
-      diagnostic_timeout: 1.0 # [s]
+      diagnostic_timeout_sec: 1.0 # [s]
       robust_kernel: "None"
       robust_k: 1.345
 
     # --- Initial State Priors ---
     prior:
-      initialization_duration: 5.0 # [s] Time duration to collect and average data before initializing.
+      initialization_duration_sec: 5.0 # [s] Time duration to collect and average data before initializing.
 
       # If true, forces the initial state to be set by the values below.
       # The parameter priors should be set at the base frame with respect to the map frame.
@@ -226,11 +226,11 @@
     ros__parameters:
       # --- Node Settings ---
       publish_diagnostics: true # Publish diagnostic information.
-      diagnostic_timeout: 0.5 # [s]
+      diagnostic_timeout_sec: 0.5 # [s]
 
       simulate_dropout: false
-      dropout_frequency: 0.033 # [Hz] Frequency of the dropout cycle (1/30).
-      dropout_duration: 5.0 # [s] Duration of the dropout.
+      dropout_frequency_hz: 0.033 # [Hz] Frequency of the dropout cycle (1/30).
+      dropout_duration_sec: 5.0 # [s] Duration of the dropout.
 
       fom_valid_threshold: 0.02 # Below this is considered a valid velocity measurement.
       # TURTLMap-based FOM covariance calculation
@@ -247,7 +247,7 @@
     ros__parameters:
       # --- Node Settings ---
       publish_diagnostics: true # Publish diagnostic information.
-      diagnostic_timeout: 0.5 # [s]
+      diagnostic_timeout_sec: 0.5 # [s]
 
       # --- ROS Topics and Frames ---
       input_topic: "dvl/position"
@@ -259,7 +259,7 @@
     ros__parameters:
       # --- Node Settings ---
       publish_diagnostics: true # Publish diagnostic information.
-      diagnostic_timeout: 0.5 # [s]
+      diagnostic_timeout_sec: 0.5 # [s]
 
       pressure_scale: 1.0
       atmospheric_pressure: 101325.0 # [Pa]
@@ -279,10 +279,10 @@
     ros__parameters:
       # --- Node Settings ---
       publish_diagnostics: true # Publish diagnostic information.
-      diagnostic_timeout: 1.0 # [s]
+      diagnostic_timeout_sec: 1.0 # [s]
 
       set_origin: false # Whether this node owns and publishes the ENU origin.
-      origin_pub_rate: 1.0 # [Hz] Rate to republish the origin.
+      origin_pub_rate_hz: 1.0 # [Hz] Rate to republish the origin.
 
       use_parameter_origin: true
       origin_latitude: 40.33940 # [deg]
@@ -300,7 +300,7 @@
     ros__parameters:
       # --- Node Settings ---
       publish_diagnostics: true # Publish diagnostic information.
-      diagnostic_timeout: 0.5 # [s]
+      diagnostic_timeout_sec: 0.5 # [s]
 
       accel_noise_sigmas: [0.0078, 0.0078, 0.0078] # [m/s^2] Accelerometer measurement noise sigmas.
       gyro_noise_sigmas: [0.0012, 0.0012, 0.0012] # [rad/s] Gyroscope measurement noise sigmas.
