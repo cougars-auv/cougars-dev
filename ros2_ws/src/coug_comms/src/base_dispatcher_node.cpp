@@ -13,8 +13,8 @@
 // limitations under the License.
 
 /**
- * @file base_status_relay_node.cpp
- * @brief Standalone executable for the BaseStatusRelayNode.
+ * @file base_dispatcher_node.cpp
+ * @brief Standalone executable for the BaseDispatcherNode.
  * @author Nelson Durrant
  * @date June 2026
  */
@@ -22,11 +22,11 @@
 #include <memory>
 #include <rclcpp/rclcpp.hpp>
 
-#include "coug_comms/base_status_relay.hpp"
+#include "coug_comms/base_dispatcher.hpp"
 
 int main(int argc, char* argv[]) {
   rclcpp::init(argc, argv);
-  auto node = std::make_shared<coug_comms::BaseStatusRelayNode>(rclcpp::NodeOptions());
+  auto node = std::make_shared<coug_comms::BaseDispatcherNode>(rclcpp::NodeOptions());
   rclcpp::spin(node);
   rclcpp::shutdown();
   return 0;

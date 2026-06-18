@@ -13,13 +13,13 @@
 // limitations under the License.
 
 /**
- * @file auv_status_relay.cpp
- * @brief Implementation of the AuvStatusRelayNode.
+ * @file auv_status_stager.cpp
+ * @brief Implementation of the AuvStatusStagerNode.
  * @author Nelson Durrant
  * @date June 2026
  */
 
-#include "coug_comms/auv_status_relay.hpp"
+#include "coug_comms/auv_status_stager.hpp"
 
 #include <array>
 #include <cstdint>
@@ -33,12 +33,12 @@ namespace coug_comms {
 using utils::BEACON_ALL;
 using utils::CID_DAT_QUEUE_SET;
 
-AuvStatusRelayNode::AuvStatusRelayNode(const rclcpp::NodeOptions& options)
-    : Node("auv_status_relay_node", options), diagnostic_updater_(this) {
-  RCLCPP_INFO(get_logger(), "Starting AUV Status Relay Node...");
+AuvStatusStagerNode::AuvStatusStagerNode(const rclcpp::NodeOptions& options)
+    : Node("auv_status_stager_node", options), diagnostic_updater_(this) {
+  RCLCPP_INFO(get_logger(), "Starting AUV Status Stager Node...");
 
   param_listener_ =
-      std::make_shared<auv_status_relay_node::ParamListener>(get_node_parameters_interface());
+      std::make_shared<auv_status_stager_node::ParamListener>(get_node_parameters_interface());
   params_ = param_listener_->get_params();
 
   // --- ROS Interfaces ---
@@ -46,22 +46,22 @@ AuvStatusRelayNode::AuvStatusRelayNode(const rclcpp::NodeOptions& options)
       params_.modem_send_topic, rclcpp::SystemDefaultsQoS());
   status_sub_ = create_subscription<coug_interfaces::msg::AgentStatus>(
       params_.status_topic, rclcpp::SystemDefaultsQoS(),
-      std::bind(&AuvStatusRelayNode::statusCallback, this, std::placeholders::_1));
+      std::bind(&AuvStatusStagerNode::statusCallback, this, std::placeholders::_1));
 
   // --- ROS Diagnostics ---
   if (params_.publish_diagnostics) {
     std::string ns = this->get_namespace();
     std::string clean_ns = (ns == "/") ? "" : ns;
-    diagnostic_updater_.setHardwareID(clean_ns + "/auv_status_relay_node");
+    diagnostic_updater_.setHardwareID(clean_ns + "/auv_status_stager_node");
 
     std::string prefix = clean_ns.empty() ? "" : "[" + clean_ns + "] ";
-    diagnostic_updater_.add(prefix + "Status Staging", this, &AuvStatusRelayNode::checkStatus);
+    diagnostic_updater_.add(prefix + "Status Staging", this, &AuvStatusStagerNode::checkStatus);
   }
 
   RCLCPP_INFO(get_logger(), "Startup complete! Waiting for status updates...");
 }
 
-void AuvStatusRelayNode::statusCallback(const coug_interfaces::msg::AgentStatus::SharedPtr msg) {
+void AuvStatusStagerNode::statusCallback(const coug_interfaces::msg::AgentStatus::SharedPtr msg) {
   last_status_time_ = this->get_clock()->now().seconds();
 
   seatrac_interfaces::msg::ModemSend send;
@@ -73,7 +73,7 @@ void AuvStatusRelayNode::statusCallback(const coug_interfaces::msg::AgentStatus:
   modem_send_pub_->publish(send);
 }
 
-void AuvStatusRelayNode::checkStatus(diagnostic_updater::DiagnosticStatusWrapper& stat) {
+void AuvStatusStagerNode::checkStatus(diagnostic_updater::DiagnosticStatusWrapper& stat) {
   double time_since =
       (last_status_time_ > 0.0) ? (this->get_clock()->now().seconds() - last_status_time_) : -1.0;
   stat.add("Time Since Last (s)", time_since);
@@ -87,4 +87,4 @@ void AuvStatusRelayNode::checkStatus(diagnostic_updater::DiagnosticStatusWrapper
 
 }  // namespace coug_comms
 
-RCLCPP_COMPONENTS_REGISTER_NODE(coug_comms::AuvStatusRelayNode)
+RCLCPP_COMPONENTS_REGISTER_NODE(coug_comms::AuvStatusStagerNode)

@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /**
- * @file base_status_relay.hpp
+ * @file base_status_poller.hpp
  * @brief ROS 2 node for polling AUV statuses over the acoustic modem.
  * @author Nelson Durrant
  * @date June 2026
@@ -32,16 +32,16 @@
 #include <unordered_map>
 #include <vector>
 
-#include "coug_comms/base_status_relay_parameters.hpp"
+#include "coug_comms/base_status_poller_parameters.hpp"
 #include "coug_interfaces/msg/agent_status.hpp"
 
 namespace coug_comms {
 
 /**
- * @class BaseStatusRelayNode
+ * @class BaseStatusPollerNode
  * @brief ROS 2 node for polling AUV statuses over the acoustic modem.
  */
-class BaseStatusRelayNode : public rclcpp::Node {
+class BaseStatusPollerNode : public rclcpp::Node {
  protected:
   /**
    * @struct AgentEntry
@@ -64,7 +64,7 @@ class BaseStatusRelayNode : public rclcpp::Node {
    * @brief Constructs the node and sets up status polling.
    * @param options The node options.
    */
-  explicit BaseStatusRelayNode(const rclcpp::NodeOptions& options);
+  explicit BaseStatusPollerNode(const rclcpp::NodeOptions& options);
 
  protected:
   /**
@@ -91,13 +91,13 @@ class BaseStatusRelayNode : public rclcpp::Node {
    * @param agent The target agent.
    * @return True if a direct link is available; false to fall back to acoustics.
    */
-  bool directStatusRelay(AgentEntry& agent);
+  bool directStatusPoll(AgentEntry& agent);
 
   /**
    * @brief Sends an acoustic status request to one agent and marks the channel busy.
    * @param agent The target agent.
    */
-  void acousticStatusRelay(AgentEntry& agent);
+  void acousticStatusPoll(AgentEntry& agent);
 
   /**
    * @brief Republishes a status received over an agent's direct ROS link.
@@ -156,8 +156,8 @@ class BaseStatusRelayNode : public rclcpp::Node {
   diagnostic_updater::Updater diagnostic_updater_;
 
   // --- Parameters ---
-  std::shared_ptr<base_status_relay_node::ParamListener> param_listener_;
-  base_status_relay_node::Params params_;
+  std::shared_ptr<base_status_poller_node::ParamListener> param_listener_;
+  base_status_poller_node::Params params_;
 
   // --- State ---
   std::vector<uint8_t> beacon_order_;

@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /**
- * @file auv_status_relay.hpp
+ * @file auv_status_stager.hpp
  * @brief ROS 2 node for staging the AUV's status for acoustic relay.
  * @author Nelson Durrant
  * @date June 2026
@@ -26,22 +26,22 @@
 #include <rclcpp/rclcpp.hpp>
 #include <seatrac_interfaces/msg/modem_send.hpp>
 
-#include "coug_comms/auv_status_relay_parameters.hpp"
+#include "coug_comms/auv_status_stager_parameters.hpp"
 #include "coug_interfaces/msg/agent_status.hpp"
 
 namespace coug_comms {
 
 /**
- * @class AuvStatusRelayNode
+ * @class AuvStatusStagerNode
  * @brief ROS 2 node for staging the AUV's status for acoustic relay.
  */
-class AuvStatusRelayNode : public rclcpp::Node {
+class AuvStatusStagerNode : public rclcpp::Node {
  public:
   /**
    * @brief Constructs the node and sets up status staging.
    * @param options The node options.
    */
-  explicit AuvStatusRelayNode(const rclcpp::NodeOptions& options);
+  explicit AuvStatusStagerNode(const rclcpp::NodeOptions& options);
 
  protected:
   /**
@@ -62,8 +62,8 @@ class AuvStatusRelayNode : public rclcpp::Node {
   diagnostic_updater::Updater diagnostic_updater_;
 
   // --- Parameters ---
-  std::shared_ptr<auv_status_relay_node::ParamListener> param_listener_;
-  auv_status_relay_node::Params params_;
+  std::shared_ptr<auv_status_stager_node::ParamListener> param_listener_;
+  auv_status_stager_node::Params params_;
 
   // --- State ---
   double last_status_time_{0.0};

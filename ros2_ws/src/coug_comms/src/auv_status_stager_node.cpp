@@ -13,8 +13,8 @@
 // limitations under the License.
 
 /**
- * @file auv_status_relay_node.cpp
- * @brief Standalone executable for the AuvStatusRelayNode.
+ * @file auv_status_stager_node.cpp
+ * @brief Standalone executable for the AuvStatusStagerNode.
  * @author Nelson Durrant
  * @date June 2026
  */
@@ -22,11 +22,11 @@
 #include <memory>
 #include <rclcpp/rclcpp.hpp>
 
-#include "coug_comms/auv_status_relay.hpp"
+#include "coug_comms/auv_status_stager.hpp"
 
 int main(int argc, char* argv[]) {
   rclcpp::init(argc, argv);
-  auto node = std::make_shared<coug_comms::AuvStatusRelayNode>(rclcpp::NodeOptions());
+  auto node = std::make_shared<coug_comms::AuvStatusStagerNode>(rclcpp::NodeOptions());
   rclcpp::spin(node);
   rclcpp::shutdown();
   return 0;

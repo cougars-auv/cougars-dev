@@ -13,8 +13,8 @@
 // limitations under the License.
 
 /**
- * @file auv_cmd_relay.hpp
- * @brief ROS 2 node for receiving base station commands on the AUV.
+ * @file auv_receiver.hpp
+ * @brief ROS 2 node for receiving base station services on the AUV.
  * @author Nelson Durrant
  * @date June 2026
  */
@@ -29,26 +29,26 @@
 #include <std_srvs/srv/trigger.hpp>
 #include <string>
 
-#include "coug_comms/auv_cmd_relay_parameters.hpp"
+#include "coug_comms/auv_receiver_parameters.hpp"
 #include "coug_comms/utils/comms_protocol.hpp"
 
 namespace coug_comms {
 
 /**
- * @class AuvCmdRelayNode
- * @brief ROS 2 node for receiving base station commands on the AUV.
+ * @class AuvReceiverNode
+ * @brief ROS 2 node for receiving base station services on the AUV.
  */
-class AuvCmdRelayNode : public rclcpp::Node {
+class AuvReceiverNode : public rclcpp::Node {
  public:
   /**
-   * @brief Constructs the node and sets up base station command reception.
+   * @brief Constructs the node and sets up base station service reception.
    * @param options The node options.
    */
-  explicit AuvCmdRelayNode(const rclcpp::NodeOptions& options);
+  explicit AuvReceiverNode(const rclcpp::NodeOptions& options);
 
  protected:
   /**
-   * @brief Dispatches incoming commands to the appropriate service.
+   * @brief Dispatches an incoming service request to the appropriate client.
    * @param msg Incoming modem message.
    */
   void modemRecCallback(const seatrac_interfaces::msg::ModemRec::SharedPtr msg);
@@ -56,23 +56,22 @@ class AuvCmdRelayNode : public rclcpp::Node {
   /**
    * @brief Calls a Trigger service and logs the outcome.
    * @param client The service client to call.
-   * @param cmd The command message ID (for logging).
+   * @param cmd The service message ID (for logging).
    */
-  void callCommandService(rclcpp::Client<std_srvs::srv::Trigger>::SharedPtr client,
-                          utils::MsgId cmd);
+  void callService(rclcpp::Client<std_srvs::srv::Trigger>::SharedPtr client, utils::MsgId cmd);
 
   /**
-   * @brief Records a command outcome in the rolling history, trimming to the last few.
-   * @param command The name of the command that was relayed.
+   * @brief Records a service outcome in the rolling history, trimming to the last few.
+   * @param service The name of the service that was relayed.
    * @param succeeded Whether the service call succeeded.
    */
-  void recordCommandResult(const std::string& command, bool succeeded);
+  void recordServiceResult(const std::string& service, bool succeeded);
 
   /**
-   * @brief Diagnostic task reporting the last few commands received and their results.
+   * @brief Diagnostic task reporting the last few services received and their results.
    * @param stat The diagnostic status wrapper.
    */
-  void checkCommandStatus(diagnostic_updater::DiagnosticStatusWrapper& stat);
+  void checkServiceStatus(diagnostic_updater::DiagnosticStatusWrapper& stat);
 
   // --- ROS Interfaces ---
   rclcpp::Subscription<seatrac_interfaces::msg::ModemRec>::SharedPtr modem_rec_sub_;
@@ -85,19 +84,19 @@ class AuvCmdRelayNode : public rclcpp::Node {
   diagnostic_updater::Updater diagnostic_updater_;
 
   // --- Parameters ---
-  std::shared_ptr<auv_cmd_relay_node::ParamListener> param_listener_;
-  auv_cmd_relay_node::Params params_;
+  std::shared_ptr<auv_receiver_node::ParamListener> param_listener_;
+  auv_receiver_node::Params params_;
 
   // --- State ---
   /**
-   * @struct CommandResult
-   * @brief A single relayed command and whether its service call succeeded.
+   * @struct ServiceResult
+   * @brief A single relayed service and whether its call succeeded.
    */
-  struct CommandResult {
-    std::string command;
+  struct ServiceResult {
+    std::string service;
     bool succeeded;
   };
-  std::deque<CommandResult> command_history_;
+  std::deque<ServiceResult> service_history_;
 };
 
 }  // namespace coug_comms

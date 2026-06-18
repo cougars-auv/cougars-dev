@@ -3,11 +3,11 @@
     ros__parameters:
       beacon_id: 1
 
-  base_cmd_relay_node:
+  base_dispatcher_node:
     ros__parameters:
       # --- Node Settings ---
       publish_diagnostics: true # Publish diagnostic information.
-      command_history_size: 5
+      service_history_size: 5
 
       # --- ROS Topics ---
       modem_send_topic: "modem_send"
@@ -26,11 +26,11 @@
       direct_emergency_stop_service: "emergency_stop"
       direct_emergency_surface_service: "emergency_surface"
 
-  auv_cmd_relay_node:
+  auv_receiver_node:
     ros__parameters:
       # --- Node Settings ---
       publish_diagnostics: true # Publish diagnostic information.
-      command_history_size: 5
+      service_history_size: 5
 
       # --- ROS Topics ---
       modem_rec_topic: "modem_rec"
@@ -42,7 +42,7 @@
       emergency_stop_service: "emergency_stop"
       emergency_surface_service: "emergency_surface"
 
-  base_status_relay_node:
+  base_status_poller_node:
     ros__parameters:
       # --- Node Settings ---
       publish_diagnostics: true # Publish diagnostic information.
@@ -57,7 +57,7 @@
       modem_cmd_update_topic: "modem_cmd_update"
       status_topic: "base/status"
 
-  auv_status_relay_node:
+  auv_status_stager_node:
     ros__parameters:
       # --- Node Settings ---
       publish_diagnostics: true # Publish diagnostic information.

@@ -1,9 +1,9 @@
-base_cmd_relay_node:
+base_dispatcher_node:
   # --- Node Settings ---
   publish_diagnostics:
     type: bool
     default_value: false
-  command_history_size:
+  service_history_size:
     type: int
     default_value: 5
     validation:

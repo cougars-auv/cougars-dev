@@ -13,13 +13,13 @@
 // limitations under the License.
 
 /**
- * @file base_cmd_relay.cpp
- * @brief Implementation of the BaseCmdRelayNode.
+ * @file base_dispatcher.cpp
+ * @brief Implementation of the BaseDispatcherNode.
  * @author Nelson Durrant
  * @date June 2026
  */
 
-#include "coug_comms/base_cmd_relay.hpp"
+#include "coug_comms/base_dispatcher.hpp"
 
 #include <rclcpp_components/register_node_macro.hpp>
 
@@ -31,12 +31,12 @@ using utils::CID_DAT_SEND;
 using utils::MSG_OWAY;
 using utils::MsgId;
 
-BaseCmdRelayNode::BaseCmdRelayNode(const rclcpp::NodeOptions& options)
-    : Node("base_cmd_relay_node", options), diagnostic_updater_(this) {
-  RCLCPP_INFO(get_logger(), "Starting Base Command Relay Node...");
+BaseDispatcherNode::BaseDispatcherNode(const rclcpp::NodeOptions& options)
+    : Node("base_dispatcher_node", options), diagnostic_updater_(this) {
+  RCLCPP_INFO(get_logger(), "Starting Base Dispatcher Node...");
 
   param_listener_ =
-      std::make_shared<base_cmd_relay_node::ParamListener>(get_node_parameters_interface());
+      std::make_shared<base_dispatcher_node::ParamListener>(get_node_parameters_interface());
   params_ = param_listener_->get_params();
 
   this->declare_parameter<std::vector<std::string>>("agent_namespaces", std::vector<std::string>{});
@@ -46,15 +46,15 @@ BaseCmdRelayNode::BaseCmdRelayNode(const rclcpp::NodeOptions& options)
   modem_send_pub_ = create_publisher<seatrac_interfaces::msg::ModemSend>(
       params_.modem_send_topic, rclcpp::SystemDefaultsQoS());
 
-  commands_ = {
-      {params_.start_service, params_.direct_start_service, MsgId::CMD_START},
-      {params_.stop_service, params_.direct_stop_service, MsgId::CMD_STOP},
-      {params_.surface_service, params_.direct_surface_service, MsgId::CMD_SURFACE},
-      {params_.home_service, params_.direct_home_service, MsgId::CMD_HOME},
+  services_ = {
+      {params_.start_service, params_.direct_start_service, MsgId::SRV_START},
+      {params_.stop_service, params_.direct_stop_service, MsgId::SRV_STOP},
+      {params_.surface_service, params_.direct_surface_service, MsgId::SRV_SURFACE},
+      {params_.home_service, params_.direct_home_service, MsgId::SRV_HOME},
       {params_.emergency_stop_service, params_.direct_emergency_stop_service,
-       MsgId::CMD_EMERGENCY_STOP},
+       MsgId::SRV_EMERGENCY_STOP},
       {params_.emergency_surface_service, params_.direct_emergency_surface_service,
-       MsgId::CMD_EMERGENCY_SURFACE},
+       MsgId::SRV_EMERGENCY_SURFACE},
   };
 
   // --- ROS Diagnostics ---
@@ -62,7 +62,7 @@ BaseCmdRelayNode::BaseCmdRelayNode(const rclcpp::NodeOptions& options)
   if (params_.publish_diagnostics) {
     std::string ns = this->get_namespace();
     std::string clean_ns = (ns == "/") ? "" : ns;
-    diagnostic_updater_.setHardwareID(clean_ns + "/base_cmd_relay_node");
+    diagnostic_updater_.setHardwareID(clean_ns + "/base_dispatcher_node");
     prefix = clean_ns.empty() ? "" : "[" + clean_ns + "] ";
   }
 
@@ -76,23 +76,23 @@ BaseCmdRelayNode::BaseCmdRelayNode(const rclcpp::NodeOptions& options)
     registerAgent(aname, static_cast<uint8_t>(raw_id), prefix);
   }
 
-  RCLCPP_INFO(get_logger(), "Startup complete! Waiting for commands...");
+  RCLCPP_INFO(get_logger(), "Startup complete! Waiting for services...");
 }
 
-void BaseCmdRelayNode::registerAgent(const std::string& aname, uint8_t beacon_id,
-                                     const std::string& diag_prefix) {
+void BaseDispatcherNode::registerAgent(const std::string& aname, uint8_t beacon_id,
+                                       const std::string& diag_prefix) {
   AgentEntry a;
   a.name = aname;
   a.beacon_id = beacon_id;
 
-  for (const auto& spec : commands_) {
+  for (const auto& spec : services_) {
     const MsgId cmd = spec.cmd;
     a.services.push_back(create_service<std_srvs::srv::Trigger>(
         "/" + aname + "/" + spec.relay_service,
         [this, cmd, beacon_id](std::shared_ptr<rclcpp::Service<std_srvs::srv::Trigger>> service,
                                std::shared_ptr<rmw_request_id_t> header,
                                std::shared_ptr<std_srvs::srv::Trigger::Request>) {
-          handleCommandRequest(cmd, beacon_id, service, header);
+          handleServiceRequest(cmd, beacon_id, service, header);
         }));
     a.direct_clients[static_cast<uint8_t>(cmd)] =
         create_client<std_srvs::srv::Trigger>("/" + aname + "/" + spec.direct_service);
@@ -101,30 +101,30 @@ void BaseCmdRelayNode::registerAgent(const std::string& aname, uint8_t beacon_id
   agents_.emplace(beacon_id, std::move(a));
 
   if (params_.publish_diagnostics) {
-    diagnostic_updater_.add(diag_prefix + "Command Status (" + aname + ")",
+    diagnostic_updater_.add(diag_prefix + "Service Status (" + aname + ")",
                             [this, beacon_id](diagnostic_updater::DiagnosticStatusWrapper& stat) {
-                              checkAgentCommandStatus(stat, beacon_id);
+                              checkAgentServiceStatus(stat, beacon_id);
                             });
   }
 
   RCLCPP_INFO(get_logger(), "Registered agent '%s' (beacon %d).", aname.c_str(), beacon_id);
 }
 
-void BaseCmdRelayNode::handleCommandRequest(
+void BaseDispatcherNode::handleServiceRequest(
     MsgId cmd, uint8_t beacon_id, rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr service,
     std::shared_ptr<rmw_request_id_t> header) {
   AgentEntry& agent = agents_.at(beacon_id);
   const std::string name = utils::messageType(cmd);
 
   if (params_.enable_direct_comms) {
-    if (directCommandRelay(cmd, agent, service, header)) {
+    if (directServiceDispatch(cmd, agent, service, header)) {
       return;
     }
   }
 
   if (params_.enable_acoustic_comms) {
-    acousticCommandRelay(cmd, beacon_id, service, header);
-    recordCommandResult(beacon_id, name, "ACOUSTIC", true);
+    acousticServiceDispatch(cmd, beacon_id, service, header);
+    recordServiceResult(beacon_id, name, "ACOUSTIC", true);
     return;
   }
 
@@ -133,10 +133,10 @@ void BaseCmdRelayNode::handleCommandRequest(
   res.message = name + " failed: comms disabled";
   service->send_response(*header, res);
   RCLCPP_ERROR(get_logger(), "%s", res.message.c_str());
-  recordCommandResult(beacon_id, name, "NONE", false);
+  recordServiceResult(beacon_id, name, "NONE", false);
 }
 
-bool BaseCmdRelayNode::directCommandRelay(
+bool BaseDispatcherNode::directServiceDispatch(
     MsgId cmd, const AgentEntry& agent, rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr service,
     std::shared_ptr<rmw_request_id_t> header) {
   auto client_it = agent.direct_clients.find(static_cast<uint8_t>(cmd));
@@ -167,12 +167,12 @@ bool BaseCmdRelayNode::directCommandRelay(
           service->send_response(*header, res);
           RCLCPP_WARN(get_logger(), "%s", res.message.c_str());
         }
-        recordCommandResult(beacon_id, label, "DIRECT", success);
+        recordServiceResult(beacon_id, label, "DIRECT", success);
       });
   return true;
 }
 
-void BaseCmdRelayNode::acousticCommandRelay(
+void BaseDispatcherNode::acousticServiceDispatch(
     MsgId cmd, uint8_t beacon_id, rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr service,
     std::shared_ptr<rmw_request_id_t> header) {
   seatrac_interfaces::msg::ModemSend msg;
@@ -190,40 +190,40 @@ void BaseCmdRelayNode::acousticCommandRelay(
   RCLCPP_INFO(get_logger(), "%s", res.message.c_str());
 }
 
-void BaseCmdRelayNode::recordCommandResult(uint8_t beacon_id, const std::string& command,
-                                           const std::string& transport, bool succeeded) {
+void BaseDispatcherNode::recordServiceResult(uint8_t beacon_id, const std::string& service,
+                                             const std::string& transport, bool succeeded) {
   AgentEntry& a = agents_.at(beacon_id);
-  a.command_history.push_back({command, transport, succeeded});
-  if (a.command_history.size() > static_cast<size_t>(params_.command_history_size)) {
-    a.command_history.pop_front();
+  a.service_history.push_back({service, transport, succeeded});
+  if (a.service_history.size() > static_cast<size_t>(params_.service_history_size)) {
+    a.service_history.pop_front();
   }
 }
 
-void BaseCmdRelayNode::checkAgentCommandStatus(diagnostic_updater::DiagnosticStatusWrapper& stat,
-                                               uint8_t beacon_id) {
+void BaseDispatcherNode::checkAgentServiceStatus(diagnostic_updater::DiagnosticStatusWrapper& stat,
+                                                 uint8_t beacon_id) {
   const AgentEntry& a = agents_.at(beacon_id);
 
-  if (a.command_history.empty()) {
-    stat.summary(diagnostic_msgs::msg::DiagnosticStatus::OK, "Waiting for first command.");
+  if (a.service_history.empty()) {
+    stat.summary(diagnostic_msgs::msg::DiagnosticStatus::OK, "Waiting for first service.");
     return;
   }
 
   size_t index = 1;
-  for (auto it = a.command_history.rbegin(); it != a.command_history.rend(); ++it) {
-    stat.add(std::to_string(index++), it->command + " (" + it->transport + ")" +
+  for (auto it = a.service_history.rbegin(); it != a.service_history.rend(); ++it) {
+    stat.add(std::to_string(index++), it->service + " (" + it->transport + ")" +
                                           (it->succeeded ? ": succeeded" : ": failed"));
   }
 
-  const CommandResult& latest = a.command_history.back();
+  const ServiceResult& latest = a.service_history.back();
   if (latest.succeeded) {
     stat.summary(diagnostic_msgs::msg::DiagnosticStatus::OK,
-                 latest.command + " to " + a.name + " succeeded.");
+                 latest.service + " to " + a.name + " succeeded.");
   } else {
     stat.summary(diagnostic_msgs::msg::DiagnosticStatus::ERROR,
-                 latest.command + " to " + a.name + " failed.");
+                 latest.service + " to " + a.name + " failed.");
   }
 }
 
 }  // namespace coug_comms
 
-RCLCPP_COMPONENTS_REGISTER_NODE(coug_comms::BaseCmdRelayNode)
+RCLCPP_COMPONENTS_REGISTER_NODE(coug_comms::BaseDispatcherNode)

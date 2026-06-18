@@ -13,13 +13,13 @@
 // limitations under the License.
 
 /**
- * @file base_status_relay.cpp
- * @brief Implementation of the BaseStatusRelayNode.
+ * @file base_status_poller.cpp
+ * @brief Implementation of the BaseStatusPollerNode.
  * @author Nelson Durrant
  * @date June 2026
  */
 
-#include "coug_comms/base_status_relay.hpp"
+#include "coug_comms/base_status_poller.hpp"
 
 #include <rclcpp_components/register_node_macro.hpp>
 
@@ -34,12 +34,12 @@ using utils::CST_XCVR_RESP_TIMEOUT;
 using utils::MSG_REQ;
 using utils::MsgId;
 
-BaseStatusRelayNode::BaseStatusRelayNode(const rclcpp::NodeOptions& options)
-    : Node("base_status_relay_node", options), diagnostic_updater_(this) {
-  RCLCPP_INFO(get_logger(), "Starting Base Status Relay Node...");
+BaseStatusPollerNode::BaseStatusPollerNode(const rclcpp::NodeOptions& options)
+    : Node("base_status_poller_node", options), diagnostic_updater_(this) {
+  RCLCPP_INFO(get_logger(), "Starting Base Status Poller Node...");
 
   param_listener_ =
-      std::make_shared<base_status_relay_node::ParamListener>(get_node_parameters_interface());
+      std::make_shared<base_status_poller_node::ParamListener>(get_node_parameters_interface());
   params_ = param_listener_->get_params();
 
   this->declare_parameter<std::vector<std::string>>("agent_namespaces", std::vector<std::string>{});
@@ -50,17 +50,17 @@ BaseStatusRelayNode::BaseStatusRelayNode(const rclcpp::NodeOptions& options)
       params_.modem_send_topic, rclcpp::SystemDefaultsQoS());
   modem_rec_sub_ = create_subscription<seatrac_interfaces::msg::ModemRec>(
       params_.modem_rec_topic, rclcpp::SystemDefaultsQoS(),
-      std::bind(&BaseStatusRelayNode::modemRecCallback, this, std::placeholders::_1));
+      std::bind(&BaseStatusPollerNode::modemRecCallback, this, std::placeholders::_1));
   modem_cmd_update_sub_ = create_subscription<seatrac_interfaces::msg::ModemCmdUpdate>(
       params_.modem_cmd_update_topic, rclcpp::SystemDefaultsQoS(),
-      std::bind(&BaseStatusRelayNode::modemCmdUpdateCallback, this, std::placeholders::_1));
+      std::bind(&BaseStatusPollerNode::modemCmdUpdateCallback, this, std::placeholders::_1));
 
   // --- ROS Diagnostics ---
   std::string prefix;
   if (params_.publish_diagnostics) {
     std::string ns = this->get_namespace();
     std::string clean_ns = (ns == "/") ? "" : ns;
-    diagnostic_updater_.setHardwareID(clean_ns + "/base_status_relay_node");
+    diagnostic_updater_.setHardwareID(clean_ns + "/base_status_poller_node");
     prefix = clean_ns.empty() ? "" : "[" + clean_ns + "] ";
   }
 
@@ -76,13 +76,13 @@ BaseStatusRelayNode::BaseStatusRelayNode(const rclcpp::NodeOptions& options)
 
   next_poll_allowed_ = now();
   tick_timer_ = create_wall_timer(std::chrono::duration<double>(params_.tick_period_sec),
-                                  std::bind(&BaseStatusRelayNode::onTick, this));
+                                  std::bind(&BaseStatusPollerNode::onTick, this));
 
   RCLCPP_INFO(get_logger(), "Startup complete! Polling agents for status...");
 }
 
-void BaseStatusRelayNode::registerAgent(const std::string& aname, uint8_t beacon_id,
-                                        const std::string& diag_prefix) {
+void BaseStatusPollerNode::registerAgent(const std::string& aname, uint8_t beacon_id,
+                                         const std::string& diag_prefix) {
   AgentEntry a;
   a.name = aname;
   a.beacon_id = beacon_id;
@@ -111,7 +111,7 @@ void BaseStatusRelayNode::registerAgent(const std::string& aname, uint8_t beacon
   RCLCPP_INFO(get_logger(), "Registered agent '%s' (beacon %d).", aname.c_str(), beacon_id);
 }
 
-void BaseStatusRelayNode::onTick() {
+void BaseStatusPollerNode::onTick() {
   // Backup timeout: fires if the modem never reports a TIMEOUT (see
   // modemCmdUpdateCallback) and no response arrives in time.
   if (awaiting_response_ && (now() - request_time_).seconds() > params_.response_timeout_sec) {
@@ -120,31 +120,31 @@ void BaseStatusRelayNode::onTick() {
   pollNextIfReady();
 }
 
-void BaseStatusRelayNode::pollNextIfReady() {
+void BaseStatusPollerNode::pollNextIfReady() {
   if (awaiting_response_ || beacon_order_.empty()) return;
   if (now() < next_poll_allowed_) return;
 
   AgentEntry& agent = agents_.at(beacon_order_[next_index_]);
   next_index_ = (next_index_ + 1) % beacon_order_.size();
 
-  if (params_.enable_direct_comms && directStatusRelay(agent)) {
+  if (params_.enable_direct_comms && directStatusPoll(agent)) {
     next_poll_allowed_ = now() + rclcpp::Duration::from_seconds(params_.poll_period_sec);
     return;
   }
   if (params_.enable_acoustic_comms) {
-    acousticStatusRelay(agent);
+    acousticStatusPoll(agent);
     return;
   }
   next_poll_allowed_ = now() + rclcpp::Duration::from_seconds(params_.poll_period_sec);
 }
 
-bool BaseStatusRelayNode::directStatusRelay(AgentEntry& agent) {
+bool BaseStatusPollerNode::directStatusPoll(AgentEntry& agent) {
   // A live direct link relays status from directStatusCallback (push), so this
   // agent does not need to be polled acoustically.
   return agent.direct_sub && agent.direct_sub->get_publisher_count() > 0;
 }
 
-void BaseStatusRelayNode::acousticStatusRelay(AgentEntry& agent) {
+void BaseStatusPollerNode::acousticStatusPoll(AgentEntry& agent) {
   seatrac_interfaces::msg::ModemSend send;
   send.msg_id = CID_DAT_SEND;
   send.dest_id = agent.beacon_id;
@@ -158,14 +158,15 @@ void BaseStatusRelayNode::acousticStatusRelay(AgentEntry& agent) {
   request_time_ = now();
 }
 
-void BaseStatusRelayNode::directStatusCallback(
+void BaseStatusPollerNode::directStatusCallback(
     uint8_t beacon_id, const coug_interfaces::msg::AgentStatus::SharedPtr msg) {
   auto it = agents_.find(beacon_id);
   if (it != agents_.end()) publishStatus(it->second, *msg, "DIRECT");
 }
 
-void BaseStatusRelayNode::publishStatus(AgentEntry& agent, coug_interfaces::msg::AgentStatus status,
-                                        const std::string& transport) {
+void BaseStatusPollerNode::publishStatus(AgentEntry& agent,
+                                         coug_interfaces::msg::AgentStatus status,
+                                         const std::string& transport) {
   status.header.stamp = now();
   status.header.frame_id = agent.name;
   agent.status_pub->publish(status);
@@ -176,7 +177,8 @@ void BaseStatusRelayNode::publishStatus(AgentEntry& agent, coug_interfaces::msg:
   agent.last_response_time = now();
 }
 
-void BaseStatusRelayNode::modemRecCallback(const seatrac_interfaces::msg::ModemRec::SharedPtr msg) {
+void BaseStatusPollerNode::modemRecCallback(
+    const seatrac_interfaces::msg::ModemRec::SharedPtr msg) {
   if (!awaiting_response_ || !msg->local_flag || msg->src_id != pending_beacon_) return;
 
   auto it = agents_.find(pending_beacon_);
@@ -199,7 +201,7 @@ void BaseStatusRelayNode::modemRecCallback(const seatrac_interfaces::msg::ModemR
   pollNextIfReady();
 }
 
-void BaseStatusRelayNode::modemCmdUpdateCallback(
+void BaseStatusPollerNode::modemCmdUpdateCallback(
     const seatrac_interfaces::msg::ModemCmdUpdate::SharedPtr msg) {
   // The modem reports a response timeout for the beacon we are polling; abandon
   // the request now instead of waiting out the backup timer in onTick().
@@ -210,22 +212,22 @@ void BaseStatusRelayNode::modemCmdUpdateCallback(
   pollNextIfReady();
 }
 
-void BaseStatusRelayNode::failPendingRequest(const char* reason) {
+void BaseStatusPollerNode::failPendingRequest(const char* reason) {
   RCLCPP_WARN(get_logger(), "Status request to beacon %d %s.", pending_beacon_, reason);
   recordTimeout(pending_beacon_);
   awaiting_response_ = false;
   next_poll_allowed_ = now() + rclcpp::Duration::from_seconds(params_.poll_period_sec);
 }
 
-void BaseStatusRelayNode::recordTimeout(uint8_t beacon_id) {
+void BaseStatusPollerNode::recordTimeout(uint8_t beacon_id) {
   auto it = agents_.find(beacon_id);
   if (it == agents_.end()) return;
   it->second.timeouts++;
   it->second.last_ok = false;
 }
 
-void BaseStatusRelayNode::checkAgentStatus(diagnostic_updater::DiagnosticStatusWrapper& stat,
-                                           uint8_t beacon_id) {
+void BaseStatusPollerNode::checkAgentStatus(diagnostic_updater::DiagnosticStatusWrapper& stat,
+                                            uint8_t beacon_id) {
   const AgentEntry& a = agents_.at(beacon_id);
 
   if (a.responses == 0 && a.timeouts == 0) {
@@ -250,4 +252,4 @@ void BaseStatusRelayNode::checkAgentStatus(diagnostic_updater::DiagnosticStatusW
 
 }  // namespace coug_comms
 
-RCLCPP_COMPONENTS_REGISTER_NODE(coug_comms::BaseStatusRelayNode)
+RCLCPP_COMPONENTS_REGISTER_NODE(coug_comms::BaseStatusPollerNode)

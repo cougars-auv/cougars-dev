@@ -104,6 +104,6 @@ TEST(StatusCodecTest, RejectsInvalidPayload) {
   AgentStatus out;
 
   EXPECT_FALSE(decodeStatus(buf.data(), len - 1, out));
-  buf[0] = static_cast<uint8_t>(MsgId::CMD_START);
+  buf[0] = static_cast<uint8_t>(MsgId::SRV_START);
   EXPECT_FALSE(decodeStatus(buf.data(), len, out));
 }

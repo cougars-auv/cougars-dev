@@ -18,31 +18,31 @@ find_package(Eigen3 REQUIRED)
 
 # --- Parameters ---
 generate_parameter_library(
-  base_cmd_relay_parameters
-  "params/base_cmd_relay_params.yaml"
+  base_dispatcher_parameters
+  "params/base_dispatcher_params.yaml"
 )
 
 generate_parameter_library(
-  auv_cmd_relay_parameters
-  "params/auv_cmd_relay_params.yaml"
+  auv_receiver_parameters
+  "params/auv_receiver_params.yaml"
 )
 
 generate_parameter_library(
-  base_status_relay_parameters
-  "params/base_status_relay_params.yaml"
+  base_status_poller_parameters
+  "params/base_status_poller_params.yaml"
 )
 
 generate_parameter_library(
-  auv_status_relay_parameters
-  "params/auv_status_relay_params.yaml"
+  auv_status_stager_parameters
+  "params/auv_status_stager_params.yaml"
 )
 
 # --- Component Library ---
 ament_auto_add_library(coug_comms_component SHARED
-  src/base_cmd_relay.cpp
-  src/auv_cmd_relay.cpp
-  src/base_status_relay.cpp
-  src/auv_status_relay.cpp
+  src/base_dispatcher.cpp
+  src/auv_receiver.cpp
+  src/base_status_poller.cpp
+  src/auv_status_stager.cpp
 )
 
 target_include_directories(coug_comms_component PUBLIC
@@ -50,32 +50,32 @@ target_include_directories(coug_comms_component PUBLIC
   $<INSTALL_INTERFACE:include>)
 
 target_link_libraries(coug_comms_component
-  base_cmd_relay_parameters
-  auv_cmd_relay_parameters
-  base_status_relay_parameters
-  auv_status_relay_parameters
+  base_dispatcher_parameters
+  auv_receiver_parameters
+  base_status_poller_parameters
+  auv_status_stager_parameters
   Eigen3::Eigen
 )
 
 rclcpp_components_register_nodes(coug_comms_component
-  "coug_comms::BaseCmdRelayNode"
-  "coug_comms::AuvCmdRelayNode"
-  "coug_comms::BaseStatusRelayNode"
-  "coug_comms::AuvStatusRelayNode"
+  "coug_comms::BaseDispatcherNode"
+  "coug_comms::AuvReceiverNode"
+  "coug_comms::BaseStatusPollerNode"
+  "coug_comms::AuvStatusStagerNode"
 )
 
 # --- Executables ---
-ament_auto_add_executable(base_cmd_relay src/base_cmd_relay_node.cpp)
-target_link_libraries(base_cmd_relay coug_comms_component)
+ament_auto_add_executable(base_dispatcher src/base_dispatcher_node.cpp)
+target_link_libraries(base_dispatcher coug_comms_component)
 
-ament_auto_add_executable(auv_cmd_relay src/auv_cmd_relay_node.cpp)
-target_link_libraries(auv_cmd_relay coug_comms_component)
+ament_auto_add_executable(auv_receiver src/auv_receiver_node.cpp)
+target_link_libraries(auv_receiver coug_comms_component)
 
-ament_auto_add_executable(base_status_relay src/base_status_relay_node.cpp)
-target_link_libraries(base_status_relay coug_comms_component)
+ament_auto_add_executable(base_status_poller src/base_status_poller_node.cpp)
+target_link_libraries(base_status_poller coug_comms_component)
 
-ament_auto_add_executable(auv_status_relay src/auv_status_relay_node.cpp)
-target_link_libraries(auv_status_relay coug_comms_component)
+ament_auto_add_executable(auv_status_stager src/auv_status_stager_node.cpp)
+target_link_libraries(auv_status_stager coug_comms_component)
 
 # --- Testing ---
 if(BUILD_TESTING)

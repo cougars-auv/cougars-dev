@@ -1,4 +1,4 @@
-base_status_relay_node:
+base_status_poller_node:
   # --- Node Settings ---
   publish_diagnostics:
     type: bool

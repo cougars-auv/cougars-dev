@@ -13,8 +13,8 @@
 // limitations under the License.
 
 /**
- * @file base_cmd_relay.hpp
- * @brief ROS 2 node for relaying base station commands to AUVs.
+ * @file base_dispatcher.hpp
+ * @brief ROS 2 node for relaying base station services to AUVs.
  * @author Nelson Durrant
  * @date June 2026
  */
@@ -31,70 +31,70 @@
 #include <unordered_map>
 #include <vector>
 
-#include "coug_comms/base_cmd_relay_parameters.hpp"
+#include "coug_comms/base_dispatcher_parameters.hpp"
 #include "coug_comms/utils/comms_protocol.hpp"
 
 namespace coug_comms {
 
 /**
- * @class BaseCmdRelayNode
- * @brief ROS 2 node for relaying base station commands to AUVs.
+ * @class BaseDispatcherNode
+ * @brief ROS 2 node for relaying base station services to AUVs.
  */
-class BaseCmdRelayNode : public rclcpp::Node {
+class BaseDispatcherNode : public rclcpp::Node {
  protected:
   /**
-   * @struct CommandSpec
-   * @brief Service names and message ID for one relayable command type.
+   * @struct ServiceSpec
+   * @brief Service names and message ID for one relayable service type.
    */
-  struct CommandSpec {
+  struct ServiceSpec {
     std::string relay_service;
     std::string direct_service;
     utils::MsgId cmd;
   };
 
   /**
-   * @struct CommandResult
-   * @brief A single relayed command, the transport used, and whether it succeeded.
+   * @struct ServiceResult
+   * @brief A single relayed service, the transport used, and whether it succeeded.
    */
-  struct CommandResult {
-    std::string command;
+  struct ServiceResult {
+    std::string service;
     std::string transport;
     bool succeeded;
   };
 
   /**
    * @struct AgentEntry
-   * @brief Per-agent state: identity, hosted services, direct clients, and command history.
+   * @brief Per-agent state: identity, hosted services, direct clients, and service history.
    */
   struct AgentEntry {
     std::string name;
     uint8_t beacon_id;
     std::vector<rclcpp::ServiceBase::SharedPtr> services;
     std::unordered_map<uint8_t, rclcpp::Client<std_srvs::srv::Trigger>::SharedPtr> direct_clients;
-    std::deque<CommandResult> command_history;
+    std::deque<ServiceResult> service_history;
   };
 
  public:
   /**
-   * @brief Constructs the node and sets up command relaying to AUVs.
+   * @brief Constructs the node and sets up service relaying to AUVs.
    * @param options The node options.
    */
-  explicit BaseCmdRelayNode(const rclcpp::NodeOptions& options);
+  explicit BaseDispatcherNode(const rclcpp::NodeOptions& options);
 
  protected:
   /**
-   * @brief Routes the command to the direct link, falling back to acoustics.
+   * @brief Routes the service to the direct link, falling back to acoustics.
    * @param cmd The message ID to send.
    * @param beacon_id The target beacon ID.
    * @param service The service the request arrived on.
    * @param header The request header to respond to.
    */
-  void handleCommandRequest(utils::MsgId cmd, uint8_t beacon_id,
+  void handleServiceRequest(utils::MsgId cmd, uint8_t beacon_id,
                             rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr service,
                             std::shared_ptr<rmw_request_id_t> header);
 
   /**
-   * @brief Sends the command over the agent's direct ROS link, responding to the Trigger
+   * @brief Sends the service over the agent's direct ROS link, responding to the Trigger
    * asynchronously.
    * @param cmd The message ID to send.
    * @param agent The target agent.
@@ -103,23 +103,23 @@ class BaseCmdRelayNode : public rclcpp::Node {
    * @return True if a direct link was ready and the request was sent; false to fall back to
    * acoustics.
    */
-  bool directCommandRelay(utils::MsgId cmd, const AgentEntry& agent,
-                          rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr service,
-                          std::shared_ptr<rmw_request_id_t> header);
+  bool directServiceDispatch(utils::MsgId cmd, const AgentEntry& agent,
+                             rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr service,
+                             std::shared_ptr<rmw_request_id_t> header);
 
   /**
-   * @brief Sends the command over the seatrac modem (one-way) and responds that it was queued.
+   * @brief Sends the service over the seatrac modem (one-way) and responds that it was queued.
    * @param cmd The message ID to send.
    * @param beacon_id The target beacon ID.
    * @param service The service the request arrived on.
    * @param header The request header to respond to.
    */
-  void acousticCommandRelay(utils::MsgId cmd, uint8_t beacon_id,
-                            rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr service,
-                            std::shared_ptr<rmw_request_id_t> header);
+  void acousticServiceDispatch(utils::MsgId cmd, uint8_t beacon_id,
+                               rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr service,
+                               std::shared_ptr<rmw_request_id_t> header);
 
   /**
-   * @brief Creates command services, direct clients, and a diagnostic task for one agent.
+   * @brief Creates service servers, direct clients, and a diagnostic task for one agent.
    * @param name The agent's ROS namespace.
    * @param beacon_id The agent's acoustic beacon ID.
    * @param diag_prefix Namespace prefix for diagnostic task labels.
@@ -127,21 +127,21 @@ class BaseCmdRelayNode : public rclcpp::Node {
   void registerAgent(const std::string& name, uint8_t beacon_id, const std::string& diag_prefix);
 
   /**
-   * @brief Records a command outcome in an agent's rolling history, trimming to the last few.
+   * @brief Records a service outcome in an agent's rolling history, trimming to the last few.
    * @param beacon_id The agent's beacon ID.
-   * @param command The name of the command that was relayed.
-   * @param transport The transport used to relay the command.
+   * @param service The name of the service that was relayed.
+   * @param transport The transport used to relay the service.
    * @param succeeded Whether the relay succeeded.
    */
-  void recordCommandResult(uint8_t beacon_id, const std::string& command,
+  void recordServiceResult(uint8_t beacon_id, const std::string& service,
                            const std::string& transport, bool succeeded);
 
   /**
-   * @brief Diagnostic task reporting the last few commands relayed to one agent and their results.
+   * @brief Diagnostic task reporting the last few services relayed to one agent and their results.
    * @param stat The diagnostic status wrapper.
    * @param beacon_id The agent's beacon ID.
    */
-  void checkAgentCommandStatus(diagnostic_updater::DiagnosticStatusWrapper& stat,
+  void checkAgentServiceStatus(diagnostic_updater::DiagnosticStatusWrapper& stat,
                                uint8_t beacon_id);
 
   // --- ROS Interfaces ---
@@ -149,11 +149,11 @@ class BaseCmdRelayNode : public rclcpp::Node {
   diagnostic_updater::Updater diagnostic_updater_;
 
   // --- Parameters ---
-  std::shared_ptr<base_cmd_relay_node::ParamListener> param_listener_;
-  base_cmd_relay_node::Params params_;
+  std::shared_ptr<base_dispatcher_node::ParamListener> param_listener_;
+  base_dispatcher_node::Params params_;
 
   // --- State ---
-  std::vector<CommandSpec> commands_;
+  std::vector<ServiceSpec> services_;
   std::unordered_map<uint8_t, AgentEntry> agents_;
 };
 

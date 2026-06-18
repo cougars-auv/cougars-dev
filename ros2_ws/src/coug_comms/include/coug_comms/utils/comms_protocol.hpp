@@ -27,12 +27,12 @@
 namespace coug_comms::utils {
 
 enum class MsgId : uint8_t {
-  CMD_START = 0x10,
-  CMD_STOP = 0x11,
-  CMD_SURFACE = 0x12,
-  CMD_HOME = 0x13,
-  CMD_EMERGENCY_STOP = 0x14,
-  CMD_EMERGENCY_SURFACE = 0x15,
+  SRV_START = 0x10,
+  SRV_STOP = 0x11,
+  SRV_SURFACE = 0x12,
+  SRV_HOME = 0x13,
+  SRV_EMERGENCY_STOP = 0x14,
+  SRV_EMERGENCY_SURFACE = 0x15,
   REQ_STATUS = 0x20,
   MSG_KEY_CONTROL = 0x30,
   MSG_ORIGIN = 0x31,
@@ -46,18 +46,18 @@ enum class MsgId : uint8_t {
  */
 inline std::string messageType(MsgId msg) {
   switch (msg) {
-    case MsgId::CMD_START:
-      return "CMD_START";
-    case MsgId::CMD_STOP:
-      return "CMD_STOP";
-    case MsgId::CMD_SURFACE:
-      return "CMD_SURFACE";
-    case MsgId::CMD_HOME:
-      return "CMD_HOME";
-    case MsgId::CMD_EMERGENCY_STOP:
-      return "CMD_EMERGENCY_STOP";
-    case MsgId::CMD_EMERGENCY_SURFACE:
-      return "CMD_EMERGENCY_SURFACE";
+    case MsgId::SRV_START:
+      return "SRV_START";
+    case MsgId::SRV_STOP:
+      return "SRV_STOP";
+    case MsgId::SRV_SURFACE:
+      return "SRV_SURFACE";
+    case MsgId::SRV_HOME:
+      return "SRV_HOME";
+    case MsgId::SRV_EMERGENCY_STOP:
+      return "SRV_EMERGENCY_STOP";
+    case MsgId::SRV_EMERGENCY_SURFACE:
+      return "SRV_EMERGENCY_SURFACE";
     case MsgId::REQ_STATUS:
       return "REQ_STATUS";
     case MsgId::MSG_KEY_CONTROL:
