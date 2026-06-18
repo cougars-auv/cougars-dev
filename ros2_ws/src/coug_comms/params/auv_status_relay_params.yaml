@@ -1,0 +1,22 @@
+auv_status_relay_node:
+  # --- Node Settings ---
+  publish_diagnostics:
+    type: bool
+    default_value: false
+  diagnostic_timeout_sec:
+    type: double
+    default_value: 0.5
+    validation:
+      gt<>: [0.0]
+
+  # --- ROS Topics ---
+  modem_send_topic:
+    type: string
+    default_value: "modem_send"
+    validation:
+      not_empty<>: []
+  status_topic:
+    type: string
+    default_value: "status"
+    validation:
+      not_empty<>: []

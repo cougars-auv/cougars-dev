@@ -117,5 +117,5 @@
 
       tick_period_sec: 0.1 # [s]
       send_delay_sec: 0.4 # [s]
-      resp_timeout_sec: 4.0 # [s]
+      resp_delay_sec: 0.1 # [s]
       beacon_id: 1

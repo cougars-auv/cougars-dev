@@ -3,6 +3,7 @@
     ros__parameters:
       # --- Node Settings ---
       tick_rate_ms: 50 # [ms] Behavior tree tick interval.
+      publish_diagnostics: true # Publish diagnostic information.
 
       # Waypoint reached if normalized ellipse distance < 1.0 (direct hit).
       capture_radius: [25.0, 2.0] # [m] [horizontal, vertical]
@@ -16,8 +17,6 @@
 
       odom_timeout_sec: 2.0 # [s] Time to wait for odometry before stopping.
       default_speed_rpm: 1500.0 # [RPM]
-
-      publish_diagnostics: true # Publish diagnostic information.
 
       # --- Groot2 Connection ---
       publish_groot2: false # Publish behavior tree state to Groot2.

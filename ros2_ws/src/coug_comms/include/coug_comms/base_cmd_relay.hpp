@@ -141,7 +141,8 @@ class BaseCmdRelayNode : public rclcpp::Node {
    * @param stat The diagnostic status wrapper.
    * @param beacon_id The agent's beacon ID.
    */
-  void checkCommandStatus(diagnostic_updater::DiagnosticStatusWrapper& stat, uint8_t beacon_id);
+  void checkAgentCommandStatus(diagnostic_updater::DiagnosticStatusWrapper& stat,
+                               uint8_t beacon_id);
 
   // --- ROS Interfaces ---
   rclcpp::Publisher<seatrac_interfaces::msg::ModemSend>::SharedPtr modem_send_pub_;

@@ -86,6 +86,22 @@ def launch_setup(context, *args, **kwargs) -> list:
                 },
             ],
         ),
+        Node(
+            package="coug_comms",
+            executable="base_status_relay",
+            name="base_status_relay_node",
+            namespace="base_station",
+            parameters=[
+                fleet_params,
+                {
+                    "agent_namespaces": agent_namespaces,
+                    "beacon_ids": beacon_ids,
+                    "use_sim_time": use_sim_time,
+                    "enable_direct_comms": enable_direct_comms,
+                    "enable_acoustic_comms": enable_acoustic_comms,
+                },
+            ],
+        ),
     ]
 
 

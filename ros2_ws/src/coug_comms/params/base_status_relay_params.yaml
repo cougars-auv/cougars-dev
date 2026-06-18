@@ -1,0 +1,50 @@
+base_status_relay_node:
+  # --- Node Settings ---
+  publish_diagnostics:
+    type: bool
+    default_value: false
+
+  enable_direct_comms:
+    type: bool
+    default_value: true
+  enable_acoustic_comms:
+    type: bool
+    default_value: true
+
+  response_timeout_sec:
+    type: double
+    default_value: 5.0
+    validation:
+      gt<>: [0.0]
+  poll_period_sec:
+    type: double
+    default_value: 0.0
+    validation:
+      gt_eq<>: [0.0]
+  tick_period_sec:
+    type: double
+    default_value: 0.05
+    validation:
+      gt<>: [0.0]
+
+  # --- ROS Topics ---
+  modem_send_topic:
+    type: string
+    default_value: "modem_send"
+    validation:
+      not_empty<>: []
+  modem_rec_topic:
+    type: string
+    default_value: "modem_rec"
+    validation:
+      not_empty<>: []
+  modem_cmd_update_topic:
+    type: string
+    default_value: "modem_cmd_update"
+    validation:
+      not_empty<>: []
+  status_topic:
+    type: string
+    default_value: "status"
+    validation:
+      not_empty<>: []

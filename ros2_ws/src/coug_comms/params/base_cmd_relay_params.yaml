@@ -1,46 +1,13 @@
 base_cmd_relay_node:
-  modem_send_topic:
-    type: string
-    default_value: "modem_send"
-
-  start_service:
-    type: string
-    default_value: "base/start"
-  stop_service:
-    type: string
-    default_value: "base/stop"
-  surface_service:
-    type: string
-    default_value: "base/surface"
-  home_service:
-    type: string
-    default_value: "base/home"
-  emergency_stop_service:
-    type: string
-    default_value: "base/emergency_stop"
-  emergency_surface_service:
-    type: string
-    default_value: "base/emergency_surface"
-
-  direct_start_service:
-    type: string
-    default_value: "start"
-  direct_stop_service:
-    type: string
-    default_value: "stop"
-  direct_surface_service:
-    type: string
-    default_value: "surface"
-  direct_home_service:
-    type: string
-    default_value: "home"
-  direct_emergency_stop_service:
-    type: string
-    default_value: "emergency_stop"
-  direct_emergency_surface_service:
-    type: string
-    default_value: "emergency_surface"
-
+  # --- Node Settings ---
+  publish_diagnostics:
+    type: bool
+    default_value: false
+  command_history_size:
+    type: int
+    default_value: 5
+    validation:
+      gt<>: [0]
   enable_direct_comms:
     type: bool
     default_value: true
@@ -48,9 +15,71 @@ base_cmd_relay_node:
     type: bool
     default_value: true
 
-  publish_diagnostics:
-    type: bool
-    default_value: false
-  command_history_size:
-    type: int
-    default_value: 5
+  # --- ROS Topics and Services ---
+  modem_send_topic:
+    type: string
+    default_value: "modem_send"
+    validation:
+      not_empty<>: []
+
+  start_service:
+    type: string
+    default_value: "base/start"
+    validation:
+      not_empty<>: []
+  stop_service:
+    type: string
+    default_value: "base/stop"
+    validation:
+      not_empty<>: []
+  surface_service:
+    type: string
+    default_value: "base/surface"
+    validation:
+      not_empty<>: []
+  home_service:
+    type: string
+    default_value: "base/home"
+    validation:
+      not_empty<>: []
+  emergency_stop_service:
+    type: string
+    default_value: "base/emergency_stop"
+    validation:
+      not_empty<>: []
+  emergency_surface_service:
+    type: string
+    default_value: "base/emergency_surface"
+    validation:
+      not_empty<>: []
+
+  direct_start_service:
+    type: string
+    default_value: "start"
+    validation:
+      not_empty<>: []
+  direct_stop_service:
+    type: string
+    default_value: "stop"
+    validation:
+      not_empty<>: []
+  direct_surface_service:
+    type: string
+    default_value: "surface"
+    validation:
+      not_empty<>: []
+  direct_home_service:
+    type: string
+    default_value: "home"
+    validation:
+      not_empty<>: []
+  direct_emergency_stop_service:
+    type: string
+    default_value: "emergency_stop"
+    validation:
+      not_empty<>: []
+  direct_emergency_surface_service:
+    type: string
+    default_value: "emergency_surface"
+    validation:
+      not_empty<>: []

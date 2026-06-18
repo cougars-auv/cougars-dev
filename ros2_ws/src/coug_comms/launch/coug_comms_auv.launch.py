@@ -64,5 +64,15 @@ def generate_launch_description() -> LaunchDescription:
                     {"use_sim_time": use_sim_time},
                 ],
             ),
+            Node(
+                package="coug_comms",
+                executable="auv_status_relay",
+                name="auv_status_relay_node",
+                parameters=[
+                    fleet_params,
+                    auv_params,
+                    {"use_sim_time": use_sim_time},
+                ],
+            ),
         ]
     )
