@@ -21,6 +21,7 @@
 
 #include "coug_comms/base_status_poller.hpp"
 
+#include <cmath>
 #include <rclcpp_components/register_node_macro.hpp>
 
 #include "coug_comms/utils/comms_protocol.hpp"
@@ -31,7 +32,7 @@ namespace coug_comms {
 
 using utils::CID_DAT_SEND;
 using utils::CST_XCVR_RESP_TIMEOUT;
-using utils::MSG_REQ;
+using utils::MSG_REQX;
 using utils::MsgId;
 
 BaseStatusPollerNode::BaseStatusPollerNode(const rclcpp::NodeOptions& options)
@@ -116,7 +117,7 @@ void BaseStatusPollerNode::registerAgent(const std::string& aname, uint8_t beaco
 
 void BaseStatusPollerNode::tickCallback() {
   if (awaiting_response_ && (now() - request_time_).seconds() > params_.response_timeout_sec) {
-    failPendingRequest("timed out (no modem report)");
+    failPendingRequest("missed driver report, node-level response timeout.");
   }
   pollNextIfReady();
 }
@@ -150,7 +151,7 @@ void BaseStatusPollerNode::sendAcousticPoll(AgentEntry& agent) {
   seatrac_interfaces::msg::ModemSend send;
   send.msg_id = CID_DAT_SEND;
   send.dest_id = agent.beacon_id;
-  send.msg_type = MSG_REQ;
+  send.msg_type = MSG_REQX;
   send.packet_len = 1;
   send.packet_data[0] = static_cast<uint8_t>(MsgId::REQ_STATUS);
   modem_send_pub_->publish(send);
@@ -164,7 +165,6 @@ void BaseStatusPollerNode::publishStatus(AgentEntry& agent,
                                          coug_interfaces::msg::AgentStatus status,
                                          const std::string& transport) {
   status.header.stamp = now();
-  status.header.frame_id = agent.name;
   agent.status_pub->publish(status);
 
   agent.responses++;
@@ -187,6 +187,29 @@ void BaseStatusPollerNode::modemRecCallback(
     return;
   }
 
+  status.includes_range = msg->includes_range;
+  if (msg->includes_range) {
+    status.range_dist = msg->range_dist / 10.0;
+  } else {
+    status.range_dist = 0.0;
+  }
+
+  status.includes_usbl = msg->includes_usbl;
+  if (msg->includes_usbl) {
+    status.usbl_azimuth = (msg->usbl_azimuth / 10.0) * M_PI / 180.0;
+    status.usbl_elevation = (msg->usbl_elevation / 10.0) * M_PI / 180.0;
+  } else {
+    status.usbl_azimuth = 0.0;
+    status.usbl_elevation = 0.0;
+  }
+
+  status.includes_position = msg->includes_position;
+  if (msg->includes_position) {
+    status.position_depth = msg->position_depth / 10.0;
+  } else {
+    status.position_depth = 0.0;
+  }
+
   publishStatus(it->second, status, "ACOUSTIC");
 
   awaiting_response_ = false;
@@ -199,12 +222,12 @@ void BaseStatusPollerNode::modemCmdUpdateCallback(
   if (!awaiting_response_ || msg->target_id != pending_beacon_) return;
   if (msg->command_status_code != CST_XCVR_RESP_TIMEOUT) return;
 
-  failPendingRequest("reported a modem response timeout");
+  failPendingRequest("driver-level response timeout.");
   pollNextIfReady();
 }
 
 void BaseStatusPollerNode::failPendingRequest(const char* reason) {
-  RCLCPP_WARN(get_logger(), "Status request to beacon %d %s.", pending_beacon_, reason);
+  RCLCPP_WARN(get_logger(), "Beacon %d: %s.", pending_beacon_, reason);
   awaiting_response_ = false;
   scheduleNextPoll();
 }
@@ -214,7 +237,7 @@ void BaseStatusPollerNode::checkAgentPollStatus(diagnostic_updater::DiagnosticSt
   const AgentEntry& a = agents_.at(beacon_id);
 
   double time_since = (a.responses > 0) ? (now() - a.last_response_time).seconds() : -1.0;
-  if (a.responses > 0) stat.add("Transport", a.last_transport);
+  if (a.responses > 0) stat.add("Last Transport", a.last_transport);
   stat.add("Time Since Last (s)", time_since);
 
   double direct_heartbeat_age =
@@ -222,9 +245,10 @@ void BaseStatusPollerNode::checkAgentPollStatus(diagnostic_updater::DiagnosticSt
   stat.add("Time Since Direct Heartbeat (s)", direct_heartbeat_age);
 
   if (a.responses == 0 || time_since > params_.diagnostic_timeout_sec) {
-    stat.summary(diagnostic_msgs::msg::DiagnosticStatus::WARN, a.name + " is offline.");
+    stat.summary(diagnostic_msgs::msg::DiagnosticStatus::WARN, "Agent is offline.");
   } else {
-    stat.summary(diagnostic_msgs::msg::DiagnosticStatus::OK, a.name + " is online.");
+    stat.summary(diagnostic_msgs::msg::DiagnosticStatus::OK,
+                 "Agent is online (" + a.last_transport + ").");
   }
 }
 

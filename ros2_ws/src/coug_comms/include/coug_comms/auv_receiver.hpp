@@ -63,9 +63,11 @@ class AuvReceiverNode : public rclcpp::Node {
   /**
    * @brief Records a service outcome in the rolling history, trimming to the last few.
    * @param service The name of the service that was relayed.
+   * @param transport The transport used (e.g. "ACOUSTIC").
    * @param succeeded Whether the service call succeeded.
    */
-  void recordServiceResult(const std::string& service, bool succeeded);
+  void recordServiceResult(const std::string& service, const std::string& transport,
+                           bool succeeded);
 
   /**
    * @brief Diagnostic task reporting the last few services received and their results.
@@ -94,6 +96,7 @@ class AuvReceiverNode : public rclcpp::Node {
    */
   struct ServiceResult {
     std::string service;
+    std::string transport;
     bool succeeded;
   };
   std::deque<ServiceResult> service_history_;

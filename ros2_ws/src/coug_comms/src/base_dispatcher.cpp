@@ -233,11 +233,9 @@ void BaseDispatcherNode::checkAgentServiceStatus(diagnostic_updater::DiagnosticS
 
   const ServiceResult& latest = a.service_history.back();
   if (latest.succeeded) {
-    stat.summary(diagnostic_msgs::msg::DiagnosticStatus::OK,
-                 latest.service + " to " + a.name + " succeeded.");
+    stat.summary(diagnostic_msgs::msg::DiagnosticStatus::OK, latest.service + " succeeded.");
   } else {
-    stat.summary(diagnostic_msgs::msg::DiagnosticStatus::ERROR,
-                 latest.service + " to " + a.name + " failed.");
+    stat.summary(diagnostic_msgs::msg::DiagnosticStatus::ERROR, latest.service + " failed.");
   }
 }
 

@@ -100,7 +100,7 @@ void AuvReceiverNode::callService(rclcpp::Client<std_srvs::srv::Trigger>::Shared
   const std::string service = utils::messageType(cmd);
   if (!client->service_is_ready()) {
     RCLCPP_ERROR(get_logger(), "Service not available: %s", service.c_str());
-    recordServiceResult(service, false);
+    recordServiceResult(service, "ACOUSTIC", false);
     return;
   }
   client->async_send_request(
@@ -110,16 +110,20 @@ void AuvReceiverNode::callService(rclcpp::Client<std_srvs::srv::Trigger>::Shared
         try {
           success = future.get()->success;
         } catch (const std::exception& e) {
-          RCLCPP_ERROR(get_logger(), "Service call failed: %s", e.what());
+          RCLCPP_ERROR(get_logger(), "Service call failed: %s; %s", service.c_str(), e.what());
         }
-        recordServiceResult(service, success);
-        RCLCPP_INFO(get_logger(), "Service for %s: %s", service.c_str(),
-                    success ? "success" : "failure");
+        recordServiceResult(service, "ACOUSTIC", success);
+        if (success) {
+          RCLCPP_INFO(get_logger(), "Service call succeeded: %s", service.c_str());
+        } else {
+          RCLCPP_WARN(get_logger(), "Service call failed: %s", service.c_str());
+        }
       });
 }
 
-void AuvReceiverNode::recordServiceResult(const std::string& service, bool succeeded) {
-  service_history_.push_back({service, succeeded});
+void AuvReceiverNode::recordServiceResult(const std::string& service, const std::string& transport,
+                                          bool succeeded) {
+  service_history_.push_back({service, transport, succeeded});
   if (service_history_.size() > static_cast<size_t>(params_.service_history_size)) {
     service_history_.pop_front();
   }
@@ -133,7 +137,8 @@ void AuvReceiverNode::checkServiceStatus(diagnostic_updater::DiagnosticStatusWra
 
   size_t index = 1;
   for (auto it = service_history_.rbegin(); it != service_history_.rend(); ++it) {
-    stat.add(std::to_string(index++), it->service + (it->succeeded ? ": succeeded" : ": failed"));
+    stat.add(std::to_string(index++), it->service + " (" + it->transport + ")" +
+                                          (it->succeeded ? ": succeeded" : ": failed"));
   }
 
   const ServiceResult& latest = service_history_.back();
