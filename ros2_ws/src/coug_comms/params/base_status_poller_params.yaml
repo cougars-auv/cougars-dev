@@ -20,10 +20,9 @@ base_status_poller_node:
     default_value: 2.0
     validation:
       gt<>: [0.0]
-
-  response_timeout_sec:
+  tick_period_sec:
     type: double
-    default_value: 5.0
+    default_value: 0.05
     validation:
       gt<>: [0.0]
   poll_period_sec:
@@ -31,9 +30,9 @@ base_status_poller_node:
     default_value: 0.0
     validation:
       gt_eq<>: [0.0]
-  tick_period_sec:
+  response_timeout_sec:
     type: double
-    default_value: 0.05
+    default_value: 5.0
     validation:
       gt<>: [0.0]
 

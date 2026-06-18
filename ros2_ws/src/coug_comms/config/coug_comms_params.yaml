@@ -52,10 +52,9 @@
       diagnostic_timeout_sec: 10.0 # [s]
 
       direct_timeout_sec: 2.0 # [s] Direct link timeout
-
-      response_timeout_sec: 5.0 # [s] Backup seconds to wait for a polled agent before skipping (modem TIMEOUT abandons earlier).
-      poll_period_sec: 0.0 # [s] Minimum seconds between polls (0 = continuous).
-      tick_period_sec: 0.05 # [s] Polling/timeout timer period.
+      tick_period_sec: 0.05 # [s]
+      poll_period_sec: 0.0 # [s]
+      response_timeout_sec: 5.0 # [s]
 
       # --- ROS Topics ---
       modem_send_topic: "modem_send"

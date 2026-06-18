@@ -9,6 +9,8 @@
       publish_diagnostics: true # Publish diagnostic information.
       service_history_size: 5
 
+      direct_timeout_sec: 2.0 # [s] Direct link timeout
+
       # --- ROS Topics ---
       modem_send_topic: "modem_send"
 
@@ -19,6 +21,7 @@
       emergency_stop_service: "base/emergency_stop"
       emergency_surface_service: "base/emergency_surface"
 
+      direct_status_topic: "status"
       direct_start_service: "start"
       direct_stop_service: "stop"
       direct_surface_service: "surface"
@@ -46,16 +49,20 @@
     ros__parameters:
       # --- Node Settings ---
       publish_diagnostics: true # Publish diagnostic information.
+      diagnostic_timeout_sec: 10.0 # [s]
 
-      response_timeout_sec: 5.0 # [s] Backup seconds to wait for a polled agent before skipping (modem TIMEOUT abandons earlier).
-      poll_period_sec: 0.0 # [s] Minimum seconds between polls (0 = continuous).
-      tick_period_sec: 0.05 # [s] Polling/timeout timer period.
+      direct_timeout_sec: 2.0 # [s] Direct link timeout
+      tick_period_sec: 0.05 # [s]
+      poll_period_sec: 0.0 # [s]
+      response_timeout_sec: 5.0 # [s]
 
       # --- ROS Topics ---
       modem_send_topic: "modem_send"
       modem_rec_topic: "modem_rec"
       modem_cmd_update_topic: "modem_cmd_update"
+
       status_topic: "base/status"
+      direct_status_topic: "status"
 
   auv_status_stager_node:
     ros__parameters:
