@@ -23,7 +23,7 @@ from launch.actions import (
     ExecuteProcess,
     OpaqueFunction,
 )
-from launch.conditions import IfCondition
+from launch.conditions import IfCondition, UnlessCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import (
     LaunchConfiguration,
@@ -43,6 +43,7 @@ def launch_setup(context, *args, **kwargs) -> list:
     base_station = LaunchConfiguration("base_station")
     enable_direct_comms = LaunchConfiguration("enable_direct_comms")
     enable_acoustic_comms = LaunchConfiguration("enable_acoustic_comms")
+    hitl_mode = LaunchConfiguration("hitl_mode")
 
     agent_list_str = context.perform_substitution(agent_list)
     record_bag_path_str = context.perform_substitution(record_bag_path)
@@ -102,6 +103,7 @@ def launch_setup(context, *args, **kwargs) -> list:
                     "auv_ns": auv_ns,
                     "compare": compare,
                 }.items(),
+                condition=UnlessCondition(hitl_mode),
             )
         )
 
@@ -258,6 +260,11 @@ def generate_launch_description() -> LaunchDescription:
                 "enable_acoustic_comms",
                 default_value="true",
                 description="Enable acoustic communications",
+            ),
+            DeclareLaunchArgument(
+                "hitl_mode",
+                default_value="false",
+                description="HITL mode (skip launching local AUV nodes)",
             ),
             OpaqueFunction(function=launch_setup),
         ]

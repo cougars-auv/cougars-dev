@@ -14,25 +14,14 @@ case ${scenario} in
 esac
 
 # --- Options ---
-options=$(gum choose --no-limit --header "Select options:" "Record rosbag" "Launch comparison methods" "Disable sensor noise" "Acoustic comms") || exit 0
+options=$(gum choose --no-limit --header "Select options:" "Record rosbag" "Launch comparison methods" "Disable sensor noise" "Acomms/radio simulation" "HITL mode") || exit 0
 
 compare="false"
 record_bag_path=""
 add_noise="true"
 enable_direct_comms="true"
 enable_acoustic_comms="true"
-
-if [[ "${options}" == *"Launch comparison methods"* ]]; then
-  compare="true"
-fi
-
-if [[ "${options}" == *"Disable sensor noise"* ]]; then
-  add_noise="false"
-fi
-
-if [[ "${options}" == *"Acoustic comms"* ]]; then
-  enable_direct_comms="false"
-fi
+hitl_mode="false"
 
 if [[ "${options}" == *"Record rosbag"* ]]; then
   suffix=$(gum input --placeholder "Set bag suffix..." || echo "")
@@ -43,6 +32,22 @@ if [[ "${options}" == *"Record rosbag"* ]]; then
   fi
 fi
 
+if [[ "${options}" == *"Launch comparison methods"* ]]; then
+  compare="true"
+fi
+
+if [[ "${options}" == *"Disable sensor noise"* ]]; then
+  add_noise="false"
+fi
+
+if [[ "${options}" == *"Acomms/radio simulation"* ]]; then
+  enable_direct_comms="false"
+fi
+
+if [[ "${options}" == *"HITL mode"* ]]; then
+  hitl_mode="true"
+fi
+
 # --- Launch ---
 args=(
   "agent_list:=${agent_list}"
@@ -51,6 +56,7 @@ args=(
   "base_station:=${base_station}"
   "enable_direct_comms:=${enable_direct_comms}"
   "enable_acoustic_comms:=${enable_acoustic_comms}"
+  "hitl_mode:=${hitl_mode}"
 )
 [ -n "${record_bag_path}" ] && args+=("record_bag_path:=${record_bag_path}")
 

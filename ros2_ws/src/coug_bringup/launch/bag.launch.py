@@ -29,6 +29,7 @@ from launch.actions import (
 from launch.event_handlers import OnProcessExit
 from launch.events import matches_action
 from launch.events.process import SignalProcess
+from launch.conditions import UnlessCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 
@@ -42,6 +43,7 @@ def launch_setup(context, *args, **kwargs) -> list:
     play_bag_path = LaunchConfiguration("play_bag_path")
     record_bag_path = LaunchConfiguration("record_bag_path")
     compare = LaunchConfiguration("compare")
+    hitl_mode = LaunchConfiguration("hitl_mode")
 
     agent_list_str = context.perform_substitution(agent_list)
     play_bag_path_str = context.perform_substitution(play_bag_path)
@@ -153,6 +155,7 @@ def launch_setup(context, *args, **kwargs) -> list:
                 "auv_ns": auv_ns,
                 "compare": compare,
             }.items(),
+            condition=UnlessCondition(hitl_mode),
         )
     )
 
@@ -201,6 +204,11 @@ def generate_launch_description() -> LaunchDescription:
                 "compare",
                 default_value="false",
                 description="Launch additional localization nodes if true",
+            ),
+            DeclareLaunchArgument(
+                "hitl_mode",
+                default_value="false",
+                description="HITL mode (skip launching local AUV nodes)",
             ),
             OpaqueFunction(function=launch_setup),
         ]

@@ -6,22 +6,28 @@ source ${OVERLAY_WS}/install/setup.bash
 # --- Selection ---
 bag_name=$(cd "${BAGS_DIR}" && find . -maxdepth 3 -name "metadata.yaml" -exec dirname {} \; | sed 's|^\./||' | sort -r | gum filter --placeholder "Select a bag to play..." || exit 0)
 [ -z "${bag_name}" ] && exit 0
-bag_path="${BAGS_DIR}/${bag_name}"
+play_bag_path="${BAGS_DIR}/${bag_name}"
 
 agent_ns=$(basename -a "${CONFIG_DIR}"/*_params.yaml | sed 's/_params.yaml$//' | sort | gum filter --placeholder "Select an agent to launch..." || exit 0)
 [ -z "${agent_ns}" ] && exit 0
 agent_list="[${agent_ns}]"
 
 # --- Options ---
-options=$(gum choose --no-limit --header "Select options:" "Record rosbag" "Set start delay" "Set playback rate" "Launch comparison methods") || exit 0
+options=$(gum choose --no-limit --header "Select options:" "Record rosbag" "Set start delay" "Set playback rate" "Launch comparison methods" "HITL mode") || exit 0
 
 compare="false"
 start_delay="0.0"
 playback_rate="1.0"
 record_bag_path=""
+hitl_mode="false"
 
-if [[ "${options}" == *"Launch comparison methods"* ]]; then
-  compare="true"
+if [[ "${options}" == *"Record rosbag"* ]]; then
+  suffix=$(gum input --placeholder "Set bag suffix..." || echo "")
+  if [ -n "${suffix}" ]; then
+    record_bag_path="${BAGS_DIR}/${suffix}$(date +'_%Y-%m-%d-%H-%M-%S')"
+  else
+    record_bag_path="${BAGS_DIR}/rosbag$(date +'_%Y-%m-%d-%H-%M-%S')"
+  fi
 fi
 
 if [[ "${options}" == *"Set start delay"* ]]; then
@@ -38,22 +44,22 @@ if [[ "${options}" == *"Set playback rate"* ]]; then
   fi
 fi
 
-if [[ "${options}" == *"Record rosbag"* ]]; then
-  suffix=$(gum input --placeholder "Set bag suffix..." || echo "")
-  if [ -n "${suffix}" ]; then
-    record_bag_path="${BAGS_DIR}/${suffix}$(date +'_%Y-%m-%d-%H-%M-%S')"
-  else
-    record_bag_path="${BAGS_DIR}/rosbag$(date +'_%Y-%m-%d-%H-%M-%S')"
-  fi
+if [[ "${options}" == *"Launch comparison methods"* ]]; then
+  compare="true"
+fi
+
+if [[ "${options}" == *"HITL mode"* ]]; then
+  hitl_mode="true"
 fi
 
 # --- Launch ---
 args=(
-  "play_bag_path:=${bag_path}"
+  "play_bag_path:=${play_bag_path}"
   "agent_list:=${agent_list}"
   "compare:=${compare}"
   "start_delay:=${start_delay}"
   "playback_rate:=${playback_rate}"
+  "hitl_mode:=${hitl_mode}"
 )
 [ -n "${record_bag_path}" ] && args+=("record_bag_path:=${record_bag_path}")
 
