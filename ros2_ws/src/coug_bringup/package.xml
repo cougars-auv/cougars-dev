@@ -20,6 +20,7 @@
   <exec_depend>coug_visual_dvl</exec_depend>
   <exec_depend>holoocean_bridge</exec_depend>
   <exec_depend>gpsd_client</exec_depend>
+  <exec_depend>gps_tools</exec_depend>
   <exec_depend>mavros</exec_depend>
   <exec_depend>ntrip_client</exec_depend>
   <exec_depend>sbg_driver</exec_depend>
