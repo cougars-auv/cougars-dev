@@ -14,7 +14,7 @@ case ${scenario} in
 esac
 
 # --- Options ---
-options=$(gum choose --no-limit --header "Select options:" "Record rosbag" "Launch comparison methods" "Disable sensor noise" "Acomms/radio simulation" "HITL mode") || exit 0
+options=$(gum choose --no-limit --header "Select options:" "Record rosbag" "Launch comparison methods" "Disable sensor noise" "Acomms simulation" "HITL mode") || exit 0
 
 compare="false"
 record_bag_path=""
@@ -40,7 +40,7 @@ if [[ "${options}" == *"Disable sensor noise"* ]]; then
   add_noise="false"
 fi
 
-if [[ "${options}" == *"Acomms/radio simulation"* ]]; then
+if [[ "${options}" == *"Acomms simulation"* ]]; then
   enable_direct_comms="false"
 fi
 

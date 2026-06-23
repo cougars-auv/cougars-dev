@@ -12,9 +12,9 @@ coug_active_fgo
 coug_comms
 coug_description
 coug_fgo
+coug_helm
 coug_interfaces
 coug_mapviz
-coug_helm
 coug_rqt
 coug_template
 coug_visual_dvl
