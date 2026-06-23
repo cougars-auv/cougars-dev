@@ -3,6 +3,10 @@ repositories:
     type: git
     url: git@github.com:cougars-auv/coug_active_fgo.git
     version: main
+  coug_comms:
+    type: git
+    url: https://github.com/cougars-auv/coug_comms.git
+    version: main
   coug_description:
     type: git
     url: git@github.com:cougars-auv/coug_description.git
@@ -51,3 +55,7 @@ repositories:
     type: zip
     url: https://github.com/paagutie/dvl_msgs/archive/refs/heads/master.zip
     version: dvl_msgs-master
+  mapviz:
+    type: zip
+    url: https://github.com/swri-robotics/mapviz/archive/refs/tags/2.6.4.zip
+    version: mapviz-2.6.4

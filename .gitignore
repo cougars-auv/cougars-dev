@@ -9,6 +9,7 @@ bags/*
 !bags/.gitkeep
 
 coug_active_fgo
+coug_comms
 coug_description
 coug_fgo
 coug_interfaces
@@ -21,6 +22,7 @@ dvl_msgs
 holoocean_bridge
 holoocean_interfaces
 seatrac_interfaces
+mapviz
 
 .DS_Store
 .env
