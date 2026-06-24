@@ -36,7 +36,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  DOCKER_IMAGE: snelsondurrant/cougars:base-latest
+  DOCKER_IMAGE: frostlab/cougars:base-latest
 
 jobs:
   build-test:

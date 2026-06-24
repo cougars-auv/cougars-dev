@@ -13,7 +13,7 @@
 # limitations under the License.
 
 ARG VERSION=latest
-FROM snelsondurrant/cougars:base-${VERSION}
+FROM frostlab/cougars:base-${VERSION}
 
 ARG DEBIAN_FRONTEND=noninteractive \
   DOCKER_USER=frostlab-docker

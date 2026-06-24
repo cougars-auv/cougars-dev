@@ -100,7 +100,7 @@ We adhere to the **Semantic Versioning (SemVer 2.0.0)** standard to release new 
   git push origin v1.2.3
   ```
 
-  Pushing the tag additionally triggers GitHub Actions to rebuild and publish the Docker images using a `<target>-<version>` format (e.g., `snelsondurrant/cougars:base-v1.2.3`).
+  Pushing the tag additionally triggers GitHub Actions to rebuild and publish the Docker images using a `<target>-<version>` format (e.g., `frostlab/cougars:base-v1.2.3`).
 
 - **Publish a GitHub Release:** On GitHub, draft a new release using your tag, review the generated notes, and publish.
 

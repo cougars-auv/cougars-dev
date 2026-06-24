@@ -14,14 +14,14 @@
 
 services:
   gtsam:
-    image: snelsondurrant/cougars:gtsam-${VERSION:-latest}
+    image: frostlab/cougars:gtsam-${VERSION:-latest}
     build:
       context: ..
       dockerfile: .docker/Dockerfile.gtsam
     profiles: ["build-reqs"]
 
   base:
-    image: snelsondurrant/cougars:base-${VERSION:-latest}
+    image: frostlab/cougars:base-${VERSION:-latest}
     build:
       context: ..
       dockerfile: .docker/Dockerfile.base
@@ -38,7 +38,7 @@ services:
     restart: unless-stopped
 
   router:
-    image: snelsondurrant/cougars:base-${VERSION:-latest}
+    image: frostlab/cougars:base-${VERSION:-latest}
     container_name: router-ct
     network_mode: host
     ipc: host
@@ -47,7 +47,7 @@ services:
     command: ros2 run rmw_zenoh_cpp rmw_zenohd
 
   dev:
-    image: snelsondurrant/cougars:dev-${VERSION:-latest}
+    image: frostlab/cougars:dev-${VERSION:-latest}
     # build:
     #   context: ..
     #   dockerfile: .docker/Dockerfile.dev
