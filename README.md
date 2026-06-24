@@ -78,7 +78,7 @@
 
 - **Submit a PR:** Open a pull request, ensure required tests pass, and merge once approved. Upon merge to `main`, GitHub Actions will automatically build and push updated images to Docker Hub with any new dependencies.
 
-## 📦 Releases
+## 📦 Releasing
 
 We adhere to the **Semantic Versioning (SemVer 2.0.0)** standard to release new versions of this sitory:
 > Given a version number **`MAJOR.MINOR.PATCH`**, increment the:
