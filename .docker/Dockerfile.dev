@@ -12,7 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM snelsondurrant/cougars:base
+ARG VERSION=latest
+FROM snelsondurrant/cougars:base-${VERSION}
 
 ARG DEBIAN_FRONTEND=noninteractive \
   DOCKER_USER=frostlab-docker

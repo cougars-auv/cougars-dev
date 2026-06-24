@@ -13,6 +13,7 @@
 # limitations under the License.
 
 # --- Cache Stage ---
+ARG VERSION=latest
 FROM ubuntu:24.04 AS cacher
 
 WORKDIR /tmp/packages
@@ -20,7 +21,7 @@ COPY ros2_ws/src .
 RUN find . -type f \! -name "package.xml" -delete
 
 # --- Main Stage ---
-FROM snelsondurrant/cougars:gtsam AS base
+FROM snelsondurrant/cougars:gtsam-${VERSION} AS base
 
 ARG DEBIAN_FRONTEND=noninteractive \
   TARGETARCH

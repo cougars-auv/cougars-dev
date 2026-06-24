@@ -93,7 +93,7 @@ jobs:
           platforms: linux/${{ matrix.arch }}
           push: true
           tags: |
-            ${{ env.DOCKER_IMAGE }}:gtsam-${{ matrix.arch }}
+            ${{ env.DOCKER_IMAGE }}:gtsam-latest-${{ matrix.arch }}
             ${{ env.IS_TAG == 'true' && format('{0}:gtsam-{1}-{2}', env.DOCKER_IMAGE, github.ref_name, matrix.arch) || '' }}
           provenance: false
           cache-from: |
@@ -113,9 +113,9 @@ jobs:
           username: ${{ env.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
       - run: |
-          docker buildx imagetools create -t ${{ env.DOCKER_IMAGE }}:gtsam \
-            ${{ env.DOCKER_IMAGE }}:gtsam-amd64 \
-            ${{ env.DOCKER_IMAGE }}:gtsam-arm64
+          docker buildx imagetools create -t ${{ env.DOCKER_IMAGE }}:gtsam-latest \
+            ${{ env.DOCKER_IMAGE }}:gtsam-latest-amd64 \
+            ${{ env.DOCKER_IMAGE }}:gtsam-latest-arm64
           if [ "${{ env.IS_TAG }}" = "true" ]; then
             docker buildx imagetools create -t ${{ env.DOCKER_IMAGE }}:gtsam-${{ github.ref_name }} \
               ${{ env.DOCKER_IMAGE }}:gtsam-${{ github.ref_name }}-amd64 \
@@ -161,8 +161,10 @@ jobs:
           platforms: linux/${{ matrix.arch }}
           pull: true
           push: true
+          build-args: |
+            VERSION=${{ env.IS_TAG == 'true' && github.ref_name || 'latest' }}
           tags: |
-            ${{ env.DOCKER_IMAGE }}:base-${{ matrix.arch }}
+            ${{ env.DOCKER_IMAGE }}:base-latest-${{ matrix.arch }}
             ${{ env.IS_TAG == 'true' && format('{0}:base-{1}-{2}', env.DOCKER_IMAGE, github.ref_name, matrix.arch) || '' }}
           provenance: false
           cache-from: |
@@ -188,9 +190,9 @@ jobs:
           username: ${{ env.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
       - run: |
-          docker buildx imagetools create -t ${{ env.DOCKER_IMAGE }}:base \
-            ${{ env.DOCKER_IMAGE }}:base-amd64 \
-            ${{ env.DOCKER_IMAGE }}:base-arm64
+          docker buildx imagetools create -t ${{ env.DOCKER_IMAGE }}:base-latest \
+            ${{ env.DOCKER_IMAGE }}:base-latest-amd64 \
+            ${{ env.DOCKER_IMAGE }}:base-latest-arm64
           if [ "${{ env.IS_TAG }}" = "true" ]; then
             docker buildx imagetools create -t ${{ env.DOCKER_IMAGE }}:base-${{ github.ref_name }} \
               ${{ env.DOCKER_IMAGE }}:base-${{ github.ref_name }}-amd64 \
@@ -221,8 +223,10 @@ jobs:
           platforms: linux/amd64
           pull: true
           push: true
+          build-args: |
+            VERSION=${{ env.IS_TAG == 'true' && github.ref_name || 'latest' }}
           tags: |
-            ${{ env.DOCKER_IMAGE }}:dev
+            ${{ env.DOCKER_IMAGE }}:dev-latest
             ${{ env.IS_TAG == 'true' && format('{0}:dev-{1}', env.DOCKER_IMAGE, github.ref_name) || '' }}
           provenance: false
           cache-from: |
