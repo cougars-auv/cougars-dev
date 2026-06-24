@@ -84,6 +84,9 @@
 
   auv_status_bundler_node:
     ros__parameters:
+      # --- Node Settings ---
+      publish_rate_hz: 10.0
+
       # --- ROS Topics ---
       status_topic: "status"
       odom_topic: "odometry/global"
