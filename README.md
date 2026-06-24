@@ -78,19 +78,22 @@
 
 - **Submit a PR:** Open a pull request, ensure required tests pass, and merge once approved. Upon merge to `main`, GitHub Actions will automatically build and push updated images to Docker Hub with any new dependencies.
 
-## 📦 Releasing
+## 📦 Releases
 
-We adhere to the **Semantic Versioning (SemVer 2.0.0)** standard to release new versions of this repository:
+We adhere to the **Semantic Versioning (SemVer 2.0.0)** standard to release new versions of this sitory:
 > Given a version number **`MAJOR.MINOR.PATCH`**, increment the:
 > - **MAJOR** version when you make incompatible API changes
 > - **MINOR** version when you add functionality in a backward compatible manner
 > - **PATCH** version when you make backward compatible bug fixes
 
-- **Create a Release Branch:** Create a dedicated release branch (e.g., `release/v1.2.x` or `release/v1.2.0`) from `main`.
+- **Create a Release Branch:** Create a dedicated release branch (e.g., `release/v1.2.x`) from `main`.
+  > Do not create separate branches for patch versions (e.g., `v1.2.1`). Simply merge fixes into the minor release branch and bump the patch version on the new tag when ready to release.
 
-- **Tag-Lock Dependencies:** On the release branch, pin all nested repositories in `cougars.repos` to specific tags instead of branches like `main`. Since sub-repositories version independently of `cougars-dev`, you can either use an existing up-to-date tag or create a new one (e.g., `v2.3.4`). Commit these updates.
+- **Tag Nested Repositories:** Check the repositories listed in `cougars.repos`. If there are untagged updates, update the `<version>` in the `package.xml` files and push new version tags (e.g., `v2.3.4`). Since sub-repositories version independently of `cougars-dev`, you can either use an existing up-to-date tag or create a new one.
 
-- **Execute the Release:** Create and push a version tag (e.g., `v1.2.3`) on your release commit:
+- **Lock Dependencies:** On the release branch, pin all nested repositories in `cougars.repos` to their specific release tags (instead of branches like `main`). Commit these updates.
+
+- **Tag and Build:** Create and push a version tag (e.g., `v1.2.3`) on your release commit:
 
   ```bash
   git tag v1.2.3
@@ -98,6 +101,8 @@ We adhere to the **Semantic Versioning (SemVer 2.0.0)** standard to release new 
   ```
 
   Pushing the tag additionally triggers GitHub Actions to rebuild and publish the Docker images using a `<target>-<version>` format (e.g., `snelsondurrant/cougars:base-v1.2.3`).
+
+- **Publish a GitHub Release:** On GitHub, draft a new release using your tag, review the generated notes, and publish.
 
 ## 📚 Citations
 
