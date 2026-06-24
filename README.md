@@ -72,11 +72,32 @@
 
 - **Make Changes:** Develop and debug your new feature. Add good documentation.
 
-  > If you need to add dependencies, update the `package.xml`, `Dockerfile`, `cougars.repos`, or `dependencies.repos` in your branch and test building the image locally. The CI will automatically build and push the new image to Docker Hub upon merge.
+  > If you need to add dependencies, update the `package.xml`, the Dockerfiles under `.docker/`, `cougars.repos`, or `dependencies.repos` in your branch and test building the image locally.
 
-- **Sync Frequently:** Regularly rebase your branch against `main` (or merge `main` into your branch) to prevent conflicts.
+- **Sync Frequently:** Regularly integrate the latest changes from `main` into your branch (via rebase or merge) to prevent future conflicts.
 
-- **Submit a PR:** Open a pull request, ensure required tests pass, and merge once approved.
+- **Submit a PR:** Open a pull request, ensure required tests pass, and merge once approved. Upon merge to `main`, GitHub Actions will automatically build and push updated images to Docker Hub with any new dependencies.
+
+## 📦 Releasing
+
+We adhere to the **Semantic Versioning (SemVer 2.0.0)** standard to release new versions of this repository:
+> Given a version number **`MAJOR.MINOR.PATCH`**, increment the:
+> - **MAJOR** version when you make incompatible API changes
+> - **MINOR** version when you add functionality in a backward compatible manner
+> - **PATCH** version when you make backward compatible bug fixes
+
+- **Create a Release Branch:** Create a dedicated release branch (e.g., `release/v1.2.x` or `release/v1.2.0`) from `main`.
+
+- **Tag-Lock Dependencies:** On the release branch, pin all nested repositories in `cougars.repos` to specific tags instead of branches like `main`. Since sub-repositories version independently of `cougars-dev`, you can either use an existing up-to-date tag or create a new one (e.g., `v2.3.4`). Commit these updates.
+
+- **Execute the Release:** Create and push a version tag (e.g., `v1.2.3`) on your release commit:
+
+  ```bash
+  git tag v1.2.3
+  git push origin v1.2.3
+  ```
+
+  Pushing the tag additionally triggers GitHub Actions to rebuild and publish the Docker images using a `<target>-<version>` format (e.g., `snelsondurrant/cougars:base-v1.2.3`).
 
 ## 📚 Citations
 
