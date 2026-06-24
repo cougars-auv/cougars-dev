@@ -61,3 +61,4 @@ services:
     command: >
       ros2 launch coug_bringup auv.launch.py
       auv_ns:=${AUV_NS}
+      use_sim_time:=${USE_SIM_TIME:-false}
