@@ -55,6 +55,7 @@ repositories:
     type: zip
     url: https://github.com/paagutie/dvl_msgs/archive/refs/heads/master.zip
     version: dvl_msgs-master
+  # TODO: Remove this once 2.6.5 install is fixed
   mapviz:
     type: zip
     url: https://github.com/swri-robotics/mapviz/archive/refs/tags/2.6.4.zip
