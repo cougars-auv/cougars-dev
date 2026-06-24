@@ -17,6 +17,8 @@ name: Docker Build
 on:
   push:
     branches: [ "main" ]
+    tags:
+      - "v*"
     paths:
       - ".github/workflows/docker_build.yml"
       - ".docker/Dockerfile.gtsam"
@@ -32,6 +34,11 @@ on:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
+
+env:
+  IS_TAG: ${{ github.ref_type == 'tag' }}
+  DOCKER_USERNAME: snelsondurrant
+  DOCKER_IMAGE: snelsondurrant/cougars
 
 jobs:
   check-changes:
@@ -63,7 +70,7 @@ jobs:
     needs: check-changes
     if: |
       github.event_name != 'repository_dispatch' &&
-      needs.check-changes.outputs.gtsam == 'true'
+      (needs.check-changes.outputs.gtsam == 'true' || github.ref_type == 'tag')
     strategy:
       matrix:
         include:
@@ -77,7 +84,7 @@ jobs:
       - uses: docker/setup-buildx-action@v4
       - uses: docker/login-action@v4
         with:
-          username: snelsondurrant
+          username: ${{ env.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
       - uses: docker/build-push-action@v7
         with:
@@ -85,14 +92,16 @@ jobs:
           file: .docker/Dockerfile.gtsam
           platforms: linux/${{ matrix.arch }}
           push: true
-          tags: snelsondurrant/cougars:gtsam-${{ matrix.arch }}
+          tags: |
+            ${{ env.DOCKER_IMAGE }}:gtsam-${{ matrix.arch }}
+            ${{ env.IS_TAG == 'true' && format('{0}:gtsam-{1}-{2}', env.DOCKER_IMAGE, github.ref_name, matrix.arch) || '' }}
           provenance: false
           cache-from: |
             type=gha,scope=gtsam-${{ matrix.arch }}
-            type=registry,ref=snelsondurrant/cougars:buildcache-gtsam-${{ matrix.arch }}
+            type=registry,ref=${{ env.DOCKER_IMAGE }}:buildcache-gtsam-${{ matrix.arch }}
           cache-to: |
             type=gha,mode=max,scope=gtsam-${{ matrix.arch }}
-            type=registry,ref=snelsondurrant/cougars:buildcache-gtsam-${{ matrix.arch }},mode=max
+            type=registry,ref=${{ env.DOCKER_IMAGE }}:buildcache-gtsam-${{ matrix.arch }},mode=max
 
   manifest-gtsam:
     needs: build-gtsam
@@ -101,18 +110,24 @@ jobs:
       - uses: docker/setup-buildx-action@v4
       - uses: docker/login-action@v4
         with:
-          username: snelsondurrant
+          username: ${{ env.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
       - run: |
-          docker buildx imagetools create -t snelsondurrant/cougars:gtsam \
-            snelsondurrant/cougars:gtsam-amd64 \
-            snelsondurrant/cougars:gtsam-arm64
+          docker buildx imagetools create -t ${{ env.DOCKER_IMAGE }}:gtsam \
+            ${{ env.DOCKER_IMAGE }}:gtsam-amd64 \
+            ${{ env.DOCKER_IMAGE }}:gtsam-arm64
+          if [ "${{ env.IS_TAG }}" = "true" ]; then
+            docker buildx imagetools create -t ${{ env.DOCKER_IMAGE }}:gtsam-${{ github.ref_name }} \
+              ${{ env.DOCKER_IMAGE }}:gtsam-${{ github.ref_name }}-amd64 \
+              ${{ env.DOCKER_IMAGE }}:gtsam-${{ github.ref_name }}-arm64
+          fi
 
   build-base:
     needs: [ check-changes, build-gtsam, manifest-gtsam ]
     if: |
       !failure() && !cancelled() &&
       (github.event_name == 'repository_dispatch' ||
+       github.ref_type == 'tag' ||
        needs.check-changes.outputs.gtsam == 'true' ||
        needs.check-changes.outputs.base == 'true')
     strategy:
@@ -137,7 +152,7 @@ jobs:
       - uses: docker/setup-buildx-action@v4
       - uses: docker/login-action@v4
         with:
-          username: snelsondurrant
+          username: ${{ env.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
       - uses: docker/build-push-action@v7
         with:
@@ -146,20 +161,23 @@ jobs:
           platforms: linux/${{ matrix.arch }}
           pull: true
           push: true
-          tags: snelsondurrant/cougars:base-${{ matrix.arch }}
+          tags: |
+            ${{ env.DOCKER_IMAGE }}:base-${{ matrix.arch }}
+            ${{ env.IS_TAG == 'true' && format('{0}:base-{1}-{2}', env.DOCKER_IMAGE, github.ref_name, matrix.arch) || '' }}
           provenance: false
           cache-from: |
             type=gha,scope=base-${{ matrix.arch }}
-            type=registry,ref=snelsondurrant/cougars:buildcache-base-${{ matrix.arch }}
+            type=registry,ref=${{ env.DOCKER_IMAGE }}:buildcache-base-${{ matrix.arch }}
           cache-to: |
             type=gha,mode=max,scope=base-${{ matrix.arch }}
-            type=registry,ref=snelsondurrant/cougars:buildcache-base-${{ matrix.arch }},mode=max
+            type=registry,ref=${{ env.DOCKER_IMAGE }}:buildcache-base-${{ matrix.arch }},mode=max
 
   manifest-base:
     needs: [ check-changes, build-base ]
     if: |
       !failure() && !cancelled() &&
       (github.event_name == 'repository_dispatch' ||
+       github.ref_type == 'tag' ||
        needs.check-changes.outputs.gtsam == 'true' ||
        needs.check-changes.outputs.base == 'true')
     runs-on: ubuntu-24.04
@@ -167,18 +185,24 @@ jobs:
       - uses: docker/setup-buildx-action@v4
       - uses: docker/login-action@v4
         with:
-          username: snelsondurrant
+          username: ${{ env.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
       - run: |
-          docker buildx imagetools create -t snelsondurrant/cougars:base \
-            snelsondurrant/cougars:base-amd64 \
-            snelsondurrant/cougars:base-arm64
+          docker buildx imagetools create -t ${{ env.DOCKER_IMAGE }}:base \
+            ${{ env.DOCKER_IMAGE }}:base-amd64 \
+            ${{ env.DOCKER_IMAGE }}:base-arm64
+          if [ "${{ env.IS_TAG }}" = "true" ]; then
+            docker buildx imagetools create -t ${{ env.DOCKER_IMAGE }}:base-${{ github.ref_name }} \
+              ${{ env.DOCKER_IMAGE }}:base-${{ github.ref_name }}-amd64 \
+              ${{ env.DOCKER_IMAGE }}:base-${{ github.ref_name }}-arm64
+          fi
 
   build-dev:
     needs: [ check-changes, build-base, manifest-base ]
     if: |
       !failure() && !cancelled() &&
       (github.event_name == 'repository_dispatch' ||
+       github.ref_type == 'tag' ||
        needs.check-changes.outputs.gtsam == 'true' ||
        needs.check-changes.outputs.base == 'true' ||
        needs.check-changes.outputs.dev == 'true')
@@ -188,7 +212,7 @@ jobs:
       - uses: docker/setup-buildx-action@v4
       - uses: docker/login-action@v4
         with:
-          username: snelsondurrant
+          username: ${{ env.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
       - uses: docker/build-push-action@v7
         with:
@@ -197,11 +221,13 @@ jobs:
           platforms: linux/amd64
           pull: true
           push: true
-          tags: snelsondurrant/cougars:dev
+          tags: |
+            ${{ env.DOCKER_IMAGE }}:dev
+            ${{ env.IS_TAG == 'true' && format('{0}:dev-{1}', env.DOCKER_IMAGE, github.ref_name) || '' }}
           provenance: false
           cache-from: |
             type=gha,scope=dev-amd64
-            type=registry,ref=snelsondurrant/cougars:buildcache-dev-amd64
+            type=registry,ref=${{ env.DOCKER_IMAGE }}:buildcache-dev-amd64
           cache-to: |
             type=gha,mode=max,scope=dev-amd64
-            type=registry,ref=snelsondurrant/cougars:buildcache-dev-amd64,mode=max
+            type=registry,ref=${{ env.DOCKER_IMAGE }}:buildcache-dev-amd64,mode=max
