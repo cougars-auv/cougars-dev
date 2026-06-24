@@ -7,7 +7,7 @@ version="latest"
 args=()
 while [ $# -gt 0 ]; do
   case "$1" in
-    --sim) use_sim_time="true"; shift ;;
+    --hitl) use_sim_time="true"; shift ;;
     --version) version="$2"; shift 2 ;;
     --version=*) version="${1#*=}"; shift ;;
     *) args+=("$1"); shift ;;
@@ -16,7 +16,7 @@ done
 set -- "${args[@]}"
 
 if [ -z "$1" ] || [ -z "$2" ]; then
-  echo "Usage: ./setup.sh <base-station-ip> <agent-ns> [--sim] [--version <tag>]"
+  echo "Usage: ./setup.sh <base-station-ip> <agent-ns> [--hitl] [--version <tag>]"
   exit 1
 fi
 
