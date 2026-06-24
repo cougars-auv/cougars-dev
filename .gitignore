@@ -18,9 +18,11 @@ coug_mapviz
 coug_rqt
 coug_template
 coug_visual_dvl
+cougars_wiki
 dvl_msgs
 holoocean_bridge
 holoocean_interfaces
+holoocean-ros
 seatrac_interfaces
 mapviz
 
