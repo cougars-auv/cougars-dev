@@ -12,14 +12,18 @@ repos:
         exclude: \.md$
       - id: end-of-file-fixer
       - id: mixed-line-ending
-      - id: check-added-large-files
-        args: ["--maxkb=10000"]
       - id: check-yaml
       - id: check-json
       - id: check-xml
       - id: check-toml
       - id: check-symlinks
+      - id: check-shebang-scripts-are-executable
+      - id: check-executables-have-shebangs
+      - id: check-added-large-files
+        args: ["--maxkb=10000"]
+      - id: check-merge-conflict
       - id: forbid-submodules
+      - id: detect-private-key
 
   - repo: https://github.com/python-jsonschema/check-jsonschema
     rev: 0.37.2
