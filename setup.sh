@@ -43,10 +43,10 @@ git remote add base "git://${ip}/cougars-dev" 2>/dev/null || \
   git remote set-url base "git://${ip}/cougars-dev"
 
 cat > .env <<EOF
-VERSION=${version}
 ZENOH_ROUTER_IP=${ip}
 AUV_NS=${agent_ns}
 USE_SIM_TIME=${use_sim_time}
+VERSION=${version}
 EOF
 
 sudo cp cougars.service /etc/systemd/system/
