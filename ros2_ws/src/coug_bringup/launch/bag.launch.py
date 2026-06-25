@@ -181,7 +181,7 @@ def generate_launch_description() -> LaunchDescription:
                 "agent_list",
                 default_value="[auv0]",
                 description=(
-                    "YAML list of AUV namespaces "
+                    "YAML list of agent namespaces "
                     "(e.g. '[coug1sim]' or '[coug1sim, coug2sim]')"
                 ),
             ),

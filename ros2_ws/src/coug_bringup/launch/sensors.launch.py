@@ -76,6 +76,13 @@ def generate_launch_description() -> LaunchDescription:
             "nmea_gpsd_params.yaml",
         ]
     )
+    topic_monitor_params = PathJoinSubstitution(
+        [
+            EnvironmentVariable("CONFIG_DIR"),
+            "fleet",
+            "topic_monitor_params.yaml",
+        ]
+    )
     ntrip_client_params = PathJoinSubstitution(
         [
             EnvironmentVariable("CONFIG_DIR"),
@@ -140,6 +147,12 @@ def generate_launch_description() -> LaunchDescription:
                 executable="nmea_gpsd_udp",
                 name="nmea_gpsd_udp",
                 parameters=[nmea_gpsd_params, auv_params],
+            ),
+            Node(
+                package="topic_monitor",
+                executable="topic_monitor_node",
+                name="topic_monitor_node",
+                parameters=[topic_monitor_params, auv_params],
             ),
             Node(
                 package="ntrip_client",

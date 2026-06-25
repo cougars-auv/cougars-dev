@@ -189,7 +189,7 @@
         orientation: [1.0, 0.0, 0.0, 0.0] # [qx, qy, qz, qw]
       covariance_scalar: 1.0 # Scales the prediction noise sigmas.
       prediction_noise_sigmas: [0.1, 0.1, 0.1] # Model prediction uncertainty sigmas.
-      mass: [31.87, 60.46, 60.46] # [kg] Mass of the vehicle (diagonal)
+      mass: [31.87, 60.46, 60.46] # [kg] Mass of the AUV (diagonal)
       linear_drag: [1.59, 3.02, 3.02] # Linear drag coefficient (diagonal)
       quad_drag: [6.11, 196.13, 196.13] # Quadratic drag coefficient (diagonal)
       diagnostic_timeout_sec: 1.0 # [s]
