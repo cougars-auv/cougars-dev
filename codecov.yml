@@ -1,0 +1,6 @@
+fixes:
+  - "**/target_ws/src/::ros2_ws/src/"
+
+ignore:
+  - "**/test/**"
+  - "**/setup.py"
