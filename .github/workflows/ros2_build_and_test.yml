@@ -43,7 +43,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        runner: [ ubuntu-24.04, ubuntu-24.04-arm ]
+        include:
+          - runner: ubuntu-24.04
+            build_type: Debug
+            coverage: "--coverage"
+          - runner: ubuntu-24.04-arm
+            build_type: Release
+            coverage: ""
     runs-on: ${{ matrix.runner }}
     steps:
       - uses: actions/checkout@v6
@@ -65,10 +71,9 @@ jobs:
           CCACHE_DIR: ${{ github.workspace }}/.ccache
           BASEDIR: ${{ github.workspace }}/.work
           TARGET_CMAKE_ARGS: >
-            -DCMAKE_BUILD_TYPE=${{ matrix.runner == 'ubuntu-24.04' && 'Debug' ||
-            'Release' }} -DCMAKE_CXX_FLAGS="${{ matrix.runner == 'ubuntu-24.04'
-            && '--coverage' || '' }}" -DCMAKE_C_FLAGS="${{ matrix.runner ==
-            'ubuntu-24.04' && '--coverage' || '' }}"
+            -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+            -DCMAKE_CXX_FLAGS="${{ matrix.coverage }}"
+            -DCMAKE_C_FLAGS="${{ matrix.coverage }}"
           AFTER_SETUP_UPSTREAM_WORKSPACE: |
             git config --global --add safe.directory "*"
             vcs custom -n --git --args submodule update --init --recursive
