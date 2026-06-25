@@ -72,28 +72,33 @@ jobs:
           AFTER_SETUP_UPSTREAM_WORKSPACE: |
             git config --global --add safe.directory "*"
             vcs custom -n --git --args submodule update --init --recursive
+          BEFORE_RUN_TARGET_TEST: |
+            apt-get update && apt-get install -y lcov python3-colcon-lcov-result
+            cd "$target_ws" && colcon lcov-result --initial --lcov-args=--ignore-errors=mismatch,gcov,negative
+          AFTER_RUN_TARGET_TEST: |
+            cd "$target_ws" && colcon lcov-result --filter '/usr/*' '/opt/*' '*/test/*' --lcov-args=--ignore-errors=mismatch,gcov,negative || true
       - if: matrix.runner == 'ubuntu-24.04'
         continue-on-error: true
         run: |
-          sudo apt-get update && sudo apt-get install -y lcov python3-coverage
-          BUILD_DIR="${{ github.workspace }}/.work/target_ws/build"
-          SRC_DIR="${{ github.workspace }}/.work/target_ws/src"
-          REPO_PATH="${{ github.workspace }}/ros2_ws/src"
-          lcov --capture --directory "$BUILD_DIR" --output-file coverage.info --ignore-errors mismatch,gcov,source,empty
-          lcov --remove coverage.info '/usr/*' '/opt/*' '*/test/*' '*/tests/*' '*/install/*' '*/build/*' --output-file coverage.info --ignore-errors mismatch,gcov,unused,empty
-          sed -i "s|$SRC_DIR|$REPO_PATH|g" coverage.info
-          covs=$(find "$BUILD_DIR" -maxdepth 2 -name .coverage 2>/dev/null || true)
+          sudo apt-get update && sudo apt-get install -y python3-coverage
+          TARGET_WS="${{ github.workspace }}/.work/target_ws"
+          CONTAINER_SRC="$TARGET_WS/src"
+          REPO_SRC="${{ github.workspace }}/ros2_ws/src"
+          [ -f "$TARGET_WS/lcov/total_coverage.info" ] && \
+            sed "s|$CONTAINER_SRC|$REPO_SRC|g" "$TARGET_WS/lcov/total_coverage.info" > coverage.info
+          covs=$(find "$TARGET_WS/build" -maxdepth 2 -name .coverage 2>/dev/null || true)
           if [ -n "$covs" ]; then
-            export COVERAGE_FILE="${{ github.workspace }}/.coverage"
-            cd "$SRC_DIR"
-            python3 -m coverage combine --keep $covs
-            python3 -m coverage xml -o "${{ github.workspace }}/coverage-py.xml" --ignore-errors --omit='/usr/*,/opt/*,*/test/*,*/tests/*,*/install/*,*/build/*,*/setup.py'
-            sed -i "s|$SRC_DIR|$REPO_PATH|g" "${{ github.workspace }}/coverage-py.xml"
+            cov_dir=$(mktemp -d)
+            i=0; for c in $covs; do cp "$c" "$cov_dir/.coverage.$i"; i=$((i + 1)); done
+            if ( cd "$CONTAINER_SRC" && export COVERAGE_FILE="$cov_dir/.coverage"
+                 python3 -m coverage combine "$cov_dir" &&
+                 python3 -m coverage xml -o "${{ github.workspace }}/coverage-py.xml" --omit='*/test/*,*/setup.py' ); then
+              sed -i "s|$CONTAINER_SRC|$REPO_SRC|g" "${{ github.workspace }}/coverage-py.xml"
+            fi
           fi
       - if: matrix.runner == 'ubuntu-24.04'
         uses: codecov/codecov-action@v6
         with:
           files: coverage.info,coverage-py.xml
           disable_search: true
-          token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: false
