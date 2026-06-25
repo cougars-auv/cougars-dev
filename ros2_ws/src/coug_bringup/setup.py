@@ -17,7 +17,7 @@ setup(
     install_requires=["setuptools"],
     zip_safe=True,
     maintainer="snelsondurrant",
-    maintainer_email="snelsondurrant@gmail.com",
+    maintainer_email="snelsond@byu.edu",
     description="Full-system launch files for the CougUV",
     license="Apache-2.0",
     extras_require={

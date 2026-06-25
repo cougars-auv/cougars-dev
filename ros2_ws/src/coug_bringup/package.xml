@@ -4,7 +4,7 @@
   <name>coug_bringup</name>
   <version>0.0.0</version>
   <description>Full-system launch files for the CougUV</description>
-  <maintainer email="snelsondurrant@gmail.com">snelsondurrant</maintainer>
+  <maintainer email="snelsond@byu.edu">snelsondurrant</maintainer>
   <license>Apache-2.0</license>
 
   <exec_depend>coug_active_fgo</exec_depend>
