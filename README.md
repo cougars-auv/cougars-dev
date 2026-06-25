@@ -80,7 +80,7 @@
 
 ## 📦 Releasing
 
-We adhere to the **Semantic Versioning (SemVer 2.0.0)** standard to release new versions of this sitory:
+We adhere to the **Semantic Versioning (SemVer 2.0.0)** standard to release new versions of this repository:
 > Given a version number **`MAJOR.MINOR.PATCH`**, increment the:
 > - **MAJOR** version when you make incompatible API changes
 > - **MINOR** version when you add functionality in a backward compatible manner
