@@ -33,7 +33,7 @@
   pressure_converter_node:
     ros__parameters:
       input_topic: "DepthSensor"
-      output_topic: "pressure"
+      output_topic: "pressure/data"
 
       water_density: 997.0 # [kg/m^3]
       gravity: 9.81 # [m/s^2]

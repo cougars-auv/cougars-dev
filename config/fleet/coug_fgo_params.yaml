@@ -270,7 +270,7 @@
       max_pressure_delta: 0.0 # [Pa]
 
       # --- ROS Topics and Frames ---
-      input_topic: "pressure"
+      input_topic: "pressure/data"
       output_topic: "odometry/depth"
 
       use_parameter_child_frame: false
