@@ -19,14 +19,6 @@ on:
     branches: [ "main" ]
     tags:
       - "v*"
-    paths:
-      - ".github/workflows/docker_build.yml"
-      - ".docker/Dockerfile.gtsam"
-      - ".docker/Dockerfile.base"
-      - ".docker/Dockerfile.dev"
-      - ".docker/entrypoint.sh"
-      - "cougars.repos"
-      - "**/package.xml"
   repository_dispatch:
     types: [ docker_dispatch ]
   workflow_dispatch:
@@ -44,9 +36,9 @@ jobs:
   check-changes:
     runs-on: ubuntu-24.04
     outputs:
-      gtsam: ${{ steps.filter.outputs.gtsam }}
-      base: ${{ steps.filter.outputs.base }}
-      dev: ${{ steps.filter.outputs.dev }}
+      build_gtsam: ${{ steps.decide.outputs.build_gtsam }}
+      build_base: ${{ steps.decide.outputs.build_base }}
+      build_dev: ${{ steps.decide.outputs.build_dev }}
     steps:
       - uses: actions/checkout@v6
       - uses: dorny/paths-filter@v4
@@ -65,12 +57,34 @@ jobs:
             dev:
               - ".github/workflows/docker_build.yml"
               - ".docker/Dockerfile.dev"
+      - id: decide
+        env:
+          IS_DISPATCH: ${{ github.event_name == 'repository_dispatch' }}
+          GTSAM: ${{ steps.filter.outputs.gtsam }}
+          BASE: ${{ steps.filter.outputs.base }}
+          DEV: ${{ steps.filter.outputs.dev }}
+        run: |
+          build_gtsam=false
+          build_base=false
+          build_dev=false
+          if [ "$IS_DISPATCH" != "true" ] && { [ "$GTSAM" = "true" ] || [ "$IS_TAG" = "true" ]; }; then
+            build_gtsam=true
+          fi
+          if [ "$IS_DISPATCH" = "true" ] || [ "$IS_TAG" = "true" ] || [ "$GTSAM" = "true" ] || [ "$BASE" = "true" ]; then
+            build_base=true
+          fi
+          if [ "$build_base" = "true" ] || [ "$DEV" = "true" ]; then
+            build_dev=true
+          fi
+          {
+            echo "build_gtsam=$build_gtsam"
+            echo "build_base=$build_base"
+            echo "build_dev=$build_dev"
+          } >> "$GITHUB_OUTPUT"
 
   build-gtsam:
     needs: check-changes
-    if: |
-      github.event_name != 'repository_dispatch' &&
-      (needs.check-changes.outputs.gtsam == 'true' || github.ref_type == 'tag')
+    if: needs.check-changes.outputs.build_gtsam == 'true'
     strategy:
       matrix:
         include:
@@ -124,12 +138,7 @@ jobs:
 
   build-base:
     needs: [ check-changes, build-gtsam, manifest-gtsam ]
-    if: |
-      !failure() && !cancelled() &&
-      (github.event_name == 'repository_dispatch' ||
-       github.ref_type == 'tag' ||
-       needs.check-changes.outputs.gtsam == 'true' ||
-       needs.check-changes.outputs.base == 'true')
+    if: ${{ !failure() && !cancelled() && needs.check-changes.outputs.build_base == 'true' }}
     strategy:
       matrix:
         include:
@@ -176,12 +185,7 @@ jobs:
 
   manifest-base:
     needs: [ check-changes, build-base ]
-    if: |
-      !failure() && !cancelled() &&
-      (github.event_name == 'repository_dispatch' ||
-       github.ref_type == 'tag' ||
-       needs.check-changes.outputs.gtsam == 'true' ||
-       needs.check-changes.outputs.base == 'true')
+    if: ${{ !failure() && !cancelled() && needs.check-changes.outputs.build_base == 'true' }}
     runs-on: ubuntu-24.04
     steps:
       - uses: docker/setup-buildx-action@v4
@@ -201,13 +205,7 @@ jobs:
 
   build-dev:
     needs: [ check-changes, build-base, manifest-base ]
-    if: |
-      !failure() && !cancelled() &&
-      (github.event_name == 'repository_dispatch' ||
-       github.ref_type == 'tag' ||
-       needs.check-changes.outputs.gtsam == 'true' ||
-       needs.check-changes.outputs.base == 'true' ||
-       needs.check-changes.outputs.dev == 'true')
+    if: ${{ !failure() && !cancelled() && needs.check-changes.outputs.build_dev == 'true' }}
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v6

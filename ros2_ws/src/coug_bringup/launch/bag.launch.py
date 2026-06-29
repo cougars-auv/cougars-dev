@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import os
+import shutil
 import signal
 import yaml
 from ament_index_python.packages import get_package_share_directory
@@ -34,6 +35,24 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 
 
+def save_config(context, record_bag_path) -> list:
+    """
+    Copy the active config directory into the recorded bag directory.
+
+    :param record_bag_path: Path to the recorded bag (skipped if not created).
+    """
+    if not record_bag_path or not os.path.isdir(record_bag_path):
+        return []
+
+    config_dir = os.environ.get("CONFIG_DIR", "")
+    if not config_dir or not os.path.isdir(config_dir):
+        return []
+
+    dest = os.path.join(record_bag_path, "config")
+    shutil.copytree(config_dir, dest, dirs_exist_ok=True)
+    return [LogInfo(msg=f"Config saved to {dest}")]
+
+
 def launch_setup(context, *args, **kwargs) -> list:
 
     use_sim_time = LaunchConfiguration("use_sim_time")
@@ -45,9 +64,9 @@ def launch_setup(context, *args, **kwargs) -> list:
     compare = LaunchConfiguration("compare")
     hitl_mode = LaunchConfiguration("hitl_mode")
 
-    agent_list_str = context.perform_substitution(agent_list)
-    play_bag_path_str = context.perform_substitution(play_bag_path)
-    record_bag_path_str = context.perform_substitution(record_bag_path)
+    agent_list_str = agent_list.perform(context)
+    play_bag_path_str = play_bag_path.perform(context)
+    record_bag_path_str = record_bag_path.perform(context)
 
     [auv_ns] = yaml.safe_load(agent_list_str)
 
@@ -74,6 +93,20 @@ def launch_setup(context, *args, **kwargs) -> list:
             ],
         )
         actions.append(record_process)
+
+        actions.append(
+            RegisterEventHandler(
+                event_handler=OnProcessExit(
+                    target_action=record_process,
+                    on_exit=[
+                        OpaqueFunction(
+                            function=save_config,
+                            kwargs={"record_bag_path": record_bag_path_str},
+                        )
+                    ],
+                )
+            )
+        )
 
     if play_bag_path_str:
         play_process = ExecuteProcess(
@@ -112,7 +145,7 @@ def launch_setup(context, *args, **kwargs) -> list:
         )
         actions.append(play_process)
 
-        exit_event = LogInfo(msg="Bag playback finished, no recording to kill...")
+        exit_event = [LogInfo(msg="Bag playback finished, no recording to kill...")]
         if record_process is not None:
             exit_event = [
                 LogInfo(msg="Bag playback finished, killing recording..."),

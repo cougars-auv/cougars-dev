@@ -1,16 +1,16 @@
 {
   "features": {
-    "ghcr.io/devcontainers/features/common-utils:2": {
+    "ghcr.io/devcontainers/features/common-utils": {
       "version": "2.5.9",
       "resolved": "ghcr.io/devcontainers/features/common-utils@sha256:cb0c4d3c276f157eed17935747e364178d75fee17f55c4e129966f64633deb3a",
       "integrity": "sha256:cb0c4d3c276f157eed17935747e364178d75fee17f55c4e129966f64633deb3a"
     },
-    "ghcr.io/devcontainers/features/docker-outside-of-docker:": {
+    "ghcr.io/devcontainers/features/docker-outside-of-docker": {
       "version": "1.10.0",
       "resolved": "ghcr.io/devcontainers/features/docker-outside-of-docker@sha256:c2c2cf829505ead8e4892c88c31b6594ae94a2bbb209e16e1fac456c1a3a624e",
       "integrity": "sha256:c2c2cf829505ead8e4892c88c31b6594ae94a2bbb209e16e1fac456c1a3a624e"
     },
-    "ghcr.io/devcontainers/features/nvidia-cuda:3.0.0": {
+    "ghcr.io/devcontainers/features/nvidia-cuda": {
       "version": "3.0.0",
       "resolved": "ghcr.io/devcontainers/features/nvidia-cuda@sha256:144e3c199d51688baea43ff20e5d931381a5990cb7b323bade9f4d6d67876ee3",
       "integrity": "sha256:144e3c199d51688baea43ff20e5d931381a5990cb7b323bade9f4d6d67876ee3"

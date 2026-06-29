@@ -65,8 +65,7 @@ services:
       - RMW_IMPLEMENTATION=rmw_zenoh_cpp
       - ROS_DOMAIN_ID=24
     volumes:
-      - ..:/home/frostlab-docker/cougars-dev:cached
-      - /var/run/docker.sock:/var/run/docker.sock
+      - ..:/home/frostlab-docker/cougars-dev
       - /tmp/.X11-unix:/tmp/.X11-unix
       - /etc/localtime:/etc/localtime:ro
       - /run/udev:/run/udev:ro

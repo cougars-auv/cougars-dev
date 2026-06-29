@@ -6,8 +6,8 @@
   "remoteUser": "frostlab-docker",
   "updateRemoteUserUID": true,
   "features": {
-    "ghcr.io/devcontainers/features/common-utils:2": {},
-    "ghcr.io/devcontainers/features/docker-outside-of-docker:": {}
+    "ghcr.io/devcontainers/features/common-utils": {},
+    "ghcr.io/devcontainers/features/docker-outside-of-docker": {}
   },
   "customizations": {
     "vscode": {
@@ -32,7 +32,6 @@
         "docker.docker",
         "eamodio.gitlens",
         "editorconfig.editorconfig",
-        "GitHub.copilot-chat",
         "mechatroner.rainbow-csv",
         "ms-azuretools.vscode-docker",
         "ms-python.python",

@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import os
+import shutil
 import yaml
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
@@ -22,8 +23,11 @@ from launch.actions import (
     GroupAction,
     ExecuteProcess,
     OpaqueFunction,
+    RegisterEventHandler,
+    LogInfo,
 )
 from launch.conditions import IfCondition, UnlessCondition
+from launch.event_handlers import OnProcessExit
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import (
     LaunchConfiguration,
@@ -31,6 +35,24 @@ from launch.substitutions import (
     EnvironmentVariable,
 )
 from launch_ros.actions import Node, PushRosNamespace
+
+
+def save_config(context, record_bag_path) -> list:
+    """
+    Copy the active config directory into the recorded bag directory.
+
+    :param record_bag_path: Path to the recorded bag (skipped if not created).
+    """
+    if not record_bag_path or not os.path.isdir(record_bag_path):
+        return []
+
+    config_dir = os.environ.get("CONFIG_DIR", "")
+    if not config_dir or not os.path.isdir(config_dir):
+        return []
+
+    dest = os.path.join(record_bag_path, "config")
+    shutil.copytree(config_dir, dest, dirs_exist_ok=True)
+    return [LogInfo(msg=f"Config saved to {dest}")]
 
 
 def launch_setup(context, *args, **kwargs) -> list:
@@ -45,8 +67,8 @@ def launch_setup(context, *args, **kwargs) -> list:
     enable_acoustic_comms = LaunchConfiguration("enable_acoustic_comms")
     hitl_mode = LaunchConfiguration("hitl_mode")
 
-    agent_list_str = context.perform_substitution(agent_list)
-    record_bag_path_str = context.perform_substitution(record_bag_path)
+    agent_list_str = agent_list.perform(context)
+    record_bag_path_str = record_bag_path.perform(context)
 
     agent_tuples = yaml.safe_load(agent_list_str)
 
@@ -61,20 +83,33 @@ def launch_setup(context, *args, **kwargs) -> list:
     actions = []
 
     if record_bag_path_str:
+        record_process = ExecuteProcess(
+            cmd=[
+                "ros2",
+                "bag",
+                "record",
+                "-a",
+                "-o",
+                record_bag_path_str,
+                "--storage",
+                "mcap",
+                "--exclude-topics",
+                "/clock",
+            ],
+        )
+        actions.append(record_process)
+
         actions.append(
-            ExecuteProcess(
-                cmd=[
-                    "ros2",
-                    "bag",
-                    "record",
-                    "-a",
-                    "-o",
-                    record_bag_path_str,
-                    "--storage",
-                    "mcap",
-                    "--exclude-topics",
-                    "/clock",
-                ],
+            RegisterEventHandler(
+                event_handler=OnProcessExit(
+                    target_action=record_process,
+                    on_exit=[
+                        OpaqueFunction(
+                            function=save_config,
+                            kwargs={"record_bag_path": record_bag_path_str},
+                        )
+                    ],
+                )
             )
         )
 
