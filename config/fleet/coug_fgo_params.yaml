@@ -55,6 +55,7 @@
     # where 'linear' holds accelerometer bias and 'angular' holds gyroscope bias.
     imu_bias_topic: "~/imu/bias"
     graph_metrics_topic: "~/metrics"
+    reset_service: "~/reset"
 
     # --- Factor Settings ---
     #
