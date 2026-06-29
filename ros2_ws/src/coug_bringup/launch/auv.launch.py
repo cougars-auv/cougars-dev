@@ -33,7 +33,7 @@ def generate_launch_description() -> LaunchDescription:
 
     use_sim_time = LaunchConfiguration("use_sim_time")
     auv_ns = LaunchConfiguration("auv_ns")
-    compare = LaunchConfiguration("compare")
+    loc_comparison = LaunchConfiguration("loc_comparison")
 
     fleet_params = PathJoinSubstitution(
         [
@@ -83,7 +83,7 @@ def generate_launch_description() -> LaunchDescription:
         launch_arguments={
             "use_sim_time": use_sim_time,
             "auv_ns": auv_ns,
-            "compare": compare,
+            "loc_comparison": loc_comparison,
         }.items(),
         condition=IfCondition(
             AndSubstitution(
@@ -174,7 +174,7 @@ def generate_launch_description() -> LaunchDescription:
                 description="Namespace for the AUV (e.g. auv0)",
             ),
             DeclareLaunchArgument(
-                "compare",
+                "loc_comparison",
                 default_value="false",
                 description="Launch additional localization nodes if true",
             ),

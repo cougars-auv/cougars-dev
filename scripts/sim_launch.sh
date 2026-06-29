@@ -14,9 +14,9 @@ case ${scenario} in
 esac
 
 # --- Options ---
-options=$(gum choose --no-limit --header "Select options:" "Record rosbag" "Launch comparison methods" "Disable sensor noise" "Acomms simulation" "HITL mode") || exit 0
+options=$(gum choose --no-limit --header "Select options:" "Record rosbag" "Localization comparison" "Disable sensor noise" "Acomms simulation" "HITL mode") || exit 0
 
-compare="false"
+loc_comparison="false"
 record_bag_path=""
 add_noise="true"
 enable_direct_comms="true"
@@ -32,8 +32,8 @@ if [[ "${options}" == *"Record rosbag"* ]]; then
   fi
 fi
 
-if [[ "${options}" == *"Launch comparison methods"* ]]; then
-  compare="true"
+if [[ "${options}" == *"Localization comparison"* ]]; then
+  loc_comparison="true"
 fi
 
 if [[ "${options}" == *"Disable sensor noise"* ]]; then
@@ -51,7 +51,7 @@ fi
 # --- Launch ---
 args=(
   "agent_list:=${agent_list}"
-  "compare:=${compare}"
+  "loc_comparison:=${loc_comparison}"
   "add_noise:=${add_noise}"
   "base_station:=${base_station}"
   "enable_direct_comms:=${enable_direct_comms}"

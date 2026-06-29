@@ -61,7 +61,7 @@ def launch_setup(context, *args, **kwargs) -> list:
     agent_list = LaunchConfiguration("agent_list")
     play_bag_path = LaunchConfiguration("play_bag_path")
     record_bag_path = LaunchConfiguration("record_bag_path")
-    compare = LaunchConfiguration("compare")
+    loc_comparison = LaunchConfiguration("loc_comparison")
     hitl_mode = LaunchConfiguration("hitl_mode")
 
     agent_list_str = agent_list.perform(context)
@@ -186,7 +186,7 @@ def launch_setup(context, *args, **kwargs) -> list:
             launch_arguments={
                 "use_sim_time": use_sim_time,
                 "auv_ns": auv_ns,
-                "compare": compare,
+                "loc_comparison": loc_comparison,
             }.items(),
             condition=UnlessCondition(hitl_mode),
         )
@@ -234,7 +234,7 @@ def generate_launch_description() -> LaunchDescription:
                 description="Bag playback rate multiplier (e.g. 0.5 for half speed, 2.0 for double)",
             ),
             DeclareLaunchArgument(
-                "compare",
+                "loc_comparison",
                 default_value="false",
                 description="Launch additional localization nodes if true",
             ),

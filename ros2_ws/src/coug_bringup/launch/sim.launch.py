@@ -60,7 +60,7 @@ def launch_setup(context, *args, **kwargs) -> list:
     use_sim_time = LaunchConfiguration("use_sim_time")
     agent_list = LaunchConfiguration("agent_list")
     record_bag_path = LaunchConfiguration("record_bag_path")
-    compare = LaunchConfiguration("compare")
+    loc_comparison = LaunchConfiguration("loc_comparison")
     add_noise = LaunchConfiguration("add_noise")
     base_station = LaunchConfiguration("base_station")
     enable_direct_comms = LaunchConfiguration("enable_direct_comms")
@@ -136,7 +136,7 @@ def launch_setup(context, *args, **kwargs) -> list:
                 launch_arguments={
                     "use_sim_time": use_sim_time,
                     "auv_ns": auv_ns,
-                    "compare": compare,
+                    "loc_comparison": loc_comparison,
                 }.items(),
                 condition=UnlessCondition(hitl_mode),
             )
@@ -272,7 +272,7 @@ def generate_launch_description() -> LaunchDescription:
                 description="Path to record rosbag (if empty, no recording)",
             ),
             DeclareLaunchArgument(
-                "compare",
+                "loc_comparison",
                 default_value="false",
                 description="Launch additional localization nodes if true",
             ),

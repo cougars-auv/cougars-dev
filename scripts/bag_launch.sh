@@ -13,9 +13,9 @@ agent_ns=$(basename -a "${CONFIG_DIR}"/*_params.yaml | sed 's/_params.yaml$//' |
 agent_list="[${agent_ns}]"
 
 # --- Options ---
-options=$(gum choose --no-limit --header "Select options:" "Record rosbag" "Set start delay" "Set playback rate" "Launch comparison methods" "HITL mode") || exit 0
+options=$(gum choose --no-limit --header "Select options:" "Record rosbag" "Set start delay" "Set playback rate" "Localization comparison" "HITL mode") || exit 0
 
-compare="false"
+loc_comparison="false"
 start_delay="0.0"
 playback_rate="1.0"
 record_bag_path=""
@@ -44,8 +44,8 @@ if [[ "${options}" == *"Set playback rate"* ]]; then
   fi
 fi
 
-if [[ "${options}" == *"Launch comparison methods"* ]]; then
-  compare="true"
+if [[ "${options}" == *"Localization comparison"* ]]; then
+  loc_comparison="true"
 fi
 
 if [[ "${options}" == *"HITL mode"* ]]; then
@@ -56,7 +56,7 @@ fi
 args=(
   "play_bag_path:=${play_bag_path}"
   "agent_list:=${agent_list}"
-  "compare:=${compare}"
+  "loc_comparison:=${loc_comparison}"
   "start_delay:=${start_delay}"
   "playback_rate:=${playback_rate}"
   "hitl_mode:=${hitl_mode}"
