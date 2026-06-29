@@ -93,16 +93,16 @@ We adhere to the **Semantic Versioning (SemVer 2.0.0)** standard to release new 
 
 - **Lock Dependencies:** On the release branch, pin all nested repositories in `cougars.repos` to their specific release tags (instead of branches like `main`). Commit these updates.
 
-- **Tag and Build:** Create and push a version tag (e.g., `v1.2.3`) on your release commit:
+- **Tag and Push:** Create and push a version tag (e.g., `v1.2.3`) on your release commit:
 
   ```bash
   git tag v1.2.3
   git push origin v1.2.3
   ```
 
-  Pushing the tag additionally triggers GitHub Actions to rebuild and publish the Docker images using a `<target>-<version>` format (e.g., `frostlab/cougars:base-v1.2.3`).
+  Pushing the tag automatically rebuilds and publishes the Docker images using a `<target>-<version>` format (e.g., `frostlab/cougars:base-v1.2.3`) and opens a draft GitHub Release with auto-generated notes.
 
-- **Publish a GitHub Release:** On GitHub, draft a new release using your tag, review the generated notes, and publish.
+- **Publish a GitHub Release:** Review the draft release in GitHub and click **Publish**.
 
 ## 📚 Citations
 
