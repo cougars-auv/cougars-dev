@@ -97,8 +97,6 @@ def generate_launch_description() -> LaunchDescription:
         ]
     )
 
-    # TODO: Add direct imports to package.xml and .repos files
-
     return LaunchDescription(
         [
             DeclareLaunchArgument(
