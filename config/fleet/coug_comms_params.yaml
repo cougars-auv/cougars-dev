@@ -21,7 +21,7 @@
       emergency_stop_service: "base/emergency_stop"
       emergency_surface_service: "base/emergency_surface"
 
-      direct_status_topic: "status"
+      direct_status_topic: "agent/status"
       direct_start_service: "start"
       direct_stop_service: "stop"
       direct_surface_service: "surface"
@@ -61,8 +61,8 @@
       modem_rec_topic: "modem_rec"
       modem_cmd_update_topic: "modem_cmd_update"
 
-      status_topic: "base/status"
-      direct_status_topic: "status"
+      status_topic: "base/agent/status"
+      direct_status_topic: "agent/status"
 
   auv_status_stager_node:
     ros__parameters:
@@ -72,12 +72,12 @@
 
       # --- ROS Topics ---
       modem_send_topic: "modem_send"
-      status_topic: "status"
+      status_topic: "agent/status"
 
   base_status_extractor_node:
     ros__parameters:
       # --- ROS Topics ---
-      status_topic: "base/status"
+      status_topic: "base/agent/status"
       odom_topic: "base/odometry/global"
       depth_topic: "base/odometry/depth"
       imu_topic: "base/imu/data"
@@ -88,7 +88,7 @@
       publish_rate_hz: 10.0
 
       # --- ROS Topics ---
-      status_topic: "status"
+      status_topic: "agent/status"
       odom_topic: "odometry/global"
       depth_topic: "odometry/depth"
       imu_topic: "imu/data"
