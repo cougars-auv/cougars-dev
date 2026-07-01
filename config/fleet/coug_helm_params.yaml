@@ -2,7 +2,7 @@
   bt_helm_node:
     ros__parameters:
       # --- Node Settings ---
-      tick_rate_ms: 50 # [ms] Behavior tree tick interval.
+      tick_rate_hz: 20.0 # [Hz] Behavior tree tick rate.
       publish_diagnostics: true # Publish diagnostic information.
 
       # Waypoint reached if normalized ellipse distance < 1.0 (direct hit).
@@ -21,7 +21,7 @@
       odom_recovery_timeout_sec: 30.0 # [s] Time to wait for odometry to recover before aborting.
 
       progress_timeout_sec: 15.0 # [s] Max no-progress time before a recovery is triggered.
-      progress_threshold: 0.5 # [m]
+      progress_threshold: 0.5 # [m] Min moved distance required for progress check.
       number_of_retries: 6
       wait_duration_sec: 5.0 # [s]
 
@@ -39,3 +39,8 @@
       stop_service: "stop"
       surface_service: "surface"
       home_service: "home"
+      emergency_stop_service: "emergency_stop"
+      emergency_surface_service: "emergency_surface"
+
+      arm_thruster_service: "thruster/arm"
+      reset_localization_service: "factor_graph_node/reset"
