@@ -178,6 +178,20 @@ def launch_setup(context, *args, **kwargs) -> list:
                 PushRosNamespace("base_station"),
                 Node(
                     package="holoocean_bridge",
+                    executable="depth_converter",
+                    name="modem_depth_converter_node",
+                    parameters=[
+                        fleet_params,
+                        {
+                            "use_sim_time": use_sim_time,
+                            "depth_frame": "base_station",
+                            "map_frame": "map",
+                            "add_noise": add_noise,
+                        },
+                    ],
+                ),
+                Node(
+                    package="holoocean_bridge",
                     executable="modem_converter",
                     name="modem_converter_node",
                     parameters=[
