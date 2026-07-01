@@ -59,6 +59,7 @@ def launch_setup(context, *args, **kwargs) -> list:
 
     use_sim_time = LaunchConfiguration("use_sim_time")
     agent_list = LaunchConfiguration("agent_list")
+    lead_agent = LaunchConfiguration("lead_agent")
     record_bag_path = LaunchConfiguration("record_bag_path")
     loc_comparison = LaunchConfiguration("loc_comparison")
     add_noise = LaunchConfiguration("add_noise")
@@ -121,6 +122,7 @@ def launch_setup(context, *args, **kwargs) -> list:
             launch_arguments={
                 "use_sim_time": use_sim_time,
                 "agent_list": agent_list_str,
+                "lead_agent": lead_agent,
                 "enable_direct_comms": enable_direct_comms,
                 "enable_acoustic_comms": enable_acoustic_comms,
             }.items(),
@@ -265,6 +267,11 @@ def generate_launch_description() -> LaunchDescription:
                     "YAML list of agent namespaces "
                     "(e.g. '[coug1sim]' or '[coug1sim, coug2sim]')"
                 ),
+            ),
+            DeclareLaunchArgument(
+                "lead_agent",
+                default_value="",
+                description="Namespace of the lead agent (optional)",
             ),
             DeclareLaunchArgument(
                 "record_bag_path",

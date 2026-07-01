@@ -15,10 +15,10 @@ agent_list="[${agent_ns}]"
 # --- Options ---
 options=$(gum choose --no-limit --header "Select options:" "Record rosbag" "Set start delay" "Set playback rate" "Localization comparison" "HITL mode") || exit 0
 
-loc_comparison="false"
+record_bag_path=""
 start_delay="0.0"
 playback_rate="1.0"
-record_bag_path=""
+loc_comparison="false"
 hitl_mode="false"
 
 if [[ "${options}" == *"Record rosbag"* ]]; then
@@ -56,12 +56,12 @@ fi
 args=(
   "play_bag_path:=${play_bag_path}"
   "agent_list:=${agent_list}"
-  "loc_comparison:=${loc_comparison}"
+  "record_bag_path:=${record_bag_path}"
   "start_delay:=${start_delay}"
   "playback_rate:=${playback_rate}"
+  "loc_comparison:=${loc_comparison}"
   "hitl_mode:=${hitl_mode}"
 )
-[ -n "${record_bag_path}" ] && args+=("record_bag_path:=${record_bag_path}")
 
 echo "ros2 launch coug_bringup bag.launch.py ${args[*]}"
 if [ -n "${record_bag_path}" ]; then

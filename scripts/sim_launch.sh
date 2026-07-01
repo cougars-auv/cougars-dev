@@ -14,11 +14,12 @@ case ${scenario} in
 esac
 
 # --- Options ---
-options=$(gum choose --no-limit --header "Select options:" "Record rosbag" "Localization comparison" "Disable sensor noise" "Acomms simulation" "HITL mode") || exit 0
+options=$(gum choose --no-limit --header "Select options:" "Record rosbag" "Localization comparison" "Disable sensor noise" "Specify lead agent" "Acomms simulation" "HITL mode") || exit 0
 
-loc_comparison="false"
 record_bag_path=""
+loc_comparison="false"
 add_noise="true"
+lead_agent=""
 enable_direct_comms="true"
 enable_acoustic_comms="true"
 hitl_mode="false"
@@ -48,17 +49,23 @@ if [[ "${options}" == *"HITL mode"* ]]; then
   hitl_mode="true"
 fi
 
+if [[ "${options}" == *"Specify lead agent"* ]]; then
+  agents_raw=$(echo "${agent_list}" | tr -d '[]' | tr -d ',')
+  lead_agent=$(gum choose --header "Select lead agent:" ${agents_raw}) || exit 0
+fi
+
 # --- Launch ---
 args=(
   "agent_list:=${agent_list}"
+  "base_station:=${base_station}"
+  "lead_agent:=${lead_agent}"
+  "record_bag_path:=${record_bag_path}"
   "loc_comparison:=${loc_comparison}"
   "add_noise:=${add_noise}"
-  "base_station:=${base_station}"
   "enable_direct_comms:=${enable_direct_comms}"
   "enable_acoustic_comms:=${enable_acoustic_comms}"
   "hitl_mode:=${hitl_mode}"
 )
-[ -n "${record_bag_path}" ] && args+=("record_bag_path:=${record_bag_path}")
 
 echo "ros2 launch coug_bringup sim.launch.py ${args[*]}"
 if [ -n "${record_bag_path}" ]; then

@@ -11,5 +11,19 @@ done
 
 agent_list="[$(paste -sd, <<< "${selection}" | sed 's/,/, /g')]"
 
+# --- Options ---
+options=$(gum choose --no-limit --header "Select options:" "Specify lead agent") || exit 0
+
+lead_agent=""
+if [[ "${options}" == *"Specify lead agent"* ]]; then
+  lead_agent=$(gum choose --header "Select lead agent:" ${selection}) || exit 0
+fi
+
 # --- Launch ---
-ros2 launch coug_bringup base.launch.py "agent_list:=${agent_list}"
+args=(
+  "agent_list:=${agent_list}"
+  "lead_agent:=${lead_agent}"
+)
+
+echo "ros2 launch coug_bringup base.launch.py ${args[*]}"
+ros2 launch coug_bringup base.launch.py "${args[@]}"
