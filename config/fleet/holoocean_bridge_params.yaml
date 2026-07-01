@@ -101,11 +101,38 @@
       output_speed_topic: "/speed"
       output_depth_topic: "/depth"
 
+  modem_imu_converter_node:
+    ros__parameters:
+      imu_input_topic: "ModemIMUSensor"
+      ahrs_input_topic: "ModemRotationSensor"
+      output_topic: "modem/imu/data"
+      bias_topic: "modem/imu/bias"
+
+      accel_noise_sigmas: [0.0078, 0.0078, 0.0078] # [m/s^2] Accelerometer measurement noise sigmas.
+      gyro_noise_sigmas: [0.0012, 0.0012, 0.0012] # [rad/s] Gyroscope measurement noise sigmas.
+      ahrs_noise_sigmas: [0.00349, 0.00349, 0.01745] # [rad] AHRS orientation uncertainty sigmas [roll, pitch, yaw].
+      accel_bias_rw_sigmas: [1.05e-5, 1.05e-5, 1.05e-5] # [m/s^2/√s] Continuous-time accel bias random walk spectral density sigmas.
+      gyro_bias_rw_sigmas: [3.91e-6, 3.91e-6, 3.91e-6] # [rad/s/√s] Continuous-time gyro bias random walk spectral density sigmas.
+
+  modem_mag_converter_node:
+    ros__parameters:
+      input_topic: "ModemMagnetometerSensor"
+      output_topic: "modem/imu/mag"
+
+      noise_sigmas: [0.003, 0.003, 0.003] # [normalized] Magnetic field uncertainty sigmas.
+
   modem_status_converter_node:
     ros__parameters:
-      imu_input_topic: "imu/data"
-      mag_input_topic: "imu/mag"
+      imu_input_topic: "modem/imu/data"
+      mag_input_topic: "modem/imu/mag"
       output_topic: "modem_status"
+
+  modem_depth_converter_node:
+    ros__parameters:
+      input_topic: "ModemDepthSensor"
+      output_topic: "modem/odometry/depth"
+
+      noise_sigma: 0.02 # [m] Depth sensor Z-position uncertainty sigma.
 
   modem_converter_node:
     ros__parameters:
@@ -114,7 +141,7 @@
       modem_rec_topic: "modem_rec"
       modem_send_topic: "modem_send"
       modem_cmd_update_topic: "modem_cmd_update"
-      depth_topic: "DepthSensor"
+      depth_topic: "modem/odometry/depth"
 
       tick_period_sec: 0.1 # [s]
       send_delay_sec: 0.4 # [s]

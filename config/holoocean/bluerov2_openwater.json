@@ -24,6 +24,43 @@
           "ros_publish": true
         },
         {
+          "sensor_type": "DepthSensor",
+          "sensor_name": "ModemDepthSensor",
+          "socket": "COM",
+          "Hz": 20,
+          "configuration": {},
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "IMUSensor",
+          "sensor_name": "ModemIMUSensor",
+          "socket": "COM",
+          "Hz": 200,
+          "configuration": {},
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "RotationSensor",
+          "sensor_name": "ModemRotationSensor",
+          "socket": "COM",
+          "Hz": 200,
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "MagnetometerSensor",
+          "sensor_name": "ModemMagnetometerSensor",
+          "socket": "COM",
+          "Hz": 100,
+          "configuration": {
+            "MagneticVector": [
+              0.07857,
+              0.41316,
+              -0.90726
+            ]
+          },
+          "ros_publish": true
+        },
+        {
           "sensor_type": "IMUSensor",
           "socket": "IMUSocket",
           "Hz": 200,
