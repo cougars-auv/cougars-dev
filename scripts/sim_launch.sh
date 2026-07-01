@@ -58,14 +58,18 @@ fi
 args=(
   "agent_list:=${agent_list}"
   "base_station:=${base_station}"
-  "lead_agent:=${lead_agent}"
-  "record_bag_path:=${record_bag_path}"
   "loc_comparison:=${loc_comparison}"
   "add_noise:=${add_noise}"
   "enable_direct_comms:=${enable_direct_comms}"
   "enable_acoustic_comms:=${enable_acoustic_comms}"
   "hitl_mode:=${hitl_mode}"
 )
+if [ -n "${lead_agent}" ]; then
+  args+=("lead_agent:=${lead_agent}")
+fi
+if [ -n "${record_bag_path}" ]; then
+  args+=("record_bag_path:=${record_bag_path}")
+fi
 
 echo "ros2 launch coug_bringup sim.launch.py ${args[*]}"
 if [ -n "${record_bag_path}" ]; then

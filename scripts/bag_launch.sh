@@ -56,12 +56,14 @@ fi
 args=(
   "play_bag_path:=${play_bag_path}"
   "agent_list:=${agent_list}"
-  "record_bag_path:=${record_bag_path}"
   "start_delay:=${start_delay}"
   "playback_rate:=${playback_rate}"
   "loc_comparison:=${loc_comparison}"
   "hitl_mode:=${hitl_mode}"
 )
+if [ -n "${record_bag_path}" ]; then
+  args+=("record_bag_path:=${record_bag_path}")
+fi
 
 echo "ros2 launch coug_bringup bag.launch.py ${args[*]}"
 if [ -n "${record_bag_path}" ]; then

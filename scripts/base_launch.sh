@@ -22,8 +22,10 @@ fi
 # --- Launch ---
 args=(
   "agent_list:=${agent_list}"
-  "lead_agent:=${lead_agent}"
 )
+if [ -n "${lead_agent}" ]; then
+  args+=("lead_agent:=${lead_agent}")
+fi
 
 echo "ros2 launch coug_bringup base.launch.py ${args[*]}"
 ros2 launch coug_bringup base.launch.py "${args[@]}"
