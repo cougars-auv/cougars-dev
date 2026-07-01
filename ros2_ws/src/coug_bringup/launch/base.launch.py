@@ -33,7 +33,8 @@ def launch_setup(context, *args, **kwargs) -> list:
     enable_direct_comms = LaunchConfiguration("enable_direct_comms")
     enable_acoustic_comms = LaunchConfiguration("enable_acoustic_comms")
     agent_list_str = agent_list.perform(context)
-    auv_ns = yaml.safe_load(agent_list_str)[0]
+    agent_namespaces = yaml.safe_load(agent_list_str)
+    auv_ns = agent_namespaces[0]
 
     coug_comms_dir = get_package_share_directory("coug_comms")
     coug_comms_launch_dir = os.path.join(coug_comms_dir, "launch")

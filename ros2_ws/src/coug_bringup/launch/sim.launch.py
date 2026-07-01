@@ -71,7 +71,7 @@ def launch_setup(context, *args, **kwargs) -> list:
     agent_list_str = agent_list.perform(context)
     record_bag_path_str = record_bag_path.perform(context)
 
-    agent_tuples = yaml.safe_load(agent_list_str)
+    agent_namespaces = yaml.safe_load(agent_list_str)
 
     coug_bringup_dir = get_package_share_directory("coug_bringup")
     coug_bringup_launch_dir = os.path.join(coug_bringup_dir, "launch")
@@ -129,7 +129,7 @@ def launch_setup(context, *args, **kwargs) -> list:
         )
     )
 
-    for i, auv_ns in enumerate(agent_tuples):
+    for auv_ns in agent_namespaces:
         actions.append(
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(
