@@ -32,7 +32,7 @@
 
   - Build a runtime image for [HoloOcean-ROS](https://github.com/cougars-auv/holoocean-ros/tree/main/docker/runtime) on the `cougars-auv` organization's fork. When prompted to run `./build_container.sh`, specify the branch `cougars-dev` using `./build_container.sh -b cougars-dev`.
 
-  - Open the `cougars-dev` repository in VSCode and use the Command Palette (`Ctrl + Shift + P`) to select "Dev Containers: Reopen in Container." When prompted to choose a `devcontainer.json` file, click `CoUGARs Dev (HoloOcean)`.
+  - Open the `cougars-dev` repository in VSCode and use the Command Palette (`Ctrl + Shift + P`) to select "Dev Containers: Reopen in Container." When prompted to choose a `devcontainer.json` file, click `CoUGARs Dev (GPU)`.
 
   - Once the containers load, open a new terminal window using `` Ctrl + Alt + Shift + ` `` and launch a HoloOcean scenario in the `holoocean-ct` container using `./holoocean_launch.sh`.
 

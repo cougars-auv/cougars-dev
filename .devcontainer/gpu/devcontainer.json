@@ -1,5 +1,5 @@
 {
-  "name": "CoUGARs Dev (HoloOcean)",
+  "name": "CoUGARs Dev (GPU)",
   "dockerComposeFile": [
     "../docker-compose.yaml",
     "docker-compose.yaml"
