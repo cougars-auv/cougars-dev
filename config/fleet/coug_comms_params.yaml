@@ -56,13 +56,15 @@
       poll_period_sec: 0.0 # [s]
       response_timeout_sec: 5.0 # [s]
 
-      # --- ROS Topics ---
+      # --- ROS Topics and Frames ---
       modem_send_topic: "modem_send"
       modem_rec_topic: "modem_rec"
       modem_cmd_update_topic: "modem_cmd_update"
 
       status_topic: "base/agent/status"
       direct_status_topic: "agent/status"
+
+      use_parameter_frame: false
 
   auv_status_stager_node:
     ros__parameters:

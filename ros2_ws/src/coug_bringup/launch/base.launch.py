@@ -20,6 +20,7 @@ from launch import LaunchDescription
 from launch.actions import (
     IncludeLaunchDescription,
     DeclareLaunchArgument,
+    GroupAction,
     OpaqueFunction,
     ExecuteProcess,
     RegisterEventHandler,
@@ -28,6 +29,7 @@ from launch.actions import (
 from launch.event_handlers import OnProcessExit
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
+from launch_ros.actions import PushRosNamespace
 
 
 def save_config(context, record_bag_path) -> list:
@@ -49,15 +51,16 @@ def save_config(context, record_bag_path) -> list:
 
 
 def launch_setup(context, *args, **kwargs) -> list:
-
     use_sim_time = LaunchConfiguration("use_sim_time")
     agent_list = LaunchConfiguration("agent_list")
     lead_agent = LaunchConfiguration("lead_agent")
     enable_direct_comms = LaunchConfiguration("enable_direct_comms")
     enable_acoustic_comms = LaunchConfiguration("enable_acoustic_comms")
     record_bag_path = LaunchConfiguration("record_bag_path")
+
     agent_list_str = agent_list.perform(context)
     record_bag_path_str = record_bag_path.perform(context)
+
     agent_namespaces = yaml.safe_load(agent_list_str)
     auv_ns = agent_namespaces[0]
 
@@ -151,9 +154,16 @@ def launch_setup(context, *args, **kwargs) -> list:
         }.items(),
     )
 
+    base_station_group = GroupAction(
+        actions=[
+            PushRosNamespace("base_station"),
+            coug_comms_base_cmd,
+            coug_fgo_base_cmd,
+        ]
+    )
+
     actions = [
-        coug_comms_base_cmd,
-        coug_fgo_base_cmd,
+        base_station_group,
         coug_fgo_viz_cmd,
         # coug_active_fgo_viz_cmd,
         # coug_visual_dvl_viz_cmd,

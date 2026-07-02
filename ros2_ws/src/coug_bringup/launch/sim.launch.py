@@ -33,7 +33,6 @@ from launch_ros.actions import Node, PushRosNamespace
 
 
 def launch_setup(context, *args, **kwargs) -> list:
-
     use_sim_time = LaunchConfiguration("use_sim_time")
     agent_list = LaunchConfiguration("agent_list")
     lead_agent = LaunchConfiguration("lead_agent")

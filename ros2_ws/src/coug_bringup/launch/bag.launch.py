@@ -54,7 +54,6 @@ def save_config(context, record_bag_path) -> list:
 
 
 def launch_setup(context, *args, **kwargs) -> list:
-
     use_sim_time = LaunchConfiguration("use_sim_time")
     start_delay = LaunchConfiguration("start_delay")
     playback_rate = LaunchConfiguration("playback_rate")

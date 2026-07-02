@@ -30,7 +30,6 @@ from launch_ros.actions import Node, PushRosNamespace
 
 
 def generate_launch_description() -> LaunchDescription:
-
     use_sim_time = LaunchConfiguration("use_sim_time")
     auv_ns = LaunchConfiguration("auv_ns")
     loc_comparison = LaunchConfiguration("loc_comparison")

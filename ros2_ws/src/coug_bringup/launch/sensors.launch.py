@@ -24,7 +24,6 @@ from launch.substitutions import (
 
 
 def generate_launch_description() -> LaunchDescription:
-
     auv_ns = LaunchConfiguration("auv_ns")
 
     seatrac_params = PathJoinSubstitution(
