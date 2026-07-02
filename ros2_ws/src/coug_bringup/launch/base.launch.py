@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import os
+import shutil
 import yaml
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
@@ -20,9 +21,31 @@ from launch.actions import (
     IncludeLaunchDescription,
     DeclareLaunchArgument,
     OpaqueFunction,
+    ExecuteProcess,
+    RegisterEventHandler,
+    LogInfo,
 )
+from launch.event_handlers import OnProcessExit
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
+
+
+def save_config(context, record_bag_path) -> list:
+    """
+    Copy the active config directory into the recorded bag directory.
+
+    :param record_bag_path: Path to the recorded bag (skipped if not created).
+    """
+    if not record_bag_path or not os.path.isdir(record_bag_path):
+        return []
+
+    config_dir = os.environ.get("CONFIG_DIR", "")
+    if not config_dir or not os.path.isdir(config_dir):
+        return []
+
+    dest = os.path.join(record_bag_path, "config")
+    shutil.copytree(config_dir, dest, dirs_exist_ok=True)
+    return [LogInfo(msg=f"Config saved to {dest}")]
 
 
 def launch_setup(context, *args, **kwargs) -> list:
@@ -32,7 +55,9 @@ def launch_setup(context, *args, **kwargs) -> list:
     lead_agent = LaunchConfiguration("lead_agent")
     enable_direct_comms = LaunchConfiguration("enable_direct_comms")
     enable_acoustic_comms = LaunchConfiguration("enable_acoustic_comms")
+    record_bag_path = LaunchConfiguration("record_bag_path")
     agent_list_str = agent_list.perform(context)
+    record_bag_path_str = record_bag_path.perform(context)
     agent_namespaces = yaml.safe_load(agent_list_str)
     auv_ns = agent_namespaces[0]
 
@@ -126,7 +151,7 @@ def launch_setup(context, *args, **kwargs) -> list:
         }.items(),
     )
 
-    return [
+    actions = [
         coug_comms_base_cmd,
         coug_fgo_base_cmd,
         coug_fgo_viz_cmd,
@@ -135,6 +160,39 @@ def launch_setup(context, *args, **kwargs) -> list:
         coug_mapviz_cmd,
         coug_rqt_cmd,
     ]
+
+    if record_bag_path_str:
+        record_process = ExecuteProcess(
+            cmd=[
+                "ros2",
+                "bag",
+                "record",
+                "-a",
+                "-o",
+                record_bag_path_str,
+                "--storage",
+                "mcap",
+                "--exclude-topics",
+                "/clock",
+            ],
+        )
+        actions.append(record_process)
+
+        actions.append(
+            RegisterEventHandler(
+                event_handler=OnProcessExit(
+                    target_action=record_process,
+                    on_exit=[
+                        OpaqueFunction(
+                            function=save_config,
+                            kwargs={"record_bag_path": record_bag_path_str},
+                        )
+                    ],
+                )
+            )
+        )
+
+    return actions
 
 
 def generate_launch_description() -> LaunchDescription:
@@ -157,6 +215,11 @@ def generate_launch_description() -> LaunchDescription:
                 "lead_agent",
                 default_value="",
                 description="Namespace of the lead agent (optional)",
+            ),
+            DeclareLaunchArgument(
+                "record_bag_path",
+                default_value="",
+                description="Path to record rosbag (if empty, no recording)",
             ),
             DeclareLaunchArgument(
                 "enable_direct_comms",

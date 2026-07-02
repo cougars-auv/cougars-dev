@@ -12,9 +12,20 @@ done
 agent_list="[$(paste -sd, <<< "${selection}" | sed 's/,/, /g')]"
 
 # --- Options ---
-options=$(gum choose --no-limit --header "Select options:" "Specify lead agent") || exit 0
+options=$(gum choose --no-limit --header "Select options:" "Record rosbag" "Specify lead agent") || exit 0
 
+record_bag_path=""
 lead_agent=""
+
+if [[ "${options}" == *"Record rosbag"* ]]; then
+  suffix=$(gum input --placeholder "Set bag suffix..." || echo "")
+  if [ -n "${suffix}" ]; then
+    record_bag_path="${BAGS_DIR}/${suffix}$(date +'_%Y-%m-%d-%H-%M-%S')"
+  else
+    record_bag_path="${BAGS_DIR}/rosbag$(date +'_%Y-%m-%d-%H-%M-%S')"
+  fi
+fi
+
 if [[ "${options}" == *"Specify lead agent"* ]]; then
   lead_agent=$(gum choose --header "Select lead agent:" ${selection}) || exit 0
 fi
@@ -26,6 +37,20 @@ args=(
 if [ -n "${lead_agent}" ]; then
   args+=("lead_agent:=${lead_agent}")
 fi
+if [ -n "${record_bag_path}" ]; then
+  args+=("record_bag_path:=${record_bag_path}")
+fi
 
 echo "ros2 launch coug_bringup base.launch.py ${args[*]}"
-ros2 launch coug_bringup base.launch.py "${args[@]}"
+if [ -n "${record_bag_path}" ]; then
+  tmp=$(mktemp -d)
+  ROS_LOG_DIR="${tmp}" ros2 launch coug_bringup base.launch.py "${args[@]}"
+
+  if [ -d "${record_bag_path}" ]; then
+    mv "${tmp}" "${record_bag_path}/log"
+  else
+    rm -rf "${tmp}"
+  fi
+else
+  ros2 launch coug_bringup base.launch.py "${args[@]}"
+fi
