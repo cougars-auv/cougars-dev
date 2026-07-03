@@ -136,11 +136,6 @@ def launch_setup(context, *args, **kwargs) -> list:
                 f"/dvl/data:=/{auv_ns}/dvl/data",
                 f"/nav/filtered_imu/data:=/{auv_ns}/imu/data_ned",
                 f"/BlueROV/pressure2_fluid:=/{auv_ns}/pressure/data",
-                # AQUA-SLAM bags
-                f"/apriltag_slam/GT:=/{auv_ns}/odometry/truth",
-                f"/aqua_slam/pose:=/{auv_ns}/odometry/global_aqs",
-                f"/imu/data:=/{auv_ns}/imu/data_ned",
-                f"/depth/data:=/{auv_ns}/odometry/depth",
             ],
         )
         actions.append(play_process)
