@@ -1,4 +1,4 @@
-/coug2_dvldr:
+/coug2:
   coug_description_launch:
     ros__parameters:
       urdf_file: "couguv.urdf.xacro"
@@ -29,6 +29,7 @@
   seatrac_x150_imu_node:
     ros__parameters:
       orientation_noise_sigmas: [0.00349, 0.00349, 0.01745]
+      # East-positive declination (NOAA convention).
       # https://www.ngdc.noaa.gov/geomag/calculators/magcalc.shtml#declination
       mag_declination_radians: 0.188 # 10.77 degrees
 

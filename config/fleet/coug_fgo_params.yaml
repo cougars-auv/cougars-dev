@@ -304,8 +304,6 @@
       publish_diagnostics: true # Publish diagnostic information.
       diagnostic_timeout_sec: 0.5 # [s]
 
-      accel_noise_sigmas: [0.0078, 0.0078, 0.0078] # [m/s^2] Accelerometer measurement noise sigmas.
-      gyro_noise_sigmas: [0.0012, 0.0012, 0.0012] # [rad/s] Gyroscope measurement noise sigmas.
       orientation_noise_sigmas: [0.00349, 0.00349, 0.01745] # [rad] Orientation uncertainty sigmas [roll, pitch, yaw].
       magnetic_field_noise_sigmas: [0.003, 0.003, 0.003] # [normalized] Magnetic field uncertainty sigmas.
       # East-positive declination (NOAA convention).

@@ -19,7 +19,6 @@ from launch.actions import IncludeLaunchDescription, DeclareLaunchArgument, Grou
 from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import (
-    AndSubstitution,
     EqualsSubstitution,
     NotEqualsSubstitution,
     LaunchConfiguration,
@@ -84,23 +83,7 @@ def generate_launch_description() -> LaunchDescription:
             "auv_ns": auv_ns,
             "loc_comparison": loc_comparison,
         }.items(),
-        condition=IfCondition(
-            AndSubstitution(
-                NotEqualsSubstitution(auv_ns, "coug2_dvldr"),
-                NotEqualsSubstitution(auv_ns, "coug2_ekf"),
-            )
-        ),
-    )
-
-    coug_fgo_dvldr_cmd = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(coug_fgo_launch_dir, "coug_fgo_dvldr.launch.py")
-        ),
-        launch_arguments={
-            "use_sim_time": use_sim_time,
-            "auv_ns": auv_ns,
-        }.items(),
-        condition=IfCondition(EqualsSubstitution(auv_ns, "coug2_dvldr")),
+        condition=IfCondition(NotEqualsSubstitution(auv_ns, "coug2")),
     )
 
     coug_fgo_ekf_cmd = IncludeLaunchDescription(
@@ -111,7 +94,7 @@ def generate_launch_description() -> LaunchDescription:
             "use_sim_time": use_sim_time,
             "auv_ns": auv_ns,
         }.items(),
-        condition=IfCondition(EqualsSubstitution(auv_ns, "coug2_ekf")),
+        condition=IfCondition(EqualsSubstitution(auv_ns, "coug2")),
     )
 
     coug_helm_cmd = IncludeLaunchDescription(
@@ -184,7 +167,6 @@ def generate_launch_description() -> LaunchDescription:
                     coug_comms_auv_cmd,
                     coug_des_cmd,
                     coug_fgo_cmd,
-                    coug_fgo_dvldr_cmd,
                     coug_fgo_ekf_cmd,
                     coug_helm_cmd,
                     coug_active_fgo_cmd,
