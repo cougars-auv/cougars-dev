@@ -127,6 +127,7 @@ def launch_setup(context, *args, **kwargs) -> list:
                 f"{auv_ns}/dvl/twist:=/{auv_ns}/dvl/twist_discard",
                 f"{auv_ns}/imu/nav_sat_fix:=/{auv_ns}/gps/fix",
                 f"{auv_ns}/shallow/pressure/data:=/{auv_ns}/pressure/data",
+                f"{auv_ns}/imu/odometry:=/{auv_ns}/odometry/sbg",
                 # FROST Lab CougUV bags
                 f"/pressure/data:=/{auv_ns}/pressure/data",
                 f"/fix:=/{auv_ns}/gps/fix",
