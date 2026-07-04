@@ -219,7 +219,7 @@
 
     # --- Comparison Methods ---
     comparison:
-      # TURTLMap-based loosely-coupled DVL preintegration implementation
+      # TURTLMap-inspired loosely-coupled DVL preintegration implementation
       enable_loose_dvl_preintegration: false
       # Forster-style tightly-coupled DVL preintegration implementation
       enable_tight_dvl_preintegration: false
