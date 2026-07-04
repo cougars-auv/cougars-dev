@@ -7,9 +7,9 @@
     ros__parameters:
       # --- Node Settings ---
       publish_diagnostics: true # Publish diagnostic information.
-      service_history_size: 5
+      service_history_size: 5 # Number of recent service results kept for diagnostics.
 
-      direct_timeout_sec: 2.0 # [s] Direct link timeout
+      direct_timeout_sec: 2.0 # [s] Max direct heartbeat age before falling back to acoustics.
 
       # --- ROS Topics ---
       modem_send_topic: "modem_send"
@@ -33,7 +33,7 @@
     ros__parameters:
       # --- Node Settings ---
       publish_diagnostics: true # Publish diagnostic information.
-      service_history_size: 5
+      service_history_size: 5 # Number of recent service results kept for diagnostics.
 
       # --- ROS Topics ---
       modem_rec_topic: "modem_rec"
@@ -51,10 +51,10 @@
       publish_diagnostics: true # Publish diagnostic information.
       diagnostic_timeout_sec: 10.0 # [s]
 
-      direct_timeout_sec: 2.0 # [s] Direct link timeout
-      tick_period_sec: 0.05 # [s]
-      poll_period_sec: 0.0 # [s]
-      response_timeout_sec: 5.0 # [s]
+      direct_timeout_sec: 2.0 # [s] Max direct heartbeat age before falling back to acoustics.
+      tick_period_sec: 0.05 # [s] Rate at which timeouts and pending polls are checked.
+      poll_period_sec: 0.0 # [s] Cooldown between polls. 0.0 polls as fast as responses allow.
+      response_timeout_sec: 5.0 # [s] Max wait for an acoustic response before moving on.
 
       # --- ROS Topics and Frames ---
       modem_send_topic: "modem_send"
@@ -87,7 +87,7 @@
   auv_status_bundler_node:
     ros__parameters:
       # --- Node Settings ---
-      publish_rate_hz: 10.0
+      publish_rate_hz: 10.0 # [Hz] AgentStatus publish rate.
 
       # --- ROS Topics ---
       status_topic: "agent/status"

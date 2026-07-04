@@ -23,7 +23,7 @@
     solver_type: "IncrementalFixedLagSmoother"
     max_update_rate_hz: -1.0 # [Hz] Maximum keyframe rate. -1.0 for no limit.
     max_opt_rate_hz: -1.0 # [Hz] Maximum optimization rate. -1.0 for no limit.
-    smoother_lag: 20.0 # The time window (in seconds) of past states to smooth over.
+    smoother_lag: 20.0 # [s] Time window of past states to smooth over.
     relinearize_threshold: 0.1 # Lower values are more accurate but slower.
     relinearize_skip: 1 # Number of updates to skip between relinearizations.
 
@@ -38,7 +38,7 @@
     keyframe_source: "DVL"
     backup_keyframe_source: "Depth" # Fallback source if the primary source drops out.
     keyframe_timeout_sec: 0.5 # [s] Time before determining the primary source has dropped out.
-    keyframe_timer_hz: 10.0 # [Hz] Period of the periodic timer (if "Timer" is used).
+    keyframe_timer_hz: 10.0 # [Hz] Rate of the periodic keyframe timer (if "Timer" is used).
 
     # --- ROS Topics and Frames ---
     imu_topic: "imu/data"
@@ -208,11 +208,11 @@
       parameter_priors:
         initial_position: [0.0, 0.0, 0.0] # [m]
         initial_orientation: [0.0, 0.0, 0.0] # [rad]
-        initial_velocity: [0.0, 0.0, 0.0] # [m/s] (at target frame)
+        initial_velocity: [0.0, 0.0, 0.0] # [m/s] (in the base frame)
         initial_accel_bias: [0.0, 0.0, 0.0] # [m/s^2]
         initial_gyro_bias: [0.0, 0.0, 0.0] # [rad/s]
         initial_position_sigmas: [0.001, 0.001, 0.001] # [m] Initial position uncertainty.
-        initial_orientation_sigmas: [0.001, 0.001, 0.001] # [rad] Initial yaw uncertainty.
+        initial_orientation_sigmas: [0.001, 0.001, 0.001] # [rad] Initial orientation uncertainty.
         initial_velocity_sigmas: [0.001, 0.001, 0.001] # [m/s] Initial velocity uncertainty.
       initial_accel_bias_sigmas: [0.01, 0.01, 0.01] # [m/s^2] Initial accelerometer bias uncertainty.
       initial_gyro_bias_sigmas: [0.001, 0.001, 0.001] # [rad/s] Initial gyroscope bias uncertainty.
@@ -221,6 +221,7 @@
     comparison:
       # TURTLMap-based loosely-coupled DVL preintegration implementation
       enable_loose_dvl_preintegration: false
+      # Forster-style tightly-coupled DVL preintegration implementation
       enable_tight_dvl_preintegration: false
 
   dvl_a50_twist_node:
@@ -233,10 +234,10 @@
       dropout_frequency_hz: 0.033 # [Hz] Frequency of the dropout cycle (1/30).
       dropout_duration_sec: 5.0 # [s] Duration of the dropout.
 
-      fom_valid_threshold: 0.02 # Below this is considered a valid velocity measurement.
+      fom_valid_threshold: 0.02 # [m/s] FOM below this is accepted even if the DVL flags the velocity invalid.
       # TURTLMap-based FOM covariance calculation
       use_fom_covariance: false
-      fom_covariance_scale: 4.0
+      fom_covariance_scale: 4.0 # Scales the FOM into a velocity variance.
 
       # --- ROS Topics and Frames ---
       input_topic: "dvl/data"
@@ -262,14 +263,14 @@
       publish_diagnostics: true # Publish diagnostic information.
       diagnostic_timeout_sec: 0.5 # [s]
 
-      pressure_scale: 1.0
+      pressure_scale: 1.0 # Scale factor to convert the input reading to Pascals.
       atmospheric_pressure: 101325.0 # [Pa]
       water_density: 997.0 # [kg/m^3]
       gravity: 9.81 # [m/s^2]
 
-      fallback_depth_noise_sigma: 0.02 # [m]
-      max_pressure_delta: 0.0 # [Pa]
-      max_consecutive_rejections: 5
+      fallback_depth_noise_sigma: 0.02 # [m] Used if the message reports no variance.
+      max_pressure_delta: 0.0 # [Pa] Reject larger jumps as spikes. 0.0 disables rejection.
+      max_consecutive_rejections: 5 # Accept the new pressure after this many rejections in a row.
 
       # --- ROS Topics and Frames ---
       input_topic: "pressure/data"
@@ -286,7 +287,7 @@
       set_origin: false # Whether this node owns and publishes the ENU origin.
       origin_pub_rate_hz: 1.0 # [Hz] Rate to republish the origin.
 
-      use_parameter_origin: true
+      use_parameter_origin: true # Only used if set_origin is true.
       origin_latitude: 40.33940 # [deg]
       origin_longitude: -111.90721 # [deg]
       origin_altitude: 1412.0 # [m]

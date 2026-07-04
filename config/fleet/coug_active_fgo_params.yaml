@@ -106,7 +106,7 @@
           gyro_noise_sigmas: [0.0012, 0.0012, 0.0012] # [rad/s/√Hz]
           accel_bias_rw_sigmas: [0.000105, 0.000105, 0.000105] # [m/s^2/√s]
           gyro_bias_rw_sigmas: [0.0000391, 0.0000391, 0.0000391] # [rad/s/√s]
-          integration_covariance: 0.00001
+          integration_covariance: 0.00001 # A small covariance for the integration process itself.
 
           # DVL parameters
           dvl_update_rate_hz: 10.0 # [Hz]

@@ -22,8 +22,8 @@
 
       progress_timeout_sec: 15.0 # [s] Max no-progress time before a recovery is triggered.
       progress_threshold: 0.5 # [m] Min moved distance required for progress check.
-      number_of_retries: 6
-      wait_duration_sec: 5.0 # [s]
+      number_of_retries: 6 # Max recovery attempts before a behavior fails.
+      wait_duration_sec: 5.0 # [s] Idle time for the Wait recovery action.
 
       # --- Groot2 Connection ---
       publish_groot2: false # Publish behavior tree state to Groot2.

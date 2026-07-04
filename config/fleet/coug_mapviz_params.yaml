@@ -10,5 +10,5 @@ mapviz:
 
 initialize_origin:
   ros__parameters:
-    local_xy_origin: "auto"
+    local_xy_origin: "auto" # "auto" sets the origin from the first GPS fix.
     local_xy_origins: [40.33940, -111.90721, 0.0, 0.0]  # [lat, lon, alt, heading]

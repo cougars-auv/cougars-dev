@@ -61,4 +61,4 @@
   dvl_a50_twist_node:
     ros__parameters:
       use_fom_covariance: true
-      fom_covariance_scale: 4.0
+      fom_covariance_scale: 4.0 # Scales the FOM into a velocity variance.
