@@ -39,7 +39,7 @@
     ros__parameters:
       publish_tf: true
 
-      odom0: "odometry/dvl"
+      odom0: "dvl/odometry"
       odom0_config: [true,  true, false,  # X, Y, Z
                       true,  true,  true,  # Roll, Pitch, Yaw
                       false, false, false, # Vx, Vy, Vz

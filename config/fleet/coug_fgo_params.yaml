@@ -253,7 +253,7 @@
 
       # --- ROS Topics and Frames ---
       input_topic: "dvl/position"
-      output_topic: "odometry/dvl_ned"
+      output_topic: "dvl/odometry_ned"
 
       use_parameter_frame: false
 
@@ -330,12 +330,12 @@
 
   odom_ned_to_enu_node:
     ros__parameters:
-      input_topic: "odometry/dvl_ned"
-      output_topic: "odometry/dvl"
+      input_topic: "dvl/odometry_ned"
+      output_topic: "dvl/odometry"
 
   odom_to_tf_node:
     ros__parameters:
-      input_topic: "odometry/dvl"
+      input_topic: "dvl/odometry"
 
   gps_to_truth_relay:
     ros__parameters:
