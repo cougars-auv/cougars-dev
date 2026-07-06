@@ -9,42 +9,50 @@
       publish_imu_bias_cov: true
 
       base:
+        use_parameter_tf: false
         parameter_tf:
           position: [0.0, 0.1, 0.1]
           orientation: [0.0, 0.0, 0.0, 1.0]
 
       imu:
+        use_parameter_tf: false
         parameter_tf:
           position: [0.11, 0.1, 0.165]
           orientation: [1.0, 0.0, 0.0, 0.0]
 
       gps:
         enable_gps: false
+        use_parameter_tf: false
         parameter_tf:
           position: [0.0, 0.1, 0.1]
           orientation: [0.0, 0.0, 0.0, 1.0]
 
       depth:
+        use_parameter_tf: false
         parameter_tf:
           position: [-0.17, 0.1, 0.16]
           orientation: [0.0, 0.0, 0.0, 1.0]
 
       mag:
+        use_parameter_tf: false
         parameter_tf:
           position: [0.11, 0.1, 0.165]
           orientation: [1.0, 0.0, 0.0, 0.0]
 
       ahrs:
+        use_parameter_tf: false
         parameter_tf:
           position: [0.11, 0.1, 0.165]
           orientation: [1.0, 0.0, 0.0, 0.0]
 
       dvl:
+        use_parameter_tf: false
         parameter_tf:
           position: [0.0, 0.0, 0.0]
           orientation: [0.0, 0.0, 0.0, 1.0]
 
       dynamics:
+        use_parameter_tf: false
         parameter_tf:
           position: [0.0, 0.1, 0.1]
           orientation: [0.0, 0.0, 0.0, 1.0]

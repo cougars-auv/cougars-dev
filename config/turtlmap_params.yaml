@@ -6,11 +6,13 @@
   "**":
     ros__parameters:
       base:
+        use_parameter_tf: false
         parameter_tf:
           position: [-0.11247, 0.00146, -0.04147]
           orientation: [1.0, 0.0, 0.0, 0.0]
 
       imu:
+        use_parameter_tf: false
         parameter_tf:
           position: [-0.11247, 0.00146, -0.04147]
           orientation: [-0.5, 0.5, -0.5, 0.5]
@@ -26,6 +28,7 @@
         enable_gps: false
 
       depth:
+        use_parameter_tf: false
         parameter_tf:
           position: [-0.11247, 0.00146, -0.04147]
           orientation: [1.0, 0.0, 0.0, 0.0]
@@ -38,6 +41,7 @@
 
       ahrs:
         enable_ahrs: true
+        use_parameter_tf: false
         parameter_tf:
           position: [-0.11247, 0.00146, -0.04147]
           orientation: [-0.5, 0.5, -0.5, 0.5]
@@ -46,6 +50,7 @@
           orientation_noise_sigmas: [0.00349, 0.00349, 0.01745]
 
       dvl:
+        use_parameter_tf: false
         parameter_tf:
           position: [0.0, 0.0, 0.0]
           orientation: [0.0, 0.0, 0.0, 1.0]
