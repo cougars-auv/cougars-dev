@@ -50,7 +50,7 @@ def save_config(context, record_bag_path) -> list:
 
     dest = os.path.join(record_bag_path, "config")
     shutil.copytree(config_dir, dest, dirs_exist_ok=True)
-    return [LogInfo(msg=f"Config saved to {dest}")]
+    return [LogInfo(msg=f"Config saved: {dest}")]
 
 
 def launch_setup(context, *args, **kwargs) -> list:
@@ -140,10 +140,10 @@ def launch_setup(context, *args, **kwargs) -> list:
         )
         actions.append(play_process)
 
-        exit_event = [LogInfo(msg="Bag playback finished, no recording to kill...")]
+        exit_event = [LogInfo(msg="Bag playback finished, no recording to kill.")]
         if record_process is not None:
             exit_event = [
-                LogInfo(msg="Bag playback finished, killing recording..."),
+                LogInfo(msg="Bag playback finished, killing recording."),
                 EmitEvent(
                     event=SignalProcess(
                         signal_number=signal.SIGINT,

@@ -47,7 +47,7 @@ def save_config(context, record_bag_path) -> list:
 
     dest = os.path.join(record_bag_path, "config")
     shutil.copytree(config_dir, dest, dirs_exist_ok=True)
-    return [LogInfo(msg=f"Config saved to {dest}")]
+    return [LogInfo(msg=f"Config saved: {dest}")]
 
 
 def launch_setup(context, *args, **kwargs) -> list:
