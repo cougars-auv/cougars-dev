@@ -76,11 +76,11 @@
 
   ekf_filter_node_map:
     ros__parameters:
-      odom2: "odometry/gps_null"
+      odom2: "gps/odometry_null"
 
   ukf_filter_node_map:
     ros__parameters:
-      odom2: "odometry/gps_null"
+      odom2: "gps/odometry_null"
 
 /base_station:
   navsat_odom_node:

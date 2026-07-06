@@ -26,7 +26,7 @@
   depth_converter_node:
     ros__parameters:
       input_topic: "DepthSensor"
-      output_topic: "odometry/depth_null"
+      output_topic: "depth/odometry_null"
 
       noise_sigma: 0.02 # [m] Depth sensor Z-position uncertainty sigma.
 
@@ -130,7 +130,7 @@
   modem_depth_converter_node:
     ros__parameters:
       input_topic: "ModemDepthSensor"
-      output_topic: "modem/odometry/depth"
+      output_topic: "modem/depth/odometry"
 
       noise_sigma: 0.02 # [m] Depth sensor Z-position uncertainty sigma.
 
@@ -141,7 +141,7 @@
       modem_rec_topic: "modem_rec"
       modem_send_topic: "modem_send"
       modem_cmd_update_topic: "modem_cmd_update"
-      depth_topic: "modem/odometry/depth"
+      depth_topic: "modem/depth/odometry"
 
       tick_period_sec: 0.1 # [s]
       send_delay_sec: 0.4 # [s]

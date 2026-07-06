@@ -47,7 +47,7 @@
                       false, false, false] # Ax, Ay, Az
       odom0_differential: true
 
-      # odom2: odometry/gps_null
+      # odom2: gps/odometry_null
       imu0: "seatrac/imu/data"
 
 /base_station:

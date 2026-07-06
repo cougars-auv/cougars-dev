@@ -81,7 +81,7 @@
       # --- ROS Topics ---
       status_topic: "base/agent/status"
       odom_topic: "base/odometry/global"
-      depth_topic: "base/odometry/depth"
+      depth_topic: "base/depth/odometry"
       imu_topic: "base/imu/data"
 
   auv_status_bundler_node:
@@ -92,5 +92,5 @@
       # --- ROS Topics ---
       status_topic: "agent/status"
       odom_topic: "odometry/global"
-      depth_topic: "odometry/depth"
+      depth_topic: "depth/odometry"
       imu_topic: "imu/data"

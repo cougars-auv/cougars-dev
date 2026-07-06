@@ -42,8 +42,8 @@
 
     # --- ROS Topics and Frames ---
     imu_topic: "imu/data"
-    gps_odom_topic: "odometry/gps"
-    depth_odom_topic: "odometry/depth"
+    gps_odom_topic: "gps/odometry"
+    depth_odom_topic: "depth/odometry"
     mag_topic: "imu/mag"
     ahrs_topic: "imu/data"
     dvl_topic: "dvl/twist"
@@ -274,7 +274,7 @@
 
       # --- ROS Topics and Frames ---
       input_topic: "pressure/data"
-      output_topic: "odometry/depth"
+      output_topic: "depth/odometry"
 
       use_parameter_child_frame: false
 
@@ -294,7 +294,7 @@
 
       # --- ROS Topics and Frames ---
       input_topic: "gps/fix"
-      output_topic: "odometry/gps"
+      output_topic: "gps/odometry"
       origin_topic: "/origin"
 
       use_parameter_child_frame: false
@@ -339,7 +339,7 @@
 
   gps_to_truth_relay:
     ros__parameters:
-      input_topic: "odometry/gps"
+      input_topic: "gps/odometry"
       output_topic: "odometry/truth"
 
   # --- Robot Localization Pipeline ---
@@ -390,7 +390,7 @@
       odom0_differential: false
       odom0_relative: false
 
-      odom1: "odometry/depth"
+      odom1: "depth/odometry"
       odom1_config: [false, false, true,  # X, Y, Z
                       false, false, false, # Roll, Pitch, Yaw
                       false, false, false, # Vx, Vy, Vz
@@ -400,7 +400,7 @@
       odom1_differential: false
       odom1_relative: false # Absolute depth in the map frame.
 
-      odom2: "odometry/gps"
+      odom2: "gps/odometry"
       odom2_config: [true,  true,  false, # X, Y, Z
                       false, false, false, # Roll, Pitch, Yaw
                       false, false, false, # Vx, Vy, Vz
@@ -437,7 +437,7 @@
       odom0_differential: false
       odom0_relative: false
 
-      odom1: "odometry/depth"
+      odom1: "depth/odometry"
       odom1_config: [false, false, true,  # X, Y, Z
                       false, false, false, # Roll, Pitch, Yaw
                       false, false, false, # Vx, Vy, Vz
@@ -447,7 +447,7 @@
       odom1_differential: false
       odom1_relative: false # Absolute depth in the map frame.
 
-      odom2: "odometry/gps"
+      odom2: "gps/odometry"
       odom2_config: [true,  true,  false, # X, Y, Z
                       false, false, false, # Roll, Pitch, Yaw
                       false, false, false, # Vx, Vy, Vz
