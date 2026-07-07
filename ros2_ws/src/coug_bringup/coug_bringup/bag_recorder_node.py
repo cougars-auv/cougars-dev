@@ -136,9 +136,7 @@ class BagRecorderNode(Node):
         return stat
 
     def _stop_bag_process(self) -> None:
-        """
-        Stop the active rosbag recording process.
-        """
+        """Stop the active rosbag recording process."""
         self.bag_process.send_signal(signal.SIGINT)
         try:
             self.bag_process.wait(timeout=10)
@@ -149,9 +147,7 @@ class BagRecorderNode(Node):
         self.bag_process = None
 
     def _save_config(self) -> None:
-        """
-        Save the current configuration files to the recorded bag directory.
-        """
+        """Save the current configuration files to the recorded bag directory."""
         if self.bag_path is None or not os.path.isdir(self.bag_path):
             return
 
@@ -159,12 +155,10 @@ class BagRecorderNode(Node):
         if config_dir and os.path.isdir(config_dir):
             dest = os.path.join(self.bag_path, "config")
             shutil.copytree(config_dir, dest, dirs_exist_ok=True)
-            self.get_logger().info(f"Config saved to {dest}")
+            self.get_logger().info(f"Config saved: {dest}")
 
     def destroy_node(self) -> None:
-        """
-        Clean up resources and stop recording when the node is destroyed.
-        """
+        """Clean up resources and stop recording when the node is destroyed."""
         if self.bag_process is not None:
             self._stop_bag_process()
             self._save_config()
