@@ -61,7 +61,7 @@ class BagRecorderNode(Node):
         prefix = f"[{clean_ns}] " if clean_ns else ""
         self.updater.add(f"{prefix}Recording Status", self._check_recording_status)
 
-        self.get_logger().info(f"Bag recorder started. Saving to {self.bag_dir}.")
+        self.get_logger().info("Initialization complete.")
 
     def _bag_record_callback(
         self, request: BagRecord.Request, response: BagRecord.Response
