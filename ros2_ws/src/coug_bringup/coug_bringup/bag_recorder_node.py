@@ -71,6 +71,7 @@ class BagRecorderNode(Node):
 
         :param request: BagRecord request with start flag and bag prefix.
         :param response: BagRecord response with success flag and message.
+        :return: The populated BagRecord response.
         """
         if self.bag_process is not None and self.bag_process.poll() is not None:
             self.bag_process = None
