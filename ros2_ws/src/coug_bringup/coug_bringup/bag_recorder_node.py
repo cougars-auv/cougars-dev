@@ -28,7 +28,7 @@ from coug_interfaces.srv import BagRecord
 
 class BagRecorderNode(Node):
     """
-    Starts and stops a rosbag recording triggered by a service call.
+    ROS 2 node that starts and stops a rosbag recording on a service call.
 
     :author: Nelson Durrant
     :date: June 2026
