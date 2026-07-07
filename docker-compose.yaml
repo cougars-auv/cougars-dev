@@ -58,6 +58,7 @@ services:
       - RMW_IMPLEMENTATION=rmw_zenoh_cpp
       - ROS_DOMAIN_ID=24
     volumes:
+      - ./bags:/bags
       - /etc/localtime:/etc/localtime:ro
       - /run/udev:/run/udev:ro
       - /dev:/dev
