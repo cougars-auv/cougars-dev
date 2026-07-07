@@ -1,7 +1,7 @@
 mapviz:
   ros__parameters:
     waypoint_topic: "waypoints"
-    waypoints_map_topic: "waypoints_map"
+    waypoint_map_topic: "waypoints_map"
 
     start_service: "base/start"
     stop_service: "base/stop"
