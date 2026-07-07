@@ -18,7 +18,7 @@ setup(
     zip_safe=True,
     maintainer="snelsondurrant",
     maintainer_email="snelsond@byu.edu",
-    description="Full-system launch files for the CougUV",
+    description="CoUGARs system-wide ROS 2 launch configurations.",
     license="Apache-2.0",
     extras_require={
         "test": [

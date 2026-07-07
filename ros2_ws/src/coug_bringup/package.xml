@@ -3,7 +3,7 @@
 <package format="3">
   <name>coug_bringup</name>
   <version>0.0.0</version>
-  <description>Full-system launch files for the CougUV</description>
+  <description>CoUGARs system-wide ROS 2 launch configurations.</description>
   <maintainer email="snelsond@byu.edu">snelsondurrant</maintainer>
   <license>Apache-2.0</license>
 
