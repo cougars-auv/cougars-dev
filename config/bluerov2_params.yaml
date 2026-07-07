@@ -6,10 +6,19 @@
   "**":
     ros__parameters:
       imu:
+        use_parameter_covariance: false
+        parameter_covariance:
+          accel_noise_sigmas: [0.0078, 0.0078, 0.0078]
+          gyro_noise_sigmas: [0.0012, 0.0012, 0.0012]
         gravity: [0.0, 0.0, -9.81]
 
       gps:
         enable_gps: false
+
+      depth:
+        use_parameter_covariance: false
+        parameter_covariance:
+          position_z_noise_sigma: 0.02
 
       mag:
         enable_mag: false
