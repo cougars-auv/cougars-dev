@@ -268,7 +268,6 @@
       water_density: 997.0 # [kg/m^3]
       gravity: 9.81 # [m/s^2]
 
-      fallback_depth_noise_sigma: 0.02 # [m] Used if the message reports no variance.
       max_pressure_delta: 0.0 # [Pa] Reject larger jumps as spikes. 0.0 disables rejection.
       max_consecutive_rejections: 5 # Accept the new pressure after this many rejections in a row.
 
