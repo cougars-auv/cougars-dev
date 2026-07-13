@@ -110,12 +110,8 @@ jobs:
             ${{ env.DOCKER_REPO }}:gtsam-latest-${{ matrix.arch }}
             ${{ env.IS_TAG == 'true' && format('{0}:gtsam-{1}-{2}', env.DOCKER_REPO, github.ref_name, matrix.arch) || '' }}
           provenance: false
-          cache-from: |
-            type=gha,scope=gtsam-${{ matrix.arch }}
-            type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-gtsam-${{ matrix.arch }}
-          cache-to: |
-            type=gha,mode=max,scope=gtsam-${{ matrix.arch }}
-            type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-gtsam-${{ matrix.arch }},mode=max
+          cache-from: type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-gtsam-${{ matrix.arch }}
+          cache-to: type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-gtsam-${{ matrix.arch }},mode=max
 
   manifest-gtsam:
     needs: build-gtsam
@@ -176,12 +172,8 @@ jobs:
             ${{ env.DOCKER_REPO }}:base-latest-${{ matrix.arch }}
             ${{ env.IS_TAG == 'true' && format('{0}:base-{1}-{2}', env.DOCKER_REPO, github.ref_name, matrix.arch) || '' }}
           provenance: false
-          cache-from: |
-            type=gha,scope=base-${{ matrix.arch }}
-            type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-base-${{ matrix.arch }}
-          cache-to: |
-            type=gha,mode=max,scope=base-${{ matrix.arch }}
-            type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-base-${{ matrix.arch }},mode=max
+          cache-from: type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-base-${{ matrix.arch }}
+          cache-to: type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-base-${{ matrix.arch }},mode=max
 
   manifest-base:
     needs: [ check-changes, build-base ]
@@ -227,9 +219,5 @@ jobs:
             ${{ env.DOCKER_REPO }}:dev-latest
             ${{ env.IS_TAG == 'true' && format('{0}:dev-{1}', env.DOCKER_REPO, github.ref_name) || '' }}
           provenance: false
-          cache-from: |
-            type=gha,scope=dev-amd64
-            type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-dev-amd64
-          cache-to: |
-            type=gha,mode=max,scope=dev-amd64
-            type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-dev-amd64,mode=max
+          cache-from: type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-dev-amd64
+          cache-to: type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-dev-amd64,mode=max
