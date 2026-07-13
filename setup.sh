@@ -16,14 +16,14 @@ done
 set -- "${args[@]}"
 
 if [ -z "$1" ] || [ -z "$2" ]; then
-  echo "Usage: ./setup.sh <base-station-ip> <agent-ns> [--hitl] [--version <tag>]"
+  echo "Usage: ./setup.sh <agent-ns> <base-station-ip> [--hitl] [--version <tag>]"
   exit 1
 fi
 
 cd "$(dirname "$0")"
 
-ip="$1"
-agent_ns="$2"
+agent_ns="$1"
+ip="$2"
 
 if [ ! -f "config/${agent_ns}_params.yaml" ]; then
   echo "Error: unknown agent '${agent_ns}'"
