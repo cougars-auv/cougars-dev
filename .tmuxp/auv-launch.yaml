@@ -1,12 +1,12 @@
 session_name: auv-launch
 start_directory: "~/cougars-dev"
+shell_command_before:
+  - alias pull="vcs custom -n --args sh -c 'git pull origin \$(git branch --show-current)'"
+  - alias pull-base="vcs custom -n --args sh -c 'git pull base \$(git branch --show-current)'"
+  - alias restart="sudo systemctl restart cougars.service && sudo journalctl -u cougars.service -f"
+  - alias logs="docker logs runtime-ct"
 windows:
   - window_name: main
-    shell_command_before:
-      - alias pull="vcs custom -n --args sh -c 'git pull origin \$(git branch --show-current)'"
-      - alias pull-base="vcs custom -n --args sh -c 'git pull base \$(git branch --show-current)'"
-      - alias restart="sudo systemctl restart cougars.service && sudo journalctl -u cougars.service -f"
-      - alias logs="docker logs runtime-ct"
     panes:
       - shell_command:
           - restart
