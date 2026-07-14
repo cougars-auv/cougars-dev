@@ -79,7 +79,7 @@ class BagRecorderNode(Node):
         if request.start:
             if self.bag_process is not None:
                 response.success = False
-                response.message = "Already recording"
+                response.message = "Already recording."
                 return response
 
             base = request.prefix if request.prefix else "rosbag"
@@ -106,14 +106,14 @@ class BagRecorderNode(Node):
         else:
             if self.bag_process is None:
                 response.success = False
-                response.message = "Not recording"
+                response.message = "Not recording."
                 return response
 
             self._stop_bag_process()
             self._save_config()
             self.bag_path = None
             response.success = True
-            response.message = "Recording stopped"
+            response.message = "Recording stopped."
             self.get_logger().info("Bag recording stopped.")
 
         return response
