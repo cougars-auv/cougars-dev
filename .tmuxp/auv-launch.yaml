@@ -4,7 +4,7 @@ shell_command_before:
   - alias pull="vcs custom -n --args sh -c 'git pull origin \$(git branch --show-current)'"
   - alias pull-base="vcs custom -n --args sh -c 'git pull base \$(git branch --show-current)'"
   - alias restart="sudo systemctl restart cougars.service && sudo journalctl -u cougars.service -f"
-  - alias logs="docker logs runtime-ct"
+  - alias logs="docker logs -f runtime-ct"
 windows:
   - window_name: main
     panes:
@@ -14,3 +14,5 @@ windows:
       - shell_command:
           - pull-base
         enter: false
+      - shell_command:
+          - logs
