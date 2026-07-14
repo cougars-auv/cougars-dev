@@ -6,7 +6,7 @@
   "**":
     ros__parameters:
       imu:
-        use_parameter_covariance: false
+        use_parameter_covariance: true
         parameter_covariance:
           accel_noise_sigmas: [0.0078, 0.0078, 0.0078]
           gyro_noise_sigmas: [0.0012, 0.0012, 0.0012]
@@ -16,7 +16,7 @@
         enable_gps: false
 
       depth:
-        use_parameter_covariance: false
+        use_parameter_covariance: true
         parameter_covariance:
           position_z_noise_sigma: 0.02
 
