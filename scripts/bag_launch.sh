@@ -4,7 +4,7 @@ set -e
 source ${OVERLAY_WS}/install/setup.bash
 
 # --- Selection ---
-bag_name=$(cd "${BAGS_DIR}" && find . -maxdepth 5 -name "metadata.yaml" -exec dirname {} \; | sed 's|^\./||' | sort -r | gum filter --placeholder "Select a bag to play..." || exit 0)
+bag_name=$(cd "${BAGS_DIR}" && find . -name "metadata.yaml" -exec dirname {} \; | sed 's|^\./||' | sort -r | gum filter --placeholder "Select a bag to play..." || exit 0)
 [ -z "${bag_name}" ] && exit 0
 play_bag_path="${BAGS_DIR}/${bag_name}"
 
