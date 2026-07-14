@@ -275,6 +275,8 @@
       input_topic: "pressure/data"
       output_topic: "depth/odometry"
 
+      calibrate_service: "depth/calibrate" # Sets depth zero ref to the current pressure.
+
       use_parameter_child_frame: false
 
   navsat_odom_node:
