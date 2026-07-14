@@ -285,6 +285,8 @@
       publish_diagnostics: true # Publish diagnostic information.
       diagnostic_timeout_sec: 1.0 # [s]
 
+      position_covariance_threshold: 0.0 # [m^2] Max horizontal variance to publish odom. 0.0 disables.
+
       set_origin: false # Whether this node owns and publishes the ENU origin.
       origin_pub_rate_hz: 1.0 # [Hz] Rate to republish the origin.
 
