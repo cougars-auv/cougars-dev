@@ -28,8 +28,7 @@ ARG DEBIAN_FRONTEND=noninteractive \
 
 SHELL [ "/bin/bash", "-c" ]
 
-ENV ROS_BUILD_ARCH=${TARGETARCH} \
-  RCUTILS_COLORIZED_OUTPUT=1
+ENV RCUTILS_COLORIZED_OUTPUT=1
 
 # Install system dependencies and configure SSH client
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
