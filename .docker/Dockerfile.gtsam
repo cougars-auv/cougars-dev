@@ -25,7 +25,11 @@ SHELL [ "/bin/bash", "-c" ]
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
   --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
   apt-get update && apt-get install -y --no-install-recommends \
-  build-essential cmake git ca-certificates ccache \
+  build-essential \
+  cmake \
+  git \
+  ca-certificates \
+  ccache \
   libtbb-dev
 
 # Build GTSAM
@@ -57,7 +61,8 @@ ARG DEBIAN_FRONTEND=noninteractive
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
   --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
   apt-get update && apt-get install -y --no-install-recommends \
-  libtbb-dev libtbb12
+  libtbb-dev \
+  libtbb12
 
 COPY --from=builder /usr/local /usr/local
 RUN ldconfig
