@@ -77,14 +77,20 @@
         position: [0.0, 0.0, 0.0] # [x, y, z]
         orientation: [0.0, 0.0, 0.0, 1.0] # [qx, qy, qz, qw]
       covariance_scalar: 1.0 # Applies to both sensor-reported and parameter_covariance values.
+      # Used to convert sensor-reported discrete covariances to continuous-time densities.
+      sensor_rate_hz: 200.0 # [Hz] IMU output rate (SBG log_imu_data: 1 = 200 Hz).
       use_parameter_covariance: false
       parameter_covariance:
-        accel_noise_sigmas: [0.0078, 0.0078, 0.0078] # [m/s^2] Accelerometer measurement noise sigmas.
-        gyro_noise_sigmas: [0.0012, 0.0012, 0.0012] # [rad/s] Gyroscope measurement noise sigmas.
-      accel_bias_rw_sigmas: [0.000105, 0.000105, 0.000105] # [m/s^2/√s] Continuous-time spectral density sigmas for accelerometer bias random walk.
-      gyro_bias_rw_sigmas: [0.0000391, 0.0000391, 0.0000391] # [rad/s/√s] Continuous-time spectral density sigmas for gyroscope bias random walk.
+        # SBG Ellipse-N: 57 µg/√Hz accel, 0.18 °/√h gyro noise density.
+        # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/performance-specifications
+        accel_noise_sigmas: [0.00056, 0.00056, 0.00056] # [m/s^2/√Hz] Accelerometer noise density sigmas.
+        gyro_noise_sigmas: [0.0000524, 0.0000524, 0.0000524] # [rad/s/√Hz] Gyroscope noise density sigmas.
+      # Derived from the SBG Ellipse-N in-run bias instabilities (14 µg accel, 7 °/h gyro).
+      # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/performance-specifications
+      accel_bias_rw_sigmas: [0.00014, 0.00014, 0.00014] # [m/s^2/√s] Continuous-time spectral density sigmas for accelerometer bias random walk.
+      gyro_bias_rw_sigmas: [0.0000339, 0.0000339, 0.0000339] # [rad/s/√s] Continuous-time spectral density sigmas for gyroscope bias random walk.
       integration_covariance: 0.00001 # A small covariance for the integration process itself.
-      gravity: [0.0, 0.0, -9.8] # [m/s^2]
+      gravity: [0.0, 0.0, -9.8] # [m/s^2] HoloOcean gravity vector
       diagnostic_timeout_sec: 1.0 # [s]
 
     gps:
@@ -98,6 +104,8 @@
       covariance_scalar: 1.0 # Applies to both sensor-reported and parameter_covariance values.
       use_parameter_covariance: false
       parameter_covariance:
+        # SBG Ellipse-N internal GNSS, RTK: 1 cm + 1 ppm horizontal position accuracy.
+        # https://www.sbg-systems.com/ins/ellipse-n/
         position_noise_sigmas: [0.015, 0.015] # [m] GPS position uncertainty sigmas.
       diagnostic_timeout_sec: 2.0 # [s]
       robust_kernel: "None"
@@ -114,6 +122,8 @@
       covariance_scalar: 1.0 # Applies to both sensor-reported and parameter_covariance values.
       use_parameter_covariance: false
       parameter_covariance:
+        # TE MS5837-02BA (Bar02, "shallow" sensor): ±2 mbar (~2 cm H2O) accuracy over 0-60 °C.
+        # https://www.te.com/en/product-CAT-BLPS0059.html
         position_z_noise_sigma: 0.02 # [m] Depth sensor Z-position uncertainty sigma.
       diagnostic_timeout_sec: 1.0 # [s]
       robust_kernel: "None"
@@ -129,8 +139,11 @@
         orientation: [0.0, 0.0, 0.0, 1.0] # [qx, qy, qz, qw]
       covariance_scalar: 1.0 # Applies to both sensor-reported and parameter_covariance values.
       use_parameter_covariance: false
+      # Measurements are normalized to unit length in the graph, so any input units work.
       parameter_covariance:
-        magnetic_field_noise_sigmas: [0.003, 0.003, 0.003] # [normalized] Magnetic field uncertainty sigmas.
+        # SBG Ellipse magnetometer: 3 mGauss RMS noise / ~0.504 Gauss local field -> ~0.006.
+        # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/hardware-documentation/aiding-sensors
+        magnetic_field_noise_sigmas: [0.006, 0.006, 0.006] # [normalized] Magnetic field uncertainty sigmas.
       # https://www.ngdc.noaa.gov/geomag/calculators/magcalc.shtml#igrfwmm
       # WMMHR-2025 (40.2406 N, 111.741 W, 2026-01-23)
       # North: 20,842.3 nT, East: 3,963.4 nT, Vertical: 45,767.8 nT
@@ -151,10 +164,12 @@
       covariance_scalar: 1.0 # Applies to both sensor-reported and parameter_covariance values.
       use_parameter_covariance: false
       parameter_covariance:
-        orientation_noise_sigmas: [0.00349, 0.00349, 0.01745] # [rad] AHRS orientation uncertainty sigmas [roll, pitch, yaw].
+        # SBG Ellipse-N AHRS: 0.4° roll/pitch, 1.0° magnetic heading (typical dynamics).
+        # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/performance-specifications
+        orientation_noise_sigmas: [0.00698, 0.00698, 0.01745] # [rad] AHRS orientation uncertainty sigmas [roll, pitch, yaw].
       # East-positive declination (NOAA convention).
       # https://www.ngdc.noaa.gov/geomag/calculators/magcalc.shtml#declination
-      mag_declination_radians: 0.0
+      mag_declination_radians: 0.0 # [rad]
       diagnostic_timeout_sec: 1.0 # [s]
       robust_kernel: "None"
       robust_k: 1.345
@@ -170,6 +185,8 @@
       covariance_scalar: 1.0 # Applies to both sensor-reported and parameter_covariance values.
       use_parameter_covariance: false
       parameter_covariance:
+        # Water Linked DVL A50: ±1.01% long-term velocity accuracy (~0.01 m/s at 1 m/s).
+        # https://waterlinked.com/dvl-a50
         velocity_noise_sigmas: [0.02, 0.02, 0.02] # [m/s] DVL body-velocity uncertainty sigmas.
       diagnostic_timeout_sec: 0.25 # [s]
       robust_kernel: "None"
@@ -312,11 +329,15 @@
       publish_diagnostics: true # Publish diagnostic information.
       diagnostic_timeout_sec: 0.5 # [s]
 
+      # Blueprint Subsea SeaTrac X150 AHRS: ±0.2° pitch/roll, ±1.0° yaw standard deviation.
+      # https://www.blueprintsubsea.com/seatrac/seatrac-standard
       orientation_noise_sigmas: [0.00349, 0.00349, 0.01745] # [rad] Orientation uncertainty sigmas [roll, pitch, yaw].
-      magnetic_field_noise_sigmas: [0.003, 0.003, 0.003] # [normalized] Magnetic field uncertainty sigmas.
+      # No published SeaTrac spec; matches the SBG Ellipse magnetometer (3 mGauss RMS noise / ~0.504 Gauss local field -> ~0.006).
+      # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/hardware-documentation/aiding-sensors
+      magnetic_field_noise_sigmas: [0.006, 0.006, 0.006] # [normalized] Magnetic field uncertainty sigmas.
       # East-positive declination (NOAA convention).
       # https://www.ngdc.noaa.gov/geomag/calculators/magcalc.shtml#declination
-      mag_declination_radians: 0.0
+      mag_declination_radians: 0.0 # [rad]
 
       # --- ROS Topics and Frames ---
       input_topic: "modem_status"

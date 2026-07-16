@@ -6,11 +6,16 @@
       output_topic: "imu/data"
       bias_topic: "imu/bias"
 
-      accel_noise_sigmas: [0.0078, 0.0078, 0.0078] # [m/s^2] Accelerometer measurement noise sigmas.
-      gyro_noise_sigmas: [0.0012, 0.0012, 0.0012] # [rad/s] Gyroscope measurement noise sigmas.
-      ahrs_noise_sigmas: [0.00349, 0.00349, 0.01745] # [rad] AHRS orientation uncertainty sigmas [roll, pitch, yaw].
-      accel_bias_rw_sigmas: [1.05e-5, 1.05e-5, 1.05e-5] # [m/s^2/√s] Continuous-time accel bias random walk spectral density sigmas.
-      gyro_bias_rw_sigmas: [3.91e-6, 3.91e-6, 3.91e-6] # [rad/s/√s] Continuous-time gyro bias random walk spectral density sigmas.
+      # SBG Ellipse-N noise densities scaled to discrete per-sample sigmas at 200 Hz
+      # (57 µg/√Hz -> 0.0079 m/s^2, 0.18 °/√h -> 0.00074 rad/s).
+      # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/performance-specifications
+      accel_noise_sigmas: [0.0079, 0.0079, 0.0079] # [m/s^2] Accelerometer measurement noise sigmas.
+      gyro_noise_sigmas: [0.00074, 0.00074, 0.00074] # [rad/s] Gyroscope measurement noise sigmas.
+      # SBG Ellipse-N AHRS: 0.4° roll/pitch, 1.0° magnetic heading (typical dynamics).
+      ahrs_noise_sigmas: [0.00698, 0.00698, 0.01745] # [rad] AHRS orientation uncertainty sigmas [roll, pitch, yaw].
+      # Derived from the SBG Ellipse-N in-run bias instabilities (14 µg accel, 7 °/h gyro).
+      accel_bias_rw_sigmas: [1.4e-4, 1.4e-4, 1.4e-4] # [m/s^2/√s] Continuous-time accel bias random walk spectral density sigmas.
+      gyro_bias_rw_sigmas: [3.39e-5, 3.39e-5, 3.39e-5] # [rad/s/√s] Continuous-time gyro bias random walk spectral density sigmas.
 
   gps_converter_node:
     ros__parameters:
@@ -21,6 +26,8 @@
       origin_longitude: -111.90721
       origin_altitude: 1412.0
 
+      # SBG Ellipse-N internal GNSS, RTK: 1 cm + 1 ppm horizontal position accuracy.
+      # https://www.sbg-systems.com/ins/ellipse-n/
       noise_sigmas: [0.015, 0.015, 0.025] # [m] GPS position uncertainty sigmas [east, north, up].
 
   depth_converter_node:
@@ -28,6 +35,8 @@
       input_topic: "DepthSensor"
       output_topic: "depth/odometry_null"
 
+      # TE MS5837-02BA (Bar02): ±2 mbar (~2 cm H2O) accuracy over 0-60 °C.
+      # https://www.te.com/en/product-CAT-BLPS0059.html
       noise_sigma: 0.02 # [m] Depth sensor Z-position uncertainty sigma.
 
   pressure_converter_node:
@@ -38,6 +47,9 @@
       water_density: 997.0 # [kg/m^3]
       gravity: 9.81 # [m/s^2]
       atmospheric_pressure: 101325.0 # [Pa]
+
+      # TE MS5837-02BA (Bar02): ±2 mbar (~2 cm H2O) accuracy over 0-60 °C.
+      # https://www.te.com/en/product-CAT-BLPS0059.html
       noise_sigma: 195.61 # [Pa]
 
   mag_converter_node:
@@ -45,7 +57,9 @@
       input_topic: "MagnetometerSensor"
       output_topic: "imu/mag"
 
-      noise_sigmas: [0.003, 0.003, 0.003] # [normalized] Magnetic field uncertainty sigmas.
+      # SBG Ellipse magnetometer: 3 mGauss RMS noise / ~0.504 Gauss local field -> ~0.006.
+      # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/hardware-documentation/aiding-sensors
+      noise_sigmas: [0.006, 0.006, 0.006] # [normalized] Magnetic field uncertainty sigmas.
 
   dvl_converter_node:
     ros__parameters:
@@ -53,6 +67,8 @@
       output_topic: "dvl/data"
       config_command_topic: "dvl/config/command"
 
+      # Water Linked DVL A50: ±1.01% long-term velocity accuracy (~0.01 m/s at 1 m/s).
+      # https://waterlinked.com/dvl-a50
       noise_sigmas: [0.02, 0.02, 0.02] # [m/s] DVL body-velocity uncertainty sigmas.
 
   dvl_odom_converter_node:
@@ -108,18 +124,25 @@
       output_topic: "modem/imu/data"
       bias_topic: "modem/imu/bias"
 
-      accel_noise_sigmas: [0.0078, 0.0078, 0.0078] # [m/s^2] Accelerometer measurement noise sigmas.
-      gyro_noise_sigmas: [0.0012, 0.0012, 0.0012] # [rad/s] Gyroscope measurement noise sigmas.
+      # The real modem_status arrives at 10 Hz (seatrac-ros2 sets STATUS_MODE_10HZ).
+      # No published SeaTrac accel/gyro specs; matches the SBG Ellipse-N noise densities
+      # scaled to discrete per-sample sigmas at 10 Hz.
+      accel_noise_sigmas: [0.0018, 0.0018, 0.0018] # [m/s^2] Accelerometer measurement noise sigmas.
+      gyro_noise_sigmas: [0.00017, 0.00017, 0.00017] # [rad/s] Gyroscope measurement noise sigmas.
+      # Blueprint Subsea SeaTrac X150 AHRS: ±0.2° pitch/roll, ±1.0° yaw standard deviation.
+      # https://www.blueprintsubsea.com/seatrac/seatrac-standard
       ahrs_noise_sigmas: [0.00349, 0.00349, 0.01745] # [rad] AHRS orientation uncertainty sigmas [roll, pitch, yaw].
-      accel_bias_rw_sigmas: [1.05e-5, 1.05e-5, 1.05e-5] # [m/s^2/√s] Continuous-time accel bias random walk spectral density sigmas.
-      gyro_bias_rw_sigmas: [3.91e-6, 3.91e-6, 3.91e-6] # [rad/s/√s] Continuous-time gyro bias random walk spectral density sigmas.
+      # Derived from the SBG Ellipse-N in-run bias instabilities (14 µg accel, 7 °/h gyro).
+      accel_bias_rw_sigmas: [1.4e-4, 1.4e-4, 1.4e-4] # [m/s^2/√s] Continuous-time accel bias random walk spectral density sigmas.
+      gyro_bias_rw_sigmas: [3.39e-5, 3.39e-5, 3.39e-5] # [rad/s/√s] Continuous-time gyro bias random walk spectral density sigmas.
 
   modem_mag_converter_node:
     ros__parameters:
       input_topic: "ModemMagnetometerSensor"
       output_topic: "modem/imu/mag"
 
-      noise_sigmas: [0.003, 0.003, 0.003] # [normalized] Magnetic field uncertainty sigmas.
+      # No published SeaTrac spec; matches the SBG Ellipse magnetometer (3 mGauss RMS noise / ~0.504 Gauss local field -> ~0.006).
+      noise_sigmas: [0.006, 0.006, 0.006] # [normalized] Magnetic field uncertainty sigmas.
 
   modem_status_converter_node:
     ros__parameters:
@@ -132,7 +155,9 @@
       input_topic: "ModemDepthSensor"
       output_topic: "modem/depth/odometry"
 
-      noise_sigma: 0.02 # [m] Depth sensor Z-position uncertainty sigma.
+      # SeaTrac X150 depth telemetry resolution: 0.1 m (SeaTrac Developer Guide UM-140).
+      # https://www.blueprintsubsea.com/seatrac/support
+      noise_sigma: 0.1 # [m] Depth sensor Z-position uncertainty sigma.
 
   modem_converter_node:
     ros__parameters:
