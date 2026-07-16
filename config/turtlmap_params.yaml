@@ -49,4 +49,4 @@
       fom_covariance_scale: 4.0
 
       use_parameter_frame: true
-      override_timestamp: true # DVL A50 clock is not synced in these bags.
+      override_timestamp: true # DVL A50 clock is not synced in these bags
