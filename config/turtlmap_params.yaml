@@ -6,6 +6,7 @@
   "**":
     ros__parameters:
       imu:
+        use_parameter_frame: true
         use_parameter_covariance: true
         parameter_covariance:
           accel_noise_sigmas: [0.003878, 0.003878, 0.003878]
@@ -26,6 +27,7 @@
         enable_mag: false
 
       ahrs:
+        use_parameter_frame: true
         enable_ahrs: true
         use_parameter_covariance: true
         parameter_covariance:
@@ -39,7 +41,11 @@
       pressure_scale: 100.0 # IMPORTANT! Pressure is in hPa, not Pa
       atmospheric_pressure: 99339.996
 
+      use_parameter_child_frame: true
+
   dvl_a50_twist_node:
     ros__parameters:
       use_fom_covariance: true
       fom_covariance_scale: 4.0
+
+      use_parameter_frame: true
