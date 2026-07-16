@@ -7,24 +7,17 @@
     ros__parameters:
       imu:
         use_parameter_covariance: true
-        parameter_covariance:
-          accel_noise_sigmas: [0.0078, 0.0078, 0.0078]
-          gyro_noise_sigmas: [0.0012, 0.0012, 0.0012]
-        gravity: [0.0, 0.0, -9.81]
+        gravity: [0.0, 0.0, -9.7977] # Utah Lake (40.24 N, ~1358 m elevation, free-air correction)
 
       gps:
         enable_gps: false
 
       depth:
         use_parameter_covariance: true
-        parameter_covariance:
-          position_z_noise_sigma: 0.02
 
       mag:
         enable_mag: false
         use_parameter_covariance: true
-        parameter_covariance:
-          magnetic_field_noise_sigmas: [0.003, 0.003, 0.003]
 
       ahrs:
         enable_ahrs: true
@@ -35,8 +28,7 @@
   fluid_pressure_odom_node:
     ros__parameters:
       atmospheric_pressure: 86039.8 # Utah Lake (~1358 m elevation)
-      water_density: 997.0
-      gravity: 9.81
+      gravity: 9.7977 # Utah Lake (40.24 N, ~1358 m elevation, free-air correction)
 
       max_pressure_delta: 9780.0 # [Pa] ~1 m depth jump
 
