@@ -234,7 +234,7 @@
       dropout_frequency_hz: 0.033 # [Hz] Frequency of the dropout cycle (1/30).
       dropout_duration_sec: 5.0 # [s] Duration of the dropout.
 
-      fom_valid_threshold: 0.02 # [m/s] FOM below this is accepted even if the DVL flags the velocity invalid.
+      fom_valid_threshold: 0.01 # [m/s] FOM below this is accepted even if the DVL flags the velocity invalid.
       # TURTLMap-based FOM covariance calculation
       use_fom_covariance: false
       fom_covariance_scale: 4.0 # Scales the FOM into a velocity variance.
