@@ -239,6 +239,8 @@
       use_fom_covariance: false
       fom_covariance_scale: 4.0 # Scales the FOM into a velocity variance.
 
+      override_timestamp: false # Restamp with ROS receive time if the A50 clock isn't synced.
+
       # --- ROS Topics and Frames ---
       input_topic: "dvl/data"
       output_topic: "dvl/twist"
@@ -250,6 +252,8 @@
       # --- Node Settings ---
       publish_diagnostics: true # Publish diagnostic information.
       diagnostic_timeout_sec: 0.5 # [s]
+
+      override_timestamp: false # Restamp with ROS receive time if the A50 clock isn't synced.
 
       # --- ROS Topics and Frames ---
       input_topic: "dvl/position"

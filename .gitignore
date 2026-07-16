@@ -25,6 +25,7 @@ holoocean_interfaces
 holoocean-ros
 seatrac_interfaces
 mapviz
+TURTLMap
 
 .DS_Store
 .env
