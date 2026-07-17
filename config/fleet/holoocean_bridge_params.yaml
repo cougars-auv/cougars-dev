@@ -12,7 +12,7 @@
       accel_noise_sigmas: [0.0079, 0.0079, 0.0079] # [m/s^2] Accelerometer measurement noise sigmas.
       gyro_noise_sigmas: [0.00074, 0.00074, 0.00074] # [rad/s] Gyroscope measurement noise sigmas.
       # SBG Ellipse-N AHRS: 0.4° roll/pitch, 1.0° magnetic heading (typical dynamics).
-      ahrs_noise_sigmas: [0.00698, 0.00698, 0.01745] # [rad] AHRS orientation uncertainty sigmas [roll, pitch, yaw].
+      ahrs_noise_sigmas: [0.00698, 0.00698, 0.01745] # [roll, pitch, yaw] [rad] AHRS orientation uncertainty sigmas.
       # Derived from the SBG Ellipse-N in-run bias instabilities (14 µg accel, 7 °/h gyro).
       accel_bias_rw_sigmas: [1.4e-4, 1.4e-4, 1.4e-4] # [m/s^2/√s] Continuous-time accel bias random walk spectral density sigmas.
       gyro_bias_rw_sigmas: [3.39e-5, 3.39e-5, 3.39e-5] # [rad/s/√s] Continuous-time gyro bias random walk spectral density sigmas.
@@ -28,7 +28,7 @@
 
       # SBG Ellipse-N internal GNSS, RTK: 1 cm + 1 ppm horizontal position accuracy.
       # https://www.sbg-systems.com/ins/ellipse-n/
-      noise_sigmas: [0.015, 0.015, 0.025] # [m] GPS position uncertainty sigmas [east, north, up].
+      noise_sigmas: [0.015, 0.015, 0.025] # [east, north, up] [m] GPS position uncertainty sigmas.
 
   depth_converter_node:
     ros__parameters:
@@ -131,7 +131,7 @@
       gyro_noise_sigmas: [0.00017, 0.00017, 0.00017] # [rad/s] Gyroscope measurement noise sigmas.
       # Blueprint Subsea SeaTrac X150 AHRS: ±0.2° pitch/roll, ±1.0° yaw standard deviation.
       # https://www.blueprintsubsea.com/seatrac/seatrac-standard
-      ahrs_noise_sigmas: [0.00349, 0.00349, 0.01745] # [rad] AHRS orientation uncertainty sigmas [roll, pitch, yaw].
+      ahrs_noise_sigmas: [0.00349, 0.00349, 0.01745] # [roll, pitch, yaw] [rad] AHRS orientation uncertainty sigmas.
       # Derived from the SBG Ellipse-N in-run bias instabilities (14 µg accel, 7 °/h gyro).
       accel_bias_rw_sigmas: [1.4e-4, 1.4e-4, 1.4e-4] # [m/s^2/√s] Continuous-time accel bias random walk spectral density sigmas.
       gyro_bias_rw_sigmas: [3.39e-5, 3.39e-5, 3.39e-5] # [rad/s/√s] Continuous-time gyro bias random walk spectral density sigmas.

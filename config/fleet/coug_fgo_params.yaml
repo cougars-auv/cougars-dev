@@ -106,7 +106,7 @@
       parameter_covariance:
         # SBG Ellipse-N internal GNSS, RTK: 1 cm + 1 ppm horizontal position accuracy.
         # https://www.sbg-systems.com/ins/ellipse-n/
-        position_noise_sigmas: [0.015, 0.015] # [m] GPS position uncertainty sigmas.
+        position_noise_sigmas: [0.015, 0.015] # [east, north] [m] GPS position uncertainty sigmas.
       diagnostic_timeout_sec: 2.0 # [s]
       robust_kernel: "None"
       robust_k: 1.345
@@ -166,7 +166,7 @@
       parameter_covariance:
         # SBG Ellipse-N AHRS: 0.4° roll/pitch, 1.0° magnetic heading (typical dynamics).
         # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/performance-specifications
-        orientation_noise_sigmas: [0.00698, 0.00698, 0.01745] # [rad] AHRS orientation uncertainty sigmas [roll, pitch, yaw].
+        orientation_noise_sigmas: [0.00698, 0.00698, 0.01745] # [roll, pitch, yaw] [rad] AHRS orientation uncertainty sigmas.
       # East-positive declination (NOAA convention).
       # https://www.ngdc.noaa.gov/geomag/calculators/magcalc.shtml#declination
       mag_declination_radians: 0.0 # [rad]
@@ -229,7 +229,7 @@
         initial_accel_bias: [0.0, 0.0, 0.0] # [m/s^2]
         initial_gyro_bias: [0.0, 0.0, 0.0] # [rad/s]
         initial_position_sigmas: [0.001, 0.001, 0.001] # [m] Initial position uncertainty.
-        initial_orientation_sigmas: [0.001, 0.001, 0.001] # [rad] Initial orientation uncertainty.
+        initial_orientation_sigmas: [0.001, 0.001, 0.001] # [roll, pitch, yaw] [rad] Initial orientation uncertainty.
         initial_velocity_sigmas: [0.001, 0.001, 0.001] # [m/s] Initial velocity uncertainty.
       initial_accel_bias_sigmas: [0.01, 0.01, 0.01] # [m/s^2] Initial accelerometer bias uncertainty.
       initial_gyro_bias_sigmas: [0.001, 0.001, 0.001] # [rad/s] Initial gyroscope bias uncertainty.
@@ -271,6 +271,10 @@
       diagnostic_timeout_sec: 0.5 # [s]
 
       override_timestamp: false # Restamp with ROS receive time if the A50 clock isn't synced.
+
+      # Water Linked DVL A50 dead reckoning: 0.1-0.3°/min calibrated yaw drift; no published roll/pitch spec (~1° estimated).
+      # https://docs.waterlinked.com/dvl/dead-reckoning/
+      orientation_noise_sigmas: [0.01745, 0.01745, 0.03491] # [roll, pitch, yaw] [rad] Orientation uncertainty sigmas.
 
       # --- ROS Topics and Frames ---
       input_topic: "dvl/position"
@@ -331,7 +335,7 @@
 
       # Blueprint Subsea SeaTrac X150 AHRS: ±0.2° pitch/roll, ±1.0° yaw standard deviation.
       # https://www.blueprintsubsea.com/seatrac/seatrac-standard
-      orientation_noise_sigmas: [0.00349, 0.00349, 0.01745] # [rad] Orientation uncertainty sigmas [roll, pitch, yaw].
+      orientation_noise_sigmas: [0.00349, 0.00349, 0.01745] # [roll, pitch, yaw] [rad] Orientation uncertainty sigmas.
       # No published SeaTrac spec; matches the SBG Ellipse magnetometer (3 mGauss RMS noise / ~0.504 Gauss local field -> ~0.006).
       # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/hardware-documentation/aiding-sensors
       magnetic_field_noise_sigmas: [0.006, 0.006, 0.006] # [normalized] Magnetic field uncertainty sigmas.

@@ -7,4 +7,4 @@
       back_stereo_info_topic: "stereo/back/camera_info"
       vel_topic: "dvl/visual"
 
-      velocity_noise_sigmas: [0.5, 0.5, 2.0] # [m/s]
+      velocity_noise_sigmas: [0.5, 0.5, 2.0] # [x, y, z] [m/s]

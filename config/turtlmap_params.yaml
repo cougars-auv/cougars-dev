@@ -36,7 +36,7 @@
         parameter_covariance:
           # LORD 3DM-GX5-25 EKF attitude: ±0.25° roll/pitch, ±0.8° heading RMS.
           # https://www.microstrain.com/inertial-sensors/3dm-gx5-25
-          orientation_noise_sigmas: [0.00436, 0.00436, 0.01396] # [rad]
+          orientation_noise_sigmas: [0.00436, 0.00436, 0.01396] # [roll, pitch, yaw] [rad]
 
       prior:
         use_parameter_priors: false
