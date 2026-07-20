@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import atexit
 import os
 import shutil
 import signal
@@ -26,31 +27,60 @@ from launch.actions import (
     RegisterEventHandler,
     EmitEvent,
     LogInfo,
+    SetEnvironmentVariable,
 )
 from launch.event_handlers import OnProcessExit
 from launch.events import matches_action
 from launch.events.process import SignalProcess
 from launch.conditions import UnlessCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch.logging import launch_config
 from launch.substitutions import LaunchConfiguration
 
 
-def save_config(context, record_bag_path) -> list:
+def save_config(record_bag_path) -> None:
     """
     Copy the active config directory into the recorded bag directory.
 
     :param record_bag_path: Path to the recorded bag (skipped if not created).
     """
     if not record_bag_path or not os.path.isdir(record_bag_path):
-        return []
+        return
 
     config_dir = os.environ.get("CONFIG_DIR", "")
     if not config_dir or not os.path.isdir(config_dir):
-        return []
+        return
 
     dest = os.path.join(record_bag_path, "config")
     shutil.copytree(config_dir, dest, dirs_exist_ok=True)
-    return [LogInfo(msg=f"Config saved: {dest}")]
+    print(f"Config saved: {dest}")
+
+
+def save_logs(record_bag_path) -> None:
+    """
+    Copy this run's ROS log directory into the recorded bag directory.
+
+    :param record_bag_path: Path to the recorded bag (skipped if not created).
+    """
+    if not record_bag_path or not os.path.isdir(record_bag_path):
+        return
+
+    log_dir = launch_config.log_dir
+    if not os.path.isdir(log_dir):
+        return
+
+    dest = os.path.join(record_bag_path, "log")
+    shutil.copytree(log_dir, dest, dirs_exist_ok=True)
+    print(f"Logs saved: {dest}")
+
+
+def save_artifacts(context, record_bag_path) -> None:
+    """
+    Copy config and logs into the recorded bag as soon as recording stops.
+    :param record_bag_path: Path to the recorded bag (skipped if not created).
+    """
+    save_config(record_bag_path)
+    save_logs(record_bag_path)
 
 
 def launch_setup(context, *args, **kwargs) -> list:
@@ -100,13 +130,16 @@ def launch_setup(context, *args, **kwargs) -> list:
                     target_action=record_process,
                     on_exit=[
                         OpaqueFunction(
-                            function=save_config,
+                            function=save_artifacts,
                             kwargs={"record_bag_path": record_bag_path_str},
                         )
                     ],
                 )
             )
         )
+
+        atexit.register(save_config, record_bag_path_str)
+        atexit.register(save_logs, record_bag_path_str)
 
     if play_bag_path_str:
         play_process = ExecuteProcess(
@@ -170,6 +203,7 @@ def launch_setup(context, *args, **kwargs) -> list:
             launch_arguments={
                 "use_sim_time": use_sim_time,
                 "agent_list": agent_list_str,
+                "record_bag_path": "",
             }.items(),
         )
     )
@@ -194,6 +228,7 @@ def launch_setup(context, *args, **kwargs) -> list:
 def generate_launch_description() -> LaunchDescription:
     return LaunchDescription(
         [
+            SetEnvironmentVariable("ROS_LOG_DIR", launch_config.log_dir),
             DeclareLaunchArgument(
                 "use_sim_time",
                 default_value="true",

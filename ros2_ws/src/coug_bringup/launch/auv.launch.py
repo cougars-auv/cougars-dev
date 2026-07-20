@@ -15,7 +15,13 @@
 import os
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription, DeclareLaunchArgument, GroupAction
+from launch.actions import (
+    IncludeLaunchDescription,
+    DeclareLaunchArgument,
+    GroupAction,
+    SetEnvironmentVariable,
+)
+from launch.logging import launch_config
 from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import (
@@ -139,12 +145,14 @@ def generate_launch_description() -> LaunchDescription:
             {
                 "use_sim_time": use_sim_time,
                 "auv_ns": auv_ns,
+                "log_dir": launch_config.log_dir,
             },
         ],
     )
 
     return LaunchDescription(
         [
+            SetEnvironmentVariable("ROS_LOG_DIR", launch_config.log_dir),
             DeclareLaunchArgument(
                 "use_sim_time",
                 default_value="false",

@@ -20,6 +20,7 @@ from datetime import datetime
 
 import diagnostic_updater
 import rclpy
+import rclpy.logging
 from diagnostic_msgs.msg import DiagnosticStatus
 from rclpy.node import Node
 
@@ -43,9 +44,11 @@ class BagRecorderNode(Node):
             os.environ.get("BAGS_DIR", os.path.expanduser("~/cougars-dev/bags")),
         )
         self.declare_parameter("bag_record_service", "bag_record")
+        self.declare_parameter("log_dir", "")
 
         self.auv_ns = self.get_parameter("auv_ns").get_parameter_value().string_value
         self.bag_dir = self.get_parameter("bag_dir").get_parameter_value().string_value
+        self.log_dir = self.get_parameter("log_dir").get_parameter_value().string_value
         bag_record_service = (
             self.get_parameter("bag_record_service").get_parameter_value().string_value
         )
@@ -111,6 +114,7 @@ class BagRecorderNode(Node):
 
             self._stop_bag_process()
             self._save_config()
+            self._save_logs()
             self.bag_path = None
             response.success = True
             response.message = "Recording stopped."
@@ -158,11 +162,23 @@ class BagRecorderNode(Node):
             shutil.copytree(config_dir, dest, dirs_exist_ok=True)
             self.get_logger().info(f"Config saved: {dest}")
 
+    def _save_logs(self) -> None:
+        """Save the current ROS log files to the recorded bag directory."""
+        if self.bag_path is None or not os.path.isdir(self.bag_path):
+            return
+
+        log_dir = self.log_dir or rclpy.logging.get_logging_directory()
+        if log_dir and os.path.isdir(log_dir):
+            dest = os.path.join(self.bag_path, "log")
+            shutil.copytree(log_dir, dest, dirs_exist_ok=True)
+            self.get_logger().info(f"Logs saved: {dest}")
+
     def destroy_node(self) -> None:
         """Clean up resources and stop recording when the node is destroyed."""
         if self.bag_process is not None:
             self._stop_bag_process()
             self._save_config()
+            self._save_logs()
         super().destroy_node()
 
 

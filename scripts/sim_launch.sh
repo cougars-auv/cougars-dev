@@ -72,15 +72,4 @@ if [ -n "${record_bag_path}" ]; then
 fi
 
 echo "ros2 launch coug_bringup sim.launch.py ${args[*]}"
-if [ -n "${record_bag_path}" ]; then
-  tmp=$(mktemp -d)
-  ROS_LOG_DIR="${tmp}" ros2 launch coug_bringup sim.launch.py "${args[@]}"
-
-  if [ -d "${record_bag_path}" ]; then
-    mv "${tmp}" "${record_bag_path}/log"
-  else
-    rm -rf "${tmp}"
-  fi
-else
-  ros2 launch coug_bringup sim.launch.py "${args[@]}"
-fi
+ros2 launch coug_bringup sim.launch.py "${args[@]}"

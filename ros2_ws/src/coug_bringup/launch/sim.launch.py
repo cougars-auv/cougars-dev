@@ -21,9 +21,11 @@ from launch.actions import (
     DeclareLaunchArgument,
     GroupAction,
     OpaqueFunction,
+    SetEnvironmentVariable,
 )
 from launch.conditions import IfCondition, UnlessCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch.logging import launch_config
 from launch.substitutions import (
     LaunchConfiguration,
     PathJoinSubstitution,
@@ -214,6 +216,7 @@ def launch_setup(context, *args, **kwargs) -> list:
 def generate_launch_description() -> LaunchDescription:
     return LaunchDescription(
         [
+            SetEnvironmentVariable("ROS_LOG_DIR", launch_config.log_dir),
             DeclareLaunchArgument(
                 "use_sim_time",
                 default_value="true",
