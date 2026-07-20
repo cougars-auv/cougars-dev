@@ -1,18 +1,20 @@
 session_name: auv-launch
 start_directory: "~/cougars-dev"
 shell_command_before:
-  - alias pull="vcs custom -n --args sh -c 'git pull origin \$(git branch --show-current)'"
-  - alias pull-base="vcs custom -n --args sh -c 'git pull base \$(git branch --show-current)'"
+  - pull_all() { for r in $(find ~/cougars-dev -name .git -prune -printf '%h\n'); do (cd "$r"; b=$(git branch --show-current); echo "=== $r ($b) ==="; git pull "$1" "$b"); done; }
+  - alias pull="pull_all origin"
+  - alias pull-base="pull_all base"
   - alias restart="sudo systemctl restart cougars.service && sudo journalctl -u cougars.service -f"
   - alias logs="docker logs -f runtime-ct"
 windows:
   - window_name: main
+    layout: main-vertical
     panes:
       - shell_command:
-          - restart
-        enter: false
-      - shell_command:
-          - pull-base
-        enter: false
-      - shell_command:
           - logs
+      - shell_command:
+          - cmd: restart
+            enter: false
+      - shell_command:
+          - cmd: pull-base
+            enter: false
