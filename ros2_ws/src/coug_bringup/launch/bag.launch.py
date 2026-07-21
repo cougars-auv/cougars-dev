@@ -156,11 +156,14 @@ def launch_setup(context, *args, **kwargs) -> list:
                 "--remap",
                 "/tf:=/tf_discard",
                 "/tf_static:=/tf_static_discard",
+                "/diagnostics_agg:=/diagnostics_agg_discard",
                 # FROST Lab BlueROV2 bags
+                "/origin:=/origin_discard",
                 f"{auv_ns}/dvl/twist:=/{auv_ns}/dvl/twist_discard",
                 f"{auv_ns}/dvl/odometry:=/{auv_ns}/dvl/odometry_discard",
                 f"{auv_ns}/imu/nav_sat_fix:=/{auv_ns}/gps/fix",
                 f"{auv_ns}/shallow/pressure/data:=/{auv_ns}/pressure/data",
+                f"{auv_ns}/odometry/global:=/{auv_ns}/odometry/global_discard",
                 # FROST Lab CougUV bags
                 f"/pressure/data:=/{auv_ns}/pressure/data",
                 f"/fix:=/{auv_ns}/gps/fix",
