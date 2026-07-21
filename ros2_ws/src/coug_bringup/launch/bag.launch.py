@@ -77,6 +77,7 @@ def save_logs(record_bag_path) -> None:
 def save_artifacts(context, record_bag_path) -> None:
     """
     Copy config and logs into the recorded bag as soon as recording stops.
+
     :param record_bag_path: Path to the recorded bag (skipped if not created).
     """
     save_config(record_bag_path)
