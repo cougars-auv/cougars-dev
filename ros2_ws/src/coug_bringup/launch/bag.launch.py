@@ -154,10 +154,10 @@ def launch_setup(context, *args, **kwargs) -> list:
                 "--start-offset",
                 start_delay,
                 "--remap",
+                # FROST Lab BlueROV2 bags
                 "/tf:=/tf_discard",
                 "/tf_static:=/tf_static_discard",
                 "/diagnostics_agg:=/diagnostics_agg_discard",
-                # FROST Lab BlueROV2 bags
                 "/origin:=/origin_discard",
                 f"{auv_ns}/dvl/twist:=/{auv_ns}/dvl/twist_discard",
                 f"{auv_ns}/dvl/odometry:=/{auv_ns}/dvl/odometry_discard",
