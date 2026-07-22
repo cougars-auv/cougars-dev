@@ -27,9 +27,7 @@ WORKDIR ${OVERLAY_WS}
 
 USER root
 
-# When run by a 1000 UID/GID user, `entrypoint.sh` causes permission conflicts with the default
-# `ubuntu` user UID/GID in Ubuntu 24.04.
-# TODO: A cleaner fix would be upstream in the holoocean-ros Dockerfile
+# TODO: Fix this upstream, doesn't work for Kalliyan
 RUN userdel -r ubuntu || true
 
 # Install CycloneDDS and Zenoh
