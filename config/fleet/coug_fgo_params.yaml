@@ -54,6 +54,7 @@
     velocity_topic: "~/velocity" # At the target frame in the map frame.
     # Topic for the IMU bias. Published as a TwistWithCovarianceStamped,
     # where 'linear' holds accelerometer bias and 'angular' holds gyroscope bias.
+    # Preserves accel/gyro cross-covariance; sensor_msgs/Imu has no field for that.
     imu_bias_topic: "~/imu/bias"
     graph_metrics_topic: "~/metrics"
     reset_service: "~/reset"
