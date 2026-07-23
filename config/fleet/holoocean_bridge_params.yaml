@@ -76,6 +76,9 @@
       input_topic: "DynamicsSensorOdom"
       output_topic: "dvl/position"
 
+      # DVL odom just matches ground truth in sim; pos_std not applied as noise, reported only.
+      pos_std: 0.05 # [m] Dead-reckoning position uncertainty.
+
   stereo_converter_node:
     ros__parameters:
       front_input_topic: "RGBCameraFront"
@@ -173,3 +176,10 @@
       resp_delay_sec: 0.0 # [s]
       resp_timeout_sec: 4.0 # [s]
       beacon_id: 1
+
+      # Blueprint Subsea SeaTrac X150 USBL: ±1° angular accuracy (typ. 2% of acoustic range).
+      # https://www.blueprintsubsea.com/seatrac/seatrac-standard
+      bearing_noise_sigmas: [0.01745, 0.01745] # [azimuth, elevation] [rad] Bearing uncertainty sigmas.
+      # Blueprint Subsea SeaTrac X150 USBL: ±0.1 m range accuracy (dependent on VOS accuracy).
+      # https://www.blueprintsubsea.com/seatrac/seatrac-standard
+      range_noise_sigma: 0.1 # [m] Two-way time-of-flight range uncertainty sigma.
