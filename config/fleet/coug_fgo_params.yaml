@@ -48,6 +48,7 @@
     ahrs_topic: "imu/data"
     dvl_topic: "dvl/twist"
     wrench_topic: "cmd_wrench"
+    multiagent_topics: ["/coug2sim/base/agent/status", "/coug3sim/base/agent/status"]
     global_odom_topic: "odometry/global"
     smoothed_path_topic: "smoothed_path"
     velocity_topic: "~/velocity" # At the target frame in the map frame.
@@ -211,6 +212,47 @@
       mass: [31.87, 60.46, 60.46] # [kg] Mass of the AUV (diagonal)
       linear_drag: [1.59, 3.02, 3.02] # Linear drag coefficient (diagonal)
       quad_drag: [6.11, 196.13, 196.13] # Quadratic drag coefficient (diagonal)
+      diagnostic_timeout_sec: 1.0 # [s]
+      robust_kernel: "None"
+      robust_k: 1.345
+
+    multiagent:
+      enable_multiagent: false
+      use_parameter_frame: false
+      use_parameter_tf: false
+      parameter_tf: # Relative to the target frame.
+        position: [0.0, 0.0, 0.0] # [x, y, z]
+        orientation: [0.0, 0.0, 0.0, 1.0] # [qx, qy, qz, qw]
+      covariance_scalar: 1.0 # Scales the bearing and range noise sigmas.
+      # Blueprint Subsea SeaTrac X150 USBL: ±1° angular accuracy (typ. 2% of acoustic range).
+      # https://www.blueprintsubsea.com/seatrac/seatrac-standard
+      bearing_noise_sigmas: [0.01745, 0.01745] # [azimuth, elevation] [rad] Bearing uncertainty sigmas.
+      # Blueprint Subsea SeaTrac X150 USBL: ±0.1 m range accuracy (dependent on VOS accuracy).
+      # https://www.blueprintsubsea.com/seatrac/seatrac-standard
+      range_noise_sigma: 0.1 # [m] Two-way time-of-flight range uncertainty sigma.
+      neighbor:
+        modem_tf: # Relative to the neighboring agent's base frame.
+          position: [0.0, 0.0, 0.0] # [x, y, z]
+          orientation: [0.0, 0.0, 0.0, 1.0] # [qx, qy, qz, qw]
+        ahrs: # Transformed into the neighboring agent's base frame.
+          enable_ahrs: true
+          covariance_scalar: 1.0 # Scales the orientation noise sigmas.
+          # SBG Ellipse-N AHRS: 0.4° roll/pitch, 1.0° magnetic heading (typical dynamics).
+          # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/performance-specifications
+          orientation_noise_sigmas: [0.00698, 0.00698, 0.01745] # [roll, pitch, yaw] [rad] AHRS orientation uncertainty sigmas.
+          # East-positive declination (NOAA convention).
+          # https://www.ngdc.noaa.gov/geomag/calculators/magcalc.shtml#declination
+          mag_declination_radians: 0.0 # [rad]
+          robust_kernel: "None"
+          robust_k: 1.345
+        depth: # Transformed into the neighboring agent's base frame.
+          enable_depth: true
+          covariance_scalar: 1.0 # Scales the position z noise sigma.
+          # TE MS5837-02BA (Bar02, "shallow" sensor): ±2 mbar (~2 cm H2O) accuracy over 0-60 °C.
+          # https://www.te.com/en/product-CAT-BLPS0059.html
+          position_z_noise_sigma: 0.02 # [m] Depth sensor Z-position uncertainty sigma.
+          robust_kernel: "None"
+          robust_k: 1.345
       diagnostic_timeout_sec: 1.0 # [s]
       robust_kernel: "None"
       robust_k: 1.345

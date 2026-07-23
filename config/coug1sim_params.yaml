@@ -1,4 +1,9 @@
 /coug1sim:
+  # "**":
+  #   ros__parameters:
+  #     multiagent:
+  #       enable_multiagent: true
+
   bt_helm_node:
     ros__parameters:
       publish_groot2: true

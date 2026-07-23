@@ -38,6 +38,7 @@ def generate_launch_description() -> LaunchDescription:
     use_sim_time = LaunchConfiguration("use_sim_time")
     auv_ns = LaunchConfiguration("auv_ns")
     loc_comparison = LaunchConfiguration("loc_comparison")
+    lead_agent = LaunchConfiguration("lead_agent")
 
     fleet_params = PathJoinSubstitution(
         [
@@ -88,6 +89,7 @@ def generate_launch_description() -> LaunchDescription:
             "use_sim_time": use_sim_time,
             "auv_ns": auv_ns,
             "loc_comparison": loc_comparison,
+            "lead_agent": lead_agent,
         }.items(),
         condition=IfCondition(NotEqualsSubstitution(auv_ns, "coug2")),
     )
@@ -167,6 +169,11 @@ def generate_launch_description() -> LaunchDescription:
                 "loc_comparison",
                 default_value="false",
                 description="Launch additional localization nodes if true",
+            ),
+            DeclareLaunchArgument(
+                "lead_agent",
+                default_value="",
+                description="Namespace of the lead agent (optional)",
             ),
             GroupAction(
                 actions=[

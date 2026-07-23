@@ -86,6 +86,7 @@ def launch_setup(context, *args, **kwargs) -> list:
                     "use_sim_time": use_sim_time,
                     "auv_ns": auv_ns,
                     "loc_comparison": loc_comparison,
+                    "lead_agent": lead_agent,
                 }.items(),
                 condition=UnlessCondition(hitl_mode),
             )

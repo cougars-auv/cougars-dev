@@ -5,6 +5,7 @@
 
   "**":
     ros__parameters:
+      multiagent_topics: ["/coug1sim/base/agent/status", "/coug2sim/base/agent/status"]
       prior:
         parameter_priors:
           initial_position: [0.0, 40.0, 0.0]
