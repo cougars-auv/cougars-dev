@@ -27,9 +27,6 @@ WORKDIR ${OVERLAY_WS}
 
 USER root
 
-# TODO: Fix this upstream, doesn't work for Kalliyan
-RUN userdel -r ubuntu || true
-
 # Install CycloneDDS and Zenoh
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
   --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
