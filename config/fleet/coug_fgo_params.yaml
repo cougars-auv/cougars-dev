@@ -232,7 +232,7 @@
       range_noise_sigma: 0.1 # [m] Two-way time-of-flight range uncertainty sigma.
       neighbor:
         modem_tf: # Relative to the neighboring agent's base frame.
-          position: [0.0, 0.0, 0.0] # [x, y, z]
+          position: [0.35, 0.0, -0.086] # [x, y, z]
           orientation: [0.0, 0.0, 0.0, 1.0] # [qx, qy, qz, qw]
         ahrs: # Transformed into the neighboring agent's base frame.
           enable_ahrs: true
