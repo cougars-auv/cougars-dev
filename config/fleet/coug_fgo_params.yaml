@@ -158,6 +158,7 @@
     ahrs:
       enable_ahrs: false
       enable_ahrs_init_only: false
+      constrain_yaw_only: true # Constrain yaw only (roll/pitch left to IMU preintegration)
       use_parameter_frame: false
       use_parameter_tf: false
       parameter_tf: # Relative to the target frame.
