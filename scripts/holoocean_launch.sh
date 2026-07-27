@@ -2,11 +2,12 @@
 set -e
 
 # --- Selection ---
-scenario=$(gum choose --header "Choose a HoloOcean scenario:" "CougUV" "BlueROV2" "Multi-Agent")
+scenario=$(gum choose --header "Choose a HoloOcean scenario:" "CougUV" "BlueROV2" "WAM-V" "Multi-Agent")
 
 case ${scenario} in
   "CougUV") params="couguv_holoocean_params.yaml";;
   "BlueROV2") params="bluerov2_holoocean_params.yaml";;
+  "WAM-V") params="wamv_holoocean_params.yaml";;
   "Multi-Agent") params="multi_couguv_holoocean_params.yaml";;
 esac
 

@@ -1,0 +1,141 @@
+{
+  "name": "wamv_openwater",
+  "package_name": "Ocean",
+  "world": "OpenWater",
+  "main_agent": "wamv1sim",
+  "ticks_per_sec": 200,
+  "frames_per_sec": false,
+  "agents": [
+    {
+      "agent_name": "wamv1sim",
+      "agent_type": "SurfaceVessel",
+      "sensors": [
+        {
+          "sensor_type": "AcousticBeaconSensor",
+          "socket": "Platform",
+          "location": [
+            0,
+            0,
+            0
+          ],
+          "configuration": {
+            "id": 1
+          },
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "DepthSensor",
+          "sensor_name": "ModemDepthSensor",
+          "socket": "Platform",
+          "Hz": 10,
+          "configuration": {},
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "IMUSensor",
+          "sensor_name": "ModemIMUSensor",
+          "socket": "Platform",
+          "Hz": 10,
+          "configuration": {},
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "RotationSensor",
+          "sensor_name": "ModemRotationSensor",
+          "socket": "Platform",
+          "Hz": 10,
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "MagnetometerSensor",
+          "sensor_name": "ModemMagnetometerSensor",
+          "socket": "Platform",
+          "Hz": 10,
+          "configuration": {
+            "MagneticVector": [
+              0.07857,
+              0.41316,
+              -0.90726
+            ]
+          },
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "IMUSensor",
+          "socket": "Platform",
+          "Hz": 200,
+          "configuration": {},
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "GPSSensor",
+          "socket": "Platform",
+          "Hz": 5,
+          "configuration": {
+            "Depth": 0.5
+          },
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "DepthSensor",
+          "socket": "Platform",
+          "Hz": 20,
+          "configuration": {},
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "MagnetometerSensor",
+          "socket": "Platform",
+          "Hz": 50,
+          "configuration": {
+            "MagneticVector": [
+              0.07857,
+              0.41316,
+              -0.90726
+            ]
+          },
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "RotationSensor",
+          "socket": "Platform",
+          "Hz": 200,
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "DVLSensor",
+          "socket": "Platform",
+          "Hz": 10,
+          "configuration": {
+            "DebugLines": false
+          },
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "DynamicsSensor",
+          "configuration": {
+            "UseCOM": true,
+            "UseRPY": false
+          },
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "VelocitySensor",
+          "socket": "Platform",
+          "ros_publish": true
+        }
+      ],
+      "control_scheme": 0,
+      "location": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ]
+    }
+  ]
+}
