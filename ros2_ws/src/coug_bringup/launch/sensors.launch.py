@@ -54,13 +54,6 @@ def generate_launch_description() -> LaunchDescription:
             "pressure_sensor_params.yaml",
         ]
     )
-    gps_tools_params = PathJoinSubstitution(
-        [
-            EnvironmentVariable("CONFIG_DIR"),
-            "fleet",
-            "gps_tools_params.yaml",
-        ]
-    )
     gpsd_client_params = PathJoinSubstitution(
         [
             EnvironmentVariable("CONFIG_DIR"),
@@ -126,12 +119,6 @@ def generate_launch_description() -> LaunchDescription:
                 executable="pressure_pub",
                 name="pressure_pub",
                 parameters=[pressure_sensor_params, auv_params],
-            ),
-            Node(
-                package="gps_tools",
-                executable="utm_odometry_node",
-                name="utm_odometry_node",
-                parameters=[gps_tools_params, auv_params],
             ),
             Node(
                 package="gpsd_client",
