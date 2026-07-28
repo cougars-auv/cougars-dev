@@ -28,6 +28,7 @@
     ros__parameters:
       expected_planner_frequency: 1.0
       transform_tolerance: 2.0
+      costmap_update_timeout: 3.0
       planner_plugins: ["GridBased"]
       GridBased:
         plugin: "nav2_smac_planner::SmacPlanner2D"
@@ -36,6 +37,7 @@
   controller_server:
     ros__parameters:
       controller_frequency: 10.0
+      costmap_update_timeout: 3.0
       enable_stamped_cmd_vel: true
       odom_topic: "odometry/local"
       progress_checker_plugin: "progress_checker"
