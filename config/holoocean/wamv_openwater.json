@@ -7,6 +7,52 @@
   "frames_per_sec": false,
   "agents": [
     {
+      "agent_name": "base_station",
+      "agent_type": "CougUV",
+      "sensors": [
+        {
+          "sensor_type": "AcousticBeaconSensor",
+          "socket": "COM",
+          "configuration": {
+            "id": 15
+          },
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "DepthSensor",
+          "sensor_name": "ModemDepthSensor",
+          "socket": "COM",
+          "Hz": 10,
+          "configuration": {},
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "DynamicsSensor",
+          "configuration": {
+            "UseCOM": true,
+            "UseRPY": false
+          }
+        }
+      ],
+      "fossen_model": "torpedo",
+      "control_mode": "depthHeadingAutopilot",
+      "control_scheme": 1,
+      "location": [
+        -5.1,
+        0,
+        -0.1
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "actuator": {
+        "fin_count": 3,
+        "fin_offset_deg": 90.0
+      }
+    },
+    {
       "agent_name": "wamv1sim",
       "agent_type": "SurfaceVessel",
       "sensors": [

@@ -23,7 +23,7 @@ from launch.actions import (
     OpaqueFunction,
     SetEnvironmentVariable,
 )
-from launch.conditions import IfCondition, UnlessCondition
+from launch.conditions import UnlessCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.logging import launch_config
 from launch.substitutions import (
@@ -41,7 +41,6 @@ def launch_setup(context, *args, **kwargs) -> list:
     record_bag_path = LaunchConfiguration("record_bag_path")
     loc_comparison = LaunchConfiguration("loc_comparison")
     add_noise = LaunchConfiguration("add_noise")
-    base_station = LaunchConfiguration("base_station")
     enable_direct_comms = LaunchConfiguration("enable_direct_comms")
     enable_acoustic_comms = LaunchConfiguration("enable_acoustic_comms")
     hitl_mode = LaunchConfiguration("hitl_mode")
@@ -152,7 +151,6 @@ def launch_setup(context, *args, **kwargs) -> list:
                     ],
                 ),
             ],
-            condition=IfCondition(base_station),
         )
     )
 
@@ -180,7 +178,6 @@ def launch_setup(context, *args, **kwargs) -> list:
                 "base_station",
             ],
             parameters=[{"use_sim_time": use_sim_time}],
-            condition=IfCondition(base_station),
         )
     )
 
@@ -250,11 +247,6 @@ def generate_launch_description() -> LaunchDescription:
                 "add_noise",
                 default_value="true",
                 description="Whether to add noise to sensor data",
-            ),
-            DeclareLaunchArgument(
-                "base_station",
-                default_value="true",
-                description="Launch base station simulation nodes",
             ),
             DeclareLaunchArgument(
                 "enable_direct_comms",
