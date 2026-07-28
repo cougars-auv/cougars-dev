@@ -34,8 +34,6 @@
           }
         }
       ],
-      "fossen_model": "torpedo",
-      "control_mode": "depthHeadingAutopilot",
       "control_scheme": 1,
       "location": [
         -5.1,
@@ -46,11 +44,7 @@
         0,
         0,
         0
-      ],
-      "actuator": {
-        "fin_count": 3,
-        "fin_offset_deg": 90.0
-      }
+      ]
     },
     {
       "agent_name": "coug1sim",
