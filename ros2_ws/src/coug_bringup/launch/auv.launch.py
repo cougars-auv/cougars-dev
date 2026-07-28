@@ -27,6 +27,8 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import (
     EqualsSubstitution,
     NotEqualsSubstitution,
+    OrSubstitution,
+    NotSubstitution,
     LaunchConfiguration,
     PathJoinSubstitution,
     EnvironmentVariable,
@@ -113,7 +115,14 @@ def generate_launch_description() -> LaunchDescription:
             "use_sim_time": use_sim_time,
             "auv_ns": auv_ns,
         }.items(),
-        condition=IfCondition(NotEqualsSubstitution(auv_ns, "blue1sim")),
+        condition=IfCondition(
+            NotSubstitution(
+                OrSubstitution(
+                    EqualsSubstitution(auv_ns, "blue1sim"),
+                    EqualsSubstitution(auv_ns, "wamv1sim"),
+                )
+            )
+        ),
     )
 
     coug_active_fgo_cmd = IncludeLaunchDescription(
@@ -124,7 +133,12 @@ def generate_launch_description() -> LaunchDescription:
             "use_sim_time": use_sim_time,
             "auv_ns": auv_ns,
         }.items(),
-        condition=IfCondition(EqualsSubstitution(auv_ns, "blue1sim")),
+        condition=IfCondition(
+            OrSubstitution(
+                EqualsSubstitution(auv_ns, "blue1sim"),
+                EqualsSubstitution(auv_ns, "wamv1sim"),
+            )
+        ),
     )
 
     coug_viz_dvl_cmd = IncludeLaunchDescription(

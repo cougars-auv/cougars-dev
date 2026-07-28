@@ -8,3 +8,15 @@
       prior:
         parameter_priors:
           initial_position_sigmas: [0.001, 0.001, 1.0] # [x, y, z] [m]
+
+  global_costmap:
+    global_costmap:
+      ros__parameters:
+        global_frame: "map"
+        robot_base_frame: "wamv1sim/base_link"
+
+  local_costmap:
+    local_costmap:
+      ros__parameters:
+        global_frame: "wamv1sim/odom"
+        robot_base_frame: "wamv1sim/base_link"

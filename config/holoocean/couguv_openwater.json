@@ -13,11 +13,6 @@
         {
           "sensor_type": "AcousticBeaconSensor",
           "socket": "COM",
-          "location": [
-            0,
-            0,
-            0
-          ],
           "configuration": {
             "id": 15
           },
@@ -64,11 +59,6 @@
         {
           "sensor_type": "AcousticBeaconSensor",
           "socket": "AcousticModemSocket",
-          "location": [
-            0,
-            0,
-            0
-          ],
           "configuration": {
             "id": 1
           },
