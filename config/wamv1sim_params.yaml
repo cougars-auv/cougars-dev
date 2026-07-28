@@ -1,4 +1,8 @@
 /wamv1sim:
+  coug_comms_base_launch:
+    ros__parameters:
+      beacon_id: 5
+
   coug_description_launch:
     ros__parameters:
       urdf_file: "wamv_holoocean.urdf.xacro"
@@ -54,3 +58,7 @@
         footprint: "[[2.5, 1.2], [2.5, -1.2], [-2.5, -1.2], [-2.5, 1.2]]"
         width: 30
         height: 30
+
+  modem_converter_node:
+    ros__parameters:
+      beacon_id: 5

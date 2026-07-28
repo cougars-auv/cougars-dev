@@ -1,4 +1,8 @@
 /blue1sim:
+  coug_comms_base_launch:
+    ros__parameters:
+      beacon_id: 4
+
   coug_description_launch:
     ros__parameters:
       urdf_file: "bluerov2_holoocean.urdf.xacro"
@@ -31,3 +35,7 @@
       ros__parameters:
         global_frame: "blue1sim/odom"
         robot_base_frame: "blue1sim/base_link"
+
+  modem_converter_node:
+    ros__parameters:
+      beacon_id: 4

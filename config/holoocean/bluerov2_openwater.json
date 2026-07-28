@@ -54,7 +54,7 @@
           "sensor_type": "AcousticBeaconSensor",
           "socket": "COM",
           "configuration": {
-            "id": 1
+            "id": 4
           },
           "ros_publish": true
         },

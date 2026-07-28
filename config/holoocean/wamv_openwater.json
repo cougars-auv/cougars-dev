@@ -54,7 +54,7 @@
           "sensor_type": "AcousticBeaconSensor",
           "socket": "Payload",
           "configuration": {
-            "id": 1
+            "id": 5
           },
           "ros_publish": true
         },

@@ -1,0 +1,434 @@
+{
+  "name": "multi_mixed_openwater",
+  "package_name": "Ocean",
+  "world": "OpenWater",
+  "main_agent": "wamv1sim",
+  "ticks_per_sec": 200,
+  "frames_per_sec": false,
+  "agents": [
+    {
+      "agent_name": "base_station",
+      "agent_type": "CougUV",
+      "sensors": [
+        {
+          "sensor_type": "AcousticBeaconSensor",
+          "socket": "COM",
+          "configuration": {
+            "id": 15
+          },
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "DepthSensor",
+          "sensor_name": "ModemDepthSensor",
+          "socket": "COM",
+          "Hz": 10,
+          "configuration": {},
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "DynamicsSensor",
+          "configuration": {
+            "UseCOM": true,
+            "UseRPY": false
+          }
+        }
+      ],
+      "control_scheme": 1,
+      "location": [
+        -5.1,
+        0,
+        -0.1
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "agent_name": "wamv1sim",
+      "agent_type": "SurfaceVessel",
+      "sensors": [
+        {
+          "sensor_type": "AcousticBeaconSensor",
+          "socket": "Payload",
+          "configuration": {
+            "id": 5
+          },
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "DepthSensor",
+          "sensor_name": "ModemDepthSensor",
+          "socket": "Payload",
+          "Hz": 10,
+          "configuration": {},
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "IMUSensor",
+          "sensor_name": "ModemIMUSensor",
+          "socket": "Payload",
+          "Hz": 10,
+          "configuration": {},
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "RotationSensor",
+          "sensor_name": "ModemRotationSensor",
+          "socket": "Payload",
+          "Hz": 10,
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "MagnetometerSensor",
+          "sensor_name": "ModemMagnetometerSensor",
+          "socket": "Payload",
+          "Hz": 10,
+          "configuration": {
+            "MagneticVector": [
+              0.07857,
+              0.41316,
+              -0.90726
+            ]
+          },
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "IMUSensor",
+          "socket": "Platform",
+          "Hz": 200,
+          "configuration": {},
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "GPSSensor",
+          "socket": "Platform",
+          "Hz": 5,
+          "configuration": {
+            "Depth": 0.5
+          },
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "DepthSensor",
+          "socket": "Payload",
+          "Hz": 20,
+          "configuration": {},
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "MagnetometerSensor",
+          "socket": "Platform",
+          "Hz": 50,
+          "configuration": {
+            "MagneticVector": [
+              0.07857,
+              0.41316,
+              -0.90726
+            ]
+          },
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "RotationSensor",
+          "socket": "Platform",
+          "Hz": 200,
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "DVLSensor",
+          "socket": "Payload",
+          "Hz": 10,
+          "configuration": {
+            "DebugLines": false
+          },
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "DynamicsSensor",
+          "configuration": {
+            "UseCOM": true,
+            "UseRPY": false
+          },
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "VelocitySensor",
+          "socket": "Payload",
+          "ros_publish": true
+        }
+      ],
+      "control_scheme": 0,
+      "location": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "agent_name": "blue1sim",
+      "agent_type": "BlueROV2",
+      "sensors": [
+        {
+          "sensor_type": "AcousticBeaconSensor",
+          "socket": "COM",
+          "configuration": {
+            "id": 4
+          },
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "DepthSensor",
+          "sensor_name": "ModemDepthSensor",
+          "socket": "COM",
+          "Hz": 10,
+          "configuration": {},
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "IMUSensor",
+          "sensor_name": "ModemIMUSensor",
+          "socket": "COM",
+          "Hz": 10,
+          "configuration": {},
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "RotationSensor",
+          "sensor_name": "ModemRotationSensor",
+          "socket": "COM",
+          "Hz": 10,
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "MagnetometerSensor",
+          "sensor_name": "ModemMagnetometerSensor",
+          "socket": "COM",
+          "Hz": 10,
+          "configuration": {
+            "MagneticVector": [
+              0.07857,
+              0.41316,
+              -0.90726
+            ]
+          },
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "IMUSensor",
+          "socket": "IMUSocket",
+          "Hz": 200,
+          "configuration": {},
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "GPSSensor",
+          "socket": "COM",
+          "Hz": 5,
+          "configuration": {
+            "Depth": 0.5
+          },
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "DepthSensor",
+          "socket": "DepthSocket",
+          "Hz": 20,
+          "configuration": {},
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "MagnetometerSensor",
+          "socket": "IMUSocket",
+          "Hz": 50,
+          "configuration": {
+            "MagneticVector": [
+              0.07857,
+              0.41316,
+              -0.90726
+            ]
+          },
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "RotationSensor",
+          "socket": "IMUSocket",
+          "Hz": 200,
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "DVLSensor",
+          "socket": "DVLSocket",
+          "Hz": 10,
+          "configuration": {
+            "DebugLines": false
+          },
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "DynamicsSensor",
+          "configuration": {
+            "UseCOM": true,
+            "UseRPY": false
+          },
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "VelocitySensor",
+          "socket": "DVLSocket",
+          "ros_publish": true
+        }
+      ],
+      "control_scheme": 0,
+      "location": [
+        0,
+        0,
+        -2
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "agent_name": "coug2sim",
+      "agent_type": "CougUV",
+      "sensors": [
+        {
+          "sensor_type": "AcousticBeaconSensor",
+          "socket": "AcousticModemSocket",
+          "configuration": {
+            "id": 2
+          },
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "DepthSensor",
+          "sensor_name": "ModemDepthSensor",
+          "socket": "AcousticModemSocket",
+          "Hz": 10,
+          "configuration": {},
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "IMUSensor",
+          "sensor_name": "ModemIMUSensor",
+          "socket": "AcousticModemSocket",
+          "Hz": 10,
+          "configuration": {},
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "RotationSensor",
+          "sensor_name": "ModemRotationSensor",
+          "socket": "AcousticModemSocket",
+          "Hz": 10,
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "MagnetometerSensor",
+          "sensor_name": "ModemMagnetometerSensor",
+          "socket": "AcousticModemSocket",
+          "Hz": 10,
+          "configuration": {
+            "MagneticVector": [
+              0.07857,
+              0.41316,
+              -0.90726
+            ]
+          },
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "IMUSensor",
+          "socket": "IMUSocket",
+          "Hz": 200,
+          "configuration": {},
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "GPSSensor",
+          "socket": "COM",
+          "Hz": 5,
+          "configuration": {
+            "Depth": 0.5
+          },
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "DepthSensor",
+          "socket": "DepthSocket",
+          "Hz": 20,
+          "configuration": {},
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "MagnetometerSensor",
+          "socket": "IMUSocket",
+          "Hz": 50,
+          "configuration": {
+            "MagneticVector": [
+              0.07857,
+              0.41316,
+              -0.90726
+            ]
+          },
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "RotationSensor",
+          "socket": "IMUSocket",
+          "Hz": 200,
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "DVLSensor",
+          "socket": "DVLSocket",
+          "Hz": 10,
+          "configuration": {
+            "DebugLines": false
+          },
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "DynamicsSensor",
+          "configuration": {
+            "UseCOM": true,
+            "UseRPY": false
+          },
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "VelocitySensor",
+          "socket": "DVLSocket",
+          "ros_publish": true
+        }
+      ],
+      "fossen_model": "torpedo",
+      "control_mode": "depthHeadingAutopilot",
+      "control_scheme": 1,
+      "location": [
+        -0.1,
+        20,
+        -0.1
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "actuator": {
+        "fin_count": 3,
+        "fin_offset_deg": 90.0
+      }
+    }
+  ]
+}

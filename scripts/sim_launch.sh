@@ -4,13 +4,14 @@ set -e
 source ${OVERLAY_WS}/install/setup.bash
 
 # --- Selection ---
-scenario=$(gum choose --header "Choose a HoloOcean scenario:" "CougUV" "BlueROV2" "WAM-V" "Multi-Agent")
+scenario=$(gum choose --header "Choose a HoloOcean scenario:" "CougUV" "BlueROV2" "WAM-V" "CougUV Multi-Agent" "Mixed Multi-Agent")
 
 case ${scenario} in
   "CougUV") agent_list="[coug1sim]";;
   "BlueROV2") agent_list="[blue1sim]";;
   "WAM-V") agent_list="[wamv1sim]";;
-  "Multi-Agent") agent_list="[coug1sim, coug2sim, coug3sim]";;
+  "CougUV Multi-Agent") agent_list="[coug1sim, coug2sim, coug3sim]";;
+  "Mixed Multi-Agent") agent_list="[wamv1sim, blue1sim, coug2sim]";;
 esac
 
 # --- Options ---
