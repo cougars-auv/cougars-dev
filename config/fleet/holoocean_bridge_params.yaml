@@ -90,9 +90,8 @@
 
   wrench_converter_node:
     ros__parameters:
-      agent_topic: "/command/agent"
       control_topic: "ControlCommand"
-      velocity_topic: "VelocitySensor"
+      odom_topic: "DynamicsSensorOdom"
       wrench_raw_topic: "cmd_wrench_raw"
       wrench_topic: "cmd_wrench"
 
