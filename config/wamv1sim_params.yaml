@@ -9,6 +9,10 @@
         parameter_priors:
           initial_position_sigmas: [0.001, 0.001, 1.0] # [x, y, z] [m]
 
+  cmd_vel_converter_node:
+    ros__parameters:
+      agent_type: "surface_vessel"
+
   global_costmap:
     global_costmap:
       ros__parameters:

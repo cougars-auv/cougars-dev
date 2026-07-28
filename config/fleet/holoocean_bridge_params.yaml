@@ -109,6 +109,8 @@
 
   cmd_vel_converter_node:
     ros__parameters:
+      agent_type: "bluerov2"
+
       input_topic: "cmd_vel_out"
       output_topic: "/command/agent"
 
