@@ -98,6 +98,11 @@
         {
           "sensor_type": "IMUSensor",
           "socket": "IMUSocket",
+          "rotation": [
+            180.0,
+            0.0,
+            0.0
+          ],
           "Hz": 200,
           "configuration": {},
           "ros_publish": true
@@ -121,6 +126,11 @@
         {
           "sensor_type": "MagnetometerSensor",
           "socket": "IMUSocket",
+          "rotation": [
+            180.0,
+            0.0,
+            0.0
+          ],
           "Hz": 50,
           "configuration": {
             "MagneticVector": [
@@ -134,6 +144,11 @@
         {
           "sensor_type": "RotationSensor",
           "socket": "IMUSocket",
+          "rotation": [
+            180.0,
+            0.0,
+            0.0
+          ],
           "Hz": 200,
           "ros_publish": true
         },
@@ -230,6 +245,11 @@
         {
           "sensor_type": "IMUSensor",
           "socket": "IMUSocket",
+          "rotation": [
+            180.0,
+            0.0,
+            0.0
+          ],
           "Hz": 200,
           "configuration": {},
           "ros_publish": true
@@ -253,6 +273,11 @@
         {
           "sensor_type": "MagnetometerSensor",
           "socket": "IMUSocket",
+          "rotation": [
+            180.0,
+            0.0,
+            0.0
+          ],
           "Hz": 50,
           "configuration": {
             "MagneticVector": [
@@ -266,6 +291,11 @@
         {
           "sensor_type": "RotationSensor",
           "socket": "IMUSocket",
+          "rotation": [
+            180.0,
+            0.0,
+            0.0
+          ],
           "Hz": 200,
           "ros_publish": true
         },
@@ -362,6 +392,11 @@
         {
           "sensor_type": "IMUSensor",
           "socket": "IMUSocket",
+          "rotation": [
+            180.0,
+            0.0,
+            0.0
+          ],
           "Hz": 200,
           "configuration": {},
           "ros_publish": true
@@ -385,6 +420,11 @@
         {
           "sensor_type": "MagnetometerSensor",
           "socket": "IMUSocket",
+          "rotation": [
+            180.0,
+            0.0,
+            0.0
+          ],
           "Hz": 50,
           "configuration": {
             "MagneticVector": [
@@ -398,6 +438,11 @@
         {
           "sensor_type": "RotationSensor",
           "socket": "IMUSocket",
+          "rotation": [
+            180.0,
+            0.0,
+            0.0
+          ],
           "Hz": 200,
           "ros_publish": true
         },

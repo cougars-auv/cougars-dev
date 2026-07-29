@@ -41,6 +41,15 @@
       prior:
         use_parameter_priors: false
 
+  ekf_filter_node_odom:
+    ros__parameters:
+      # IMPORTANT! Handle non-trivial IMU rotation for robot_localization gravity mishandling bug.
+      imu0_config: [false, false, false, # X, Y, Z
+                    false, false, false, # Roll, Pitch, Yaw
+                    false, false, false, # Vx, Vy, Vz
+                    true,  true,  true,  # Vroll, Vpitch, Vyaw
+                    false, false, false] # Ax, Ay, Az
+
   fluid_pressure_odom_node:
     ros__parameters:
       pressure_scale: 100.0 # IMPORTANT! Pressure is in hPa, not Pa
