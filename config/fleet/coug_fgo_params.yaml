@@ -9,9 +9,9 @@
     publish_graph_metrics: true # Publish high-frequency timing and graph metadata.
 
     # These are computationally expensive to calculate, so disable if not needed.
-    publish_pose_cov: true # Publish the pose covariance along with the pose.
-    publish_velocity_cov: false # Publish the velocity covariance along with the velocity.
-    publish_imu_bias_cov: false # Publish the IMU bias covariance along with the bias.
+    publish_pose_cov: true # Publish the pose covariance.
+    publish_velocity_cov: false # Publish the velocity covariance.
+    publish_imu_bias_cov: false # Publish the IMU bias covariance.
 
     # --- GTSAM Smoother Settings ---
     #
@@ -141,7 +141,6 @@
         orientation: [0.0, 0.0, 0.0, 1.0] # [qx, qy, qz, qw]
       covariance_scalar: 1.0 # Applies to both sensor-reported and parameter_covariance values.
       use_parameter_covariance: false
-      # Measurements are normalized to unit length in the graph, so any input units work.
       parameter_covariance:
         # SBG Ellipse magnetometer: 3 mGauss RMS noise / ~0.504 Gauss local field -> ~0.006.
         # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/hardware-documentation/aiding-sensors
@@ -282,7 +281,7 @@
     comparison:
       # TURTLMap-inspired loosely-coupled DVL preintegration implementation
       enable_loose_dvl_preintegration: false
-      # Forster-style tightly-coupled DVL preintegration implementation
+      # Thoms et al., IEEE JOE 2023 style tightly-coupled DVL preintegration implementation
       enable_tight_dvl_preintegration: false
 
   dvl_a50_twist_node:
@@ -292,7 +291,7 @@
       diagnostic_timeout_sec: 0.5 # [s]
 
       simulate_dropout: false
-      dropout_frequency_hz: 0.033 # [Hz] Frequency of the dropout cycle (1/30).
+      dropout_frequency_hz: 0.033 # [Hz] Frequency of the dropout cycle.
       dropout_duration_sec: 5.0 # [s] Duration of the dropout.
 
       fom_valid_threshold: 0.01 # [m/s] FOM below this is accepted even if the DVL flags the velocity invalid.
