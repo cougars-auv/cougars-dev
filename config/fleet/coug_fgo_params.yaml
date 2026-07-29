@@ -3,7 +3,7 @@
     # --- Node Settings ---
     publish_global_tf: true # Publish the map -> odom transform.
     publish_smoothed_path: true # Publish the full smoothed path for visualization.
-    publish_velocity: true # Publish the estimated velocity (at the target frame in the map frame).
+    publish_velocity: true # Publish the estimated velocity (of the target frame in the map frame).
     publish_imu_bias: true # Publish the estimated IMU biases (accel + gyro).
     publish_diagnostics: true # Publish diagnostic information.
     publish_graph_metrics: true # Publish high-frequency timing and graph metadata.
@@ -263,19 +263,18 @@
       initialization_duration_sec: 5.0 # [s] Time duration to collect and average data before initializing.
 
       # If true, forces the initial state to be set by the values below.
-      # The parameter priors should be set at the base frame with respect to the map frame.
       use_parameter_priors: true
       parameter_priors:
-        initial_position: [0.0, 0.0, 0.0] # [m]
-        initial_orientation: [0.0, 0.0, 0.0] # [rad]
+        initial_position: [0.0, 0.0, 0.0] # [m] (of the base frame in the map frame)
+        initial_orientation: [0.0, 0.0, 0.0] # [roll, pitch, yaw] [rad] (of the base frame in the map frame)
         initial_velocity: [0.0, 0.0, 0.0] # [m/s] (in the base frame)
-        initial_accel_bias: [0.0, 0.0, 0.0] # [m/s^2]
-        initial_gyro_bias: [0.0, 0.0, 0.0] # [rad/s]
-        initial_position_sigmas: [0.001, 0.001, 0.001] # [m] Initial position uncertainty.
-        initial_orientation_sigmas: [0.001, 0.001, 0.001] # [roll, pitch, yaw] [rad] Initial orientation uncertainty.
-        initial_velocity_sigmas: [0.001, 0.001, 0.001] # [m/s] Initial velocity uncertainty.
-      initial_accel_bias_sigmas: [0.01, 0.01, 0.01] # [m/s^2] Initial accelerometer bias uncertainty.
-      initial_gyro_bias_sigmas: [0.001, 0.001, 0.001] # [rad/s] Initial gyroscope bias uncertainty.
+        initial_accel_bias: [0.0, 0.0, 0.0] # [m/s^2] (in the IMU frame)
+        initial_gyro_bias: [0.0, 0.0, 0.0] # [rad/s] (in the IMU frame)
+      initial_position_sigmas: [0.001, 0.001, 0.001] # [m] (in the map frame)
+      initial_orientation_sigmas: [0.001, 0.001, 0.001] # [roll, pitch, yaw] [rad] (in the map frame)
+      initial_velocity_sigmas: [0.001, 0.001, 0.001] # [m/s] (in the base frame)
+      initial_accel_bias_sigmas: [0.01, 0.01, 0.01] # [m/s^2] (in the IMU frame)
+      initial_gyro_bias_sigmas: [0.001, 0.001, 0.001] # [rad/s] (in the IMU frame)
 
     # --- Comparison Methods ---
     comparison:

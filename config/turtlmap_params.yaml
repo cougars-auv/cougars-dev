@@ -40,6 +40,7 @@
 
       prior:
         use_parameter_priors: false
+        initial_velocity_sigmas: [0.1, 0.1, 0.1] # [m/s] TURTLMap PosegraphBackendOnline.cpp callbackDVL()
 
   ekf_filter_node_odom:
     ros__parameters:
