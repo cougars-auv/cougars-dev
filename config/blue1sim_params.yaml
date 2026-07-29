@@ -15,7 +15,7 @@
       gps:
         enable_gps: false
 
-      prior:
+      priors:
         initial_position_sigmas: [0.001, 0.001, 1.0] # [x, y, z] [m]
 
   behavior_server:

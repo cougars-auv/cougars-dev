@@ -259,7 +259,7 @@
       robust_k: 1.345
 
     # --- Initial State Priors ---
-    prior:
+    priors:
       initialization_duration_sec: 5.0 # [s] Time duration to collect and average data before initializing.
 
       # If true, forces the initial state to be set by the values below.

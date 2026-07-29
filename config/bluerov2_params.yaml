@@ -22,7 +22,7 @@
       ahrs:
         enable_ahrs: true
 
-      prior:
+      priors:
         use_parameter_priors: false
 
   fluid_pressure_odom_node:
