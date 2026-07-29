@@ -33,7 +33,7 @@
 
       FollowPath:
         plugin: "nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController"
-        desired_linear_vel: 1.0 # [m/s]
+        desired_linear_vel: 2.5 # [m/s]
         lookahead_dist: 6.0 # [m] Roughly one hull length ahead
         regulated_linear_scaling_min_radius: 3.5 # [m]
         max_angular_accel: 2.0 # [rad/s^2]
