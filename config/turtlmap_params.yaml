@@ -8,13 +8,11 @@
       imu:
         use_parameter_frame: true
         use_parameter_covariance: true
-        # LORD 3DM-GX5-25: 25 µg/√Hz accel, 0.005 °/s/√Hz gyro noise density.
-        # https://www.microstrain.com/inertial-sensors/3dm-gx5-25
         parameter_covariance:
-          accel_noise_sigmas: [0.00024525, 0.00024525, 0.00024525] # [m/s^2/√Hz]
-          gyro_noise_sigmas: [8.726646e-05, 8.726646e-05, 8.726646e-05] # [rad/s/√Hz]
-        accel_bias_rw_sigmas: [0.00620438876, 0.00620438876, 0.00620438876] # [m/s^2/√s]
-        gyro_bias_rw_sigmas: [0.00061324618, 0.00061324618, 0.00061324618] # [rad/s/√s]
+          accel_noise_sigmas: [0.00024525, 0.00024525, 0.00024525] # [m/s^2/√Hz] br2config.yaml
+          gyro_noise_sigmas: [8.726646e-05, 8.726646e-05, 8.726646e-05] # [rad/s/√Hz] br2config.yaml
+        accel_bias_rw_sigmas: [0.00620438876, 0.00620438876, 0.00620438876] # [m/s^2/√s] br2config.yaml
+        gyro_bias_rw_sigmas: [0.00061324618, 0.00061324618, 0.00061324618] # [rad/s/√s] br2config.yaml
         integration_covariance: 1.0e-8 # TURTLMap Posegraph.cpp setImuParams()
         gravity: [0.0, 0.0, -9.81007] # [m/s^2] br2config.yaml (g: 9.81007)
 
