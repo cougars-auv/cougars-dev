@@ -89,8 +89,9 @@
         gyro_noise_sigmas: [0.0000524, 0.0000524, 0.0000524] # [rad/s/√Hz] Gyroscope noise density sigmas.
       # Derived from the SBG Ellipse-N in-run bias instabilities (14 µg accel, 7 °/h gyro).
       # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/performance-specifications
-      accel_bias_rw_sigmas: [0.00014, 0.00014, 0.00014] # [m/s^2/√s] Continuous-time spectral density sigmas for accelerometer bias random walk.
-      gyro_bias_rw_sigmas: [0.0000339, 0.0000339, 0.0000339] # [rad/s/√s] Continuous-time spectral density sigmas for gyroscope bias random walk.
+      # Gauss-Markov fit K ≈ 2.3 * B / √tau_c at tau_c = 500 s.
+      accel_bias_rw_sigmas: [0.000014, 0.000014, 0.000014] # [m/s^2/√s] Continuous-time spectral density sigmas for accelerometer bias random walk.
+      gyro_bias_rw_sigmas: [0.0000035, 0.0000035, 0.0000035] # [rad/s/√s] Continuous-time spectral density sigmas for gyroscope bias random walk.
       integration_covariance: 0.00001 # A small covariance for the integration process itself.
       gravity: [0.0, 0.0, -9.8] # [m/s^2] HoloOcean gravity vector
       diagnostic_timeout_sec: 1.0 # [s]
