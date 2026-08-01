@@ -275,7 +275,9 @@
       initial_orientation_sigmas: [0.001, 0.001, 0.001] # [roll, pitch, yaw] [rad] (in the map frame)
       initial_velocity_sigmas: [0.001, 0.001, 0.001] # [m/s] (in the base frame)
       initial_accel_bias_sigmas: [0.01, 0.01, 0.01] # [m/s^2] (in the IMU frame)
-      initial_gyro_bias_sigmas: [0.001, 0.001, 0.001] # [rad/s] (in the IMU frame)
+      # IMPORTANT! The gravity-aligned component is unobservable with AHRS/mag/GPS off, so this bounds heading drift.
+      # max(ARW / √T, B); T = initialization_duration_sec.
+      initial_gyro_bias_sigmas: [0.000034, 0.000034, 0.000034] # [rad/s] (in the IMU frame)
 
     # --- Comparison Methods ---
     comparison:
