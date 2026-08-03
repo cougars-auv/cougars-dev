@@ -85,14 +85,14 @@
       parameter_covariance:
         # SBG Ellipse-N: 57 µg/√Hz accel, 0.18 °/√h gyro noise density.
         # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/performance-specifications
-        accel_noise_sigmas: [0.00056, 0.00056, 0.00056] # [m/s^2/√Hz] Accelerometer noise density sigmas.
-        gyro_noise_sigmas: [0.0000524, 0.0000524, 0.0000524] # [rad/s/√Hz] Gyroscope noise density sigmas.
+        accel_noise_sigmas: [5.6e-4, 5.6e-4, 5.6e-4] # [m/s^2/√Hz] Accelerometer noise density sigmas.
+        gyro_noise_sigmas: [5.24e-5, 5.24e-5, 5.24e-5] # [rad/s/√Hz] Gyroscope noise density sigmas.
       # Derived from the SBG Ellipse-N in-run bias instabilities (14 µg accel, 7 °/h gyro).
       # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/performance-specifications
       # Gauss-Markov fit K ≈ 2.3 * B / √tau_c at tau_c = 500 s.
-      accel_bias_rw_sigmas: [0.000014, 0.000014, 0.000014] # [m/s^2/√s] Continuous-time spectral density sigmas for accelerometer bias random walk.
-      gyro_bias_rw_sigmas: [0.0000035, 0.0000035, 0.0000035] # [rad/s/√s] Continuous-time spectral density sigmas for gyroscope bias random walk.
-      integration_covariance: 0.00001 # A small covariance for the integration process itself.
+      accel_bias_rw_sigmas: [1.4e-5, 1.4e-5, 1.4e-5] # [m/s^2/√s] Continuous-time spectral density sigmas for accelerometer bias random walk.
+      gyro_bias_rw_sigmas: [3.5e-6, 3.5e-6, 3.5e-6] # [rad/s/√s] Continuous-time spectral density sigmas for gyroscope bias random walk.
+      integration_covariance: 1.0e-5 # A small covariance for the integration process itself.
       gravity: [0.0, 0.0, -9.8] # [m/s^2] HoloOcean gravity vector
       diagnostic_timeout_sec: 1.0 # [s]
 
@@ -277,7 +277,7 @@
       initial_accel_bias_sigmas: [0.01, 0.01, 0.01] # [m/s^2] (in the IMU frame)
       # IMPORTANT! The gravity-aligned component is unobservable with AHRS/mag/GPS off, so this bounds heading drift.
       # max(ARW / √T, B); T = initialization_duration_sec.
-      initial_gyro_bias_sigmas: [0.000034, 0.000034, 0.000034] # [rad/s] (in the IMU frame)
+      initial_gyro_bias_sigmas: [3.4e-5, 3.4e-5, 3.4e-5] # [rad/s] (in the IMU frame)
 
     # --- Comparison Methods ---
     comparison:

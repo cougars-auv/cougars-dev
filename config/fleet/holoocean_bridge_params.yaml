@@ -7,10 +7,10 @@
       bias_topic: "imu/bias"
 
       # SBG Ellipse-N noise densities scaled to discrete per-sample sigmas at 200 Hz
-      # (57 µg/√Hz -> 0.0079 m/s^2, 0.18 °/√h -> 0.00074 rad/s).
+      # (57 µg/√Hz -> 7.9e-3 m/s^2, 0.18 °/√h -> 7.4e-4 rad/s).
       # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/performance-specifications
-      accel_noise_sigmas: [0.0079, 0.0079, 0.0079] # [m/s^2] Accelerometer measurement noise sigmas.
-      gyro_noise_sigmas: [0.00074, 0.00074, 0.00074] # [rad/s] Gyroscope measurement noise sigmas.
+      accel_noise_sigmas: [7.9e-3, 7.9e-3, 7.9e-3] # [m/s^2] Accelerometer measurement noise sigmas.
+      gyro_noise_sigmas: [7.4e-4, 7.4e-4, 7.4e-4] # [rad/s] Gyroscope measurement noise sigmas.
       # SBG Ellipse-N AHRS: 0.4° roll/pitch, 1.0° magnetic heading (typical dynamics).
       ahrs_noise_sigmas: [0.00698, 0.00698, 0.01745] # [roll, pitch, yaw] [rad] AHRS orientation uncertainty sigmas.
       # Derived from the SBG Ellipse-N in-run bias instabilities (14 µg accel, 7 °/h gyro).
@@ -132,8 +132,8 @@
       # The real modem_status arrives at 10 Hz (seatrac-ros2 sets STATUS_MODE_10HZ).
       # No published SeaTrac accel/gyro specs; matches the SBG Ellipse-N noise densities
       # scaled to discrete per-sample sigmas at 10 Hz.
-      accel_noise_sigmas: [0.0018, 0.0018, 0.0018] # [m/s^2] Accelerometer measurement noise sigmas.
-      gyro_noise_sigmas: [0.00017, 0.00017, 0.00017] # [rad/s] Gyroscope measurement noise sigmas.
+      accel_noise_sigmas: [1.8e-3, 1.8e-3, 1.8e-3] # [m/s^2] Accelerometer measurement noise sigmas.
+      gyro_noise_sigmas: [1.7e-4, 1.7e-4, 1.7e-4] # [rad/s] Gyroscope measurement noise sigmas.
       # Blueprint Subsea SeaTrac X150 AHRS: ±0.2° pitch/roll, ±1.0° yaw standard deviation.
       # https://www.blueprintsubsea.com/seatrac/seatrac-standard
       ahrs_noise_sigmas: [0.00349, 0.00349, 0.01745] # [roll, pitch, yaw] [rad] AHRS orientation uncertainty sigmas.
