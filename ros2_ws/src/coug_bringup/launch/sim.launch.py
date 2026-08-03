@@ -13,13 +13,14 @@
 # limitations under the License.
 
 import os
+
 import yaml
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import (
-    IncludeLaunchDescription,
     DeclareLaunchArgument,
     GroupAction,
+    IncludeLaunchDescription,
     OpaqueFunction,
     SetEnvironmentVariable,
 )
@@ -27,9 +28,9 @@ from launch.conditions import UnlessCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.logging import launch_config
 from launch.substitutions import (
+    EnvironmentVariable,
     LaunchConfiguration,
     PathJoinSubstitution,
-    EnvironmentVariable,
 )
 from launch_ros.actions import Node, PushRosNamespace
 

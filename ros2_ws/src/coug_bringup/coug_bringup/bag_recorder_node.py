@@ -21,10 +21,9 @@ from datetime import datetime
 import diagnostic_updater
 import rclpy
 import rclpy.logging
+from coug_interfaces.srv import BagRecord
 from diagnostic_msgs.msg import DiagnosticStatus
 from rclpy.node import Node
-
-from coug_interfaces.srv import BagRecord
 
 
 class BagRecorderNode(Node):
