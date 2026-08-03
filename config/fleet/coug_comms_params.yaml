@@ -86,9 +86,6 @@
 
   auv_status_bundler_node:
     ros__parameters:
-      # --- Node Settings ---
-      publish_rate_hz: 10.0 # [Hz] AgentStatus publish rate.
-
       # --- ROS Topics ---
       status_topic: "agent/status"
       odom_topic: "odometry/global"
