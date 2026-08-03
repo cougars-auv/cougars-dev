@@ -1,10 +1,12 @@
 /**:
   visual_dvl_node:
     ros__parameters:
+      # --- Node Settings ---
+      velocity_noise_sigmas: [0.5, 0.5, 2.0] # [x, y, z] [m/s]
+
+      # --- ROS Topics and Frames ---
       front_stereo_topic: "stereo/front/image_raw"
       back_stereo_topic: "stereo/back/image_raw"
       front_stereo_info_topic: "stereo/front/camera_info"
       back_stereo_info_topic: "stereo/back/camera_info"
       vel_topic: "dvl/visual"
-
-      velocity_noise_sigmas: [0.5, 0.5, 2.0] # [x, y, z] [m/s]

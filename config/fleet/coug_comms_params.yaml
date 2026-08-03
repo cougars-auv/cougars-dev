@@ -86,7 +86,7 @@
 
   auv_status_bundler_node:
     ros__parameters:
-      # --- ROS Topics ---
+      # --- ROS Topics and Frames ---
       status_topic: "agent/status"
       odom_topic: "odometry/global"
       depth_topic: "depth/odometry"

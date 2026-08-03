@@ -135,6 +135,10 @@
     mag:
       enable_mag: true
       enable_mag_init_only: false
+      estimate_hard_iron_bias: true # Estimate a constant hard iron bias across the mission
+      # SBG Ellipse magnetometer: hard-iron offset is ~20% of the local field magnitude.
+      hard_iron_bias: [0.0, 0.0, 0.0] # [T] (in the sensor frame)
+      hard_iron_bias_sigmas: [1.0e-05, 1.0e-05, 1.0e-05] # [T] (in the sensor frame)
       use_parameter_frame: false
       use_parameter_tf: false
       parameter_tf: # Relative to the target frame.
@@ -143,14 +147,14 @@
       covariance_scalar: 1.0 # Applies to both sensor-reported and parameter_covariance values.
       use_parameter_covariance: false
       parameter_covariance:
-        # SBG Ellipse magnetometer: 3 mGauss RMS noise / ~0.504 Gauss local field -> ~0.006.
+        # SBG Ellipse magnetometer: 3 mGauss RMS noise -> 3e-07 T.
         # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/hardware-documentation/aiding-sensors
-        magnetic_field_noise_sigmas: [0.006, 0.006, 0.006] # [normalized] Magnetic field uncertainty sigmas.
+        magnetic_field_noise_sigmas: [3.0e-07, 3.0e-07, 3.0e-07] # [T] Magnetic field uncertainty sigmas.
       # https://www.ngdc.noaa.gov/geomag/calculators/magcalc.shtml#igrfwmm
       # WMMHR-2025 (40.2406 N, 111.741 W, 2026-01-23)
       # North: 20,842.3 nT, East: 3,963.4 nT, Vertical: 45,767.8 nT
       # NED: [X, Y, Z] -> ENU: [Y, X, -Z]
-      reference_field: [0.07857, 0.41316, -0.90726] # [normalized]
+      reference_field: [3.9634e-06, 2.08423e-05, -4.57678e-05] # [T]
       diagnostic_timeout_sec: 1.0 # [s]
       robust_kernel: "None"
       robust_k: 1.345
@@ -371,6 +375,16 @@
       origin_topic: "/origin"
 
       use_parameter_child_frame: false
+
+  sbg_imu_mag_node:
+    ros__parameters:
+      # --- Node Settings ---
+      # IMPORTANT! This must match the magnitude of factor_graph_node's mag reference_field.
+      au_to_tesla: 5.0446e-05
+
+      # --- ROS Topics ---
+      input_topic: "imu/mag_au"
+      output_topic: "imu/mag"
 
   seatrac_x150_imu_node:
     ros__parameters:

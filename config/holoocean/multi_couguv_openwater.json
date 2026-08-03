@@ -88,9 +88,9 @@
           "Hz": 10,
           "configuration": {
             "MagneticVector": [
-              0.07857,
-              0.41316,
-              -0.90726
+              3.9634e-06,
+              2.08423e-05,
+              -4.57678e-05
             ]
           },
           "ros_publish": true
@@ -134,9 +134,9 @@
           "Hz": 50,
           "configuration": {
             "MagneticVector": [
-              0.07857,
-              0.41316,
-              -0.90726
+              3.9634e-06,
+              2.08423e-05,
+              -4.57678e-05
             ]
           },
           "ros_publish": true
@@ -235,9 +235,9 @@
           "Hz": 10,
           "configuration": {
             "MagneticVector": [
-              0.07857,
-              0.41316,
-              -0.90726
+              3.9634e-06,
+              2.08423e-05,
+              -4.57678e-05
             ]
           },
           "ros_publish": true
@@ -281,9 +281,9 @@
           "Hz": 50,
           "configuration": {
             "MagneticVector": [
-              0.07857,
-              0.41316,
-              -0.90726
+              3.9634e-06,
+              2.08423e-05,
+              -4.57678e-05
             ]
           },
           "ros_publish": true
@@ -382,9 +382,9 @@
           "Hz": 10,
           "configuration": {
             "MagneticVector": [
-              0.07857,
-              0.41316,
-              -0.90726
+              3.9634e-06,
+              2.08423e-05,
+              -4.57678e-05
             ]
           },
           "ros_publish": true
@@ -428,9 +428,9 @@
           "Hz": 50,
           "configuration": {
             "MagneticVector": [
-              0.07857,
-              0.41316,
-              -0.90726
+              3.9634e-06,
+              2.08423e-05,
+              -4.57678e-05
             ]
           },
           "ros_publish": true
