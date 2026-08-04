@@ -19,7 +19,7 @@
         # enable_mag: false
         use_parameter_covariance: true
 
-      ahrs:
+      # ahrs:
         # enable_ahrs: true
 
       priors:
