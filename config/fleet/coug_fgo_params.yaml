@@ -273,8 +273,8 @@
         initial_position: [0.0, 0.0, 0.0] # [m] (of the base frame in the map frame)
         initial_orientation: [0.0, 0.0, 0.0] # [roll, pitch, yaw] [rad] (of the base frame in the map frame)
         initial_velocity: [0.0, 0.0, 0.0] # [m/s] (in the base frame)
-        initial_gyro_bias: [0.0, 0.0, 0.0] # [rad/s] (in the IMU frame)
       initial_accel_bias: [0.0, 0.0, 0.0] # [m/s^2] (in the IMU frame)
+      initial_gyro_bias: [0.0, 0.0, 0.0] # [rad/s] (in the IMU frame)
       hard_iron_bias: [0.0, 0.0, 0.0] # [T] (in the sensor frame)
 
       initial_position_sigmas: [0.001, 0.001, 0.001] # [m] (in the map frame)
