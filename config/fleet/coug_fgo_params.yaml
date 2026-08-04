@@ -95,7 +95,7 @@
       # Gauss-Markov fit K ≈ 2.3 * B / √tau_c at tau_c = 500 s.
       accel_bias_rw_sigmas: [1.4e-5, 1.4e-5, 1.4e-5] # [m/s^2/√s] Continuous-time spectral density sigmas for accelerometer bias random walk.
       gyro_bias_rw_sigmas: [3.5e-6, 3.5e-6, 3.5e-6] # [rad/s/√s] Continuous-time spectral density sigmas for gyroscope bias random walk.
-      integration_covariance: 1.0e-5 # A small covariance for the integration process itself.
+      integration_covariance: 1.0e-8 # A small covariance for the integration process itself.
       gravity: [0.0, 0.0, -9.8] # [m/s^2] HoloOcean gravity vector
       diagnostic_timeout_sec: 1.0 # [s]
 
