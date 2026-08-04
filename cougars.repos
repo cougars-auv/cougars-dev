@@ -10,7 +10,7 @@ repositories:
   coug_description:
     type: git
     url: git@github.com:cougars-auv/coug_description.git
-    version: main
+    version: nelson/holoocean-2.4.0
   coug_fgo:
     type: git
     url: git@github.com:cougars-auv/coug_fgo.git
