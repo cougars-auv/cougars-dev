@@ -24,8 +24,8 @@ HoloOcean
 holoocean_bridge
 holoocean_interfaces
 holoocean-ros
-seatrac_interfaces
 mapviz
+seatrac_interfaces
 TURTLMap
 
 .DS_Store
