@@ -5,6 +5,7 @@
     publish_smoothed_path: true # Publish the full smoothed path for visualization.
     publish_velocity: true # Publish the estimated velocity (of the target frame in the map frame).
     publish_imu_bias: true # Publish the estimated IMU biases (accel + gyro).
+    publish_mag_bias: true # Publish the estimated magnetometer hard-iron bias.
     publish_diagnostics: true # Publish diagnostic information.
     publish_graph_metrics: true # Publish high-frequency timing and graph metadata.
 
@@ -12,6 +13,7 @@
     publish_pose_cov: true # Publish the pose covariance.
     publish_velocity_cov: false # Publish the velocity covariance.
     publish_imu_bias_cov: false # Publish the IMU bias covariance.
+    publish_mag_bias_cov: false # Publish the magnetometer hard-iron bias covariance.
 
     # --- GTSAM Smoother Settings ---
     #
@@ -56,6 +58,7 @@
     # where 'linear' holds accelerometer bias and 'angular' holds gyroscope bias.
     # Preserves accel/gyro cross-covariance; sensor_msgs/Imu has no field for that.
     imu_bias_topic: "~/imu/bias"
+    mag_bias_topic: "~/imu/mag/bias"
     graph_metrics_topic: "~/metrics"
     reset_service: "~/reset"
 

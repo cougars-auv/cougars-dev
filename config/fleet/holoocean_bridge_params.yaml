@@ -70,10 +70,13 @@
       # SBG Ellipse magnetometer: 3 mGauss RMS noise -> 3e-07 T.
       # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/hardware-documentation/aiding-sensors
       noise_sigmas: [3.0e-07, 3.0e-07, 3.0e-07] # [T] Magnetic field uncertainty sigmas.
+      # SBG Ellipse magnetometer: hard-iron offset is ~20% of the local field magnitude.
+      bias_sigmas: [1.0e-05, 1.0e-05, 1.0e-05] # [T] Hard-iron bias sigmas.
 
       # --- ROS Topics and Frames ---
       input_topic: "MagnetometerSensor"
       output_topic: "imu/mag_au"
+      bias_topic: "imu/mag/bias"
 
   dvl_converter_node:
     ros__parameters:
@@ -170,10 +173,13 @@
       # --- Node Settings ---
       # No published SeaTrac spec; matches the SBG Ellipse magnetometer (3 mGauss RMS noise -> 3e-07 T).
       noise_sigmas: [3.0e-07, 3.0e-07, 3.0e-07] # [T] Magnetic field uncertainty sigmas.
+      # No published SeaTrac spec; matches the SBG Ellipse magnetometer hard-iron offset.
+      bias_sigmas: [1.0e-05, 1.0e-05, 1.0e-05] # [T] Hard-iron bias sigmas.
 
       # --- ROS Topics and Frames ---
       input_topic: "ModemMagnetometerSensor"
       output_topic: "modem/imu/mag"
+      bias_topic: "modem/imu/mag/bias"
 
   modem_status_converter_node:
     ros__parameters:
