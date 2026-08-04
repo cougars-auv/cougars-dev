@@ -16,7 +16,7 @@ import os
 import shutil
 import signal
 import subprocess
-from datetime import datetime
+from datetime import datetime, timezone
 
 import diagnostic_updater
 import rclpy
@@ -85,7 +85,7 @@ class BagRecorderNode(Node):
                 return response
 
             base = request.prefix if request.prefix else "rosbag"
-            timestamp = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+            timestamp = datetime.now(tz=timezone.utc).strftime("%Y-%m-%d-%H-%M-%S")
             path = os.path.join(self.bag_dir, f"{base}_{self.auv_ns}_{timestamp}")
             self.bag_path = path
             self.bag_process = subprocess.Popen(
