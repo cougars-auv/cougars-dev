@@ -41,6 +41,7 @@
     backup_keyframe_source: "Depth" # Fallback source if the primary source drops out.
     keyframe_timeout_sec: 0.5 # [s] Time before determining the primary source has dropped out.
     keyframe_timer_hz: 10.0 # [Hz] Rate of the periodic keyframe timer (if "Timer" is used).
+    min_keyframe_interval_sec: 0.02 # [s] Minimum time between consecutive keyframes.
 
     # --- ROS Topics and Frames ---
     imu_topic: "imu/data"
