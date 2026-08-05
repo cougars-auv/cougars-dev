@@ -6,14 +6,20 @@
       publish_diagnostics: true # Publish diagnostic information.
 
       # Waypoint reached if normalized ellipse distance < 1.0 (direct hit).
-      default_capture_radius: [25.0, 2.0] # [m] [horizontal, vertical]
-      surface_capture_radius: [1000.0, 0.5] # [m]
-      home_capture_radius: [25.0, 0.5] # [m]
+      default_capture_radius: 25.0 # [m]
+      default_capture_radius_z: 2.0 # [m]
+      surface_capture_radius: 1000.0 # [m]
+      surface_capture_radius_z: 0.5 # [m]
+      home_capture_radius: 25.0 # [m]
+      home_capture_radius_z: 0.5 # [m]
 
       # Waypoint reached if overshoot detected within slip ellipse.
-      default_slip_radius: [50.0, 4.0] # [m] [horizontal, vertical] (typically 2x default_capture_radius)
-      surface_slip_radius: [1000.0, 0.5] # [m]
-      home_slip_radius: [50.0, 0.5] # [m]
+      default_slip_radius: 50.0 # [m] (typically 2x default_capture_radius)
+      default_slip_radius_z: 4.0 # [m]
+      surface_slip_radius: 1000.0 # [m]
+      surface_slip_radius_z: 0.5 # [m]
+      home_slip_radius: 50.0 # [m]
+      home_slip_radius_z: 0.5 # [m]
 
       default_speed_rpm: 1500.0 # [RPM]
 

@@ -1,5 +1,13 @@
 mapviz:
   ros__parameters:
+    # --- Waypoint Defaults ---
+    default_speed_rpm: 1500.0 # [RPM]
+    default_capture_radius: 25.0 # [m]
+    default_capture_radius_z: 2.0 # [m]
+    default_slip_radius: 50.0 # [m] (typically 2x default_capture_radius)
+    default_slip_radius_z: 4.0 # [m]
+
+    # --- ROS Topics and Services ---
     waypoint_topic: "waypoints"
     waypoint_map_topic: "waypoints_map"
 
