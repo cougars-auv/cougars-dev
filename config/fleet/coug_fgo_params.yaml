@@ -72,8 +72,8 @@
     base:
       use_parameter_tf: false
       parameter_tf: # Relative to the target frame.
-        position: [-0.475, 0.0, -0.035] # [x, y, z]
-        orientation: [1.0, 0.0, 0.0, 0.0] # [qx, qy, qz, qw]
+        position: [0.0, 0.0, 0.0] # [x, y, z]
+        orientation: [0.0, 0.0, 0.0, 1.0] # [qx, qy, qz, qw]
 
     imu:
       use_parameter_frame: false
@@ -105,8 +105,8 @@
       use_parameter_frame: false
       use_parameter_tf: false
       parameter_tf: # Relative to the target frame.
-        position: [-0.475, 0.0, -0.035] # [x, y, z]
-        orientation: [1.0, 0.0, 0.0, 0.0] # [qx, qy, qz, qw]
+        position: [0.0, 0.0, 0.0] # [x, y, z]
+        orientation: [0.0, 0.0, 0.0, 1.0] # [qx, qy, qz, qw]
       covariance_scalar: 1.0 # Applies to both sensor-reported and parameter_covariance values.
       use_parameter_covariance: false
       parameter_covariance:
@@ -123,8 +123,8 @@
       use_parameter_frame: false
       use_parameter_tf: false
       parameter_tf: # Relative to the target frame.
-        position: [-0.325, 0.0, -0.053] # [x, y, z]
-        orientation: [1.0, 0.0, 0.0, 0.0] # [qx, qy, qz, qw]
+        position: [0.0, 0.0, 0.0] # [x, y, z]
+        orientation: [0.0, 0.0, 0.0, 1.0] # [qx, qy, qz, qw]
       covariance_scalar: 1.0 # Applies to both sensor-reported and parameter_covariance values.
       use_parameter_covariance: false
       parameter_covariance:
@@ -210,8 +210,8 @@
       use_parameter_frame: false
       use_parameter_tf: false
       parameter_tf: # Relative to the target frame.
-        position: [-0.475, 0.0, -0.035] # [x, y, z]
-        orientation: [1.0, 0.0, 0.0, 0.0] # [qx, qy, qz, qw]
+        position: [0.0, 0.0, 0.0] # [x, y, z]
+        orientation: [0.0, 0.0, 0.0, 1.0] # [qx, qy, qz, qw]
       covariance_scalar: 1.0 # Scales the prediction noise sigmas.
       prediction_noise_sigmas: [0.1, 0.1, 0.1] # [m/s/sqrt(s)] Model prediction uncertainty sigmas.
       mass: [31.87, 60.46, 60.46] # [kg] Mass of the AUV (diagonal)
