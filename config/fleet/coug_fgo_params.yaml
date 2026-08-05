@@ -137,7 +137,6 @@
 
     mag:
       enable_mag: true
-      enable_mag_init_only: false
       estimate_hard_iron_bias: true # Estimate a constant hard iron bias across the mission
       use_parameter_frame: false
       use_parameter_tf: false
@@ -161,7 +160,7 @@
 
     ahrs:
       enable_ahrs: false
-      enable_ahrs_init_only: false
+      enable_ahrs_init_only: true
       constrain_yaw_only: true # Constrain yaw only (roll/pitch left to IMU preintegration)
       use_parameter_frame: false
       use_parameter_tf: false
