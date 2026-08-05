@@ -204,6 +204,8 @@
       enable_const_vel_dropout_only: false
       covariance_scalar: 1.0 # Scales the prediction noise sigmas.
       prediction_noise_sigmas: [0.001, 0.001, 0.001] # [m/s/sqrt(s)] Velocity prediction uncertainty sigmas.
+      robust_kernel: "None"
+      robust_k: 1.345
 
     dynamics:
       enable_dynamics: false
