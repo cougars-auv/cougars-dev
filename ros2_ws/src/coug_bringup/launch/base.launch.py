@@ -204,6 +204,8 @@ def launch_setup(context, *args, **kwargs) -> list:
                 "--exclude-topics",
                 "/clock",
             ],
+            sigterm_timeout="15",
+            sigkill_timeout="15",
         )
         actions.append(record_process)
 
