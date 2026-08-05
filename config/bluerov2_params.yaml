@@ -7,7 +7,6 @@
     ros__parameters:
       imu:
         use_parameter_covariance: true
-        gravity: [0.0, 0.0, -9.7977] # Utah Lake (40.24 N, ~1358 m elevation, free-air correction)
 
       gps:
         enable_gps: false
@@ -31,8 +30,6 @@
   fluid_pressure_odom_node:
     ros__parameters:
       atmospheric_pressure: 86039.8 # Utah Lake (~1358 m elevation)
-      gravity: 9.7977 # Utah Lake (40.24 N, ~1358 m elevation, free-air correction)
-
       max_pressure_delta: 9780.0 # [Pa] ~1 m depth jump
 
   navsat_odom_node:

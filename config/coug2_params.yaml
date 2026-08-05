@@ -16,8 +16,6 @@
   fluid_pressure_odom_node:
     ros__parameters:
       atmospheric_pressure: 82776.2 # Deer Creek (~1673 m elevation)
-      gravity: 9.7969 # Deer Creek (40.42 N, ~1673 m elevation, free-air correction)
-
       max_pressure_delta: 9780.0 # [Pa] ~1 m depth jump
 
       use_parameter_child_frame: true
