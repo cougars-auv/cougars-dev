@@ -115,7 +115,7 @@
           velocity_noise_sigmas: [0.02, 0.02, 0.02] # [m/s]
 
           # AHRS parameters
-          ahrs_update_rate_hz: 50.0 # [Hz]
+          ahrs_update_rate_hz: 10.0 # [Hz]
           yaw_noise_sigma: 0.01745 # [rad]
 
   twist_mux:

@@ -15,6 +15,12 @@
       gps:
         enable_gps: false
 
+      mag:
+        enable_mag: false
+
+      ahrs:
+        enable_ahrs: true
+
       priors:
         initial_position_sigmas: [0.001, 0.001, 1.0] # [x, y, z] [m]
 
