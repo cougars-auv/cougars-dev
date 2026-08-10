@@ -27,6 +27,7 @@
 
       priors:
         use_parameter_priors: false
+        use_parameter_priors_covariance: false
 
   fluid_pressure_odom_node:
     ros__parameters:

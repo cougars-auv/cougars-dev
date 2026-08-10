@@ -10,7 +10,8 @@
   "**":
     ros__parameters:
       priors:
-        initial_position_sigmas: [0.001, 0.001, 1.0] # [x, y, z] [m]
+        parameter_priors_covariance:
+          initial_position_sigmas: [0.001, 0.001, 1.0] # [x, y, z] [m]
 
   cmd_vel_converter_node:
     ros__parameters:

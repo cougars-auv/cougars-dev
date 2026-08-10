@@ -44,7 +44,9 @@
 
       priors:
         use_parameter_priors: false
-        initial_velocity_sigmas: [0.1, 0.1, 0.1] # [m/s] TURTLMap PosegraphBackendOnline.cpp callbackDVL()
+        use_parameter_priors_covariance: false
+        parameter_priors_covariance:
+          initial_velocity_sigmas: [0.1, 0.1, 0.1] # [m/s] TURTLMap PosegraphBackendOnline.cpp callbackDVL()
         # LORD 3DM-GX5-25: 8 °/hr in-run gyro bias instability.
         # https://www.microstrain.com/inertial-sensors/3dm-gx5-25
         initial_gyro_bias_sigmas: [3.9e-5, 3.9e-5, 3.9e-5] # [rad/s]
