@@ -10,6 +10,7 @@
 
       gps:
         enable_gps: false
+        enable_gps_init_priors: false
 
       depth:
         use_parameter_covariance: true

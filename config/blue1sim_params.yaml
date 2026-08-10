@@ -14,6 +14,7 @@
 
       gps:
         enable_gps: false
+        enable_gps_init_priors: false
 
       mag:
         enable_mag: false

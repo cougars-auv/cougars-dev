@@ -23,6 +23,7 @@
 
       gps:
         enable_gps: false
+        enable_gps_init_priors: false
 
       depth:
         use_parameter_covariance: true
@@ -44,9 +45,8 @@
       priors:
         use_parameter_priors: false
         initial_velocity_sigmas: [0.1, 0.1, 0.1] # [m/s] TURTLMap PosegraphBackendOnline.cpp callbackDVL()
-        # Derived from the LORD 3DM-GX5-25 gyro ARW (0.005 °/s/√Hz) and in-run bias instability (8 °/hr).
+        # LORD 3DM-GX5-25: 8 °/hr in-run gyro bias instability.
         # https://www.microstrain.com/inertial-sensors/3dm-gx5-25
-        # max(ARW / √T, B); T = initialization_duration_sec.
         initial_gyro_bias_sigmas: [3.9e-5, 3.9e-5, 3.9e-5] # [rad/s]
 
   ekf_filter_node_odom:
