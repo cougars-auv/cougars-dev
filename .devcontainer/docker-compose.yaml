@@ -37,6 +37,17 @@ services:
       - ../.mapproxy:/mapproxy
     restart: unless-stopped
 
+  maptiles:
+    # Built directly from GitHub because the pre-built Docker Hub image is outdated and broken
+    build: https://github.com/AliFlux/MapTilesDownloader.git#master
+    container_name: maptiles-ct
+    ports:
+      - "8081:8080"
+    volumes:
+      - ../.mapproxy/cache_data/gm_cache_EPSG900913:/app/output
+    restart: unless-stopped
+    command: sh -c "sed -i 's/{timestamp}//' /app/UI/index.htm && python server.py"
+
   router:
     image: frostlab/cougars:base-${VERSION:-latest}
     container_name: router-ct
