@@ -2,6 +2,7 @@
   ros__parameters:
     # --- Node Settings ---
     publish_global_tf: true # Publish the map -> odom transform.
+    publish_neighbor_global_tf: true # Publish the map -> neighbor base transforms.
     publish_smoothed_path: true # Publish the full smoothed path for visualization.
     publish_velocity: true # Publish the estimated velocity (of the target frame in the map frame).
     publish_imu_bias: true # Publish the estimated IMU biases (accel + gyro).
@@ -11,6 +12,7 @@
 
     # These are computationally expensive to calculate, so disable if not needed.
     publish_pose_cov: true # Publish the pose covariance.
+    publish_neighbor_pose_cov: true # Publish the neighbor agent pose covariances.
     publish_velocity_cov: false # Publish the velocity covariance.
     publish_imu_bias_cov: false # Publish the IMU bias covariance.
     publish_mag_bias_cov: false # Publish the magnetometer hard-iron bias covariance.
@@ -51,7 +53,6 @@
     ahrs_topic: "imu/data"
     dvl_topic: "dvl/twist"
     wrench_topic: "cmd_wrench"
-    multiagent_topics: ["/coug2sim/base/agent/status", "/coug3sim/base/agent/status"]
     global_odom_topic: "odometry/global"
     smoothed_path_topic: "smoothed_path"
     velocity_topic: "~/velocity" # At the target frame in the map frame.
@@ -62,6 +63,10 @@
     mag_bias_topic: "~/imu/mag/bias"
     graph_metrics_topic: "~/metrics"
     reset_service: "~/reset"
+
+    multiagent_namespaces: ["coug2sim", "coug3sim"]
+    multiagent_status_topic: "base/agent/status" # Prefixed with neighbor namespace.
+    multiagent_global_odom_topic: "base/odometry/global_nbr" # Prefixed with neighbor namespace.
 
     # --- Factor Settings ---
     #
@@ -232,9 +237,11 @@
         position: [0.0, 0.0, 0.0] # [x, y, z]
         orientation: [0.0, 0.0, 0.0, 1.0] # [qx, qy, qz, qw]
       covariance_scalar: 1.0 # Scales the bearing and range noise sigmas.
+      enable_bearing: true
       # Blueprint Subsea SeaTrac X150 USBL: ±1° angular accuracy (typ. 2% of acoustic range).
       # https://www.blueprintsubsea.com/seatrac/seatrac-standard
       bearing_noise_sigmas: [0.01745, 0.01745] # [azimuth, elevation] [rad] Bearing uncertainty sigmas.
+      enable_range: true
       # Blueprint Subsea SeaTrac X150 USBL: ±0.1 m range accuracy (dependent on VOS accuracy).
       # https://www.blueprintsubsea.com/seatrac/seatrac-standard
       range_noise_sigma: 0.1 # [m] Two-way time-of-flight range uncertainty sigma.
