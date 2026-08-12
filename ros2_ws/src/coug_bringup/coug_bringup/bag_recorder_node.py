@@ -25,6 +25,8 @@ from coug_interfaces.srv import BagRecord
 from diagnostic_msgs.msg import DiagnosticStatus
 from rclpy.node import Node
 
+PROCESS_WAIT_TIMEOUT_SEC = 10
+
 
 class BagRecorderNode(Node):
     """
@@ -143,7 +145,7 @@ class BagRecorderNode(Node):
         """Stop the active rosbag recording process."""
         self.bag_process.send_signal(signal.SIGINT)
         try:
-            self.bag_process.wait(timeout=10)
+            self.bag_process.wait(timeout=PROCESS_WAIT_TIMEOUT_SEC)
         except subprocess.TimeoutExpired:
             self.get_logger().error("Bag recorder did not stop cleanly. Killing it.")
             self.bag_process.kill()
