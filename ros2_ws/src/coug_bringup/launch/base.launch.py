@@ -15,10 +15,12 @@
 import atexit
 import os
 import shutil
+from typing import Any
 
 import yaml
 from ament_index_python.packages import get_package_share_directory
-from launch import LaunchDescription
+from launch import LaunchContext, LaunchDescription
+from launch.action import Action
 from launch.actions import (
     DeclareLaunchArgument,
     ExecuteProcess,
@@ -33,7 +35,7 @@ from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import PushRosNamespace
 
 
-def save_config(record_bag_path) -> None:
+def save_config(record_bag_path: str) -> None:
     """
     Copy the active config directory into the recorded bag directory.
 
@@ -51,7 +53,7 @@ def save_config(record_bag_path) -> None:
     print(f"Config saved: {dest}")
 
 
-def save_logs(record_bag_path) -> None:
+def save_logs(record_bag_path: str) -> None:
     """
     Copy this run's ROS log directory into the recorded bag directory.
 
@@ -69,7 +71,7 @@ def save_logs(record_bag_path) -> None:
     print(f"Logs saved: {dest}")
 
 
-def launch_setup(context, *args, **kwargs) -> list:
+def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Action]:
     use_sim_time = LaunchConfiguration("use_sim_time")
     agent_list = LaunchConfiguration("agent_list")
     lead_agent = LaunchConfiguration("lead_agent")

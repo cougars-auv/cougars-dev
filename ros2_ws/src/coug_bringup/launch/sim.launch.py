@@ -13,10 +13,12 @@
 # limitations under the License.
 
 import os
+from typing import Any
 
 import yaml
 from ament_index_python.packages import get_package_share_directory
-from launch import LaunchDescription
+from launch import LaunchContext, LaunchDescription
+from launch.action import Action
 from launch.actions import (
     DeclareLaunchArgument,
     GroupAction,
@@ -35,7 +37,7 @@ from launch.substitutions import (
 from launch_ros.actions import Node, PushRosNamespace
 
 
-def launch_setup(context, *args, **kwargs) -> list:
+def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Action]:
     use_sim_time = LaunchConfiguration("use_sim_time")
     agent_list = LaunchConfiguration("agent_list")
     lead_agent = LaunchConfiguration("lead_agent")
