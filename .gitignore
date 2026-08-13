@@ -28,7 +28,6 @@ mapviz
 seatrac_interfaces
 TURTLMap
 
-.DS_Store
 .env
 __pycache__
 .venv
