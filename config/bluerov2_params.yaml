@@ -38,7 +38,6 @@
     ros__parameters:
       position_covariance_threshold: 0.001 # IMPORTANT! Using RTK GPS ground truth
 
-      use_parameter_origin: false
       use_parameter_child_frame: true
 
   ekf_filter_node_map:
