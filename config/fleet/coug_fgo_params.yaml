@@ -134,7 +134,7 @@
       covariance_scalar: 1.0 # Applies to both sensor-reported and parameter_covariance values.
       use_parameter_covariance: false
       parameter_covariance:
-        # TE MS5837-02BA (Bar02, "shallow" sensor): ±2 mbar (~2 cm H2O) accuracy over 0-60 °C.
+        # TE MS5837-02BA (Bar02): ±2 mbar (~2 cm H2O) accuracy over 0-60 °C.
         # https://www.te.com/en/product-CAT-BLPS0059.html
         position_z_noise_sigma: 0.02 # [m] Depth sensor Z-position uncertainty sigma.
       diagnostic_timeout_sec: 1.0 # [s]
@@ -252,9 +252,9 @@
         ahrs: # Transformed into the neighboring agent's base frame.
           enable_ahrs: true
           covariance_scalar: 1.0 # Scales the orientation noise sigmas.
-          # SBG Ellipse-N AHRS: 0.4° roll/pitch, 1.0° magnetic heading (typical dynamics).
-          # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/performance-specifications
-          orientation_noise_sigmas: [0.00698, 0.00698, 0.01745] # [roll, pitch, yaw] [rad] AHRS orientation uncertainty sigmas.
+          # Blueprint Subsea SeaTrac X150 AHRS: ±0.2° pitch/roll, ±1.0° yaw standard deviation.
+          # https://www.blueprintsubsea.com/seatrac/seatrac-standard
+          orientation_noise_sigmas: [0.00349, 0.00349, 0.01745] # [roll, pitch, yaw] [rad] AHRS orientation uncertainty sigmas.
           # East-positive declination (NOAA convention).
           # https://www.ngdc.noaa.gov/geomag/calculators/magcalc.shtml#declination
           mag_declination_radians: 0.0 # [rad]
@@ -263,9 +263,9 @@
         depth: # Transformed into the neighboring agent's base frame.
           enable_depth: true
           covariance_scalar: 1.0 # Scales the position z noise sigma.
-          # TE MS5837-02BA (Bar02, "shallow" sensor): ±2 mbar (~2 cm H2O) accuracy over 0-60 °C.
-          # https://www.te.com/en/product-CAT-BLPS0059.html
-          position_z_noise_sigma: 0.02 # [m] Depth sensor Z-position uncertainty sigma.
+          # SeaTrac X150 depth telemetry resolution: 0.1 m (SeaTrac Developer Guide UM-140).
+          # https://www.blueprintsubsea.com/seatrac/support
+          position_z_noise_sigma: 0.1 # [m] Depth sensor Z-position uncertainty sigma.
           robust_kernel: "None"
           robust_k: 1.345
       diagnostic_timeout_sec: 1.0 # [s]
@@ -298,7 +298,7 @@
       # SBG Ellipse-N: 7 °/h in-run gyro bias instability.
       # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/performance-specifications
       initial_gyro_bias_sigmas: [3.4e-5, 3.4e-5, 3.4e-5] # [rad/s] (in the IMU frame)
-      # SBG Ellipse magnetometer: hard-iron offset is ~20% of the local field magnitude.
+      # No published SBG hard-iron spec; assumes ~20% of the local field magnitude.
       hard_iron_bias_sigmas: [1.0e-05, 1.0e-05, 1.0e-05] # [T] (in the sensor frame)
 
     # --- Comparison Methods ---
@@ -311,9 +311,6 @@
   dvl_a50_twist_node:
     ros__parameters:
       # --- Node Settings ---
-      publish_diagnostics: true # Publish diagnostic information.
-      diagnostic_timeout_sec: 0.5 # [s]
-
       simulate_dropout: false
       dropout_frequency_hz: 0.033 # [Hz] Frequency of the dropout cycle.
       dropout_duration_sec: 5.0 # [s] Duration of the dropout.
@@ -334,9 +331,6 @@
   dvl_a50_odom_node:
     ros__parameters:
       # --- Node Settings ---
-      publish_diagnostics: true # Publish diagnostic information.
-      diagnostic_timeout_sec: 0.5 # [s]
-
       override_timestamp: false # Restamp with ROS receive time if the A50 clock isn't synced.
 
       # Water Linked DVL A50 dead reckoning: 0.1-0.3°/min calibrated yaw drift; no published roll/pitch spec (~1° estimated).
@@ -352,9 +346,6 @@
   fluid_pressure_odom_node:
     ros__parameters:
       # --- Node Settings ---
-      publish_diagnostics: true # Publish diagnostic information.
-      diagnostic_timeout_sec: 0.5 # [s]
-
       pressure_scale: 1.0 # Scale factor to convert the input reading to Pascals.
       atmospheric_pressure: 101325.0 # [Pa]
       water_density: 997.0 # [kg/m^3]
@@ -375,7 +366,6 @@
     ros__parameters:
       # --- Node Settings ---
       publish_diagnostics: true # Publish diagnostic information.
-      diagnostic_timeout_sec: 1.0 # [s]
 
       position_covariance_threshold: 0.0 # [m^2] Max horizontal variance to publish odom. 0.0 disables.
 
@@ -404,26 +394,29 @@
       input_topic: "imu/mag_au"
       output_topic: "imu/mag"
 
-  seatrac_x150_imu_node:
+  seatrac_x150_imu_depth_node:
     ros__parameters:
       # --- Node Settings ---
-      publish_diagnostics: true # Publish diagnostic information.
-      diagnostic_timeout_sec: 0.5 # [s]
-
       # Blueprint Subsea SeaTrac X150 AHRS: ±0.2° pitch/roll, ±1.0° yaw standard deviation.
       # https://www.blueprintsubsea.com/seatrac/seatrac-standard
       orientation_noise_sigmas: [0.00349, 0.00349, 0.01745] # [roll, pitch, yaw] [rad] Orientation uncertainty sigmas.
-      # No published SeaTrac spec; matches the SBG Ellipse magnetometer (3 mGauss RMS noise / ~0.504 Gauss local field -> ~0.006).
-      # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/hardware-documentation/aiding-sensors
-      magnetic_field_noise_sigmas: [0.006, 0.006, 0.006] # [normalized] Magnetic field uncertainty sigmas.
       # East-positive declination (NOAA convention).
       # https://www.ngdc.noaa.gov/geomag/calculators/magcalc.shtml#declination
       mag_declination_radians: 0.0 # [rad]
+
+      # No published SeaTrac spec; matches the SBG Ellipse magnetometer (3 mGauss RMS noise / ~0.504 Gauss local field -> ~0.006).
+      # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/hardware-documentation/aiding-sensors
+      magnetic_field_noise_sigmas: [0.006, 0.006, 0.006] # [normalized] Magnetic field uncertainty sigmas.
+
+      # SeaTrac X150 depth telemetry resolution: 0.1 m (SeaTrac Developer Guide UM-140).
+      # https://www.blueprintsubsea.com/seatrac/support
+      depth_noise_sigma: 0.1 # [m] Depth sensor Z-position uncertainty sigma.
 
       # --- ROS Topics and Frames ---
       input_topic: "modem_status"
       imu_output_topic: "seatrac/imu/data_ned"
       mag_output_topic: "seatrac/imu/mag"
+      depth_output_topic: "seatrac/depth/odometry_ned"
 
       use_parameter_frame: false
 
@@ -431,6 +424,11 @@
     ros__parameters:
       input_topic: "seatrac/imu/data_ned"
       output_topic: "seatrac/imu/data"
+
+  seatrac_odom_ned_to_enu_node:
+    ros__parameters:
+      input_topic: "seatrac/depth/odometry_ned"
+      output_topic: "seatrac/depth/odometry"
 
   imu_ned_to_enu_node:
     ros__parameters:

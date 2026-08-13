@@ -8,8 +8,10 @@
       accel_noise_sigmas: [7.9e-3, 7.9e-3, 7.9e-3] # [m/s^2] Accelerometer measurement noise sigmas.
       gyro_noise_sigmas: [7.4e-4, 7.4e-4, 7.4e-4] # [rad/s] Gyroscope measurement noise sigmas.
       # SBG Ellipse-N AHRS: 0.4° roll/pitch, 1.0° magnetic heading (typical dynamics).
+      # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/performance-specifications
       ahrs_noise_sigmas: [0.00698, 0.00698, 0.01745] # [roll, pitch, yaw] [rad] AHRS orientation uncertainty sigmas.
       # Derived from the SBG Ellipse-N in-run bias instabilities (14 µg accel, 7 °/h gyro).
+      # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/performance-specifications
       # Gauss-Markov fit K ≈ 2.3 * B / √tau_c at tau_c = 500 s.
       accel_bias_rw_sigmas: [1.4e-5, 1.4e-5, 1.4e-5] # [m/s^2/√s] Continuous-time accel bias random walk spectral density sigmas.
       gyro_bias_rw_sigmas: [3.5e-6, 3.5e-6, 3.5e-6] # [rad/s/√s] Continuous-time gyro bias random walk spectral density sigmas.
@@ -70,7 +72,7 @@
       # SBG Ellipse magnetometer: 3 mGauss RMS noise -> 3e-07 T.
       # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/hardware-documentation/aiding-sensors
       noise_sigmas: [3.0e-07, 3.0e-07, 3.0e-07] # [T] Magnetic field uncertainty sigmas.
-      # SBG Ellipse magnetometer: hard-iron offset is ~20% of the local field magnitude.
+      # No published SBG hard-iron spec; assumes ~20% of the local field magnitude.
       bias_sigmas: [1.0e-05, 1.0e-05, 1.0e-05] # [T] Hard-iron bias sigmas.
 
       # --- ROS Topics and Frames ---
@@ -152,12 +154,14 @@
       # The real modem_status arrives at 10 Hz (seatrac-ros2 sets STATUS_MODE_10HZ).
       # No published SeaTrac accel/gyro specs; matches the SBG Ellipse-N noise densities
       # scaled to discrete per-sample sigmas at 10 Hz.
+      # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/performance-specifications
       accel_noise_sigmas: [1.8e-3, 1.8e-3, 1.8e-3] # [m/s^2] Accelerometer measurement noise sigmas.
       gyro_noise_sigmas: [1.7e-4, 1.7e-4, 1.7e-4] # [rad/s] Gyroscope measurement noise sigmas.
       # Blueprint Subsea SeaTrac X150 AHRS: ±0.2° pitch/roll, ±1.0° yaw standard deviation.
       # https://www.blueprintsubsea.com/seatrac/seatrac-standard
       ahrs_noise_sigmas: [0.00349, 0.00349, 0.01745] # [roll, pitch, yaw] [rad] AHRS orientation uncertainty sigmas.
       # Derived from the SBG Ellipse-N in-run bias instabilities (14 µg accel, 7 °/h gyro).
+      # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/performance-specifications
       # Gauss-Markov fit K ≈ 2.3 * B / √tau_c at tau_c = 500 s.
       accel_bias_rw_sigmas: [1.4e-5, 1.4e-5, 1.4e-5] # [m/s^2/√s] Continuous-time accel bias random walk spectral density sigmas.
       gyro_bias_rw_sigmas: [3.5e-6, 3.5e-6, 3.5e-6] # [rad/s/√s] Continuous-time gyro bias random walk spectral density sigmas.
@@ -172,8 +176,9 @@
     ros__parameters:
       # --- Node Settings ---
       # No published SeaTrac spec; matches the SBG Ellipse magnetometer (3 mGauss RMS noise -> 3e-07 T).
+      # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/hardware-documentation/aiding-sensors
       noise_sigmas: [3.0e-07, 3.0e-07, 3.0e-07] # [T] Magnetic field uncertainty sigmas.
-      # No published SeaTrac spec; matches the SBG Ellipse magnetometer hard-iron offset.
+      # No published SeaTrac spec; matches the assumed SBG Ellipse magnetometer hard-iron offset.
       bias_sigmas: [1.0e-05, 1.0e-05, 1.0e-05] # [T] Hard-iron bias sigmas.
 
       # --- ROS Topics and Frames ---

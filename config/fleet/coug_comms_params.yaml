@@ -77,13 +77,13 @@
       # --- ROS Topics ---
       status_topic: "base/agent/status"
       odom_topic: "base/odometry/global"
-      depth_topic: "base/depth/odometry"
-      imu_topic: "base/imu/data"
+      depth_topic: "base/seatrac/depth/odometry"
+      imu_topic: "base/seatrac/imu/data"
 
   auv_status_bundler_node:
     ros__parameters:
       # --- ROS Topics and Frames ---
       status_topic: "agent/status"
       odom_topic: "odometry/global"
-      depth_topic: "depth/odometry"
-      imu_topic: "imu/data"
+      depth_topic: "seatrac/depth/odometry"
+      imu_topic: "seatrac/imu/data"
