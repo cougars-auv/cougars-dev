@@ -95,8 +95,12 @@
   dvl_odom_converter_node:
     ros__parameters:
       # --- Node Settings ---
-      # DVL odom just matches ground truth in sim; the sigma is reported, not applied as noise.
-      noise_sigma: 0.05 # [m] Dead-reckoning position uncertainty sigma.
+      # Water Linked DVL A50: ±1.01% long-term accuracy (standard version).
+      # https://waterlinked.com/dvl-a50
+      noise_sigma_scale: 0.0101 # [m/m] Dead-reckoning position uncertainty sigma per meter traveled.
+      # Water Linked DVL A50 dead reckoning: 0.1-0.3°/min calibrated yaw drift.
+      # https://docs.waterlinked.com/dvl/dead-reckoning/
+      yaw_drift_sigma: 0.3 # [deg/min] Dead-reckoning yaw drift rate sigma.
 
       # --- ROS Topics and Frames ---
       input_topic: "DynamicsSensorOdom"
