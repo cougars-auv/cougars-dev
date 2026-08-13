@@ -82,20 +82,6 @@
           "ros_publish": true
         },
         {
-          "sensor_type": "MagnetometerSensor",
-          "sensor_name": "ModemMagnetometerSensor",
-          "socket": "AcousticModemSocket",
-          "Hz": 10,
-          "configuration": {
-            "MagneticVector": [
-              3.9634e-06,
-              2.08423e-05,
-              -4.57678e-05
-            ]
-          },
-          "ros_publish": true
-        },
-        {
           "sensor_type": "IMUSensor",
           "socket": "IMUSocket",
           "Hz": 200,
@@ -214,20 +200,6 @@
           "ros_publish": true
         },
         {
-          "sensor_type": "MagnetometerSensor",
-          "sensor_name": "ModemMagnetometerSensor",
-          "socket": "AcousticModemSocket",
-          "Hz": 10,
-          "configuration": {
-            "MagneticVector": [
-              3.9634e-06,
-              2.08423e-05,
-              -4.57678e-05
-            ]
-          },
-          "ros_publish": true
-        },
-        {
           "sensor_type": "IMUSensor",
           "socket": "IMUSocket",
           "Hz": 200,
@@ -343,20 +315,6 @@
           "sensor_name": "ModemRotationSensor",
           "socket": "AcousticModemSocket",
           "Hz": 10,
-          "ros_publish": true
-        },
-        {
-          "sensor_type": "MagnetometerSensor",
-          "sensor_name": "ModemMagnetometerSensor",
-          "socket": "AcousticModemSocket",
-          "Hz": 10,
-          "configuration": {
-            "MagneticVector": [
-              3.9634e-06,
-              2.08423e-05,
-              -4.57678e-05
-            ]
-          },
           "ros_publish": true
         },
         {
