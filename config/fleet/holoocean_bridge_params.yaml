@@ -95,12 +95,13 @@
   dvl_odom_converter_node:
     ros__parameters:
       # --- Node Settings ---
-      # DVL odom just matches ground truth in sim; pos_std not applied as noise, reported only.
-      pos_std: 0.05 # [m] Dead-reckoning position uncertainty.
+      # DVL odom just matches ground truth in sim; the sigma is reported, not applied as noise.
+      noise_sigma: 0.05 # [m] Dead-reckoning position uncertainty sigma.
 
       # --- ROS Topics and Frames ---
       input_topic: "DynamicsSensorOdom"
       output_topic: "dvl/position"
+      config_command_topic: "dvl/config/command"
 
   stereo_converter_node:
     ros__parameters:
