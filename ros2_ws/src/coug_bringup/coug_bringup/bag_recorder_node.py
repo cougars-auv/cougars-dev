@@ -39,16 +39,18 @@ class BagRecorderNode(Node):
     def __init__(self) -> None:
         super().__init__("bag_recorder_node")
 
+        self.declare_parameter("publish_diagnostics", False)
         self.declare_parameter("auv_ns", "auv")
-        self.declare_parameter(
-            "bag_dir",
-            os.environ.get("BAGS_DIR", os.path.expanduser("~/cougars-dev/bags")),
-        )
         self.declare_parameter("bag_record_service", "bag_record")
         self.declare_parameter("log_dir", "")
 
+        publish_diagnostics = (
+            self.get_parameter("publish_diagnostics").get_parameter_value().bool_value
+        )
         self.auv_ns = self.get_parameter("auv_ns").get_parameter_value().string_value
-        self.bag_dir = self.get_parameter("bag_dir").get_parameter_value().string_value
+        self.bag_dir = os.environ.get(
+            "BAGS_DIR", os.path.expanduser("~/cougars-dev/bags")
+        )
         self.log_dir = self.get_parameter("log_dir").get_parameter_value().string_value
         bag_record_service = (
             self.get_parameter("bag_record_service").get_parameter_value().string_value
@@ -58,12 +60,13 @@ class BagRecorderNode(Node):
 
         self.create_service(BagRecord, bag_record_service, self._bag_record_callback)
 
-        ns = self.get_namespace()
-        clean_ns = "" if ns == "/" else ns
-        self.updater = diagnostic_updater.Updater(self)
-        self.updater.setHardwareID(f"{clean_ns}/bag_recorder_node")
-        prefix = f"[{clean_ns}] " if clean_ns else ""
-        self.updater.add(f"{prefix}Recording Status", self._check_recording_status)
+        if publish_diagnostics:
+            ns = self.get_namespace()
+            clean_ns = "" if ns == "/" else ns
+            self.updater = diagnostic_updater.Updater(self)
+            self.updater.setHardwareID(f"{clean_ns}/bag_recorder_node")
+            prefix = f"[{clean_ns}] " if clean_ns else ""
+            self.updater.add(f"{prefix}Recording Status", self._check_recording_status)
 
         self.get_logger().info("Initialization complete.")
 
