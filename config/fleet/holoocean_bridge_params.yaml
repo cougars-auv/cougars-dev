@@ -2,6 +2,7 @@
   imu_converter_node:
     ros__parameters:
       # --- Node Settings ---
+      sync_slop_sec: 0.05 # [s] Max stamp difference to sync the IMU and AHRS messages.
       # SBG Ellipse-N noise densities scaled to discrete per-sample sigmas at 200 Hz
       # (57 µg/√Hz -> 7.9e-3 m/s^2, 0.18 °/√h -> 7.4e-4 rad/s).
       # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/performance-specifications
@@ -102,6 +103,8 @@
       # https://docs.waterlinked.com/dvl/dead-reckoning/
       yaw_drift_sigma: 0.3 # [deg/min] Dead-reckoning yaw drift rate sigma.
 
+      tf_timeout_sec: 0.1 # [s] How long to wait for the map transform.
+
       # --- ROS Topics and Frames ---
       input_topic: "DynamicsSensorOdom"
       output_topic: "dvl/position"
@@ -109,6 +112,10 @@
 
   stereo_converter_node:
     ros__parameters:
+      # --- Node Settings ---
+      sync_slop_sec: 0.05 # [s] Max stamp difference to sync the stereo images.
+
+      # --- ROS Topics and Frames ---
       front_input_topic: "RGBCameraFront"
       back_input_topic: "RGBCameraBack"
       front_output_topic: "stereo/front/image_raw"
@@ -127,6 +134,7 @@
     ros__parameters:
       # --- Node Settings ---
       publish_tf: false # Whether to publish the map->base_link transform
+      tf_timeout_sec: 0.1 # [s] How long to wait for the map transform.
 
       # --- ROS Topics and Frames ---
       input_topic: "DynamicsSensorOdom"
@@ -156,6 +164,7 @@
   modem_imu_converter_node:
     ros__parameters:
       # --- Node Settings ---
+      sync_slop_sec: 0.05 # [s] Max stamp difference to sync the IMU and AHRS messages.
       # The real modem_status arrives at 10 Hz (seatrac-ros2 sets STATUS_MODE_10HZ).
       # No published SeaTrac accel/gyro specs; matches the SBG Ellipse-N noise densities
       # scaled to discrete per-sample sigmas at 10 Hz.
@@ -190,6 +199,10 @@
 
   modem_status_converter_node:
     ros__parameters:
+      # --- Node Settings ---
+      sync_slop_sec: 0.05 # [s] Max stamp difference to sync the IMU and depth messages.
+
+      # -- ROS Topics and Frames ---
       imu_input_topic: "modem/imu/data"
       depth_input_topic: "modem/depth/odometry"
       output_topic: "modem_status"

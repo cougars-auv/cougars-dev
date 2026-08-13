@@ -3,6 +3,7 @@
     ros__parameters:
       # --- Node Settings ---
       velocity_noise_sigmas: [0.5, 0.5, 2.0] # [x, y, z] [m/s]
+      sync_slop_sec: 0.05 # [s] Max stamp difference to sync the stereo images and info.
 
       # --- ROS Topics and Frames ---
       front_stereo_topic: "stereo/front/image_raw"
