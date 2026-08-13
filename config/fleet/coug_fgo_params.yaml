@@ -404,10 +404,6 @@
       # https://www.ngdc.noaa.gov/geomag/calculators/magcalc.shtml#declination
       mag_declination_radians: 0.0 # [rad]
 
-      # No published SeaTrac spec; matches the SBG Ellipse magnetometer (3 mGauss RMS noise / ~0.504 Gauss local field -> ~0.006).
-      # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/hardware-documentation/aiding-sensors
-      magnetic_field_noise_sigmas: [0.006, 0.006, 0.006] # [normalized] Magnetic field uncertainty sigmas.
-
       # SeaTrac X150 depth telemetry resolution: 0.1 m (SeaTrac Developer Guide UM-140).
       # https://www.blueprintsubsea.com/seatrac/support
       depth_noise_sigma: 0.1 # [m] Depth sensor Z-position uncertainty sigma.
@@ -415,7 +411,6 @@
       # --- ROS Topics and Frames ---
       input_topic: "modem_status"
       imu_output_topic: "seatrac/imu/data_ned"
-      mag_output_topic: "seatrac/imu/mag"
       depth_output_topic: "seatrac/depth/odometry_ned"
 
       use_parameter_frame: false
