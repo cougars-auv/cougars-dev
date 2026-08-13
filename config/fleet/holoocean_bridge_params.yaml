@@ -181,12 +181,6 @@
       output_topic: "modem/imu/mag"
       bias_topic: "modem/imu/mag/bias"
 
-  modem_status_converter_node:
-    ros__parameters:
-      imu_input_topic: "modem/imu/data"
-      mag_input_topic: "modem/imu/mag"
-      output_topic: "modem_status"
-
   modem_depth_converter_node:
     ros__parameters:
       # --- Node Settings ---
@@ -197,6 +191,13 @@
       # --- ROS Topics and Frames ---
       input_topic: "ModemDepthSensor"
       output_topic: "modem/depth/odometry"
+
+  modem_status_converter_node:
+    ros__parameters:
+      imu_input_topic: "modem/imu/data"
+      mag_input_topic: "modem/imu/mag"
+      depth_input_topic: "modem/depth/odometry"
+      output_topic: "modem_status"
 
   modem_converter_node:
     ros__parameters:
