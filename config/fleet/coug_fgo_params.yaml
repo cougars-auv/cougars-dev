@@ -27,7 +27,7 @@
     solver_type: "IncrementalFixedLagSmoother"
     max_update_rate_hz: -1.0 # [Hz] Maximum keyframe rate. -1.0 for no limit.
     max_opt_rate_hz: -1.0 # [Hz] Maximum optimization rate. -1.0 for no limit.
-    smoother_lag: 20.0 # [s] Time window of past states to smooth over.
+    smoother_lag_sec: 20.0 # [s] Time window of past states to smooth over.
     relinearize_threshold: 0.1 # Lower values are more accurate but slower.
     relinearize_skip: 1 # Number of updates to skip between relinearizations.
 
@@ -102,7 +102,7 @@
       accel_bias_rw_sigmas: [1.4e-5, 1.4e-5, 1.4e-5] # [m/s^2/√s] Continuous-time spectral density sigmas for accelerometer bias random walk.
       gyro_bias_rw_sigmas: [3.5e-6, 3.5e-6, 3.5e-6] # [rad/s/√s] Continuous-time spectral density sigmas for gyroscope bias random walk.
       integration_covariance: 1.0e-8 # A small covariance for the integration process itself.
-      gravity: [0.0, 0.0, -9.8] # [m/s^2] HoloOcean gravity vector
+      gravity: [0.0, 0.0, -9.8] # [m/s^2] HoloOcean gravity vector.
       diagnostic_timeout_sec: 1.0 # [s]
 
     gps:
@@ -245,6 +245,7 @@
       # Blueprint Subsea SeaTrac X150 USBL: ±0.1 m range accuracy (dependent on VOS accuracy).
       # https://www.blueprintsubsea.com/seatrac/seatrac-standard
       range_noise_sigma: 0.1 # [m] Two-way time-of-flight range uncertainty sigma.
+      sound_speed: 1500.0 # [m/s] HoloOcean speed of sound.
       neighbor:
         modem_tf: # Relative to the neighboring agent's base frame.
           position: [0.3785, 0.0, -0.0985] # [x, y, z]
