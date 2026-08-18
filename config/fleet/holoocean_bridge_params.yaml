@@ -210,10 +210,10 @@
   modem_converter_node:
     ros__parameters:
       # --- Node Settings ---
-      tick_period_sec: 0.1 # [s]
-      send_delay_sec: 0.4 # [s]
-      resp_delay_sec: 0.0 # [s]
-      resp_timeout_sec: 4.0 # [s]
+      tick_period_sec: 0.1 # [s] Timer period for servicing the send queue.
+      send_delay_sec: 0.4 # [s] Channel busy time after each transmission.
+      resp_delay_sec: 0.0 # [s] Delay before answering a REQ with its RESP.
+      resp_timeout_sec: 4.0 # [s] How long to wait for a RESP before timing out.
       beacon_id: 1
 
       # Blueprint Subsea SeaTrac X150 USBL: ±1° angular accuracy (typ. 2% of acoustic range).
