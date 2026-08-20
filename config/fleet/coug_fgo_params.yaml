@@ -231,6 +231,7 @@
 
     multiagent:
       enable_multiagent: false
+      estimate_origin_delta: false # Estimate each neighbor's map-frame offset.
       use_parameter_frame: false
       use_parameter_tf: false
       parameter_tf: # Relative to the target frame.
@@ -286,6 +287,9 @@
       initial_accel_bias: [0.0, 0.0, 0.0] # [m/s^2] (in the IMU frame)
       initial_gyro_bias: [0.0, 0.0, 0.0] # [rad/s] (in the IMU frame)
       hard_iron_bias: [0.0, 0.0, 0.0] # [T] (in the sensor frame)
+      # IMPORTANT! The xy delta is seeded from the first range/bearing pair to prevent antipodal trapping.
+      origin_delta_position: [0.0, 0.0, 0.0] # [m] (of the neighbor's base frame in the map frame)
+      origin_delta_orientation: [0.0, 0.0, 0.0] # [roll, pitch, yaw] [rad] (of the neighbor's base frame in the map frame)
 
       # If true, forces the initial state covariance to be set by the values below.
       use_parameter_priors_covariance: true
@@ -301,6 +305,8 @@
       initial_gyro_bias_sigmas: [3.4e-5, 3.4e-5, 3.4e-5] # [rad/s] (in the IMU frame)
       # No published SBG hard-iron spec; assumes ~20% of the local field magnitude.
       hard_iron_bias_sigmas: [1.0e-05, 1.0e-05, 1.0e-05] # [T] (in the sensor frame)
+      origin_delta_position_sigmas: [1000.0, 1000.0, 1.0e-04] # [m] (in the map frame)
+      origin_delta_orientation_sigmas: [1.0e-04, 1.0e-04, 1.0e-04] # [roll, pitch, yaw] [rad] (in the map frame)
 
     # --- Comparison Methods ---
     comparison:
