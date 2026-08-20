@@ -36,9 +36,9 @@
       ],
       "control_scheme": 1,
       "location": [
-        -5.1,
+        -5,
         0,
-        -0.1
+        0
       ],
       "rotation": [
         0,
@@ -150,9 +150,9 @@
       "control_mode": "depthHeadingAutopilot",
       "control_scheme": 1,
       "location": [
-        -0.1,
         0,
-        -0.1
+        0,
+        0
       ],
       "rotation": [
         0,
