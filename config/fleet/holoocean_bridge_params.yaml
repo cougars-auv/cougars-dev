@@ -86,10 +86,15 @@
       # --- Node Settings ---
       # Water Linked DVL A50: ±1.01% long-term velocity accuracy (~0.01 m/s at 1 m/s).
       # https://waterlinked.com/dvl-a50
-      noise_sigmas: [0.02, 0.02, 0.02] # [m/s] DVL body-velocity uncertainty sigmas.
+      velocity_noise_sigmas: [0.02, 0.02, 0.02] # [m/s] DVL body-velocity uncertainty sigmas.
+      range_noise_sigma: 0.1 # [m] Beam range uncertainty sigma.
+
+      # IMPORTANT! This must match HoloOcean's MaxRange for the DVLSensor.
+      max_range: 50.0 # [m] Beams at or beyond this are reported lost.
 
       # --- ROS Topics and Frames ---
-      input_topic: "DVLSensorVelocity"
+      velocity_input_topic: "DVLSensorVelocity"
+      range_input_topic: "DVLSensorRange"
       output_topic: "dvl/data"
       config_command_topic: "dvl/config/command"
 
@@ -166,8 +171,7 @@
       # --- Node Settings ---
       sync_slop_sec: 0.05 # [s] Max stamp difference to sync the IMU and AHRS messages.
       # The real modem_status arrives at 10 Hz (seatrac-ros2 sets STATUS_MODE_10HZ).
-      # No published SeaTrac accel/gyro specs; matches the SBG Ellipse-N noise densities
-      # scaled to discrete per-sample sigmas at 10 Hz.
+      # No published SeaTrac accel/gyro specs; matches the SBG Ellipse-N noise densities scaled to discrete per-sample sigmas at 10 Hz.
       # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/performance-specifications
       accel_noise_sigmas: [1.8e-3, 1.8e-3, 1.8e-3] # [m/s^2] Accelerometer measurement noise sigmas.
       gyro_noise_sigmas: [1.7e-4, 1.7e-4, 1.7e-4] # [rad/s] Gyroscope measurement noise sigmas.
