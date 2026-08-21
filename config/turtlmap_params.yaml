@@ -67,7 +67,7 @@
 
       use_parameter_child_frame: true
 
-  dvl_a50_twist_node:
+  dvl_a50_twist_beams_node:
     ros__parameters:
       use_fom_covariance: true
       fom_covariance_scale: 4.0

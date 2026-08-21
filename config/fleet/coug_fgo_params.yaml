@@ -315,7 +315,7 @@
       # Thoms et al., IEEE JOE 2023 style tightly-coupled DVL preintegration implementation
       enable_tight_dvl_preintegration: false
 
-  dvl_a50_twist_node:
+  dvl_a50_twist_beams_node:
     ros__parameters:
       # --- Node Settings ---
       simulate_dropout: false
@@ -329,9 +329,23 @@
 
       override_timestamp: false # Restamp with ROS receive time if the A50 clock isn't synced.
 
+      # Water Linked DVL A50: 4.4° half-power beam width.
+      # https://docs.waterlinked.com/dvl/dvl-a50/
+      beam_field_of_view_radians: 0.0768 # [rad] Half-power beam width.
+      # Water Linked DVL A50: 5 cm - 50 m altitude range.
+      # https://waterlinked.com/dvl-a50
+      beam_min_range: 0.05 # [m] Minimum reportable beam distance.
+      beam_max_range: 50.0 # [m] Maximum reportable beam distance.
+
       # --- ROS Topics and Frames ---
       input_topic: "dvl/data"
-      output_topic: "dvl/twist"
+      twist_output_topic: "dvl/twist"
+      beams_output_topic: "dvl/beams"
+
+      beam0_range_topic: "dvl/beam0/range"
+      beam1_range_topic: "dvl/beam1/range"
+      beam2_range_topic: "dvl/beam2/range"
+      beam3_range_topic: "dvl/beam3/range"
 
       use_parameter_frame: false
 

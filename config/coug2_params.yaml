@@ -3,7 +3,7 @@
     ros__parameters:
       urdf_file: "couguv.urdf.xacro"
 
-  dvl_a50_twist_node:
+  dvl_a50_twist_beams_node:
     ros__parameters:
       use_parameter_frame: true
       override_timestamp: true # DVL A50 clock is not synced in these bags
