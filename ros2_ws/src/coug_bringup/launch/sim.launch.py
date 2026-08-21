@@ -150,6 +150,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                             "use_sim_time": use_sim_time,
                             "beacon_id": 15,
                             "modem_frame": "base_station",
+                            "add_noise": add_noise,
                         },
                     ],
                 ),
