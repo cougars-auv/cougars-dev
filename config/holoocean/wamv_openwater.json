@@ -133,6 +133,7 @@
           ],
           "Hz": 10,
           "configuration": {
+            "MaxRange": 50,
             "DebugLines": false
           },
           "ros_publish": true
