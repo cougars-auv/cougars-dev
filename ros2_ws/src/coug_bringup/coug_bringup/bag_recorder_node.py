@@ -29,13 +29,6 @@ PROCESS_WAIT_TIMEOUT_SEC = 10
 
 
 class BagRecorderNode(Node):
-    """
-    ROS 2 node that starts and stops a rosbag recording on a service call.
-
-    :author: Nelson Durrant
-    :date: June 2026
-    """
-
     def __init__(self) -> None:
         super().__init__("bag_recorder_node")
 
@@ -73,13 +66,6 @@ class BagRecorderNode(Node):
     def _bag_record_callback(
         self, request: BagRecord.Request, response: BagRecord.Response
     ) -> BagRecord.Response:
-        """
-        Handle a bag recording start or stop request.
-
-        :param request: BagRecord request with start flag and bag prefix.
-        :param response: BagRecord response with success flag and message.
-        :return: The populated BagRecord response.
-        """
         if self.bag_process is not None and self.bag_process.poll() is not None:
             self.bag_process = None
 
@@ -129,12 +115,6 @@ class BagRecorderNode(Node):
     def _check_recording_status(
         self, stat: diagnostic_updater.DiagnosticStatusWrapper
     ) -> diagnostic_updater.DiagnosticStatusWrapper:
-        """
-        Check the status of the bag recording for diagnostics.
-
-        :param stat: Diagnostic status wrapper to update.
-        :return: Updated diagnostic status wrapper.
-        """
         if self.bag_process is not None and self.bag_process.poll() is None:
             stat.summary(DiagnosticStatus.OK, "Recording in progress.")
             stat.add(
@@ -145,7 +125,6 @@ class BagRecorderNode(Node):
         return stat
 
     def _stop_bag_process(self) -> None:
-        """Stop the active rosbag recording process."""
         self.bag_process.send_signal(signal.SIGINT)
         try:
             self.bag_process.wait(timeout=PROCESS_WAIT_TIMEOUT_SEC)
@@ -156,7 +135,6 @@ class BagRecorderNode(Node):
         self.bag_process = None
 
     def _save_config(self) -> None:
-        """Save the current configuration files to the recorded bag directory."""
         if self.bag_path is None or not os.path.isdir(self.bag_path):
             return
 
@@ -167,7 +145,6 @@ class BagRecorderNode(Node):
             self.get_logger().info(f"Config saved: {dest}")
 
     def _save_logs(self) -> None:
-        """Save the current ROS log files to the recorded bag directory."""
         if self.bag_path is None or not os.path.isdir(self.bag_path):
             return
 
@@ -178,7 +155,6 @@ class BagRecorderNode(Node):
             self.get_logger().info(f"Logs saved: {dest}")
 
     def destroy_node(self) -> None:
-        """Clean up resources and stop recording when the node is destroyed."""
         if self.bag_process is not None:
             self._stop_bag_process()
             self._save_config()

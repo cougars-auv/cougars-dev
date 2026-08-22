@@ -42,11 +42,6 @@ from launch.substitutions import LaunchConfiguration
 
 
 def save_config(record_bag_path: str) -> None:
-    """
-    Copy the active config directory into the recorded bag directory.
-
-    :param record_bag_path: Path to the recorded bag (skipped if not created).
-    """
     if not record_bag_path or not os.path.isdir(record_bag_path):
         return
 
@@ -60,11 +55,6 @@ def save_config(record_bag_path: str) -> None:
 
 
 def save_logs(record_bag_path: str) -> None:
-    """
-    Copy this run's ROS log directory into the recorded bag directory.
-
-    :param record_bag_path: Path to the recorded bag (skipped if not created).
-    """
     if not record_bag_path or not os.path.isdir(record_bag_path):
         return
 
@@ -78,12 +68,6 @@ def save_logs(record_bag_path: str) -> None:
 
 
 def save_artifacts(context: LaunchContext, record_bag_path: str) -> None:
-    """
-    Copy config and logs into the recorded bag as soon as recording stops.
-
-    :param context: Launch context.
-    :param record_bag_path: Path to the recorded bag (skipped if not created).
-    """
     save_config(record_bag_path)
     save_logs(record_bag_path)
 
