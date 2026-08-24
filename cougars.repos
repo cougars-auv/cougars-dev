@@ -23,14 +23,6 @@ repositories:
     type: git
     url: git@github.com:cougars-auv/coug_interfaces.git
     version: main
-  coug_mapviz:
-    type: git
-    url: git@github.com:cougars-auv/coug_mapviz.git
-    version: main
-  coug_rqt:
-    type: git
-    url: git@github.com:cougars-auv/coug_rqt.git
-    version: main
   coug_template:
     type: git
     url: git@github.com:cougars-auv/coug_template.git
@@ -39,14 +31,6 @@ repositories:
     type: git
     url: git@github.com:cougars-auv/coug_visual_dvl.git
     version: main
-  holoocean_bridge:
-    type: git
-    url: git@github.com:cougars-auv/holoocean_bridge.git
-    version: main
-  holoocean_interfaces:
-    type: zip
-    url: https://github.com/cougars-auv/holoocean-ros/archive/refs/heads/main.zip
-    version: holoocean-ros-main/holoocean_interfaces
   seatrac_interfaces:
     type: zip
     url: https://github.com/BYU-FROST-Lab/seatrac-ros2/archive/refs/heads/main.zip
@@ -55,7 +39,3 @@ repositories:
     type: zip
     url: https://github.com/paagutie/dvl_msgs/archive/refs/heads/master.zip
     version: dvl_msgs-master
-  mapviz:
-    type: zip
-    url: https://github.com/swri-robotics/mapviz/archive/refs/tags/2.6.4.zip
-    version: mapviz-2.6.4

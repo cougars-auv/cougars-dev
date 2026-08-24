@@ -74,7 +74,7 @@ CoUGARs is a low-cost, configurable AUV platform designed for multi-agent autono
 
 - **Make Changes:** Develop and debug your new feature. Add good documentation.
 
-  > If you need to add dependencies, update the `package.xml`, the Dockerfiles under `.docker/`, `cougars.repos`, or `dependencies.repos` in your branch and test building the image locally.
+  > If you need to add dependencies, update the `package.xml`, the Dockerfiles under `.docker/`, `.repos` files (`cougars.repos`, `base.repos`, `gpu.repos`), or `dependencies.repos` in your branch and test building the image locally.
 
 - **Sync Frequently:** Regularly integrate the latest changes from `main` into your branch (via rebase or merge) to prevent future conflicts.
 
@@ -91,9 +91,9 @@ We adhere to the **Semantic Versioning (SemVer 2.0.0)** standard to release new 
 - **Create a Release Branch:** Create a dedicated release branch (e.g., `release/v1.2.x`) from `main`.
   > Do not create separate branches for patch versions (e.g., `v1.2.1`). Simply merge fixes into the minor release branch and bump the patch version on the new tag when ready to release.
 
-- **Tag Nested Repositories:** Check the repositories listed in `cougars.repos`. If there are untagged updates, update the `<version>` in the `package.xml` files and push new version tags (e.g., `v2.3.4`). Since sub-repositories version independently of `cougars-dev`, you can either use an existing up-to-date tag or create a new one.
+- **Tag Nested Repositories:** Check the repositories listed in the `.repos` files (`cougars.repos`, `base.repos`, `gpu.repos`). If there are untagged updates, update the `<version>` in the `package.xml` files and push new version tags (e.g., `v2.3.4`). Since sub-repositories version independently of `cougars-dev`, you can either use an existing up-to-date tag or create a new one.
 
-- **Lock Dependencies:** On the release branch, pin all nested repositories in `cougars.repos` to their specific release tags (instead of branches like `main`). Commit these updates.
+- **Lock Dependencies:** On the release branch, pin all nested repositories in the `.repos` files to their specific release tags (instead of branches like `main`). Commit these updates.
 
 - **Tag and Push:** Create and push a version tag (e.g., `v1.2.3`) on your release commit:
 

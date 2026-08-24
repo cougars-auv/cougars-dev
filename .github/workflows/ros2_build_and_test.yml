@@ -21,12 +21,14 @@ on:
       - ".github/workflows/ros2_build_and_test.yml"
       - "ros2_ws/src/**"
       - "cougars.repos"
+      - "base.repos"
   pull_request:
     branches: [ "main" ]
     paths:
       - ".github/workflows/ros2_build_and_test.yml"
       - "ros2_ws/src/**"
       - "cougars.repos"
+      - "base.repos"
   repository_dispatch:
     types: [ ros2_dispatch ]
   workflow_dispatch:
@@ -60,7 +62,7 @@ jobs:
         env:
           DOCKER_IMAGE: ${{ env.DOCKER_IMAGE }}
           DOCKER_PULL: true
-          UPSTREAM_WORKSPACE: cougars.repos
+          UPSTREAM_WORKSPACE: "cougars.repos base.repos"
           TARGET_WORKSPACE: ros2_ws
           CCACHE_DIR: ${{ github.workspace }}/.ccache
           BASEDIR: ${{ github.workspace }}/.work

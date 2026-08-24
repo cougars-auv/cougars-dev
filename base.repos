@@ -1,0 +1,13 @@
+repositories:
+  coug_mapviz:
+    type: git
+    url: git@github.com:cougars-auv/coug_mapviz.git
+    version: main
+  coug_rqt:
+    type: git
+    url: git@github.com:cougars-auv/coug_rqt.git
+    version: main
+  mapviz:
+    type: zip
+    url: https://github.com/swri-robotics/mapviz/archive/refs/tags/2.6.4.zip
+    version: mapviz-2.6.4
