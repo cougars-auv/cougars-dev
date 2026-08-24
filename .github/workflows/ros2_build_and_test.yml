@@ -42,11 +42,10 @@ jobs:
       fail-fast: false
       matrix:
         runner: [ ubuntu-24.04, ubuntu-24.04-arm ]
-        target: [ cougars, base ]
-        include:
-          - target: cougars
+        target:
+          - name: cougars
             repos: "cougars.repos"
-          - target: base
+          - name: base
             repos: "cougars.repos base.repos"
     runs-on: ${{ matrix.runner }}
     steps:
@@ -54,9 +53,9 @@ jobs:
       - uses: actions/cache@v6
         with:
           path: ${{ github.workspace }}/.ccache
-          key: ccache-${{ github.repository }}-${{ matrix.runner }}-${{ matrix.target }}-${{ github.run_id }}
+          key: ccache-${{ github.repository }}-${{ matrix.runner }}-${{ matrix.target.name }}-${{ github.run_id }}
           restore-keys: |
-            ccache-${{ github.repository }}-${{ matrix.runner }}-${{ matrix.target }}-
+            ccache-${{ github.repository }}-${{ matrix.runner }}-${{ matrix.target.name }}-
       - uses: webfactory/ssh-agent@v0.10.0
         with:
           ssh-private-key: ${{ secrets.SSH_KEY }}
@@ -64,7 +63,7 @@ jobs:
         env:
           DOCKER_IMAGE: ${{ env.DOCKER_IMAGE }}
           DOCKER_PULL: true
-          UPSTREAM_WORKSPACE: ${{ matrix.repos }}
+          UPSTREAM_WORKSPACE: ${{ matrix.target.repos }}
           TARGET_WORKSPACE: ros2_ws
           CCACHE_DIR: ${{ github.workspace }}/.ccache
           BASEDIR: ${{ github.workspace }}/.work
