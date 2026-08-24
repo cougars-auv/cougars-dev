@@ -7,6 +7,10 @@ repositories:
     type: git
     url: git@github.com:cougars-auv/coug_rqt.git
     version: main
+  eigen_checks:
+    type: zip
+    url: https://github.com/cougars-auv/eigen_checks/archive/refs/heads/ros2.zip
+    version: eigen_checks-ros2
   holoocean_bridge:
     type: git
     url: git@github.com:cougars-auv/holoocean_bridge.git
@@ -19,10 +23,6 @@ repositories:
     type: zip
     url: https://github.com/swri-robotics/mapviz/archive/refs/tags/2.6.4.zip
     version: mapviz-2.6.4
-  eigen_checks:
-    type: zip
-    url: https://github.com/cougars-auv/eigen_checks/archive/refs/heads/ros2.zip
-    version: eigen_checks-ros2
   voxblox_ros2:
     type: zip
     url: https://github.com/cougars-auv/voxblox_ros2/archive/refs/heads/ros2.zip

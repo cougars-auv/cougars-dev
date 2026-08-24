@@ -31,11 +31,11 @@ repositories:
     type: git
     url: git@github.com:cougars-auv/coug_visual_dvl.git
     version: main
-  seatrac_interfaces:
-    type: zip
-    url: https://github.com/BYU-FROST-Lab/seatrac-ros2/archive/refs/heads/main.zip
-    version: seatrac-ros2-main/seatrac_interfaces
   dvl_msgs:
     type: zip
     url: https://github.com/paagutie/dvl_msgs/archive/refs/heads/master.zip
     version: dvl_msgs-master
+  seatrac_interfaces:
+    type: zip
+    url: https://github.com/BYU-FROST-Lab/seatrac-ros2/archive/refs/heads/main.zip
+    version: seatrac-ros2-main/seatrac_interfaces
