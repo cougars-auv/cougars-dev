@@ -88,7 +88,7 @@
         position: [0.0, 0.0, 0.0] # [x, y, z]
         orientation: [0.0, 0.0, 0.0, 1.0] # [qx, qy, qz, qw]
       covariance_scalar: 1.0 # Applies to both sensor-reported and parameter_covariance values.
-      # Used to convert sensor-reported discrete covariances to continuous-time densities.
+      # Used to convert between sensor-reported discrete covariances and continuous-time densities.
       sensor_rate_hz: 200.0 # [Hz] IMU output rate (SBG log_imu_data: 1 = 200 Hz).
       use_parameter_covariance: false
       parameter_covariance:
@@ -212,9 +212,9 @@
       robust_kernel: "None"
       robust_k: 1.345
 
-    dynamics:
-      enable_dynamics: false
-      enable_dynamics_dropout_only: false
+    wrench:
+      enable_wrench: false
+      enable_wrench_dropout_only: false
       use_parameter_frame: false
       use_parameter_tf: false
       parameter_tf: # Relative to the target frame.

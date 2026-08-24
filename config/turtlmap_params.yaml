@@ -7,17 +7,13 @@
     ros__parameters:
       imu:
         use_parameter_frame: true
+        sensor_rate_hz: 250.0 # [Hz] /nav/filtered_imu/data
         use_parameter_covariance: true
         parameter_covariance:
           accel_noise_sigmas: [2.4525e-4, 2.4525e-4, 2.4525e-4] # [m/s^2/√Hz] br2config.yaml
           gyro_noise_sigmas: [8.726646e-5, 8.726646e-5, 8.726646e-5] # [rad/s/√Hz] br2config.yaml
         accel_bias_rw_sigmas: [6.20438876e-3, 6.20438876e-3, 6.20438876e-3] # [m/s^2/√s] br2config.yaml
         gyro_bias_rw_sigmas: [6.1324618e-4, 6.1324618e-4, 6.1324618e-4] # [rad/s/√s] br2config.yaml
-        # Derived from the LORD 3DM-GX5-25 in-run bias instabilities (±0.04 mg accel, 8 °/hr gyro).
-        # https://www.microstrain.com/inertial-sensors/3dm-gx5-25
-        # Gauss-Markov fit K ≈ 2.3 * B / √tau_c at tau_c = 500 s.
-        # accel_bias_rw_sigmas: [4.0e-5, 4.0e-5, 4.0e-5] # [m/s^2/√s]
-        # gyro_bias_rw_sigmas: [4.0e-6, 4.0e-6, 4.0e-6] # [rad/s/√s]
         integration_covariance: 1.0e-8 # TURTLMap Posegraph.cpp setImuParams()
         gravity: [0.0, 0.0, -9.81007] # [m/s^2] br2config.yaml (g: 9.81007)
 
@@ -36,7 +32,7 @@
       ahrs:
         use_parameter_frame: true
         enable_ahrs: true
-        use_parameter_covariance: true
+        use_parameter_covariance: true # TODO: Test this
         parameter_covariance:
           # LORD 3DM-GX5-25 EKF attitude: ±0.25° roll/pitch, ±0.8° heading RMS.
           # https://www.microstrain.com/inertial-sensors/3dm-gx5-25
@@ -69,7 +65,7 @@
 
   dvl_a50_twist_beams_node:
     ros__parameters:
-      use_fom_covariance: true
+      use_fom_covariance: true # TODO: Test this
       fom_covariance_scale: 4.0
 
       use_parameter_frame: true
