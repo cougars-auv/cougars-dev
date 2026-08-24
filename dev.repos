@@ -7,6 +7,14 @@ repositories:
     type: git
     url: git@github.com:cougars-auv/coug_rqt.git
     version: main
+  holoocean_bridge:
+    type: git
+    url: git@github.com:cougars-auv/holoocean_bridge.git
+    version: main
+  holoocean_interfaces:
+    type: zip
+    url: https://github.com/cougars-auv/holoocean-ros/archive/refs/heads/main.zip
+    version: holoocean-ros-main/holoocean_interfaces
   mapviz:
     type: zip
     url: https://github.com/swri-robotics/mapviz/archive/refs/tags/2.6.4.zip

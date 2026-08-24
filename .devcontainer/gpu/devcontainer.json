@@ -54,8 +54,7 @@
   },
   "postCreateCommand": [
     "/bin/bash",
-    ".devcontainer/post-create-command.sh",
-    "--gpu"
+    ".devcontainer/post-create-command.sh"
   ],
   "postStartCommand": [
     "/bin/bash",

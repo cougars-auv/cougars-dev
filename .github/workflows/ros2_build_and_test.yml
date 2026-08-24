@@ -21,14 +21,14 @@ on:
       - ".github/workflows/ros2_build_and_test.yml"
       - "ros2_ws/src/**"
       - "cougars.repos"
-      - "base.repos"
+      - "dev.repos"
   pull_request:
     branches: [ "main" ]
     paths:
       - ".github/workflows/ros2_build_and_test.yml"
       - "ros2_ws/src/**"
       - "cougars.repos"
-      - "base.repos"
+      - "dev.repos"
   repository_dispatch:
     types: [ ros2_dispatch ]
   workflow_dispatch:
@@ -45,8 +45,8 @@ jobs:
         target:
           - name: cougars
             repos: "cougars.repos"
-          - name: base
-            repos: "cougars.repos base.repos"
+          - name: dev
+            repos: "cougars.repos dev.repos"
     runs-on: ${{ matrix.runner }}
     steps:
       - uses: actions/checkout@v7
