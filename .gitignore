@@ -27,6 +27,7 @@ holoocean-ros
 mapviz
 seatrac_interfaces
 TURTLMap
+voxblox_ros2
 
 .env
 __pycache__

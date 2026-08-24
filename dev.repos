@@ -19,3 +19,7 @@ repositories:
     type: zip
     url: https://github.com/swri-robotics/mapviz/archive/refs/tags/2.6.4.zip
     version: mapviz-2.6.4
+  voxblox_ros2:
+    type: zip
+    url: https://github.com/cougars-auv/voxblox_ros2/archive/refs/heads/ros2.zip
+    version: voxblox_ros2-ros2
