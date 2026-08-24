@@ -19,6 +19,11 @@ on:
     branches: [ "main" ]
     tags:
       - "v*"
+    paths:
+      - ".github/workflows/docker_build.yml"
+      - ".docker/**"
+      - "*.repos"
+      - "**/package.xml"
   repository_dispatch:
     types: [ docker_dispatch ]
   workflow_dispatch:
@@ -29,65 +34,7 @@ env:
   DOCKER_REPO: frostlab/cougars
 
 jobs:
-  check-changes:
-    runs-on: ubuntu-24.04
-    outputs:
-      build_gtsam: ${{ steps.decide.outputs.build_gtsam }}
-      build_base: ${{ steps.decide.outputs.build_base }}
-      build_dev: ${{ steps.decide.outputs.build_dev }}
-    steps:
-      - uses: actions/checkout@v7
-      - uses: dorny/paths-filter@v4
-        id: filter
-        with:
-          filters: |
-            gtsam:
-              - ".github/workflows/docker_build.yml"
-              - ".docker/Dockerfile.gtsam"
-            base:
-              - ".github/workflows/docker_build.yml"
-              - ".docker/Dockerfile.base"
-              - ".docker/entrypoint.sh"
-              - "cougars.repos"
-              - "dev.repos"
-              - "**/package.xml"
-            dev:
-              - ".github/workflows/docker_build.yml"
-              - ".docker/Dockerfile.dev"
-      - id: decide
-        env:
-          IS_DISPATCH: ${{ github.event_name == 'repository_dispatch' }}
-          IS_MANUAL: ${{ github.event_name == 'workflow_dispatch' }}
-          GTSAM: ${{ steps.filter.outputs.gtsam }}
-          BASE: ${{ steps.filter.outputs.base }}
-          DEV: ${{ steps.filter.outputs.dev }}
-        run: |
-          build_gtsam=false
-          build_base=false
-          build_dev=false
-          if [ "$IS_DISPATCH" != "true" ] && { [ "$GTSAM" = "true" ] || [ "$IS_TAG" = "true" ]; }; then
-            build_gtsam=true
-          fi
-          if [ "$IS_DISPATCH" = "true" ] || [ "$IS_TAG" = "true" ] || [ "$GTSAM" = "true" ] || [ "$BASE" = "true" ]; then
-            build_base=true
-          fi
-          if [ "$build_base" = "true" ] || [ "$DEV" = "true" ]; then
-            build_dev=true
-          fi
-          if [ "$IS_MANUAL" = "true" ]; then
-            build_gtsam=true
-            build_base=true
-            build_dev=true
-          fi
-          {
-            echo "build_gtsam=$build_gtsam"
-            echo "build_base=$build_base"
-            echo "build_dev=$build_dev"
-          } >> "$GITHUB_OUTPUT"
-
   build-gtsam:
-    needs: check-changes
-    if: needs.check-changes.outputs.build_gtsam == 'true'
     strategy:
       matrix:
         include:
@@ -136,8 +83,7 @@ jobs:
           fi
 
   build-base:
-    needs: [ check-changes, build-gtsam, manifest-gtsam ]
-    if: ${{ !failure() && !cancelled() && needs.check-changes.outputs.build_base == 'true' }}
+    needs: manifest-gtsam
     strategy:
       matrix:
         include:
@@ -180,8 +126,7 @@ jobs:
           cache-to: type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-base-${{ matrix.arch }},mode=max
 
   manifest-base:
-    needs: [ check-changes, build-base ]
-    if: ${{ !failure() && !cancelled() && needs.check-changes.outputs.build_base == 'true' }}
+    needs: build-base
     runs-on: ubuntu-24.04
     steps:
       - uses: docker/setup-buildx-action@v4
@@ -200,8 +145,7 @@ jobs:
           fi
 
   build-dev:
-    needs: [ check-changes, build-base, manifest-base ]
-    if: ${{ !failure() && !cancelled() && needs.check-changes.outputs.build_dev == 'true' }}
+    needs: manifest-base
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
