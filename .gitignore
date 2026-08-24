@@ -20,6 +20,7 @@ coug_template
 coug_visual_dvl
 cougars-wiki
 dvl_msgs
+eigen_checks
 HoloOcean
 holoocean_bridge
 holoocean_interfaces
