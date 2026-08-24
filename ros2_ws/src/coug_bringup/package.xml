@@ -14,8 +14,6 @@
   <exec_depend>coug_fgo</exec_depend>
   <exec_depend>coug_helm</exec_depend>
   <exec_depend>coug_interfaces</exec_depend>
-  <exec_depend>coug_mapviz</exec_depend>
-  <exec_depend>coug_rqt</exec_depend>
   <exec_depend>coug_visual_dvl</exec_depend>
   <exec_depend>diagnostic_common_diagnostics</exec_depend>
   <exec_depend>diagnostic_msgs</exec_depend>
