@@ -22,7 +22,6 @@
   <exec_depend>diagnostic_updater</exec_depend>
   <exec_depend>gps_tools</exec_depend>
   <exec_depend>gpsd_client</exec_depend>
-  <exec_depend>holoocean_bridge</exec_depend>
   <exec_depend>mavros</exec_depend>
   <exec_depend>ntrip_client</exec_depend>
   <exec_depend>python3-yaml</exec_depend>
