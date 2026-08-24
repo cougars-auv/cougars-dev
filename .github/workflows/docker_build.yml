@@ -23,10 +23,6 @@ on:
     types: [ docker_dispatch ]
   workflow_dispatch:
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
 env:
   IS_TAG: ${{ github.ref_type == 'tag' }}
   DOCKER_USERNAME: frostlab

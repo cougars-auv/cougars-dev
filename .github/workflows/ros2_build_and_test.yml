@@ -33,10 +33,6 @@ on:
     types: [ ros2_dispatch ]
   workflow_dispatch:
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
 env:
   DOCKER_IMAGE: frostlab/cougars:base-latest
 
