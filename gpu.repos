@@ -9,5 +9,5 @@ repositories:
     version: holoocean-ros-main/holoocean_interfaces
   nvblox:
     type: zip
-    url: https://github.com/nvidia-isaac/nvblox/archive/refs/heads/main.zip
-    version: nvblox-main
+    url: https://github.com/nvidia-isaac/nvblox/archive/refs/heads/public.zip
+    version: nvblox-public
