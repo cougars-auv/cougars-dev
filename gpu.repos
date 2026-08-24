@@ -8,6 +8,6 @@ repositories:
     url: https://github.com/cougars-auv/holoocean-ros/archive/refs/heads/main.zip
     version: holoocean-ros-main/holoocean_interfaces
   nvblox:
-    type: git
-    url: https://github.com/nvidia-isaac/nvblox.git
-    version: main
+    type: zip
+    url: https://github.com/nvidia-isaac/nvblox/archive/refs/heads/main.zip
+    version: nvblox-main
