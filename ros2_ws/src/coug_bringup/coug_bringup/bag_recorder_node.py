@@ -56,10 +56,12 @@ class BagRecorderNode(Node):
         if publish_diagnostics:
             ns = self.get_namespace()
             clean_ns = "" if ns == "/" else ns
-            self.updater = diagnostic_updater.Updater(self)
-            self.updater.setHardwareID(f"{clean_ns}/bag_recorder_node")
+            self.diagnostic_updater = diagnostic_updater.Updater(self)
+            self.diagnostic_updater.setHardwareID(f"{clean_ns}/bag_recorder_node")
             prefix = f"[{clean_ns}] " if clean_ns else ""
-            self.updater.add(f"{prefix}Recording Status", self._check_recording_status)
+            self.diagnostic_updater.add(
+                f"{prefix}Recording Status", self._check_recording_status
+            )
 
         self.get_logger().info("Initialization complete.")
 
