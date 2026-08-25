@@ -12,7 +12,7 @@ CoUGARs is a low-cost, configurable AUV platform designed for multi-agent autono
   <img src=".github/assets/mapviz.gif" width="600">
 </p>
 
-## 🚀 Get Started
+## Get Started
 
 > **Prerequisites:** 64-bit Linux, free disk space (10+ GB recommended), and a dedicated NVIDIA GPU (for HoloOcean simulation).
 
@@ -68,7 +68,7 @@ CoUGARs is a low-cost, configurable AUV platform designed for multi-agent autono
 
 > **Note:** This repository uses vcstool to manage nested repositories. If not all repositories appear in the Git sidebar, open settings (`Ctrl + ,`), set "Git: Repository Scan Max Depth" to 3, and reload the window.
 
-## 🤝 Contributing
+## Contributing
 
 - **Create a Branch:** Create a new branch using the format `name/feature` (e.g., `nelson/repo-docs`).
 
@@ -80,7 +80,7 @@ CoUGARs is a low-cost, configurable AUV platform designed for multi-agent autono
 
 - **Submit a PR:** Open a pull request, ensure required tests pass, and merge once approved. Upon merge to `main`, GitHub Actions will automatically build and push updated images to Docker Hub with any new dependencies.
 
-## 📦 Releasing
+## Releasing
 
 We adhere to the **Semantic Versioning (SemVer 2.0.0)** standard to release new versions of this repository:
 > Given a version number **`MAJOR.MINOR.PATCH`**, increment the:
@@ -106,7 +106,7 @@ We adhere to the **Semantic Versioning (SemVer 2.0.0)** standard to release new 
 
 - **Publish a GitHub Release:** Review the draft release in GitHub and click **Publish**.
 
-## 📚 Citations
+## Citations
 
 Please cite our relevant publications if you find this repository useful for your research:
 
