@@ -32,13 +32,14 @@ from launch.actions import (
     RegisterEventHandler,
     SetEnvironmentVariable,
 )
-from launch.conditions import UnlessCondition
+from launch.conditions import IfCondition, UnlessCondition
 from launch.event_handlers import OnProcessExit
 from launch.events import matches_action
 from launch.events.process import SignalProcess
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.logging import launch_config
-from launch.substitutions import LaunchConfiguration
+from launch.substitutions import EqualsSubstitution, LaunchConfiguration
+from launch_ros.actions import Node
 
 
 def save_config(record_bag_path: str) -> None:
@@ -214,6 +215,29 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                 "loc_comparison": loc_comparison,
             }.items(),
             condition=UnlessCondition(hitl_mode),
+        )
+    )
+
+    actions.append(
+        Node(
+            package="voxblox_ros",
+            executable="tsdf_server",
+            name="voxblox_node",
+            namespace=auv_ns,
+            output="screen",
+            remappings=[
+                ("pointcloud_1", "/zedm/zed_node/point_cloud/cloud_registered"),
+            ],
+            parameters=[
+                {
+                    "use_sim_time": use_sim_time,
+                    "world_frame": "map",
+                    "tsdf_voxel_size": 0.05,
+                    "method": "fast",
+                    "min_time_between_msgs_sec": 0.0,
+                }
+            ],
+            condition=IfCondition(EqualsSubstitution(auv_ns, "turtlmap")),
         )
     )
 
