@@ -31,6 +31,10 @@ repositories:
     type: git
     url: git@github.com:cougars-auv/coug_visual_dvl.git
     version: main
+  cougars-wiki:
+    type: git
+    url: git@github.com:cougars-auv/cougars-wiki.git
+    version: main
   dvl_msgs:
     type: zip
     url: https://github.com/paagutie/dvl_msgs/archive/refs/heads/master.zip
