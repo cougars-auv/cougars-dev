@@ -66,7 +66,7 @@ CoUGARs is a low-cost, configurable AUV platform designed for multi-agent autono
 
 ### Field Operations
 * [Mission Preparation](https://github.com/cougars-auv/cougars-dev/blob/main/docs/field_operations/mission_preparation.md)
-* Fleet Deployment
+* [Fleet Deployment](https://github.com/cougars-auv/cougars-dev/blob/main/docs/field_operations/fleet_deployment.md)
 * Post-Mission Analysis
 
 ### Resources
