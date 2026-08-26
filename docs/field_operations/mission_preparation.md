@@ -30,7 +30,7 @@
 
 - For each CougUV:
 
-  - Outside of the dev container, attach to the configured tmux session over mosh using `./connect.sh <agent-ns>`.
+  - Outside of the dev container, attach to a tmux session on the CougUV using `./connect.sh <agent-ns>`.
 
     ```bash
     cd ~/cougars-dev && ./connect.sh <agent-ns>
