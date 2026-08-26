@@ -12,7 +12,8 @@ We **strongly encourage** new lab members to take a week or two and simply work 
 2. [CLI tools](https://docs.ros.org/en/jazzy/Tutorials/Beginner-CLI-Tools.html)
 3. [Packages & nodes](https://docs.ros.org/en/jazzy/Tutorials/Beginner-Client-Libraries.html)
 4. [Tf2 tutorials](https://docs.ros.org/en/jazzy/Tutorials/Intermediate/Tf2/Tf2-Main.html)
-5. [End-to-end project](https://github.com/henki-robotics/robotics_essentials_ros2/tree/main)
+5. [Nav2 tutorials](https://docs.nav2.org/jazzy/tutorials/general_tutorials/#general-tutorials)
+6. [End-to-end project](https://github.com/henki-robotics/robotics_essentials_ros2/tree/main)
 
 ## HoloOcean
 1. [HoloOcean docs](https://byu-holoocean.github.io/holoocean-docs)
