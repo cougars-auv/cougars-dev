@@ -77,8 +77,8 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
 
     coug_comms_dir = get_package_share_directory("coug_comms")
     coug_comms_launch_dir = os.path.join(coug_comms_dir, "launch")
-    coug_fgo_dir = get_package_share_directory("coug_fgo")
-    coug_fgo_launch_dir = os.path.join(coug_fgo_dir, "launch")
+    coug_fg_dir = get_package_share_directory("coug_fg")
+    coug_fg_launch_dir = os.path.join(coug_fg_dir, "launch")
     coug_active_fgo_dir = get_package_share_directory("coug_active_fgo")
     coug_active_fgo_launch_dir = os.path.join(coug_active_fgo_dir, "launch")
     coug_visual_dvl_dir = get_package_share_directory("coug_visual_dvl")
@@ -101,9 +101,9 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
         }.items(),
     )
 
-    coug_fgo_base_cmd = IncludeLaunchDescription(
+    coug_fg_base_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            os.path.join(coug_fgo_launch_dir, "coug_fgo_base.launch.py")
+            os.path.join(coug_fg_launch_dir, "coug_fg_base.launch.py")
         ),
         launch_arguments={
             "use_sim_time": use_sim_time,
@@ -111,9 +111,9 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
         }.items(),
     )
 
-    coug_fgo_viz_cmd = IncludeLaunchDescription(
+    coug_fg_viz_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            os.path.join(coug_fgo_launch_dir, "coug_fgo_viz.launch.py")
+            os.path.join(coug_fg_launch_dir, "coug_fg_viz.launch.py")
         ),
         launch_arguments={
             "use_sim_time": use_sim_time,
@@ -169,13 +169,13 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
         actions=[
             PushRosNamespace("base_station"),
             coug_comms_base_cmd,
-            coug_fgo_base_cmd,
+            coug_fg_base_cmd,
         ]
     )
 
     actions = [
         base_station_group,
-        coug_fgo_viz_cmd,
+        coug_fg_viz_cmd,
         # coug_active_fgo_viz_cmd,
         # coug_visual_dvl_viz_cmd,
         coug_mapviz_cmd,

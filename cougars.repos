@@ -11,9 +11,9 @@ repositories:
     type: git
     url: git@github.com:cougars-auv/coug_description.git
     version: main
-  coug_fgo:
+  coug_fg:
     type: git
-    url: git@github.com:cougars-auv/coug_fgo.git
+    url: git@github.com:cougars-auv/coug_fg.git
     version: main
   coug_helm:
     type: git

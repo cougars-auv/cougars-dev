@@ -7,6 +7,6 @@
     arm_thruster_service: "thruster/arm"
     emergency_stop_service: "base/emergency_stop"
     emergency_surface_service: "base/emergency_surface"
-    fgo_reset_service: "factor_graph_node/reset"
+    fg_reset_service: "factor_graph_node/reset"
     depth_calibrate_service: "depth/calibrate"
     fins_calibrate_service: "fins/calibrate"

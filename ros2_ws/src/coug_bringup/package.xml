@@ -11,7 +11,7 @@
   <exec_depend>coug_active_fgo</exec_depend>
   <exec_depend>coug_comms</exec_depend>
   <exec_depend>coug_description</exec_depend>
-  <exec_depend>coug_fgo</exec_depend>
+  <exec_depend>coug_fg</exec_depend>
   <exec_depend>coug_helm</exec_depend>
   <exec_depend>coug_interfaces</exec_depend>
   <exec_depend>coug_visual_dvl</exec_depend>

@@ -55,8 +55,8 @@ def generate_launch_description() -> LaunchDescription:
     coug_des_launch_dir = os.path.join(coug_des_dir, "launch")
     coug_comms_dir = get_package_share_directory("coug_comms")
     coug_comms_launch_dir = os.path.join(coug_comms_dir, "launch")
-    coug_fgo_dir = get_package_share_directory("coug_fgo")
-    coug_fgo_launch_dir = os.path.join(coug_fgo_dir, "launch")
+    coug_fg_dir = get_package_share_directory("coug_fg")
+    coug_fg_launch_dir = os.path.join(coug_fg_dir, "launch")
     coug_helm_dir = get_package_share_directory("coug_helm")
     coug_helm_launch_dir = os.path.join(coug_helm_dir, "launch")
     coug_active_fgo_dir = get_package_share_directory("coug_active_fgo")
@@ -84,9 +84,9 @@ def generate_launch_description() -> LaunchDescription:
         }.items(),
     )
 
-    coug_fgo_cmd = IncludeLaunchDescription(
+    coug_fg_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            os.path.join(coug_fgo_launch_dir, "coug_fgo.launch.py")
+            os.path.join(coug_fg_launch_dir, "coug_fg.launch.py")
         ),
         launch_arguments={
             "use_sim_time": use_sim_time,
@@ -97,9 +97,9 @@ def generate_launch_description() -> LaunchDescription:
         condition=IfCondition(NotEqualsSubstitution(auv_ns, "coug2")),
     )
 
-    coug_fgo_ekf_cmd = IncludeLaunchDescription(
+    coug_fg_ekf_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            os.path.join(coug_fgo_launch_dir, "coug_fgo_ekf.launch.py")
+            os.path.join(coug_fg_launch_dir, "coug_fg_ekf.launch.py")
         ),
         launch_arguments={
             "use_sim_time": use_sim_time,
@@ -196,8 +196,8 @@ def generate_launch_description() -> LaunchDescription:
                     bag_recorder_cmd,
                     coug_comms_auv_cmd,
                     coug_des_cmd,
-                    coug_fgo_cmd,
-                    coug_fgo_ekf_cmd,
+                    coug_fg_cmd,
+                    coug_fg_ekf_cmd,
                     coug_helm_cmd,
                     coug_active_fgo_cmd,
                     coug_viz_dvl_cmd,
