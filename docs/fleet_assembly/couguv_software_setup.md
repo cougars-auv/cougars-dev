@@ -23,7 +23,7 @@
 
 - Flash "Raspberry Pi OS Lite (64-bit)" onto a new SD card. During configuration, set the new agent namespace as the hostname and "frostlab" as the username and password. Add the info for the dedicated fleet WiFi router and enable SSH with a password.
 
-- Insert the SD card into the board and power it on. Once the device is online, generate a new SSH key on the base station and connect.
+- Insert the SD card into the board and power it on. Once the device is online, generate a new SSH key on the base station (outside of the dev container) and connect.
 
   ```bash
   ssh-keygen -t ed25519
@@ -61,7 +61,7 @@
   cd ~/cougars-dev && ./connect.sh <agent-ns>
   ```
  
-- Use the configured aliases to pull the latest code from both remotes and rebuild and relaunch the ROS 2 nodes.
+- Use the configured aliases to pull the latest code from both remotes and rebuild/restart the ROS 2 software.
   
     ```bash
     pull
