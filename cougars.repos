@@ -1,7 +1,7 @@
 repositories:
-  coug_active_fgo:
+  coug_belief_mppi:
     type: git
-    url: git@github.com:cougars-auv/coug_active_fgo.git
+    url: git@github.com:cougars-auv/coug_belief_mppi.git
     version: main
   coug_comms:
     type: git

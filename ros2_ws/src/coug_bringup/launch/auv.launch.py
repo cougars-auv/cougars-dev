@@ -59,8 +59,8 @@ def generate_launch_description() -> LaunchDescription:
     coug_fg_launch_dir = os.path.join(coug_fg_dir, "launch")
     coug_helm_dir = get_package_share_directory("coug_helm")
     coug_helm_launch_dir = os.path.join(coug_helm_dir, "launch")
-    coug_active_fgo_dir = get_package_share_directory("coug_active_fgo")
-    coug_active_fgo_launch_dir = os.path.join(coug_active_fgo_dir, "launch")
+    coug_belief_mppi_dir = get_package_share_directory("coug_belief_mppi")
+    coug_belief_mppi_launch_dir = os.path.join(coug_belief_mppi_dir, "launch")
     coug_viz_dvl_dir = get_package_share_directory("coug_visual_dvl")
     coug_viz_dvl_launch_dir = os.path.join(coug_viz_dvl_dir, "launch")
 
@@ -126,9 +126,9 @@ def generate_launch_description() -> LaunchDescription:
         ),
     )
 
-    coug_active_fgo_cmd = IncludeLaunchDescription(
+    coug_belief_mppi_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            os.path.join(coug_active_fgo_launch_dir, "coug_active_fgo.launch.py")
+            os.path.join(coug_belief_mppi_launch_dir, "coug_belief_mppi.launch.py")
         ),
         launch_arguments={
             "use_sim_time": use_sim_time,
@@ -199,7 +199,7 @@ def generate_launch_description() -> LaunchDescription:
                     coug_fg_cmd,
                     coug_fg_ekf_cmd,
                     coug_helm_cmd,
-                    coug_active_fgo_cmd,
+                    coug_belief_mppi_cmd,
                     coug_viz_dvl_cmd,
                 ]
             ),

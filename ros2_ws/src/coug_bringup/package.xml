@@ -8,7 +8,7 @@
   <license>Apache-2.0</license>
   <url type="repository">https://github.com/cougars-auv/cougars-dev</url>
 
-  <exec_depend>coug_active_fgo</exec_depend>
+  <exec_depend>coug_belief_mppi</exec_depend>
   <exec_depend>coug_comms</exec_depend>
   <exec_depend>coug_description</exec_depend>
   <exec_depend>coug_fg</exec_depend>

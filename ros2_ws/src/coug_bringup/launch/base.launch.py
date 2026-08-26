@@ -79,8 +79,8 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
     coug_comms_launch_dir = os.path.join(coug_comms_dir, "launch")
     coug_fg_dir = get_package_share_directory("coug_fg")
     coug_fg_launch_dir = os.path.join(coug_fg_dir, "launch")
-    coug_active_fgo_dir = get_package_share_directory("coug_active_fgo")
-    coug_active_fgo_launch_dir = os.path.join(coug_active_fgo_dir, "launch")
+    coug_belief_mppi_dir = get_package_share_directory("coug_belief_mppi")
+    coug_belief_mppi_launch_dir = os.path.join(coug_belief_mppi_dir, "launch")
     coug_visual_dvl_dir = get_package_share_directory("coug_visual_dvl")
     coug_visual_dvl_launch_dir = os.path.join(coug_visual_dvl_dir, "launch")
     coug_mapviz_dir = get_package_share_directory("coug_mapviz")
@@ -123,9 +123,9 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
         }.items(),
     )
 
-    coug_active_fgo_viz_cmd = IncludeLaunchDescription(  # noqa: F841
+    coug_belief_mppi_viz_cmd = IncludeLaunchDescription(  # noqa: F841
         PythonLaunchDescriptionSource(
-            os.path.join(coug_active_fgo_launch_dir, "coug_active_fgo_viz.launch.py")
+            os.path.join(coug_belief_mppi_launch_dir, "coug_belief_mppi_viz.launch.py")
         ),
         launch_arguments={
             "use_sim_time": use_sim_time,
@@ -176,7 +176,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
     actions = [
         base_station_group,
         coug_fg_viz_cmd,
-        # coug_active_fgo_viz_cmd,
+        # coug_belief_mppi_viz_cmd,
         # coug_visual_dvl_viz_cmd,
         coug_mapviz_cmd,
         coug_rqt_cmd,
