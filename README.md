@@ -68,6 +68,22 @@ CoUGARs is a low-cost, configurable AUV platform designed for multi-agent autono
 
 > **Note:** This repository uses vcstool to manage nested repositories. If not all repositories appear in the Git sidebar, open settings (`Ctrl + ,`), set "Git: Repository Scan Max Depth" to 3, and reload the window.
 
+## Documentation
+
+### Fleet Assembly
+* Bill of Materials
+* Assembly Instructions
+* [Base Station Software Setup](https://github.com/cougars-auv/cougars-dev/blob/main/docs/fleet_assembly/base_station_software_setup.md)
+* [CougUV Software Setup](https://github.com/cougars-auv/cougars-dev/blob/main/docs/fleet_assembly/couguv_software_setup.md)
+
+### Field Operations
+* [Mission Preparation](https://github.com/cougars-auv/cougars-dev/blob/main/docs/field_operations/mission_preparation.md)
+* Fleet Deployment
+* Post-Mission Analysis
+
+### Resources
+* [Helpful Tutorials](https://github.com/cougars-auv/cougars-dev/blob/main/docs/resources/helpful_tutorials.md)
+
 ## Contributing
 
 - **Create a Branch:** Create a new branch using the format `name/feature` (e.g., `nelson/repo-docs`).
