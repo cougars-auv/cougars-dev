@@ -6,7 +6,7 @@
     sudo apt-get update && sudo apt-get install -y mosh
     ```
 
-- Work through the [Get Started](https://github.com/cougars-auv/cougars-dev/blob/main/README.md#get-started) section of `cougars-dev`.
+- Work through the [Get Started](https://github.com/cougars-auv/cougars-dev/blob/main/README.md#get-started) section of `README.md`.
 
 - Choose the "Recorded Data (`rosbag2`)" workflow, but skip copying in a bag and run `./base_launch.sh` instead of `./bag_launch.sh`.
 
