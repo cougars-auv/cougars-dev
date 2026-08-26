@@ -1,5 +1,7 @@
 # CougUV Software Setup
 
+- Complete the [Base Station Software Setup](https://github.com/cougars-auv/cougars-dev/blob/main/docs/fleet_assembly/base_station_software_setup.md).
+
 - Choose a new agent namespace (e.g., "coug0").
 
 - Add a parameter file to `cougars-dev/config` using the pattern `<agent-ns>_params.yaml` (e.g., `coug0_params.yaml`). At a minimum, ensure that the following parameters are set:
