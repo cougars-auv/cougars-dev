@@ -48,6 +48,7 @@ services:
 
   router:
     image: frostlab/cougars:base-${VERSION:-latest}
+    pull_policy: always
     container_name: router-ct
     network_mode: host
     ipc: host
@@ -57,6 +58,7 @@ services:
 
   dev:
     image: frostlab/cougars:dev-${VERSION:-latest}
+    pull_policy: always
     # build:
     #   context: ..
     #   dockerfile: .docker/Dockerfile.dev
