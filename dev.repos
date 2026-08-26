@@ -1,4 +1,8 @@
 repositories:
+  coug_holoocean:
+    type: git
+    url: git@github.com:cougars-auv/coug_holoocean.git
+    version: main
   coug_mapviz:
     type: git
     url: git@github.com:cougars-auv/coug_mapviz.git
@@ -11,10 +15,6 @@ repositories:
     type: zip
     url: https://github.com/cougars-auv/eigen_checks/archive/refs/heads/ros2.zip
     version: eigen_checks-ros2
-  holoocean_bridge:
-    type: git
-    url: git@github.com:cougars-auv/holoocean_bridge.git
-    version: main
   holoocean_interfaces:
     type: zip
     url: https://github.com/cougars-auv/holoocean-ros/archive/refs/heads/main.zip

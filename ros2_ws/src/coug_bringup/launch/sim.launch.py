@@ -54,10 +54,10 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
 
     coug_bringup_dir = get_package_share_directory("coug_bringup")
     coug_bringup_launch_dir = os.path.join(coug_bringup_dir, "launch")
-    holo_bridge_dir = get_package_share_directory("holoocean_bridge")
-    holo_bridge_launch_dir = os.path.join(holo_bridge_dir, "launch")
+    coug_holo_dir = get_package_share_directory("coug_holoocean")
+    coug_holo_launch_dir = os.path.join(coug_holo_dir, "launch")
     fleet_params = PathJoinSubstitution(
-        [EnvironmentVariable("CONFIG_DIR"), "fleet", "holoocean_bridge_params.yaml"]
+        [EnvironmentVariable("CONFIG_DIR"), "fleet", "coug_holoocean_params.yaml"]
     )
 
     actions = []
@@ -96,7 +96,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
 
         bridge_launch = IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
-                os.path.join(holo_bridge_launch_dir, "holoocean_bridge.launch.py")
+                os.path.join(coug_holo_launch_dir, "coug_holoocean.launch.py")
             ),
             launch_arguments={
                 "use_sim_time": use_sim_time,
@@ -127,7 +127,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
             actions=[
                 PushRosNamespace("base_station"),
                 Node(
-                    package="holoocean_bridge",
+                    package="coug_holoocean",
                     executable="depth_converter",
                     name="modem_depth_converter_node",
                     parameters=[
@@ -141,7 +141,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                     ],
                 ),
                 Node(
-                    package="holoocean_bridge",
+                    package="coug_holoocean",
                     executable="modem_converter",
                     name="modem_converter_node",
                     parameters=[

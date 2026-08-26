@@ -13,6 +13,7 @@ coug_comms
 coug_description
 coug_fg
 coug_helm
+coug_holoocean
 coug_interfaces
 coug_mapviz
 coug_rqt
@@ -21,7 +22,6 @@ coug_visual_dvl
 dvl_msgs
 eigen_checks
 HoloOcean
-holoocean_bridge
 holoocean_interfaces
 holoocean-ros
 mapviz
