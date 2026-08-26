@@ -8,10 +8,6 @@
 
 CoUGARs is a low-cost, configurable AUV platform designed for multi-agent autonomy research by the [Field Robotic Systems Lab (FROST Lab)](https://frostlab.byu.edu) at [Brigham Young University](https://byu.edu).
 
-<p align="left">
-  <img src=".github/assets/mapviz.gif" width="600">
-</p>
-
 ## Get Started
 
 > **Prerequisites:** 64-bit Linux, free disk space (10+ GB recommended), and a dedicated NVIDIA GPU (for HoloOcean simulation).
@@ -27,10 +23,6 @@ CoUGARs is a low-cost, configurable AUV platform designed for multi-agent autono
 - Choose a development workflow:
 
   **Simulation (HoloOcean):**
-
-  <p align="left">
-    <img src=".github/assets/holoocean.gif" width="400">
-  </p>
 
   - Build a runtime image for [HoloOcean-ROS](https://github.com/cougars-auv/holoocean-ros/tree/main/docker/runtime) on the `cougars-auv` organization's fork. When prompted to run `./build_container.sh`, specify the branch `nelson/cougars-dev` using `./build_container.sh -b nelson/cougars-dev`.
 
@@ -50,10 +42,6 @@ CoUGARs is a low-cost, configurable AUV platform designed for multi-agent autono
     ```
 
   **Recorded Data (`rosbag2`):**
-
-  <p align="left">
-    <img src=".github/assets/rviz.gif" width="400">
-  </p>
 
   - Open the `cougars-dev` repository in VSCode and use the Command Palette (`Ctrl + Shift + P`) to select "Dev Containers: Reopen in Container." When prompted to choose a `devcontainer.json` file, click `CoUGARs Dev`.
 
