@@ -48,7 +48,7 @@
     cd ~/cougars-dev && ./setup.sh $(hostname) <base-station-ip> # --version v1.2.x
     ```
 
-  - Use the configured aliases to pull the latest code from both remotes and rebuild and relaunch the ROS 2 nodes.
+  - Use the configured aliases to pull the latest code from both remotes and rebuild/restart the ROS 2 software.
 
     ```bash
     pull
