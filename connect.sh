@@ -11,5 +11,5 @@ cd "$(dirname "$0")"
 agent_ns="$1"
 
 ssh frostlab@"${agent_ns}".local \
-  "tmux has-session -t auv-launch 2>/dev/null || tmuxp load -d ~/cougars-dev/.tmuxp/auv-launch.yaml"
-mosh frostlab@"${agent_ns}".local -- tmux attach -t auv-launch
+  "tmux has-session -t couguv-launch 2>/dev/null || tmuxp load -d ~/cougars-dev/.tmuxp/couguv-launch.yaml"
+mosh frostlab@"${agent_ns}".local -- tmux attach -t couguv-launch

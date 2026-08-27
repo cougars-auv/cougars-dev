@@ -33,14 +33,16 @@ class BagRecorderNode(Node):
         super().__init__("bag_recorder_node")
 
         self.declare_parameter("publish_diagnostics", False)
-        self.declare_parameter("auv_ns", "auv")
+        self.declare_parameter("agent_ns", "auv0")
         self.declare_parameter("bag_record_service", "bag_record")
         self.declare_parameter("log_dir", "")
 
         publish_diagnostics = (
             self.get_parameter("publish_diagnostics").get_parameter_value().bool_value
         )
-        self.auv_ns = self.get_parameter("auv_ns").get_parameter_value().string_value
+        self.agent_ns = (
+            self.get_parameter("agent_ns").get_parameter_value().string_value
+        )
         self.bag_dir = os.environ.get(
             "BAGS_DIR", os.path.expanduser("~/cougars-dev/bags")
         )
@@ -79,7 +81,7 @@ class BagRecorderNode(Node):
 
             base = request.prefix if request.prefix else "rosbag"
             timestamp = datetime.now(tz=timezone.utc).strftime("%Y-%m-%d-%H-%M-%S")
-            path = os.path.join(self.bag_dir, f"{base}_{self.auv_ns}_{timestamp}")
+            path = os.path.join(self.bag_dir, f"{base}_{self.agent_ns}_{timestamp}")
             self.bag_path = path
             self.bag_process = subprocess.Popen(
                 [

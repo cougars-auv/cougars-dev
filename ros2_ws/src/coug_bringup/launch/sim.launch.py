@@ -39,7 +39,7 @@ from launch_ros.actions import Node, PushRosNamespace
 
 def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Action]:
     use_sim_time = LaunchConfiguration("use_sim_time")
-    agent_list = LaunchConfiguration("agent_list")
+    agent_list_config = LaunchConfiguration("agent_list")
     lead_agent = LaunchConfiguration("lead_agent")
     record_bag_path = LaunchConfiguration("record_bag_path")
     loc_comparison = LaunchConfiguration("loc_comparison")
@@ -48,9 +48,9 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
     enable_acoustic_comms = LaunchConfiguration("enable_acoustic_comms")
     hitl_mode = LaunchConfiguration("hitl_mode")
 
-    agent_list_str = agent_list.perform(context)
+    agent_list_str = agent_list_config.perform(context)
 
-    agent_namespaces = yaml.safe_load(agent_list_str)
+    agent_list = yaml.safe_load(agent_list_str)
 
     coug_bringup_dir = get_package_share_directory("coug_bringup")
     coug_bringup_launch_dir = os.path.join(coug_bringup_dir, "launch")
@@ -78,15 +78,15 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
         )
     )
 
-    for auv_ns in agent_namespaces:
+    for agent_ns in agent_list:
         actions.append(
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(
-                    os.path.join(coug_bringup_launch_dir, "auv.launch.py")
+                    os.path.join(coug_bringup_launch_dir, "agent.launch.py")
                 ),
                 launch_arguments={
                     "use_sim_time": use_sim_time,
-                    "auv_ns": auv_ns,
+                    "agent_ns": agent_ns,
                     "loc_comparison": loc_comparison,
                     "lead_agent": lead_agent,
                 }.items(),
@@ -100,12 +100,12 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
             ),
             launch_arguments={
                 "use_sim_time": use_sim_time,
-                "auv_ns": auv_ns,
+                "agent_ns": agent_ns,
                 "add_noise": add_noise,
             }.items(),
         )
 
-        actions.append(GroupAction(actions=[PushRosNamespace(auv_ns), bridge_launch]))
+        actions.append(GroupAction(actions=[PushRosNamespace(agent_ns), bridge_launch]))
 
     actions.append(
         Node(

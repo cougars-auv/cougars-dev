@@ -1,4 +1,4 @@
-session_name: auv-launch
+session_name: couguv-launch
 start_directory: "~/cougars-dev"
 options:
   mouse: on

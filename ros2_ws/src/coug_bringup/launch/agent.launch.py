@@ -39,7 +39,7 @@ from launch_ros.actions import Node, PushRosNamespace
 
 def generate_launch_description() -> LaunchDescription:
     use_sim_time = LaunchConfiguration("use_sim_time")
-    auv_ns = LaunchConfiguration("auv_ns")
+    agent_ns = LaunchConfiguration("agent_ns")
     loc_comparison = LaunchConfiguration("loc_comparison")
     lead_agent = LaunchConfiguration("lead_agent")
 
@@ -70,17 +70,17 @@ def generate_launch_description() -> LaunchDescription:
         ),
         launch_arguments={
             "use_sim_time": use_sim_time,
-            "auv_ns": auv_ns,
+            "agent_ns": agent_ns,
         }.items(),
     )
 
-    coug_comms_auv_cmd = IncludeLaunchDescription(
+    coug_comms_agent_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            os.path.join(coug_comms_launch_dir, "coug_comms_auv.launch.py")
+            os.path.join(coug_comms_launch_dir, "coug_comms_agent.launch.py")
         ),
         launch_arguments={
             "use_sim_time": use_sim_time,
-            "auv_ns": auv_ns,
+            "agent_ns": agent_ns,
         }.items(),
     )
 
@@ -90,11 +90,11 @@ def generate_launch_description() -> LaunchDescription:
         ),
         launch_arguments={
             "use_sim_time": use_sim_time,
-            "auv_ns": auv_ns,
+            "agent_ns": agent_ns,
             "loc_comparison": loc_comparison,
             "lead_agent": lead_agent,
         }.items(),
-        condition=IfCondition(NotEqualsSubstitution(auv_ns, "coug2")),
+        condition=IfCondition(NotEqualsSubstitution(agent_ns, "coug2")),
     )
 
     coug_fg_ekf_cmd = IncludeLaunchDescription(
@@ -103,9 +103,9 @@ def generate_launch_description() -> LaunchDescription:
         ),
         launch_arguments={
             "use_sim_time": use_sim_time,
-            "auv_ns": auv_ns,
+            "agent_ns": agent_ns,
         }.items(),
-        condition=IfCondition(EqualsSubstitution(auv_ns, "coug2")),
+        condition=IfCondition(EqualsSubstitution(agent_ns, "coug2")),
     )
 
     coug_helm_cmd = IncludeLaunchDescription(
@@ -114,13 +114,13 @@ def generate_launch_description() -> LaunchDescription:
         ),
         launch_arguments={
             "use_sim_time": use_sim_time,
-            "auv_ns": auv_ns,
+            "agent_ns": agent_ns,
         }.items(),
         condition=IfCondition(
             NotSubstitution(
                 OrSubstitution(
-                    EqualsSubstitution(auv_ns, "blue1sim"),
-                    EqualsSubstitution(auv_ns, "wamv1sim"),
+                    EqualsSubstitution(agent_ns, "blue1sim"),
+                    EqualsSubstitution(agent_ns, "wamv1sim"),
                 )
             )
         ),
@@ -132,12 +132,12 @@ def generate_launch_description() -> LaunchDescription:
         ),
         launch_arguments={
             "use_sim_time": use_sim_time,
-            "auv_ns": auv_ns,
+            "agent_ns": agent_ns,
         }.items(),
         condition=IfCondition(
             OrSubstitution(
-                EqualsSubstitution(auv_ns, "blue1sim"),
-                EqualsSubstitution(auv_ns, "wamv1sim"),
+                EqualsSubstitution(agent_ns, "blue1sim"),
+                EqualsSubstitution(agent_ns, "wamv1sim"),
             )
         ),
     )
@@ -148,9 +148,9 @@ def generate_launch_description() -> LaunchDescription:
         ),
         launch_arguments={
             "use_sim_time": use_sim_time,
-            "auv_ns": auv_ns,
+            "agent_ns": agent_ns,
         }.items(),
-        condition=IfCondition(EqualsSubstitution(auv_ns, "blue1sim")),
+        condition=IfCondition(EqualsSubstitution(agent_ns, "blue1sim")),
     )
 
     bag_recorder_cmd = Node(
@@ -161,7 +161,7 @@ def generate_launch_description() -> LaunchDescription:
             fleet_params,
             {
                 "use_sim_time": use_sim_time,
-                "auv_ns": auv_ns,
+                "agent_ns": agent_ns,
                 "log_dir": launch_config.log_dir,
             },
         ],
@@ -176,9 +176,9 @@ def generate_launch_description() -> LaunchDescription:
                 description="Use simulation/rosbag clock if true",
             ),
             DeclareLaunchArgument(
-                "auv_ns",
+                "agent_ns",
                 default_value="auv0",
-                description="Namespace for the AUV (e.g. auv0)",
+                description="Namespace for the agent (e.g. auv0)",
             ),
             DeclareLaunchArgument(
                 "loc_comparison",
@@ -192,9 +192,9 @@ def generate_launch_description() -> LaunchDescription:
             ),
             GroupAction(
                 actions=[
-                    PushRosNamespace(auv_ns),
+                    PushRosNamespace(agent_ns),
                     bag_recorder_cmd,
-                    coug_comms_auv_cmd,
+                    coug_comms_agent_cmd,
                     coug_des_cmd,
                     coug_fg_cmd,
                     coug_fg_ekf_cmd,

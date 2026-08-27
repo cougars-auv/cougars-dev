@@ -77,18 +77,18 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
     use_sim_time = LaunchConfiguration("use_sim_time")
     start_delay = LaunchConfiguration("start_delay")
     playback_rate = LaunchConfiguration("playback_rate")
-    agent_list = LaunchConfiguration("agent_list")
+    agent_list_config = LaunchConfiguration("agent_list")
     play_bag_path = LaunchConfiguration("play_bag_path")
     record_bag_path = LaunchConfiguration("record_bag_path")
     loc_comparison = LaunchConfiguration("loc_comparison")
     hitl_mode = LaunchConfiguration("hitl_mode")
 
-    agent_list_str = agent_list.perform(context)
+    agent_list_str = agent_list_config.perform(context)
     play_bag_path_str = play_bag_path.perform(context)
     record_bag_path_str = record_bag_path.perform(context)
 
-    agent_namespaces = yaml.safe_load(agent_list_str)
-    auv_ns = agent_namespaces[0]
+    agent_list = yaml.safe_load(agent_list_str)
+    agent_ns = agent_list[0]
 
     coug_bringup_dir = get_package_share_directory("coug_bringup")
     coug_bringup_launch_dir = os.path.join(coug_bringup_dir, "launch")
@@ -151,21 +151,21 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                 "/tf_static:=/tf_static_discard",
                 "/diagnostics_agg:=/diagnostics_agg_discard",
                 "/origin:=/origin_discard",
-                f"{auv_ns}/odometry/global:=/{auv_ns}/odometry/global_discard",
-                f"{auv_ns}/dvl/twist:=/{auv_ns}/dvl/twist_discard",
-                f"{auv_ns}/dvl/odometry:=/{auv_ns}/dvl/odometry_discard",
-                f"{auv_ns}/imu/nav_sat_fix:=/{auv_ns}/gps/fix",
-                f"{auv_ns}/imu/mag:=/{auv_ns}/imu/mag_au",
-                f"{auv_ns}/shallow/pressure/data:=/{auv_ns}/pressure/data",
+                f"{agent_ns}/odometry/global:=/{agent_ns}/odometry/global_discard",
+                f"{agent_ns}/dvl/twist:=/{agent_ns}/dvl/twist_discard",
+                f"{agent_ns}/dvl/odometry:=/{agent_ns}/dvl/odometry_discard",
+                f"{agent_ns}/imu/nav_sat_fix:=/{agent_ns}/gps/fix",
+                f"{agent_ns}/imu/mag:=/{agent_ns}/imu/mag_au",
+                f"{agent_ns}/shallow/pressure/data:=/{agent_ns}/pressure/data",
                 # FROST Lab CougUV bags
-                f"/pressure/data:=/{auv_ns}/pressure/data",
-                f"/fix:=/{auv_ns}/gps/fix",
-                f"/dvl/position:=/{auv_ns}/dvl/position",
-                f"/dvl/data:=/{auv_ns}/dvl/data",
-                f"/modem_status:=/{auv_ns}/modem_status",
+                f"/pressure/data:=/{agent_ns}/pressure/data",
+                f"/fix:=/{agent_ns}/gps/fix",
+                f"/dvl/position:=/{agent_ns}/dvl/position",
+                f"/dvl/data:=/{agent_ns}/dvl/data",
+                f"/modem_status:=/{agent_ns}/modem_status",
                 # TURTLMap bags
-                f"/nav/filtered_imu/data:=/{auv_ns}/imu/data_ned",
-                f"/BlueROV/pressure2_fluid:=/{auv_ns}/pressure/data",
+                f"/nav/filtered_imu/data:=/{agent_ns}/imu/data_ned",
+                f"/BlueROV/pressure2_fluid:=/{agent_ns}/pressure/data",
             ],
         )
         actions.append(play_process)
@@ -207,11 +207,11 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
     actions.append(
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
-                os.path.join(coug_bringup_launch_dir, "auv.launch.py")
+                os.path.join(coug_bringup_launch_dir, "agent.launch.py")
             ),
             launch_arguments={
                 "use_sim_time": use_sim_time,
-                "auv_ns": auv_ns,
+                "agent_ns": agent_ns,
                 "loc_comparison": loc_comparison,
             }.items(),
             condition=UnlessCondition(hitl_mode),
@@ -223,7 +223,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
             package="voxblox_ros",
             executable="tsdf_server",
             name="voxblox_node",
-            namespace=auv_ns,
+            namespace=agent_ns,
             output="screen",
             remappings=[
                 ("pointcloud_1", "/zedm/zed_node/point_cloud/cloud_registered"),
@@ -237,7 +237,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                     "min_time_between_msgs_sec": 0.0,
                 }
             ],
-            condition=IfCondition(EqualsSubstitution(auv_ns, "turtlmap")),
+            condition=IfCondition(EqualsSubstitution(agent_ns, "turtlmap")),
         )
     )
 

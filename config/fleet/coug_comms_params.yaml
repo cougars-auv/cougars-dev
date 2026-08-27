@@ -29,7 +29,7 @@
       direct_emergency_stop_service: "emergency_stop"
       direct_emergency_surface_service: "emergency_surface"
 
-  auv_receiver_node:
+  agent_receiver_node:
     ros__parameters:
       # --- Node Settings ---
       publish_diagnostics: true # Publish diagnostic information.
@@ -66,7 +66,7 @@
 
       use_parameter_frame: false
 
-  auv_status_stager_node:
+  agent_status_stager_node:
     ros__parameters:
       # --- ROS Topics ---
       modem_send_topic: "modem_send"
@@ -80,7 +80,7 @@
       depth_topic: "base/seatrac/depth/odometry"
       imu_topic: "base/seatrac/imu/data"
 
-  auv_status_bundler_node:
+  agent_status_bundler_node:
     ros__parameters:
       # --- ROS Topics and Frames ---
       status_topic: "agent/status"

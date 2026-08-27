@@ -24,7 +24,7 @@ from launch_ros.actions import Node
 
 
 def generate_launch_description() -> LaunchDescription:
-    auv_ns = LaunchConfiguration("auv_ns")
+    agent_ns = LaunchConfiguration("agent_ns")
 
     seatrac_params = PathJoinSubstitution(
         [
@@ -82,67 +82,67 @@ def generate_launch_description() -> LaunchDescription:
             "ntrip_client_params.yaml",
         ]
     )
-    auv_params = PathJoinSubstitution(
+    agent_params = PathJoinSubstitution(
         [
             EnvironmentVariable("CONFIG_DIR"),
-            PythonExpression(["'", auv_ns, "' + '_params.yaml'"]),
+            PythonExpression(["'", agent_ns, "' + '_params.yaml'"]),
         ]
     )
 
     return LaunchDescription(
         [
             DeclareLaunchArgument(
-                "auv_ns",
+                "agent_ns",
                 default_value="auv0",
-                description="Namespace for the AUV (e.g. auv0)",
+                description="Namespace for the agent (e.g. auv0)",
             ),
             Node(
                 package="seatrac",
                 executable="modem",
                 name="modem",
-                parameters=[seatrac_params, auv_params],
+                parameters=[seatrac_params, agent_params],
             ),
             Node(
                 package="sbg_driver",
                 executable="sbg_device",
                 name="sbg_device",
-                parameters=[sbg_driver_params, auv_params],
+                parameters=[sbg_driver_params, agent_params],
             ),
             Node(
                 package="dvl_a50",
                 executable="dvl_a50_sensor",
                 name="dvl_a50_sensor",
-                parameters=[dvl_a50_params, auv_params],
+                parameters=[dvl_a50_params, agent_params],
             ),
             Node(
                 package="pressure_sensor",
                 executable="pressure_pub",
                 name="pressure_pub",
-                parameters=[pressure_sensor_params, auv_params],
+                parameters=[pressure_sensor_params, agent_params],
             ),
             Node(
                 package="gpsd_client",
                 executable="gpsd_client",
                 name="gpsd_client",
-                parameters=[gpsd_client_params, auv_params],
+                parameters=[gpsd_client_params, agent_params],
             ),
             Node(
                 package="nmea_gpsd",
                 executable="nmea_gpsd_udp",
                 name="nmea_gpsd_udp",
-                parameters=[nmea_gpsd_params, auv_params],
+                parameters=[nmea_gpsd_params, agent_params],
             ),
             Node(
                 package="topic_monitor",
                 executable="topic_monitor_node",
                 name="topic_monitor_node",
-                parameters=[topic_monitor_params, auv_params],
+                parameters=[topic_monitor_params, agent_params],
             ),
             Node(
                 package="ntrip_client",
                 executable="ntrip_ros.py",
                 name="ntrip_client",
-                parameters=[ntrip_client_params, auv_params],
+                parameters=[ntrip_client_params, agent_params],
             ),
         ]
     )

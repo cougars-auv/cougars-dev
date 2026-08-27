@@ -63,17 +63,17 @@ def save_logs(record_bag_path: str) -> None:
 
 def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Action]:
     use_sim_time = LaunchConfiguration("use_sim_time")
-    agent_list = LaunchConfiguration("agent_list")
+    agent_list_config = LaunchConfiguration("agent_list")
     lead_agent = LaunchConfiguration("lead_agent")
     enable_direct_comms = LaunchConfiguration("enable_direct_comms")
     enable_acoustic_comms = LaunchConfiguration("enable_acoustic_comms")
     record_bag_path = LaunchConfiguration("record_bag_path")
 
-    agent_list_str = agent_list.perform(context)
+    agent_list_str = agent_list_config.perform(context)
     record_bag_path_str = record_bag_path.perform(context)
 
-    agent_namespaces = yaml.safe_load(agent_list_str)
-    auv_ns = agent_namespaces[0]
+    agent_list = yaml.safe_load(agent_list_str)
+    agent_ns = agent_list[0]
 
     coug_comms_dir = get_package_share_directory("coug_comms")
     coug_comms_launch_dir = os.path.join(coug_comms_dir, "launch")
@@ -94,7 +94,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
         ),
         launch_arguments={
             "use_sim_time": use_sim_time,
-            "agent_list": agent_list,
+            "agent_list": agent_list_str,
             "lead_agent": lead_agent,
             "enable_direct_comms": enable_direct_comms,
             "enable_acoustic_comms": enable_acoustic_comms,
@@ -107,7 +107,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
         ),
         launch_arguments={
             "use_sim_time": use_sim_time,
-            "agent_list": agent_list,
+            "agent_list": agent_list_str,
         }.items(),
     )
 
@@ -117,7 +117,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
         ),
         launch_arguments={
             "use_sim_time": use_sim_time,
-            "agent_list": agent_list,
+            "agent_list": agent_list_str,
             "launch_rviz": "true",
             "launch_plotjuggler": "true",
         }.items(),
@@ -129,7 +129,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
         ),
         launch_arguments={
             "use_sim_time": use_sim_time,
-            "auv_ns": auv_ns,
+            "agent_ns": agent_ns,
             "launch_rviz": "true",
             "launch_plotjuggler": "true",
         }.items(),
@@ -141,7 +141,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
         ),
         launch_arguments={
             "use_sim_time": use_sim_time,
-            "auv_ns": auv_ns,
+            "agent_ns": agent_ns,
         }.items(),
     )
 
@@ -151,7 +151,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
         ),
         launch_arguments={
             "use_sim_time": use_sim_time,
-            "agent_list": agent_list,
+            "agent_list": agent_list_str,
         }.items(),
     )
 
@@ -161,7 +161,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
         ),
         launch_arguments={
             "use_sim_time": use_sim_time,
-            "agent_list": agent_list,
+            "agent_list": agent_list_str,
         }.items(),
     )
 

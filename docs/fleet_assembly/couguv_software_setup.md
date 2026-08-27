@@ -10,7 +10,7 @@
   /<agent-ns>:
     coug_description_launch:
       ros__parameters:
-        urdf_file: "<auv-type>.urdf.xacro"
+        urdf_file: "<agent-type>.urdf.xacro"
   
     coug_comms_base_launch:
       ros__parameters:

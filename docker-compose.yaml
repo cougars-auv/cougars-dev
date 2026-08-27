@@ -64,6 +64,6 @@ services:
       - /dev:/dev
     restart: unless-stopped
     command: >
-      ros2 launch coug_bringup auv.launch.py
-      auv_ns:=${AUV_NS}
+      ros2 launch coug_bringup agent.launch.py
+      agent_ns:=${AGENT_NS}
       use_sim_time:=${USE_SIM_TIME:-false}
