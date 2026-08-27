@@ -16,21 +16,21 @@ name: ROS 2 Build & Test
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
     paths:
       - ".github/workflows/ros2_build_and_test.yml"
       - "ros2_ws/src/**"
       - "cougars.repos"
       - "dev.repos"
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
     paths:
       - ".github/workflows/ros2_build_and_test.yml"
       - "ros2_ws/src/**"
       - "cougars.repos"
       - "dev.repos"
   repository_dispatch:
-    types: [ ros2_dispatch ]
+    types: [ros2_dispatch]
   workflow_dispatch:
 
 env:
@@ -41,7 +41,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        runner: [ ubuntu-24.04, ubuntu-24.04-arm ]
+        runner: [ubuntu-24.04, ubuntu-24.04-arm]
         target:
           - name: cougars
             repos: "cougars.repos"

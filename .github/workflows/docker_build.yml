@@ -16,7 +16,7 @@ name: Docker Build
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
     tags:
       - "v*"
     paths:
@@ -25,7 +25,7 @@ on:
       - "*.repos"
       - "**/package.xml"
   repository_dispatch:
-    types: [ docker_dispatch ]
+    types: [docker_dispatch]
   workflow_dispatch:
 
 env:
