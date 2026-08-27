@@ -6,7 +6,6 @@
   <description>System-wide ROS 2 launch configurations.</description>
   <maintainer email="snelsond@byu.edu">snelsondurrant</maintainer>
   <license>Apache-2.0</license>
-  <url type="repository">https://github.com/cougars-auv/cougars-dev</url>
 
   <exec_depend>coug_belief_mppi</exec_depend>
   <exec_depend>coug_comms</exec_depend>
