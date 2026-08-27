@@ -21,7 +21,6 @@ setup(
     maintainer_email="snelsond@byu.edu",
     description="System-wide ROS 2 launch configurations.",
     license="Apache-2.0",
-    url="https://github.com/cougars-auv/cougars-dev",
     extras_require={
         "test": [
             "pytest",
