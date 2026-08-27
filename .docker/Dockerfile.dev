@@ -50,7 +50,6 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
   && apt-get update && apt-get install -y --no-install-recommends \
   python3-pip \
   python3-venv \
-  pipx \
   gum \
   ros-${ROS_DISTRO}-rqt* \
   cm-super \

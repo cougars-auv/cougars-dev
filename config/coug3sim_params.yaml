@@ -8,7 +8,7 @@
       multiagent_namespaces: ["coug1sim", "coug2sim"]
       priors:
         parameter_priors:
-          initial_position: [0.0, 40.0, 0.0] # [x, y, z] [m]
+          initial_position: [0.0, 40.0, 0.0]
 
   ekf_filter_node_map:
     ros__parameters:

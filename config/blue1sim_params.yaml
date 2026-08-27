@@ -24,7 +24,7 @@
 
       priors:
         parameter_priors:
-          initial_position: [0.0, 0.0, -275.0] # [x, y, z] [m]
+          initial_position: [0.0, 0.0, -275.0]
 
   behavior_server:
     ros__parameters:
