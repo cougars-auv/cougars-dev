@@ -19,7 +19,13 @@
   cd ~/cougars-dev/.devcontainer && echo "VERSION=v1.2.x" > .env
   ```
 
-- Use the Command Palette (`Ctrl + Shift + P`) to select "Dev Containers: Rebuild Container Without Cache." If you specified a version, this will pull the version-specific Docker image and pinned packages.
+- Update the Docker images. If you specified a version, this will pull the version-specific Docker image.
+
+  ```bash
+  cd ~/cougars-dev/.devcontainer && docker compose pull dev router
+  ```
+
+- Use the Command Palette (`Ctrl + Shift + P`) to select "Dev Containers: Rebuild Container." If you specified a version, this will pull the corresponding pinned package versions from the `.repos` files.
 
 - Open a new terminal window using `` Ctrl + Alt + Shift + ` ``, build the `ros2_ws` workspace, and test launching the base station software using `./base_launch.sh`.
 
