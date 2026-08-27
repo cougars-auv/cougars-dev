@@ -8,5 +8,4 @@ agent_ns=$(basename -a "${CONFIG_DIR}"/*_params.yaml | sed 's/_params.yaml$//' |
 [ -z "${agent_ns}" ] && exit 0
 
 # --- Launch ---
-ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args \
-  -p stamped:=True --remap cmd_vel:="/${agent_ns}/cmd_vel_joy"
+ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args -p stamped:=True --remap cmd_vel:="/${agent_ns}/cmd_vel_joy"
