@@ -143,7 +143,7 @@
 
     mag:
       enable_mag: true
-      estimate_hard_iron_bias: true # Estimate a constant hard iron bias across the mission
+      estimate_hard_iron_bias: true # Estimate a constant hard iron bias.
       use_parameter_frame: false
       use_parameter_tf: false
       parameter_tf: # Relative to the target frame.
