@@ -18,7 +18,7 @@ ARG ROS_DISTRO=jazzy
 FROM ubuntu:24.04 AS builder
 
 ARG DEBIAN_FRONTEND=noninteractive \
-    GTSAM_VERSION=4.3a1
+  GTSAM_VERSION=4.3a1
 
 SHELL [ "/bin/bash", "-c" ]
 
