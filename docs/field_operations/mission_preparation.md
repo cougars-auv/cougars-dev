@@ -64,4 +64,4 @@
     logs
     ```
 
-    > Skip `pull` and `pull-base` when specifying a version — those repositories are checked out at tags, not branches.
+    > Skip `pull` and `pull-base` when specifying a version -- those repositories are checked out at tags, not branches.
