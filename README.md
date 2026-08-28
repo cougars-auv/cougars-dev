@@ -1,4 +1,4 @@
-# 🌊 CoUGARs Development Environment
+# 🌊 CoUGARs: Configurable Underwater Group of Autonomous Robots
 
 [![arXiv](https://img.shields.io/badge/arXiv-2511.08822-b31b1b.svg)](https://arxiv.org/pdf/2511.08822)
 [![ROS 2 Build & Test](https://github.com/cougars-auv/cougars-dev/actions/workflows/ros2_build_and_test.yml/badge.svg)](https://github.com/cougars-auv/cougars-dev/actions/workflows/ros2_build_and_test.yml)
