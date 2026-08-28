@@ -12,11 +12,11 @@
 
 ## Software Updates
 
-- If you want to run a specific CoUGARs software version, check out the dedicated release branch (e.g., `release/v1.2.x`) on `cougars-dev` and add `VERSION=v1.2.x` to a new `.env` file in `cougars-dev/.devcontainer`.
+- If you want to run a specific CoUGARs software version, check out the dedicated release branch (e.g., `release/v1.2.x`) on `cougars-dev` and add the exact release tag (e.g., `VERSION=v1.2.3`) to a new `.env` file in `cougars-dev/.devcontainer`.
 
   ```bash
   cd ~/cougars-dev && git fetch origin && git checkout release/v1.2.x && git pull
-  cd ~/cougars-dev/.devcontainer && echo "VERSION=v1.2.x" > .env
+  cd ~/cougars-dev/.devcontainer && echo "VERSION=v1.2.3" > .env
   ```
 
 - Update the Docker images. If you specified a version, this will pull the version-specific Docker image.
@@ -48,10 +48,10 @@
     cd ~/cougars-dev && git fetch origin && git checkout release/v1.2.x && git pull
     ```
 
-  - Set up the CoUGARs software stack using `./setup.sh $(hostname) <base-station-ip>`. To specify a version, run `./setup.sh $(hostname) <base-station-ip> --version v1.2.x`.
+  - Set up the CoUGARs software stack using `./setup.sh $(hostname) <base-station-ip>`. To specify a version, run `./setup.sh $(hostname) <base-station-ip> --version v1.2.3`.
 
     ```bash
-    cd ~/cougars-dev && ./setup.sh $(hostname) <base-station-ip> # --version v1.2.x
+    cd ~/cougars-dev && ./setup.sh $(hostname) <base-station-ip> # --version v1.2.3
     ```
 
   - Use the configured aliases to pull the latest code from both remotes, update the Docker image, and rebuild/restart the ROS 2 software.
