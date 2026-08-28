@@ -75,15 +75,21 @@ CoUGARs is a low-cost, configurable AUV platform designed for multi-agent autono
 
 ## Contributing
 
-- **Create a Branch:** Create a new branch using the format `name/feature` (e.g., `nelson/repo-docs`).
+> For small changes confined to one package, the full `cougars-dev` branch workflow is unnecessary. Simply create a new package branch and PR.
 
-- **Make Changes:** Develop and debug your new feature. Add good documentation.
+- **Create a Branch:** Create a new `cougars-dev` branch using the format `name/feature` (e.g., `nelson/repo-docs`).
 
-  > If you need to add dependencies, update the `package.xml`, the Dockerfiles under `.docker/`, `cougars.repos`, `dev.repos`, or `dependencies.repos` in your branch and test building the image locally.
+- **Create Package Branches:** For each package you plan to modify, create a new branch with the same name. In your new `cougars-dev` branch, temporarily update the relevant `.repos` files to reference those branches.
 
-- **Sync Frequently:** Regularly integrate the latest changes from `main` into your branch (via rebase or merge) to prevent future conflicts.
+- **Make Changes:** Develop and debug your new feature. Test it extensively.
 
-- **Submit a PR:** Open a pull request, ensure required tests pass, and merge once approved. Upon merge to `main`, GitHub Actions will automatically build and push updated images to Docker Hub with any new dependencies.
+  > If you need to add dependencies, update the relevant `package.xml` files, Dockerfiles under `.docker/`, `cougars.repos`, `dev.repos`, or `dependencies.repos`. Test building the Docker images locally.
+
+- **Sync Frequently:** Regularly integrate the latest changes from `main` into your branches (via rebase or merge) to prevent future conflicts.
+
+- **Submit Package PRs:** Open a pull request for each package branch, ensure required tests pass, and merge once approved.
+
+- **Submit Final PR**: Before merging the `cougars-dev` branch, revert the temporary changes to the `.repos` files. Upon merge to `main`, GitHub Actions will automatically build and push updated images to Docker Hub.
 
 ## Releasing
 
