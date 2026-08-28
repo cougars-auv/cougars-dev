@@ -77,7 +77,7 @@ CoUGARs is a low-cost, configurable AUV platform designed for multi-agent autono
 
 > For small changes confined to one package, the full `cougars-dev` branch workflow is unnecessary. Simply create a new package branch and PR.
 
-- **Create a Branch:** Create a new `cougars-dev` branch using the format `name/feature` (e.g., `nelson/repo-docs`).
+- **Create a Branch:** Create a new `cougars-dev` branch (e.g., `nelson/repo-docs`).
 
 - **Create Package Branches:** For each package you plan to modify, create a new branch with the same name. In your new `cougars-dev` branch, temporarily update the relevant `.repos` files to reference those branches.
 
