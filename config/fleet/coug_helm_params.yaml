@@ -36,7 +36,6 @@
       groot2_port: 1667 # [port] Groot2 publisher port (override per-robot to avoid conflicts).
 
       # --- ROS Topics ---
-      origin_topic: "/origin"
       waypoint_topic: "waypoints"
       odom_topic: "odometry/global"
       hsd_topic: "cmd_hsd"
