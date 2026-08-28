@@ -8,7 +8,7 @@
 
   waypoint_nav2_node:
     ros__parameters:
-      waypoint_topic: "waypoints_map"
+      waypoint_topic: "waypoints_nav2"
 
   waypoint_follower:
     ros__parameters:
