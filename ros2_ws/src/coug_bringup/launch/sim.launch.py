@@ -112,7 +112,12 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
             package="tf2_ros",
             executable="static_transform_publisher",
             name="map_to_holoocean_transform",
+            # Match this to the starting XY location of the first agent
             arguments=[
+                "--x",
+                "0",
+                "--y",
+                "0",
                 "--frame-id",
                 "map",
                 "--child-frame-id",
