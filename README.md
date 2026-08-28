@@ -89,8 +89,6 @@ CoUGARs is a low-cost, configurable AUV platform designed for multi-agent autono
 
 - **Submit Package PRs:** Open a pull request for each package branch, ensure required tests pass, and merge once approved.
 
-  > Because most graduate students write terrible commit messages, default to "Squash and Merge." Only use a "Merge Commit" for complex changes where commits hold technical value. See [GitHub's documentation](https://docs.github.com/en/pull-requests/reference/pull-request-merges).
-
 - **Submit Final PR**: Before merging the `cougars-dev` branch, revert the temporary changes to the `.repos` files. Upon merge to `main`, GitHub Actions will automatically build and push updated images to Docker Hub.
 
 ## Releasing
