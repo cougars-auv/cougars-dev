@@ -93,12 +93,13 @@ We adhere to the **Semantic Versioning (SemVer 2.0.0)** standard to release new 
 > - **MINOR** version when you add functionality in a backward compatible manner
 > - **PATCH** version when you make backward compatible bug fixes
 
-- **Create a Release Branch:** Create a dedicated release branch (e.g., `release/v1.2.x`) from `main`.
-  > Do not create separate branches for patch versions (e.g., `v1.2.1`). Simply merge fixes into the minor release branch and bump the patch version on the new tag when ready to release.
+- **Create a Release Branch:** Create a dedicated minor release branch (e.g., `release/v1.2.x`) from `main`.
 
-- **Tag Nested Repositories:** Check the repositories listed in `cougars.repos` and `dev.repos`. If there are untagged updates, update the `<version>` in the `package.xml` files and push new version tags (e.g., `v2.3.4`). Since sub-repositories version independently of `cougars-dev`, you can either use an existing up-to-date tag or create a new one.
+  > Do not create separate branches for patch versions (e.g., `v1.2.1`). Simply merge fixes into the minor release branch and bump the patch version on a new tag when ready to release.
 
-- **Lock Dependencies:** On the release branch, pin all nested repositories in the `.repos` files to their specific release tags (instead of branches like `main`). Commit these updates.
+- **Tag Nested Repositories:** Check the repositories listed in `cougars.repos` and `dev.repos`. If they have untagged updates, update the `<version>` in the `package.xml` files and push new tags (e.g., `v2.3.4`). Since packages version independently of `cougars-dev`, you can either use an existing up-to-date tag or create a new one.
+
+- **Lock Dependencies:** On the release branch, pin all nested repositories in the `.repos` files to their specific tags (instead of branches like `main`). Commit these updates.
 
 - **Tag and Push:** Create and push a version tag (e.g., `v1.2.3`) on your release commit:
 
