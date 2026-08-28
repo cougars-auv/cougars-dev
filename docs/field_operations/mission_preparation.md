@@ -25,7 +25,7 @@
   cd ~/cougars-dev/.devcontainer && docker compose pull dev router
   ```
 
-- Use the Command Palette (`Ctrl + Shift + P`) to select "Dev Containers: Rebuild Container." If you specified a version, this will pull the corresponding pinned package versions from the `.repos` files.
+- Use the Command Palette (`Ctrl + Shift + P`) to select "Dev Containers: Rebuild Container." If you specified a version, this will pull the pinned tags from the `.repos` files.
 
 - Open a new terminal window using `` Ctrl + Alt + Shift + ` ``, build the `ros2_ws` workspace, and test launching the base station software using `./base_launch.sh`.
 
