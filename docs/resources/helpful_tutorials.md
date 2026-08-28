@@ -20,6 +20,6 @@ We **strongly encourage** new lab members to take a week or two and simply work 
 2. [HoloOcean-ROS](https://github.com/byu-holoocean/holoocean-ros)
 
 ## LLM Agents
-> Using these skills will improve the results you get out of Claude Code or Codex, but they are ultimately just guidelines. Our specific system/research constraints introduce unique challenges that require simplifying or violating many of these suggestions. Good engineering means knowing when to break them, and why.
+> Using these skills will improve the results you get out of Claude Code or Codex, but they are ultimately just guidelines. Our specific system/research constraints introduce unique challenges that require simplifying or violating many of these suggestions.
 1. [Essential skills](https://github.com/henki-robotics/henki_ros2_best_practices/tree/main)
 2. [Advanced skills & architecture](https://github.com/arpitg1304/robotics-agent-skills)
