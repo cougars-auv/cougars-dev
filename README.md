@@ -95,11 +95,11 @@ We adhere to the **Semantic Versioning (SemVer 2.0.0)** standard to release new 
 
 - **Create a Release Branch:** Create a dedicated minor release branch (e.g., `release/v1.2.x`) from `main`.
 
-  > Do not create separate branches for patch versions (e.g., `v1.2.1`). Simply merge fixes into the minor release branch and bump the patch version on a new tag when ready to release.
+  > Do not create separate branches for patch versions (e.g., `v1.2.0` to `v1.2.1`). Simply merge fixes into the minor release branch and bump the patch version on a new tag when ready to release.
 
 - **Tag Packages:** Check the packages listed in `cougars.repos` and `dev.repos`. If they have untagged updates, update the `<version>` in the `package.xml` files and push new tags (e.g., `v2.3.4`). Since packages version independently of `cougars-dev`, you can either use an existing up-to-date tag or create a new one.
 
-- **Pin Dependencies:** On the release branch, pin all packages in the `.repos` files to their specific tags (instead of branches like `main`). Commit these updates.
+- **Lock Dependencies:** On the release branch, pin all packages in the `.repos` files to their specific tags (instead of branches like `main`). Commit these updates.
 
 - **Tag and Push:** Create and push a version tag (e.g., `v1.2.3`) on your release commit:
 
