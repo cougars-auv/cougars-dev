@@ -13,6 +13,14 @@
 # limitations under the License.
 
 services:
+  builder:
+    image: frostlab/cougars:runtime-${VERSION:-latest}
+    container_name: cougars-builder-ct
+    volumes:
+      - ./ros2_ws:/ros2_ws
+    profiles: ["build"]
+    command: colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release
+
   router:
     image: frostlab/cougars:runtime-${VERSION:-latest}
     container_name: cougars-router-ct
@@ -23,14 +31,6 @@ services:
       - ZENOH_CONFIG_OVERRIDE=connect/endpoints=["tcp/${ZENOH_ROUTER_IP}:7447"]
     restart: unless-stopped
     command: ros2 run rmw_zenoh_cpp rmw_zenohd
-
-  builder:
-    image: frostlab/cougars:runtime-${VERSION:-latest}
-    container_name: cougars-builder-ct
-    volumes:
-      - ./ros2_ws:/ros2_ws
-    profiles: ["build"]
-    command: colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release
 
   runtime:
     image: frostlab/cougars:runtime-${VERSION:-latest}
