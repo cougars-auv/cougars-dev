@@ -28,7 +28,7 @@ CoUGARs is a low-cost, configurable AUV platform designed for multi-agent autono
 
   - Open the `cougars-dev` repository in VSCode and use the Command Palette (`Ctrl + Shift + P`) to select "Dev Containers: Reopen in Container." When prompted to choose a `devcontainer.json` file, click `CoUGARs Dev (GPU)`.
 
-  - Once the containers load, open a new terminal window using `` Ctrl + Alt + Shift + ` `` and launch a HoloOcean scenario in the `holoocean-ct` container using `./holoocean_launch.sh`.
+  - Once the containers load, open a new terminal window using `` Ctrl + Alt + Shift + ` `` and launch a HoloOcean scenario in the `cougars-holoocean-ct` container using `./holoocean_launch.sh`.
 
     ```bash
     cd ~/cougars-dev/scripts && ./holoocean_launch.sh

@@ -15,7 +15,7 @@
 services:
   mapproxy:
     image: danielsnider/mapproxy
-    container_name: mapproxy-ct
+    container_name: cougars-mapproxy-ct
     network_mode: host
     volumes:
       - ../.mapproxy:/mapproxy
@@ -23,7 +23,7 @@ services:
 
   maptiles:
     build: https://github.com/cougars-auv/MapTilesDownloader.git#master
-    container_name: maptiles-ct
+    container_name: cougars-maptiles-ct
     ports:
       - "8081:8080"
     volumes:
@@ -32,7 +32,7 @@ services:
 
   router:
     image: frostlab/cougars:runtime-${VERSION:-latest}
-    container_name: router-ct
+    container_name: cougars-router-ct
     network_mode: host
     ipc: host
     pid: host

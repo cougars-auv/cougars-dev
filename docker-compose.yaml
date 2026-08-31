@@ -15,7 +15,7 @@
 services:
   router:
     image: frostlab/cougars:runtime-${VERSION:-latest}
-    container_name: router-ct
+    container_name: cougars-router-ct
     network_mode: host
     ipc: host
     pid: host
@@ -26,7 +26,7 @@ services:
 
   builder:
     image: frostlab/cougars:runtime-${VERSION:-latest}
-    container_name: builder-ct
+    container_name: cougars-builder-ct
     volumes:
       - ./ros2_ws:/ros2_ws
     profiles: ["build"]

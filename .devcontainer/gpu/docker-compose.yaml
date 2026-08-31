@@ -24,7 +24,7 @@ services:
     build:
       context: ..
       dockerfile: .docker/holoocean/Dockerfile.holoocean
-    container_name: holoocean-ct
+    container_name: cougars-holoocean-ct
     network_mode: host
     ipc: host
     pid: host
