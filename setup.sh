@@ -33,9 +33,8 @@ fi
 sed 's|git@github.com:|https://github.com/|g' runtime.repos | vcs import ros2_ws/src
 vcs custom -n --git --args submodule update --init --recursive
 
-for repo in ros2_ws/src/*/; do
-  repo="${repo%/}"
-  [ -d "${repo}/.git" ] || continue
+for git_dir in $(find ros2_ws/src -maxdepth 2 -name .git -prune); do
+  repo="$(dirname "${git_dir}")"
   git -C "${repo}" remote add base "git://${ip}/cougars-dev/${repo}" 2>/dev/null || \
     git -C "${repo}" remote set-url base "git://${ip}/cougars-dev/${repo}"
 done
