@@ -32,8 +32,7 @@ on:
   workflow_dispatch:
 
 env:
-  RUNTIME_DOCKER_IMAGE: frostlab/cougars:runtime-latest
-  DEV_DOCKER_IMAGE: frostlab/cougars:dev-latest
+  DOCKER_REPO: frostlab/cougars
 
 jobs:
   build-test:
@@ -64,7 +63,7 @@ jobs:
           ssh-private-key: ${{ secrets.SSH_KEY }}
       - uses: ros-industrial/industrial_ci@master
         env:
-          DOCKER_IMAGE: ${{ matrix.target == 'dev' && env.DEV_DOCKER_IMAGE || env.RUNTIME_DOCKER_IMAGE }}
+          DOCKER_IMAGE: ${{ env.DOCKER_REPO }}:${{ matrix.target }}-latest
           DOCKER_PULL: true
           UPSTREAM_WORKSPACE: ${{ matrix.repos }}
           TARGET_WORKSPACE: ros2_ws

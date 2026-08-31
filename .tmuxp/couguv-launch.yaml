@@ -3,7 +3,7 @@ start_directory: "~/cougars-dev"
 options:
   mouse: on
 shell_command_before:
-  - pull_all() { for r in $(find ~/cougars-dev -name .git -prune -printf '%h\n'); do git -C "$r" pull "$1" "$(git -C "$r" branch --show-current)"; done; }
+  - pull_all() { for r in $(find ~/cougars-dev -name .git -prune -printf '%h\n'); do b="$(git -C "$r" branch --show-current)"; [ -n "$b" ] || continue; git -C "$r" pull "$1" "$b"; done; }
   - alias pull="pull_all origin"
   - alias pull-base="pull_all base"
   - alias docker-pull="docker compose -f ~/cougars-dev/docker-compose.yaml pull"

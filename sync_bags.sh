@@ -11,4 +11,4 @@ cd "$(dirname "$0")"
 agent_ns="$1"
 
 mkdir -p "bags/${agent_ns}"
-rsync -avz --progress frostlab@"${agent_ns}".local:~/cougars-dev/bags/ "bags/${agent_ns}/"
+rsync -avzP frostlab@"${agent_ns}".local:~/cougars-dev/bags/ "bags/${agent_ns}/"
