@@ -81,7 +81,7 @@ CoUGARs is a low-cost, configurable AUV platform designed for multi-agent autono
 
 - **Create Package Branches:** For each package you plan to modify, create a new branch with the same name. In your new `cougars-dev` branch, temporarily update the relevant `.repos` files to reference those branches.
 
-- **Make Changes:** Develop and debug your new feature. Test it extensively.
+- **Make Changes:** Develop and debug your new feature. Test extensively.
 
   > If you need to add dependencies, update the relevant `package.xml` files, Dockerfiles under `.docker/`, `runtime.repos`, `dev.repos`, or `dependencies.repos`. Test building the Docker images locally.
 
