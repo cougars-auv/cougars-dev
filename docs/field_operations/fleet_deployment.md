@@ -33,7 +33,7 @@
     cd ~/cougars-dev && ./connect.sh <agent-ns>
     ```
 
-  - Use the configured aliases to pull the latest code from the base station remote, rebuild the workspace, and restart the ROS 2 software.
+  - Use the configured aliases to pull the latest code from the base station remote, rebuild the `ros2_ws` workspace, and restart the ROS 2 software.
 
     ```bash
     pull-base
