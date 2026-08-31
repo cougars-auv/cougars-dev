@@ -43,15 +43,16 @@ class BagRecorderNode(Node):
         self.agent_ns = (
             self.get_parameter("agent_ns").get_parameter_value().string_value
         )
-        self.bag_dir = os.environ.get(
-            "BAGS_DIR", os.path.expanduser("~/cougars-dev/bags")
-        )
+        self.bag_dir = os.environ.get("BAGS_DIR", "")
         self.log_dir = self.get_parameter("log_dir").get_parameter_value().string_value
         bag_record_service = (
             self.get_parameter("bag_record_service").get_parameter_value().string_value
         )
         self.bag_path: str | None = None
         self.bag_process: subprocess.Popen | None = None
+
+        if not self.bag_dir:
+            self.get_logger().error("BAGS_DIR is not set.")
 
         self.create_service(BagRecord, bag_record_service, self._bag_record_callback)
 
@@ -77,6 +78,11 @@ class BagRecorderNode(Node):
             if self.bag_process is not None:
                 response.success = False
                 response.message = "Already recording."
+                return response
+
+            if not self.bag_dir:
+                response.success = False
+                response.message = "BAGS_DIR is not set."
                 return response
 
             base = request.prefix if request.prefix else "rosbag"
