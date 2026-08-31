@@ -29,9 +29,9 @@ on:
   workflow_dispatch:
 
 env:
-  IS_TAG: ${{ github.ref_type == 'tag' }}
   DOCKER_USERNAME: frostlab
   DOCKER_REPO: frostlab/cougars
+  VERSION: ${{ github.ref_type == 'tag' && github.ref_name || 'latest' }}
 
 jobs:
   build-gtsam:
@@ -58,7 +58,7 @@ jobs:
           push: true
           tags: |
             ${{ env.DOCKER_REPO }}:gtsam-latest-${{ matrix.arch }}
-            ${{ env.IS_TAG == 'true' && format('{0}:gtsam-{1}-{2}', env.DOCKER_REPO, github.ref_name, matrix.arch) || '' }}
+            ${{ env.VERSION != 'latest' && format('{0}:gtsam-{1}-{2}', env.DOCKER_REPO, env.VERSION, matrix.arch) || '' }}
           provenance: false
           cache-from: type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-gtsam-${{ matrix.arch }}
           cache-to: type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-gtsam-${{ matrix.arch }},mode=max
@@ -76,13 +76,13 @@ jobs:
           docker buildx imagetools create -t ${{ env.DOCKER_REPO }}:gtsam-latest \
             ${{ env.DOCKER_REPO }}:gtsam-latest-amd64 \
             ${{ env.DOCKER_REPO }}:gtsam-latest-arm64
-          if [ "${{ env.IS_TAG }}" = "true" ]; then
-            docker buildx imagetools create -t ${{ env.DOCKER_REPO }}:gtsam-${{ github.ref_name }} \
-              ${{ env.DOCKER_REPO }}:gtsam-${{ github.ref_name }}-amd64 \
-              ${{ env.DOCKER_REPO }}:gtsam-${{ github.ref_name }}-arm64
+          if [ "${{ env.VERSION }}" != "latest" ]; then
+            docker buildx imagetools create -t ${{ env.DOCKER_REPO }}:gtsam-${{ env.VERSION }} \
+              ${{ env.DOCKER_REPO }}:gtsam-${{ env.VERSION }}-amd64 \
+              ${{ env.DOCKER_REPO }}:gtsam-${{ env.VERSION }}-arm64
           fi
 
-  build-base:
+  build-runtime:
     needs: manifest-gtsam
     strategy:
       matrix:
@@ -101,8 +101,7 @@ jobs:
           sudo apt-get update && sudo apt-get install -y python3-pip
           pip3 install --user vcstool
           echo "${HOME}/.local/bin" >> ${GITHUB_PATH}
-          vcs import ros2_ws/src < cougars.repos
-          vcs import ros2_ws/src < dev.repos
+          vcs import ros2_ws/src < runtime.repos
           vcs custom -n --git --args submodule update --init --recursive
       - uses: docker/setup-buildx-action@v4
       - uses: docker/login-action@v4
@@ -112,21 +111,21 @@ jobs:
       - uses: docker/build-push-action@v7
         with:
           context: .
-          file: .docker/Dockerfile.base
+          file: .docker/Dockerfile.runtime
           platforms: linux/${{ matrix.arch }}
           pull: true
           push: true
           build-args: |
-            VERSION=${{ env.IS_TAG == 'true' && github.ref_name || 'latest' }}
+            VERSION=${{ env.VERSION }}
           tags: |
-            ${{ env.DOCKER_REPO }}:base-latest-${{ matrix.arch }}
-            ${{ env.IS_TAG == 'true' && format('{0}:base-{1}-{2}', env.DOCKER_REPO, github.ref_name, matrix.arch) || '' }}
+            ${{ env.DOCKER_REPO }}:runtime-latest-${{ matrix.arch }}
+            ${{ env.VERSION != 'latest' && format('{0}:runtime-{1}-{2}', env.DOCKER_REPO, env.VERSION, matrix.arch) || '' }}
           provenance: false
-          cache-from: type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-base-${{ matrix.arch }}
-          cache-to: type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-base-${{ matrix.arch }},mode=max
+          cache-from: type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-runtime-${{ matrix.arch }}
+          cache-to: type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-runtime-${{ matrix.arch }},mode=max
 
-  manifest-base:
-    needs: build-base
+  manifest-runtime:
+    needs: build-runtime
     runs-on: ubuntu-24.04
     steps:
       - uses: docker/setup-buildx-action@v4
@@ -135,20 +134,30 @@ jobs:
           username: ${{ env.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
       - run: |
-          docker buildx imagetools create -t ${{ env.DOCKER_REPO }}:base-latest \
-            ${{ env.DOCKER_REPO }}:base-latest-amd64 \
-            ${{ env.DOCKER_REPO }}:base-latest-arm64
-          if [ "${{ env.IS_TAG }}" = "true" ]; then
-            docker buildx imagetools create -t ${{ env.DOCKER_REPO }}:base-${{ github.ref_name }} \
-              ${{ env.DOCKER_REPO }}:base-${{ github.ref_name }}-amd64 \
-              ${{ env.DOCKER_REPO }}:base-${{ github.ref_name }}-arm64
+          docker buildx imagetools create -t ${{ env.DOCKER_REPO }}:runtime-latest \
+            ${{ env.DOCKER_REPO }}:runtime-latest-amd64 \
+            ${{ env.DOCKER_REPO }}:runtime-latest-arm64
+          if [ "${{ env.VERSION }}" != "latest" ]; then
+            docker buildx imagetools create -t ${{ env.DOCKER_REPO }}:runtime-${{ env.VERSION }} \
+              ${{ env.DOCKER_REPO }}:runtime-${{ env.VERSION }}-amd64 \
+              ${{ env.DOCKER_REPO }}:runtime-${{ env.VERSION }}-arm64
           fi
 
   build-dev:
-    needs: manifest-base
+    needs: manifest-runtime
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
+      - uses: webfactory/ssh-agent@v0.10.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_KEY }}
+      - run: |
+          sudo apt-get update && sudo apt-get install -y python3-pip
+          pip3 install --user vcstool
+          echo "${HOME}/.local/bin" >> ${GITHUB_PATH}
+          vcs import ros2_ws/src < runtime.repos
+          vcs import ros2_ws/src < dev.repos
+          vcs custom -n --git --args submodule update --init --recursive
       - uses: docker/setup-buildx-action@v4
       - uses: docker/login-action@v4
         with:
@@ -162,10 +171,10 @@ jobs:
           pull: true
           push: true
           build-args: |
-            VERSION=${{ env.IS_TAG == 'true' && github.ref_name || 'latest' }}
+            VERSION=${{ env.VERSION }}
           tags: |
             ${{ env.DOCKER_REPO }}:dev-latest
-            ${{ env.IS_TAG == 'true' && format('{0}:dev-{1}', env.DOCKER_REPO, github.ref_name) || '' }}
+            ${{ env.VERSION != 'latest' && format('{0}:dev-{1}', env.DOCKER_REPO, env.VERSION) || '' }}
           provenance: false
           cache-from: type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-dev-amd64
           cache-to: type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-dev-amd64,mode=max

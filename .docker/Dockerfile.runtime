@@ -12,8 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# --- Cache Stage ---
 ARG VERSION=latest
-FROM frostlab/cougars:base-${VERSION}
+FROM ubuntu:24.04 AS cacher
+
+WORKDIR /tmp/packages
+COPY ros2_ws/src .
+RUN find . -type f \! -name "package.xml" -delete
+
+# --- Main Stage ---
+FROM frostlab/cougars:gtsam-${VERSION} AS runtime
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -22,21 +30,52 @@ SHELL [ "/bin/bash", "-c" ]
 ENV DOCKER_USER=root \
   OVERLAY_WS=/ros2_ws \
   CONFIG_DIR=/config \
-  BAGS_DIR=/bags
+  BAGS_DIR=/bags \
+  RCUTILS_COLORIZED_OUTPUT=1
 
-COPY ros2_ws/src ${OVERLAY_WS}/src
+# Install system dependencies and configure SSH client
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+  --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
+  apt-get update && apt-get install -y --no-install-recommends \
+  vim \
+  tmux \
+  openssh-client \
+  && echo "Host *" >> /etc/ssh/ssh_config \
+  && echo "    StrictHostKeyChecking no" >> /etc/ssh/ssh_config
 
-# Build the ROS workspace
-WORKDIR ${OVERLAY_WS}
-RUN --mount=type=cache,target=${OVERLAY_WS}/build \
-  --mount=type=cache,target=${OVERLAY_WS}/log \
-  source /opt/ros/${ROS_DISTRO}/setup.bash && \
-  colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release
+# Install ROS packages
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+  --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
+  apt-get update && apt-get install -y --no-install-recommends \
+  ros-${ROS_DISTRO}-rmw-cyclonedds-cpp \
+  ros-${ROS_DISTRO}-rmw-zenoh-cpp \
+  ros-${ROS_DISTRO}-joy \
+  ros-${ROS_DISTRO}-teleop-twist-joy \
+  ros-${ROS_DISTRO}-teleop-twist-keyboard \
+  ros-${ROS_DISTRO}-teleop-tools \
+  ros-${ROS_DISTRO}-rosbag2-storage-mcap
+
+# Install ROS dependencies (rosdep)
+WORKDIR /tmp/packages
+COPY --from=cacher /tmp/packages .
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+  --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
+  --mount=type=cache,target=/root/.ros/rosdep \
+  apt-get update \
+  && rosdep update \
+  && rosdep install --from-paths . --ignore-src -y \
+  && rm -rf ./*
+
+# Install GeographicLib datasets required by MAVROS
+RUN /opt/ros/${ROS_DISTRO}/lib/mavros/install_geographiclib_datasets.sh
 
 RUN echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> /root/.bashrc \
   && echo "[ -f ${OVERLAY_WS}/install/setup.bash ] && source ${OVERLAY_WS}/install/setup.bash" >> /root/.bashrc
 
-COPY config ${CONFIG_DIR}
+COPY .docker/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+WORKDIR ${OVERLAY_WS}
 
 ENTRYPOINT [ "/entrypoint.sh" ]
 CMD [ "/bin/bash" ]

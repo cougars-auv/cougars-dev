@@ -6,9 +6,10 @@ shell_command_before:
   - pull_all() { for r in $(find ~/cougars-dev -name .git -prune -printf '%h\n'); do git -C "$r" pull "$1" "$(git -C "$r" branch --show-current)"; done; }
   - alias pull="pull_all origin"
   - alias pull-base="pull_all base"
-  - alias docker-pull="docker compose -f ~/cougars-dev/docker-compose.yaml pull router"
+  - alias docker-pull="docker compose -f ~/cougars-dev/docker-compose.yaml pull"
+  - alias build="docker compose -f ~/cougars-dev/docker-compose.yaml run --rm builder"
   - alias restart="sudo systemctl restart cougars.service && sudo journalctl -u cougars.service -f"
-  - alias logs="docker logs -f runtime-ct"
+  - alias logs="docker logs -f cougars-runtime-ct"
 windows:
   - window_name: main
     layout: main-vertical
@@ -16,7 +17,7 @@ windows:
       - shell_command:
           - logs
       - shell_command:
-          - cmd: restart
+          - cmd: build && restart
             enter: false
       - shell_command:
           - cmd: pull-base

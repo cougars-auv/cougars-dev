@@ -20,50 +20,53 @@ on:
     paths:
       - ".github/workflows/ros2_build_and_test.yml"
       - "ros2_ws/src/**"
-      - "cougars.repos"
-      - "dev.repos"
+      - "*.repos"
   pull_request:
     branches: ["main"]
     paths:
       - ".github/workflows/ros2_build_and_test.yml"
       - "ros2_ws/src/**"
-      - "cougars.repos"
-      - "dev.repos"
+      - "*.repos"
   repository_dispatch:
     types: [ros2_dispatch]
   workflow_dispatch:
 
 env:
-  DOCKER_IMAGE: frostlab/cougars:base-latest
+  RUNTIME_DOCKER_IMAGE: frostlab/cougars:runtime-latest
+  DEV_DOCKER_IMAGE: frostlab/cougars:dev-latest
 
 jobs:
   build-test:
     strategy:
       fail-fast: false
       matrix:
-        runner: [ubuntu-24.04, ubuntu-24.04-arm]
-        target:
-          - name: cougars
-            repos: "cougars.repos"
-          - name: dev
-            repos: "cougars.repos dev.repos"
+        include:
+          - target: runtime
+            runner: ubuntu-24.04
+            repos: "runtime.repos"
+          - target: runtime
+            runner: ubuntu-24.04-arm
+            repos: "runtime.repos"
+          - target: dev
+            runner: ubuntu-24.04
+            repos: "runtime.repos dev.repos"
     runs-on: ${{ matrix.runner }}
     steps:
       - uses: actions/checkout@v7
       - uses: actions/cache@v6
         with:
           path: ${{ github.workspace }}/.ccache
-          key: ccache-${{ github.repository }}-${{ matrix.runner }}-${{ matrix.target.name }}-${{ github.run_id }}
+          key: ccache-${{ github.repository }}-${{ matrix.runner }}-${{ matrix.target }}-${{ github.run_id }}
           restore-keys: |
-            ccache-${{ github.repository }}-${{ matrix.runner }}-${{ matrix.target.name }}-
+            ccache-${{ github.repository }}-${{ matrix.runner }}-${{ matrix.target }}-
       - uses: webfactory/ssh-agent@v0.10.0
         with:
           ssh-private-key: ${{ secrets.SSH_KEY }}
       - uses: ros-industrial/industrial_ci@master
         env:
-          DOCKER_IMAGE: ${{ env.DOCKER_IMAGE }}
+          DOCKER_IMAGE: ${{ matrix.target == 'dev' && env.DEV_DOCKER_IMAGE || env.RUNTIME_DOCKER_IMAGE }}
           DOCKER_PULL: true
-          UPSTREAM_WORKSPACE: ${{ matrix.target.repos }}
+          UPSTREAM_WORKSPACE: ${{ matrix.repos }}
           TARGET_WORKSPACE: ros2_ws
           CCACHE_DIR: ${{ github.workspace }}/.ccache
           BASEDIR: ${{ github.workspace }}/.work
@@ -74,7 +77,7 @@ jobs:
           AFTER_SETUP_UPSTREAM_WORKSPACE: |
             git config --global --add safe.directory "*"
             vcs custom -n --git --args submodule update --init --recursive
-      - if: matrix.runner == 'ubuntu-24.04'
+      - if: matrix.target == 'runtime' && matrix.runner == 'ubuntu-24.04'
         uses: codecov/codecov-action@v7
         with:
           token: ${{ secrets.CODECOV_TOKEN }}

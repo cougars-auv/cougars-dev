@@ -12,8 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# --- Cache Stage ---
 ARG VERSION=latest
-FROM frostlab/cougars:base-${VERSION}
+FROM ubuntu:24.04 AS cacher
+
+WORKDIR /tmp/packages
+COPY ros2_ws/src .
+RUN find . -type f \! -name "package.xml" -delete
+
+# --- Main Stage ---
+FROM frostlab/cougars:runtime-${VERSION} AS dev
 
 ARG DEBIAN_FRONTEND=noninteractive \
   DOCKER_USER=frostlab-docker
@@ -62,6 +70,19 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
   x11-utils \
   x11-xserver-utils \
   xauth
+
+# Install ROS dependencies (rosdep)
+WORKDIR /tmp/packages
+COPY --from=cacher /tmp/packages .
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+  --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
+  --mount=type=cache,target=/root/.ros/rosdep \
+  apt-get update \
+  && rosdep update \
+  && rosdep install --from-paths . --ignore-src -y \
+  && rm -rf ./*
+
+WORKDIR ${OVERLAY_WS}
 
 # Install Python development tools
 USER ${DOCKER_USER}

@@ -83,7 +83,7 @@ CoUGARs is a low-cost, configurable AUV platform designed for multi-agent autono
 
 - **Make Changes:** Develop and debug your new feature. Test it extensively.
 
-  > If you need to add dependencies, update the relevant `package.xml` files, Dockerfiles under `.docker/`, `cougars.repos`, `dev.repos`, or `dependencies.repos`. Test building the Docker images locally.
+  > If you need to add dependencies, update the relevant `package.xml` files, Dockerfiles under `.docker/`, `runtime.repos`, `dev.repos`, or `dependencies.repos`. Test building the Docker images locally.
 
 - **Sync Frequently:** Regularly integrate the latest changes from `main` into your branches (via rebase or merge) to prevent future conflicts.
 
@@ -103,7 +103,7 @@ We adhere to the **Semantic Versioning (SemVer 2.0.0)** standard to release new 
 
   > Do not create separate branches for patch versions (e.g., `v1.2.0` to `v1.2.1`). Simply merge fixes into the minor release branch and bump the patch version on a new tag when ready to release.
 
-- **Tag Packages:** Check the packages listed in `cougars.repos` and `dev.repos`. If they have untagged updates, update the `<version>` in the `package.xml` files and push new tags (e.g., `v2.3.4`). Since packages version independently of `cougars-dev`, you can either use an existing up-to-date tag or create a new one.
+- **Tag Packages:** Check the packages listed in `runtime.repos` and `dev.repos`. If they have untagged updates, update the `<version>` in the `package.xml` files and push new tags (e.g., `v2.3.4`). Since packages version independently of `cougars-dev`, you can either use an existing up-to-date tag or create a new one.
 
 - **Lock Dependencies:** On the release branch, pin all packages in the `.repos` files to their specific tags (instead of branches like `main`). Commit these updates.
 
@@ -114,7 +114,7 @@ We adhere to the **Semantic Versioning (SemVer 2.0.0)** standard to release new 
   git push origin v1.2.3
   ```
 
-  Pushing the tag automatically rebuilds and publishes the Docker images using a `<target>-<version>` format (e.g., `frostlab/cougars:base-v1.2.3`) and opens a draft GitHub Release with auto-generated notes.
+  Pushing the tag automatically rebuilds and publishes the Docker images using a `<target>-<version>` format (e.g., `frostlab/cougars:runtime-v1.2.3`) and opens a draft GitHub Release with auto-generated notes.
 
 - **Publish a GitHub Release:** Review the draft release in GitHub and click **Publish**.
 

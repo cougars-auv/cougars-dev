@@ -30,7 +30,7 @@ if [ ! -f "config/${agent_ns}_params.yaml" ]; then
   exit 1
 fi
 
-sed 's|git@github.com:|https://github.com/|g' cougars.repos | vcs import ros2_ws/src
+sed 's|git@github.com:|https://github.com/|g' runtime.repos | vcs import ros2_ws/src
 vcs custom -n --git --args submodule update --init --recursive
 
 for repo in ros2_ws/src/*/; do
@@ -52,4 +52,3 @@ EOF
 sudo cp cougars.service /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl enable cougars.service
-sudo systemctl restart cougars.service

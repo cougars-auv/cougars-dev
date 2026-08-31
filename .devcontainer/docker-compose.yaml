@@ -13,22 +13,6 @@
 # limitations under the License.
 
 services:
-  gtsam:
-    image: frostlab/cougars:gtsam-${VERSION:-latest}
-    build:
-      context: ..
-      dockerfile: .docker/Dockerfile.gtsam
-    profiles: ["build-reqs"]
-
-  base:
-    image: frostlab/cougars:base-${VERSION:-latest}
-    build:
-      context: ..
-      dockerfile: .docker/Dockerfile.base
-      args:
-        - VERSION=${VERSION:-latest}
-    profiles: ["build-reqs"]
-
   mapproxy:
     image: danielsnider/mapproxy
     container_name: mapproxy-ct
@@ -47,7 +31,7 @@ services:
     restart: unless-stopped
 
   router:
-    image: frostlab/cougars:base-${VERSION:-latest}
+    image: frostlab/cougars:runtime-${VERSION:-latest}
     container_name: router-ct
     network_mode: host
     ipc: host
@@ -62,7 +46,7 @@ services:
     #   dockerfile: .docker/Dockerfile.dev
     #   args:
     #     - VERSION=${VERSION:-latest}
-    container_name: cougars-ct
+    container_name: cougars-dev-ct
     network_mode: host
     ipc: host
     pid: host

@@ -13,24 +13,8 @@
 # limitations under the License.
 
 services:
-  gtsam:
-    image: frostlab/cougars:gtsam-${VERSION:-latest}
-    build:
-      context: .
-      dockerfile: .docker/Dockerfile.gtsam
-    profiles: ["build-reqs"]
-
-  base:
-    image: frostlab/cougars:base-${VERSION:-latest}
-    build:
-      context: .
-      dockerfile: .docker/Dockerfile.base
-      args:
-        - VERSION=${VERSION:-latest}
-    profiles: ["build-reqs"]
-
   router:
-    image: frostlab/cougars:base-${VERSION:-latest}
+    image: frostlab/cougars:runtime-${VERSION:-latest}
     container_name: router-ct
     network_mode: host
     ipc: host
@@ -40,14 +24,22 @@ services:
     restart: unless-stopped
     command: ros2 run rmw_zenoh_cpp rmw_zenohd
 
+  builder:
+    image: frostlab/cougars:runtime-${VERSION:-latest}
+    container_name: builder-ct
+    volumes:
+      - ./ros2_ws:/ros2_ws
+    profiles: ["build"]
+    command: colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release
+
   runtime:
     image: frostlab/cougars:runtime-${VERSION:-latest}
-    build:
-      context: .
-      dockerfile: .docker/Dockerfile.runtime
-      args:
-        - VERSION=${VERSION:-latest}
-    container_name: runtime-ct
+    # build:
+    #   context: .
+    #   dockerfile: .docker/Dockerfile.runtime
+    #   args:
+    #     - VERSION=${VERSION:-latest}
+    container_name: cougars-runtime-ct
     network_mode: host
     ipc: host
     pid: host
@@ -58,6 +50,8 @@ services:
       - RMW_IMPLEMENTATION=rmw_zenoh_cpp
       - ROS_DOMAIN_ID=24
     volumes:
+      - ./ros2_ws:/ros2_ws
+      - ./config:/config
       - ./bags:/bags
       - /etc/localtime:/etc/localtime:ro
       - /run/udev:/run/udev:ro

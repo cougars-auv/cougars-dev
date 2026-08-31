@@ -5,7 +5,7 @@ After=docker.service
 
 [Service]
 WorkingDirectory=/home/frostlab/cougars-dev
-ExecStart=/usr/bin/docker compose up --build
+ExecStart=/usr/bin/docker compose up
 ExecStop=/usr/bin/docker compose down
 Restart=on-failure
 
