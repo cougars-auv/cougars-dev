@@ -1,0 +1,426 @@
+{
+    "coug1sim": [
+        {
+            "capture_radius": 25,
+            "capture_radius_z": 2,
+            "lat": 40.34039845949225,
+            "lon": -111.9051612543192,
+            "mode": 0,
+            "slip_radius": 50,
+            "slip_radius_z": 4,
+            "speed_rpm": 1500,
+            "z": 0
+        },
+        {
+            "capture_radius": 25,
+            "capture_radius_z": 2,
+            "lat": 40.339735509790195,
+            "lon": -111.90422420735582,
+            "mode": 0,
+            "slip_radius": 50,
+            "slip_radius_z": 4,
+            "speed_rpm": 1500,
+            "z": 0
+        },
+        {
+            "capture_radius": 25,
+            "capture_radius_z": 2,
+            "lat": 40.33900495511125,
+            "lon": -111.90522317649334,
+            "mode": 0,
+            "slip_radius": 50,
+            "slip_radius_z": 4,
+            "speed_rpm": 1500,
+            "z": 0
+        },
+        {
+            "capture_radius": 25,
+            "capture_radius_z": 2,
+            "lat": 40.340432299677325,
+            "lon": -111.90716801074348,
+            "mode": 0,
+            "slip_radius": 50,
+            "slip_radius_z": 4,
+            "speed_rpm": 1500,
+            "z": 0
+        },
+        {
+            "capture_radius": 25,
+            "capture_radius_z": 2,
+            "lat": 40.33957319190579,
+            "lon": -111.90822883809469,
+            "mode": 0,
+            "slip_radius": 50,
+            "slip_radius_z": 4,
+            "speed_rpm": 1500,
+            "z": 0
+        },
+        {
+            "capture_radius": 25,
+            "capture_radius_z": 2,
+            "lat": 40.338342036212666,
+            "lon": -111.90825533884346,
+            "mode": 0,
+            "slip_radius": 50,
+            "slip_radius_z": 4,
+            "speed_rpm": 1500,
+            "z": -20
+        },
+        {
+            "capture_radius": 25,
+            "capture_radius_z": 2,
+            "lat": 40.33830141529398,
+            "lon": -111.9041712291056,
+            "mode": 0,
+            "slip_radius": 50,
+            "slip_radius_z": 4,
+            "speed_rpm": 1500,
+            "z": -20
+        },
+        {
+            "capture_radius": 25,
+            "capture_radius_z": 2,
+            "lat": 40.33917404793728,
+            "lon": -111.90418887097229,
+            "mode": 0,
+            "slip_radius": 50,
+            "slip_radius_z": 4,
+            "speed_rpm": 1500,
+            "z": -20
+        },
+        {
+            "capture_radius": 25,
+            "capture_radius_z": 2,
+            "lat": 40.339228193570875,
+            "lon": -111.90861780073442,
+            "mode": 0,
+            "slip_radius": 50,
+            "slip_radius_z": 4,
+            "speed_rpm": 1500,
+            "z": -20
+        },
+        {
+            "capture_radius": 25,
+            "capture_radius_z": 2,
+            "lat": 40.3401278841974,
+            "lon": -111.90860013951674,
+            "mode": 0,
+            "slip_radius": 50,
+            "slip_radius_z": 4,
+            "speed_rpm": 1500,
+            "z": -20
+        },
+        {
+            "capture_radius": 25,
+            "capture_radius_z": 2,
+            "lat": 40.3400466716361,
+            "lon": -111.90387942253713,
+            "mode": 0,
+            "slip_radius": 50,
+            "slip_radius_z": 4,
+            "speed_rpm": 1500,
+            "z": -20
+        },
+        {
+            "capture_radius": 25,
+            "capture_radius_z": 2,
+            "lat": 40.3413522564244,
+            "lon": -111.9046484794471,
+            "mode": 0,
+            "slip_radius": 50,
+            "slip_radius_z": 4,
+            "speed_rpm": 1500,
+            "z": -20
+        }
+    ],
+    "coug2sim": [
+        {
+            "capture_radius": 25,
+            "capture_radius_z": 2,
+            "lat": 40.34039845949225,
+            "lon": -111.9051612543192,
+            "mode": 0,
+            "slip_radius": 50,
+            "slip_radius_z": 4,
+            "speed_rpm": 1500,
+            "z": 0
+        },
+        {
+            "capture_radius": 25,
+            "capture_radius_z": 2,
+            "lat": 40.339735509790195,
+            "lon": -111.90422420735582,
+            "mode": 0,
+            "slip_radius": 50,
+            "slip_radius_z": 4,
+            "speed_rpm": 1500,
+            "z": 0
+        },
+        {
+            "capture_radius": 25,
+            "capture_radius_z": 2,
+            "lat": 40.33900495511125,
+            "lon": -111.90522317649334,
+            "mode": 0,
+            "slip_radius": 50,
+            "slip_radius_z": 4,
+            "speed_rpm": 1500,
+            "z": 0
+        },
+        {
+            "capture_radius": 25,
+            "capture_radius_z": 2,
+            "lat": 40.340432299677325,
+            "lon": -111.90716801074348,
+            "mode": 0,
+            "slip_radius": 50,
+            "slip_radius_z": 4,
+            "speed_rpm": 1500,
+            "z": 0
+        },
+        {
+            "capture_radius": 25,
+            "capture_radius_z": 2,
+            "lat": 40.33957319190579,
+            "lon": -111.90822883809469,
+            "mode": 0,
+            "slip_radius": 50,
+            "slip_radius_z": 4,
+            "speed_rpm": 1500,
+            "z": 0
+        },
+        {
+            "capture_radius": 25,
+            "capture_radius_z": 2,
+            "lat": 40.33792263146663,
+            "lon": -111.90826417206506,
+            "mode": 0,
+            "slip_radius": 50,
+            "slip_radius_z": 4,
+            "speed_rpm": 1500,
+            "z": -40
+        },
+        {
+            "capture_radius": 25,
+            "capture_radius_z": 2,
+            "lat": 40.337909107566645,
+            "lon": -111.9071768503998,
+            "mode": 0,
+            "slip_radius": 50,
+            "slip_radius_z": 4,
+            "speed_rpm": 1500,
+            "z": -40
+        },
+        {
+            "capture_radius": 25,
+            "capture_radius_z": 2,
+            "lat": 40.341372577419264,
+            "lon": -111.90716801087595,
+            "mode": 0,
+            "slip_radius": 50,
+            "slip_radius_z": 4,
+            "speed_rpm": 1500,
+            "z": -40
+        },
+        {
+            "capture_radius": 25,
+            "capture_radius_z": 2,
+            "lat": 40.341365807560265,
+            "lon": -111.90605411254779,
+            "mode": 0,
+            "slip_radius": 50,
+            "slip_radius_z": 4,
+            "speed_rpm": 1500,
+            "z": -40
+        },
+        {
+            "capture_radius": 25,
+            "capture_radius_z": 2,
+            "lat": 40.337888808265866,
+            "lon": -111.906027649212,
+            "mode": 0,
+            "slip_radius": 50,
+            "slip_radius_z": 4,
+            "speed_rpm": 1500,
+            "z": -40
+        },
+        {
+            "capture_radius": 25,
+            "capture_radius_z": 2,
+            "lat": 40.3378820254948,
+            "lon": -111.90481656820097,
+            "mode": 0,
+            "slip_radius": 50,
+            "slip_radius_z": 4,
+            "speed_rpm": 1500,
+            "z": -40
+        },
+        {
+            "capture_radius": 25,
+            "capture_radius_z": 2,
+            "lat": 40.34135226065785,
+            "lon": -111.90485181005319,
+            "mode": 0,
+            "slip_radius": 50,
+            "slip_radius_z": 4,
+            "speed_rpm": 1500,
+            "z": -20
+        }
+    ],
+    "coug3sim": [
+        {
+            "capture_radius": 25,
+            "capture_radius_z": 2,
+            "lat": 40.34039845949225,
+            "lon": -111.9051612543192,
+            "mode": 0,
+            "slip_radius": 50,
+            "slip_radius_z": 4,
+            "speed_rpm": 1500,
+            "z": 0
+        },
+        {
+            "capture_radius": 25,
+            "capture_radius_z": 2,
+            "lat": 40.339735509790195,
+            "lon": -111.90422420735582,
+            "mode": 0,
+            "slip_radius": 50,
+            "slip_radius_z": 4,
+            "speed_rpm": 1500,
+            "z": 0
+        },
+        {
+            "capture_radius": 25,
+            "capture_radius_z": 2,
+            "lat": 40.33900495511125,
+            "lon": -111.90522317649334,
+            "mode": 0,
+            "slip_radius": 50,
+            "slip_radius_z": 4,
+            "speed_rpm": 1500,
+            "z": 0
+        },
+        {
+            "capture_radius": 25,
+            "capture_radius_z": 2,
+            "lat": 40.340432299677325,
+            "lon": -111.90716801074348,
+            "mode": 0,
+            "slip_radius": 50,
+            "slip_radius_z": 4,
+            "speed_rpm": 1500,
+            "z": 0
+        },
+        {
+            "capture_radius": 25,
+            "capture_radius_z": 2,
+            "lat": 40.33957319190579,
+            "lon": -111.90822883809469,
+            "mode": 0,
+            "slip_radius": 50,
+            "slip_radius_z": 4,
+            "speed_rpm": 1500,
+            "z": 0
+        },
+        {
+            "capture_radius": 25,
+            "capture_radius_z": 2,
+            "lat": 40.33833481870805,
+            "lon": -111.9082538286792,
+            "mode": 0,
+            "slip_radius": 50,
+            "slip_radius_z": 4,
+            "speed_rpm": 1500,
+            "z": -20
+        },
+        {
+            "capture_radius": 25,
+            "capture_radius_z": 2,
+            "lat": 40.33830097603558,
+            "lon": -111.90483272401018,
+            "mode": 0,
+            "slip_radius": 50,
+            "slip_radius_z": 4,
+            "speed_rpm": 1500,
+            "z": -20
+        },
+        {
+            "capture_radius": 25,
+            "capture_radius_z": 2,
+            "lat": 40.33872712013496,
+            "lon": -111.90382493560023,
+            "mode": 0,
+            "slip_radius": 50,
+            "slip_radius_z": 4,
+            "speed_rpm": 1500,
+            "z": 0
+        },
+        {
+            "capture_radius": 25,
+            "capture_radius_z": 2,
+            "lat": 40.33918037240049,
+            "lon": -111.90481501279015,
+            "mode": 0,
+            "slip_radius": 50,
+            "slip_radius_z": 4,
+            "speed_rpm": 1500,
+            "z": -40
+        },
+        {
+            "capture_radius": 25,
+            "capture_radius_z": 2,
+            "lat": 40.33922774477067,
+            "lon": -111.90823616207369,
+            "mode": 0,
+            "slip_radius": 50,
+            "slip_radius_z": 4,
+            "speed_rpm": 1500,
+            "z": -40
+        },
+        {
+            "capture_radius": 25,
+            "capture_radius_z": 2,
+            "lat": 40.339667433838976,
+            "lon": -111.90899642943918,
+            "mode": 0,
+            "slip_radius": 50,
+            "slip_radius_z": 4,
+            "speed_rpm": 1500,
+            "z": -40
+        },
+        {
+            "capture_radius": 25,
+            "capture_radius_z": 2,
+            "lat": 40.34012067092062,
+            "lon": -111.90819197410268,
+            "mode": 0,
+            "slip_radius": 50,
+            "slip_radius_z": 4,
+            "speed_rpm": 1500,
+            "z": -60
+        },
+        {
+            "capture_radius": 25,
+            "capture_radius_z": 2,
+            "lat": 40.34005299287654,
+            "lon": -111.90431108534315,
+            "mode": 0,
+            "slip_radius": 50,
+            "slip_radius_z": 4,
+            "speed_rpm": 1500,
+            "z": -60
+        },
+        {
+            "capture_radius": 25,
+            "capture_radius_z": 2,
+            "lat": 40.34135179679307,
+            "lon": -111.9044347962003,
+            "mode": 0,
+            "slip_radius": 50,
+            "slip_radius_z": 4,
+            "speed_rpm": 1500,
+            "z": -20
+        }
+    ]
+}
