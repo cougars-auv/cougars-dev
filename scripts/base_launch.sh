@@ -5,14 +5,18 @@ source ${OVERLAY_WS}/install/setup.bash
 
 # --- Selection ---
 while true; do
-  selection=$(basename -a "${CONFIG_DIR}"/*_params.yaml | sed 's/_params.yaml$//' | sort | gum choose --no-limit --header "Select agents to launch:") || exit 0
+  selection=$(basename -a "${CONFIG_DIR}"/*_params.yaml | \
+    sed 's/_params.yaml$//' | sort | \
+    gum choose --no-limit --header "Select agents to launch:") || exit 0
   [ -n "${selection}" ] && break
 done
 
 agent_list="[$(paste -sd, <<< "${selection}" | sed 's/,/, /g')]"
 
 # --- Options ---
-options=$(gum choose --no-limit --header "Select options:" "Record rosbag" "Specify lead agent") || exit 0
+options=$(gum choose --no-limit --header "Select options:" \
+  "Record rosbag" \
+  "Specify lead agent") || exit 0
 
 record_bag_path=""
 lead_agent=""

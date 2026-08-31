@@ -4,7 +4,12 @@ set -e
 source ${OVERLAY_WS}/install/setup.bash
 
 # --- Selection ---
-scenario=$(gum choose --header "Choose a HoloOcean scenario:" "CougUV" "BlueROV2" "WAM-V" "CougUV Multi-Agent" "Mixed Multi-Agent")
+scenario=$(gum choose --header "Choose a HoloOcean scenario:" \
+  "CougUV" \
+  "BlueROV2" \
+  "WAM-V" \
+  "CougUV Multi-Agent" \
+  "Mixed Multi-Agent")
 
 case ${scenario} in
   "CougUV") agent_list="[coug1sim]";;
@@ -15,7 +20,13 @@ case ${scenario} in
 esac
 
 # --- Options ---
-options=$(gum choose --no-limit --header "Select options:" "Record rosbag" "Localization comparison" "Disable sensor noise" "Specify lead agent" "Acomms simulation" "HITL mode") || exit 0
+options=$(gum choose --no-limit --header "Select options:" \
+  "Record rosbag" \
+  "Localization comparison" \
+  "Disable sensor noise" \
+  "Specify lead agent" \
+  "Acomms simulation" \
+  "HITL mode") || exit 0
 
 record_bag_path=""
 loc_comparison="false"
