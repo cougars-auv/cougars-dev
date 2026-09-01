@@ -100,7 +100,7 @@ CoUGARs is a low-cost, configurable AUV platform designed for multi-agent autono
 ## Releasing
 
 This repository follows the **Semantic Versioning (SemVer 2.0.0)** standard:
-> Given a version number **`MAJOR.MINOR.PATCH`**, increment:
+> Given a version number **`MAJOR.MINOR.PATCH`**, increment the:
 > - **MAJOR** version when you make incompatible API changes
 > - **MINOR** version when you add functionality in a backward compatible manner
 > - **PATCH** version when you make backward compatible bug fixes
