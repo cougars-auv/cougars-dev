@@ -2,7 +2,7 @@
 
 - For each CougUV:
 
-  - Outside of the dev container, copy the agent-recorded bags onto the base station using `./sync_bags.sh <agent-ns>`.
+  - Outside the dev container, copy the bags recorded by the agent to the base station with `./sync_bags.sh <agent-ns>`.
 
     ```bash
     cd ~/cougars-dev && ./sync_bags.sh <agent-ns>

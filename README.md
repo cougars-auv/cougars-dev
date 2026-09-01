@@ -24,9 +24,9 @@ CoUGARs is a low-cost, configurable AUV platform designed for multi-agent autono
 
   **Simulation (HoloOcean):**
 
-  - Build a runtime image for [HoloOcean-ROS](https://github.com/cougars-auv/holoocean-ros/tree/main/docker/runtime) on the `cougars-auv` organization's fork. When prompted to run `./build_container.sh`, specify the branch `nelson/cougars-dev` using `./build_container.sh -b nelson/cougars-dev`.
+  - Build the runtime image from the `cougars-auv` fork of [HoloOcean-ROS](https://github.com/cougars-auv/holoocean-ros/tree/main/docker/runtime). When prompted to run `./build_container.sh`, specify the `nelson/cougars-dev` branch with `./build_container.sh -b nelson/cougars-dev`.
 
-  - Open the `cougars-dev` repository in VSCode and use the Command Palette (`Ctrl + Shift + P`) to select "Dev Containers: Reopen in Container." When prompted to choose a `devcontainer.json` file, click `CoUGARs Dev (GPU)`.
+  - Open the `cougars-dev` repository in VSCode and use the Command Palette (`Ctrl + Shift + P`) to select "Dev Containers: Reopen in Container." When prompted to choose a `devcontainer.json` file, click "CoUGARs Dev (GPU)."
 
   - Once the containers load, open a new terminal window using `` Ctrl + Alt + Shift + ` `` and launch a HoloOcean scenario in the `cougars-holoocean-ct` container using `./holoocean_launch.sh`.
 
@@ -34,7 +34,7 @@ CoUGARs is a low-cost, configurable AUV platform designed for multi-agent autono
     cd ~/cougars-dev/scripts && ./holoocean_launch.sh
     ```
 
-  - Open a new terminal, build the `ros2_ws` workspace, and select the matching launch configuration using `./sim_launch.sh`.
+  - Open a new terminal, build the `ros2_ws` workspace, and select the matching launch configuration with `./sim_launch.sh`.
 
     ```bash
     cd ~/cougars-dev/ros2_ws && colcon build
@@ -43,16 +43,17 @@ CoUGARs is a low-cost, configurable AUV platform designed for multi-agent autono
 
   **Recorded Data (`rosbag2`):**
 
-  - Open the `cougars-dev` repository in VSCode and use the Command Palette (`Ctrl + Shift + P`) to select "Dev Containers: Reopen in Container." When prompted to choose a `devcontainer.json` file, click `CoUGARs Dev`.
+  - Open the `cougars-dev` repository in VSCode and use the Command Palette (`Ctrl + Shift + P`) to select "Dev Containers: Reopen in Container." When prompted to choose a `devcontainer.json` file, click "CoUGARs Dev."
 
-  - Once the containers load, copy your `rosbag2` bag into the `bags` folder at the root of the repository.
+  - Once the containers load, copy your `rosbag2` bag into the repository's `bags` folder.
 
-  - Open a new terminal window using `` Ctrl + Alt + Shift + ` ``, build the `ros2_ws` workspace, and select the bag using `./bag_launch.sh`.
+  - Open a new terminal window using `` Ctrl + Alt + Shift + ` ``, build the `ros2_ws` workspace, and select a bag with `./bag_launch.sh`.
 
     ```bash
     cd ~/cougars-dev/ros2_ws && colcon build
     cd ~/cougars-dev/scripts && ./bag_launch.sh
     ```
+
 > If you run into crashes or out-of-memory errors while building the workspace, restrict the compiler to a single worker using `colcon build --parallel-workers 1`.
 
 > If not all repositories appear in the Git sidebar in VSCode, open settings (`Ctrl + ,`), set "Git: Repository Scan Max Depth" to 3, and reload the window.
@@ -60,18 +61,21 @@ CoUGARs is a low-cost, configurable AUV platform designed for multi-agent autono
 ## Documentation
 
 ### Fleet Assembly
-* Bill of Materials
-* Assembly Instructions
-* [Base Station Software Setup](https://github.com/cougars-auv/cougars-dev/blob/main/docs/fleet_assembly/base_station_software_setup.md)
-* [CougUV Software Setup](https://github.com/cougars-auv/cougars-dev/blob/main/docs/fleet_assembly/couguv_software_setup.md)
+
+- Bill of Materials
+- Assembly Instructions
+- [Base Station Software Setup](https://github.com/cougars-auv/cougars-dev/blob/main/docs/fleet_assembly/base_station_software_setup.md)
+- [CougUV Software Setup](https://github.com/cougars-auv/cougars-dev/blob/main/docs/fleet_assembly/couguv_software_setup.md)
 
 ### Field Operations
-* [Mission Preparation](https://github.com/cougars-auv/cougars-dev/blob/main/docs/field_operations/mission_preparation.md)
-* [Fleet Deployment](https://github.com/cougars-auv/cougars-dev/blob/main/docs/field_operations/fleet_deployment.md)
-* [Post-Mission Analysis](https://github.com/cougars-auv/cougars-dev/blob/main/docs/field_operations/post_mission_analysis.md)
+
+- [Mission Preparation](https://github.com/cougars-auv/cougars-dev/blob/main/docs/field_operations/mission_preparation.md)
+- [Fleet Deployment](https://github.com/cougars-auv/cougars-dev/blob/main/docs/field_operations/fleet_deployment.md)
+- [Post-Mission Analysis](https://github.com/cougars-auv/cougars-dev/blob/main/docs/field_operations/post_mission_analysis.md)
 
 ### Resources
-* [Helpful Tutorials](https://github.com/cougars-auv/cougars-dev/blob/main/docs/resources/helpful_tutorials.md)
+
+- [Helpful Tutorials](https://github.com/cougars-auv/cougars-dev/blob/main/docs/resources/helpful_tutorials.md)
 
 ## Contributing
 
@@ -95,19 +99,19 @@ CoUGARs is a low-cost, configurable AUV platform designed for multi-agent autono
 
 ## Releasing
 
-We adhere to the **Semantic Versioning (SemVer 2.0.0)** standard to release new versions of this repository:
-> Given a version number **`MAJOR.MINOR.PATCH`**, increment the:
+This repository follows the **Semantic Versioning (SemVer 2.0.0)** standard:
+> Given a version number **`MAJOR.MINOR.PATCH`**, increment:
 > - **MAJOR** version when you make incompatible API changes
 > - **MINOR** version when you add functionality in a backward compatible manner
 > - **PATCH** version when you make backward compatible bug fixes
 
-- **Create a Release Branch:** Create a dedicated minor release branch (e.g., `release/v1.2.x`) from `main`.
+- **Create a Release Branch:** Create a minor release branch (e.g., `release/v1.2.x`) from `main`.
 
-  > Do not create separate branches for patch versions (e.g., `v1.2.0` to `v1.2.1`). Simply merge fixes into the minor release branch and bump the patch version on a new tag when ready to release.
+  > Do not create separate branches for patch versions (e.g., `v1.2.0` to `v1.2.1`). Merge fixes into the minor release branch, then bump the patch version in a new tag when ready to release.
 
-- **Tag Packages:** Check the packages listed in `runtime.repos` and `dev.repos`. If they have untagged updates, update the `<version>` in the `package.xml` files and push new tags (e.g., `v2.3.4`). Since packages version independently of `cougars-dev`, you can either use an existing up-to-date tag or create a new one.
+- **Tag Packages:** Check the packages listed in `runtime.repos` and `dev.repos`. For packages with untagged updates, update the `<version>` in their `package.xml` files and push a new tag (e.g., `v2.3.4`). Since packages are versioned independently of `cougars-dev`, use an existing up-to-date tag or create a new one.
 
-- **Lock Dependencies:** On the release branch, pin all packages in the `.repos` files to their specific tags (instead of branches like `main`). Commit these updates.
+- **Lock Dependencies:** On the release branch, pin each package in the `.repos` files to a specific tag instead of a branch such as `main`. Commit these updates.
 
 - **Tag and Push:** Create and push a version tag (e.g., `v1.2.3`) on your release commit:
 
@@ -116,13 +120,13 @@ We adhere to the **Semantic Versioning (SemVer 2.0.0)** standard to release new 
   git push origin v1.2.3
   ```
 
-  Pushing the tag automatically rebuilds and publishes the Docker images using a `<target>-<version>` format (e.g., `frostlab/cougars:runtime-v1.2.3`) and opens a draft GitHub Release with auto-generated notes.
+  Pushing the tag automatically rebuilds and publishes Docker images using the `<target>-<version>` format (e.g., `frostlab/cougars:runtime-v1.2.3`) and creates a draft GitHub Release with auto-generated notes.
 
 - **Publish a GitHub Release:** Review the draft release in GitHub and click **Publish**.
 
 ## Citations
 
-Please cite our relevant publications if you find this repository useful for your research:
+If you use this repository in your research, please cite the following publications:
 
 ### CoUGARs
 ```bibtex

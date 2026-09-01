@@ -2,9 +2,9 @@
 
 - Complete the [Base Station Software Setup](https://github.com/cougars-auv/cougars-dev/blob/main/docs/fleet_assembly/base_station_software_setup.md).
 
-- Choose a new agent namespace (e.g., "coug0").
+- Choose a new agent namespace (e.g., `coug0`).
 
-- Add a parameter file to `cougars-dev/config` using the pattern `<agent-ns>_params.yaml` (e.g., `coug0_params.yaml`). At a minimum, ensure that the following parameters are set:
+- Add a parameter file to `cougars-dev/config` named `<agent-ns>_params.yaml` (e.g., `coug0_params.yaml`). At a minimum, set the following parameters:
 
   ```yaml
   /<agent-ns>:
@@ -21,9 +21,9 @@
 
 - Install [Raspberry Pi Imager](https://www.raspberrypi.com/software/) on the base station or a personal computer.
 
-- Flash "Raspberry Pi OS Lite (64-bit)" onto a new SD card. During configuration, set the new agent namespace as the hostname and "frostlab" as the username and password. Add the info for the dedicated fleet WiFi router and enable SSH with a password.
+- Flash "Raspberry Pi OS Lite (64-bit)" onto a new SD card. During configuration, set the agent namespace as the hostname and `frostlab` as the username and password. Add the dedicated fleet WiFi router details and enable password-based SSH.
 
-- Insert the SD card into the board and power it on. Once the device is online, generate a new SSH key on the base station (outside of the dev container) and connect.
+- Insert the SD card into the board and power it on. Once the device is online, generate a new SSH key on the base station outside the dev container, then connect.
 
   ```bash
   ssh-keygen -t ed25519
@@ -33,7 +33,7 @@
 
 - On the Raspberry Pi 5:
 
-  - Install [Docker Engine](https://docs.docker.com/engine/install/debian/#install-using-the-repository). Make sure to follow the [Linux post-installation steps](https://docs.docker.com/engine/install/linux-postinstall).
+  - Install [Docker Engine](https://docs.docker.com/engine/install/debian/#install-using-the-repository), including the [Linux post-installation steps](https://docs.docker.com/engine/install/linux-postinstall).
   
   - Install project dependencies.
   
@@ -48,13 +48,13 @@
     cd ~ && git clone https://github.com/cougars-auv/cougars-dev.git
     ```
   
-  - Set up the CoUGARs software stack using `./setup.sh $(hostname) <base-station-ip>`.
+  - Set up the CoUGARs software stack with `./setup.sh $(hostname) <base-station-ip>`.
   
     ```bash
     cd ~/cougars-dev && ./setup.sh $(hostname) <base-station-ip>
     ```
 
-- Close the direct SSH connection and attach via tmux instead using `./connect.sh <agent-ns>`.
+- Close the direct SSH connection, then attach via tmux with `./connect.sh <agent-ns>`.
 
   ```bash
   exit
