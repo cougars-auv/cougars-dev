@@ -7,6 +7,7 @@
   <maintainer email="snelsond@byu.edu">snelsondurrant</maintainer>
   <license>Apache-2.0</license>
 
+  <exec_depend>ament_index_python</exec_depend>
   <exec_depend>coug_belief_mppi</exec_depend>
   <exec_depend>coug_comms</exec_depend>
   <exec_depend>coug_description</exec_depend>
@@ -19,11 +20,16 @@
   <exec_depend>diagnostic_updater</exec_depend>
   <exec_depend>gps_tools</exec_depend>
   <exec_depend>gpsd_client</exec_depend>
+  <exec_depend>launch</exec_depend>
+  <exec_depend>launch_ros</exec_depend>
   <exec_depend>mavros</exec_depend>
   <exec_depend>ntrip_client</exec_depend>
   <exec_depend>python3-yaml</exec_depend>
   <exec_depend>rclpy</exec_depend>
+  <exec_depend>rosbag2_storage_mcap</exec_depend>
+  <exec_depend>rosbag2_transport</exec_depend>
   <exec_depend>sbg_driver</exec_depend>
+  <exec_depend>tf2_ros</exec_depend>
 
   <test_depend>python3-pytest</test_depend>
   <test_depend>python3-pytest-cov</test_depend>
