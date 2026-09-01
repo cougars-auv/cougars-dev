@@ -17,16 +17,8 @@ name: ROS 2 Build & Test
 on:
   push:
     branches: ["main"]
-    paths:
-      - ".github/workflows/ros2_build_and_test.yml"
-      - "ros2_ws/src/**"
-      - "*.repos"
   pull_request:
     branches: ["main"]
-    paths:
-      - ".github/workflows/ros2_build_and_test.yml"
-      - "ros2_ws/src/**"
-      - "*.repos"
   repository_dispatch:
     types: [ros2_dispatch]
   workflow_dispatch:
@@ -81,3 +73,11 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: false
+
+  build-test-status:
+    needs: build-test
+    if: always()
+    runs-on: ubuntu-24.04
+    steps:
+      - if: needs.build-test.result != 'success'
+        run: exit 1
