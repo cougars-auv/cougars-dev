@@ -81,15 +81,17 @@ CoUGARs is a low-cost, configurable AUV platform designed for multi-agent autono
 
 - **Create Package Branches:** For each package you plan to modify, create a new branch with the same name. In your new `cougars-dev` branch, temporarily update the relevant `.repos` files to reference those branches.
 
-- **Make Changes:** Develop and debug your new feature. Test extensively.
+- **Make Changes:** Develop, debug, and test your changes.
 
   > If you need to add dependencies, update the relevant `package.xml` files, Dockerfiles under `.docker/`, `runtime.repos`, `dev.repos`, or `dependencies.repos`. Test building the Docker images locally.
 
-- **Sync Frequently:** Regularly integrate the latest changes from `main` into your branches (via rebase or merge) to prevent future conflicts.
+- **Sync Frequently:** Regularly update your branches with the latest `main` (via rebase or merge) to catch conflicts early.
 
-- **Submit Package PRs:** Open a pull request for each package branch, ensure required tests pass, and merge once approved.
+- **Submit Package PRs:** Open a pull request for each package branch. Ensure required tests pass, then merge once approved. After merging, delete the branch and create a new branch from `main` for any follow-up work.
 
-- **Submit Final PR**: Before merging the `cougars-dev` branch, revert the temporary changes to the `.repos` files. Upon merge to `main`, GitHub Actions will automatically build and push updated images to Docker Hub.
+  > All pull requests must use [squash and merge](https://docs.github.com/en/pull-requests/reference/pull-request-merges#squash-and-merge-your-commits).
+
+- **Submit Final PR:** After all package PRs have merged, revert the temporary `.repos` changes in your `cougars-dev` branch and open a pull request. Once merged, GitHub Actions will build and push the updated Docker images to Docker Hub. Delete the branch after merging.
 
 ## Releasing
 
