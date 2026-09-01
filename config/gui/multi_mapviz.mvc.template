@@ -1,0 +1,98 @@
+displays:
+  - type: mapviz_plugins/tf_frame
+    name: AGENT_NS
+    config:
+      visible: true
+      collapsed: true
+      frame: AGENT_NS/base_link
+      color: "#00ff00"
+      draw_style: arrows
+      position_tolerance: 0
+      buffer_size: 1
+      static_arrow_sizes: true
+      arrow_size: 53
+  - type: mapviz_plugins/navsat
+    name: AGENT_NS
+    config:
+      visible: true
+      collapsed: true
+      topic: /AGENT_NS/gps/fix
+      color: "#55aaff"
+      draw_style: points
+      position_tolerance: 0
+      buffer_size: 1
+      qos_depth: 10
+      qos_history: 1
+      qos_reliability: 1
+      qos_durability: 2
+  - type: mapviz_plugins/path
+    name: AGENT_NS
+    config:
+      visible: true
+      collapsed: true
+      topic: /AGENT_NS/smoothed_path
+      color: "#ff55ff"
+      qos_depth: 10
+      qos_history: 1
+      qos_reliability: 1
+      qos_durability: 2
+  - type: mapviz_plugins/odometry
+    name: AGENT_NS, GT
+    config:
+      visible: true
+      collapsed: true
+      topic: /AGENT_NS/odometry/truth
+      color: "#ffffff"
+      draw_style: lines
+      position_tolerance: 0
+      buffer_size: 0
+      show_laps: false
+      show_covariance: false
+      show_all_covariances: false
+      static_arrow_sizes: false
+      arrow_size: 25
+      show_timestamps: 0
+      qos_depth: 10
+      qos_history: 1
+      qos_reliability: 1
+      qos_durability: 2
+  - type: mapviz_plugins/odometry
+    name: AGENT_NS, NBR
+    config:
+      visible: true
+      collapsed: true
+      topic: /AGENT_NS/base/odometry/global_nbr
+      color: "#ffaa00"
+      draw_style: lines
+      position_tolerance: 0
+      buffer_size: 0
+      show_laps: false
+      show_covariance: true
+      show_all_covariances: false
+      static_arrow_sizes: false
+      arrow_size: 25
+      show_timestamps: 0
+      qos_depth: 10
+      qos_history: 1
+      qos_reliability: 1
+      qos_durability: 2
+  - type: mapviz_plugins/odometry
+    name: AGENT_NS, FGO
+    config:
+      visible: true
+      collapsed: true
+      topic: /AGENT_NS/base/odometry/global
+      color: "#00ff00"
+      draw_style: lines
+      position_tolerance: 0
+      buffer_size: 0
+      show_laps: false
+      show_covariance: true
+      show_all_covariances: false
+      static_arrow_sizes: false
+      arrow_size: 25
+      show_timestamps: 0
+      qos_depth: 10
+      qos_history: 1
+      qos_reliability: 1
+      qos_durability: 2

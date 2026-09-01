@@ -43,7 +43,7 @@ def generate_launch_description() -> LaunchDescription:
     loc_comparison = LaunchConfiguration("loc_comparison")
     lead_agent = LaunchConfiguration("lead_agent")
 
-    fleet_params = PathJoinSubstitution(
+    fleet_param_file = PathJoinSubstitution(
         [
             EnvironmentVariable("CONFIG_DIR"),
             "fleet",
@@ -64,7 +64,7 @@ def generate_launch_description() -> LaunchDescription:
     coug_viz_dvl_dir = get_package_share_directory("coug_visual_dvl")
     coug_viz_dvl_launch_dir = os.path.join(coug_viz_dvl_dir, "launch")
 
-    coug_des_cmd = IncludeLaunchDescription(
+    coug_description_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(coug_des_launch_dir, "coug_description.launch.py")
         ),
@@ -74,7 +74,7 @@ def generate_launch_description() -> LaunchDescription:
         }.items(),
     )
 
-    coug_comms_agent_cmd = IncludeLaunchDescription(
+    coug_comms_agent_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(coug_comms_launch_dir, "coug_comms_agent.launch.py")
         ),
@@ -84,7 +84,7 @@ def generate_launch_description() -> LaunchDescription:
         }.items(),
     )
 
-    coug_fg_cmd = IncludeLaunchDescription(
+    coug_fg_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(coug_fg_launch_dir, "coug_fg.launch.py")
         ),
@@ -97,7 +97,7 @@ def generate_launch_description() -> LaunchDescription:
         condition=IfCondition(NotEqualsSubstitution(agent_ns, "coug2")),
     )
 
-    coug_fg_ekf_cmd = IncludeLaunchDescription(
+    coug_fg_ekf_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(coug_fg_launch_dir, "coug_fg_ekf.launch.py")
         ),
@@ -108,7 +108,7 @@ def generate_launch_description() -> LaunchDescription:
         condition=IfCondition(EqualsSubstitution(agent_ns, "coug2")),
     )
 
-    coug_helm_cmd = IncludeLaunchDescription(
+    coug_helm_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(coug_helm_launch_dir, "coug_helm.launch.py")
         ),
@@ -126,7 +126,7 @@ def generate_launch_description() -> LaunchDescription:
         ),
     )
 
-    coug_belief_mppi_cmd = IncludeLaunchDescription(
+    coug_belief_mppi_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(coug_belief_mppi_launch_dir, "coug_belief_mppi.launch.py")
         ),
@@ -142,7 +142,7 @@ def generate_launch_description() -> LaunchDescription:
         ),
     )
 
-    coug_viz_dvl_cmd = IncludeLaunchDescription(
+    coug_visual_dvl_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(coug_viz_dvl_launch_dir, "coug_visual_dvl.launch.py")
         ),
@@ -153,12 +153,12 @@ def generate_launch_description() -> LaunchDescription:
         condition=IfCondition(EqualsSubstitution(agent_ns, "blue1sim")),
     )
 
-    bag_recorder_cmd = Node(
+    bag_recorder_node = Node(
         package="coug_bringup",
         executable="bag_recorder",
         name="bag_recorder_node",
         parameters=[
-            fleet_params,
+            fleet_param_file,
             {
                 "use_sim_time": use_sim_time,
                 "agent_ns": agent_ns,
@@ -193,14 +193,14 @@ def generate_launch_description() -> LaunchDescription:
             GroupAction(
                 actions=[
                     PushRosNamespace(agent_ns),
-                    bag_recorder_cmd,
-                    coug_comms_agent_cmd,
-                    coug_des_cmd,
-                    coug_fg_cmd,
-                    coug_fg_ekf_cmd,
-                    coug_helm_cmd,
-                    coug_belief_mppi_cmd,
-                    coug_viz_dvl_cmd,
+                    bag_recorder_node,
+                    coug_comms_agent_launch,
+                    coug_description_launch,
+                    coug_fg_launch,
+                    coug_fg_ekf_launch,
+                    coug_helm_launch,
+                    coug_belief_mppi_launch,
+                    coug_visual_dvl_launch,
                 ]
             ),
         ]

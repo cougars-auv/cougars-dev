@@ -56,7 +56,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
     coug_bringup_launch_dir = os.path.join(coug_bringup_dir, "launch")
     coug_holo_dir = get_package_share_directory("coug_holoocean")
     coug_holo_launch_dir = os.path.join(coug_holo_dir, "launch")
-    fleet_params = PathJoinSubstitution(
+    fleet_param_file = PathJoinSubstitution(
         [EnvironmentVariable("CONFIG_DIR"), "fleet", "coug_holoocean_params.yaml"]
     )
 
@@ -136,7 +136,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                     executable="depth_converter",
                     name="modem_depth_converter_node",
                     parameters=[
-                        fleet_params,
+                        fleet_param_file,
                         {
                             "use_sim_time": use_sim_time,
                             "depth_frame": "base_station",
@@ -150,7 +150,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                     executable="modem_converter",
                     name="modem_converter_node",
                     parameters=[
-                        fleet_params,
+                        fleet_param_file,
                         {
                             "use_sim_time": use_sim_time,
                             "beacon_id": 15,

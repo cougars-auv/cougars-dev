@@ -42,35 +42,23 @@ from launch.substitutions import EqualsSubstitution, LaunchConfiguration
 from launch_ros.actions import Node
 
 
-def save_config(record_bag_path: str) -> None:
+def save_artifacts(record_bag_path: str) -> None:
     if not record_bag_path or not os.path.isdir(record_bag_path):
         return
 
-    config_dir = os.environ.get("CONFIG_DIR", "")
-    if not config_dir or not os.path.isdir(config_dir):
-        return
-
-    dest = os.path.join(record_bag_path, "config")
-    shutil.copytree(config_dir, dest, dirs_exist_ok=True)
-    print(f"Config saved: {dest}")
-
-
-def save_logs(record_bag_path: str) -> None:
-    if not record_bag_path or not os.path.isdir(record_bag_path):
-        return
-
-    log_dir = launch_config.log_dir
-    if not os.path.isdir(log_dir):
-        return
-
-    dest = os.path.join(record_bag_path, "log")
-    shutil.copytree(log_dir, dest, dirs_exist_ok=True)
-    print(f"Logs saved: {dest}")
+    artifacts = (
+        ("Config", os.environ.get("CONFIG_DIR", ""), "config"),
+        ("Logs", launch_config.log_dir, "log"),
+    )
+    for label, source, directory in artifacts:
+        if os.path.isdir(source):
+            destination = os.path.join(record_bag_path, directory)
+            shutil.copytree(source, destination, dirs_exist_ok=True)
+            print(f"{label} saved: {destination}")
 
 
-def save_artifacts(context: LaunchContext, record_bag_path: str) -> None:
-    save_config(record_bag_path)
-    save_logs(record_bag_path)
+def save_artifacts_on_exit(context: LaunchContext, record_bag_path: str) -> None:
+    save_artifacts(record_bag_path)
 
 
 def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Action]:
@@ -122,7 +110,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                     target_action=record_process,
                     on_exit=[
                         OpaqueFunction(
-                            function=save_artifacts,
+                            function=save_artifacts_on_exit,
                             kwargs={"record_bag_path": record_bag_path_str},
                         )
                     ],
@@ -130,8 +118,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
             )
         )
 
-        atexit.register(save_config, record_bag_path_str)
-        atexit.register(save_logs, record_bag_path_str)
+        atexit.register(save_artifacts, record_bag_path_str)
 
     if play_bag_path_str:
         play_process = ExecuteProcess(
@@ -257,7 +244,8 @@ def generate_launch_description() -> LaunchDescription:
                 "start_delay",
                 default_value="0.0",
                 description=(
-                    "Time in seconds to skip from the beginning of the bag file (start offset)"
+                    "Time in seconds to skip from the beginning of the bag file "
+                    "(start offset)"
                 ),
             ),
             DeclareLaunchArgument(
@@ -281,7 +269,10 @@ def generate_launch_description() -> LaunchDescription:
             DeclareLaunchArgument(
                 "playback_rate",
                 default_value="1.0",
-                description="Bag playback rate multiplier (e.g. 0.5 for half speed, 2.0 for double)",
+                description=(
+                    "Bag playback rate multiplier "
+                    "(e.g. 0.5 for half speed, 2.0 for double)"
+                ),
             ),
             DeclareLaunchArgument(
                 "loc_comparison",

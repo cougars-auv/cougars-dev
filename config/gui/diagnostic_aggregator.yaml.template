@@ -1,0 +1,74 @@
+diagnostic_aggregator:
+  ros__parameters:
+    analyzers: ["AGENT_NS", "base_station"]
+
+    AGENT_NS:
+      type: diagnostic_aggregator/AnalyzerGroup
+      path: AGENT_NS
+      analyzers:
+        [
+          "factor_graph_node",
+          "navsat_odom_node",
+          "bt_helm_node",
+          "agent_receiver_node",
+          "bag_recorder_node",
+        ]
+
+      factor_graph_node:
+        type: diagnostic_aggregator/GenericAnalyzer
+        path: "factor_graph_node"
+        find_and_remove_prefix:
+          [
+            "factor_graph_node: [/AGENT_NS] ",
+            "factor_graph_node_isam2: [/AGENT_NS] ",
+            "factor_graph_node_lpi: [/AGENT_NS] ",
+            "factor_graph_node_tpi: [/AGENT_NS] ",
+          ]
+        timeout: 5.0
+
+      navsat_odom_node:
+        type: diagnostic_aggregator/GenericAnalyzer
+        path: "navsat_odom_node"
+        find_and_remove_prefix: ["navsat_odom_node: [/AGENT_NS] "]
+        timeout: 5.0
+
+      bt_helm_node:
+        type: diagnostic_aggregator/GenericAnalyzer
+        path: "bt_helm_node"
+        find_and_remove_prefix: ["bt_helm_node: [/AGENT_NS] "]
+        timeout: 5.0
+
+      agent_receiver_node:
+        type: diagnostic_aggregator/GenericAnalyzer
+        path: "agent_receiver_node"
+        find_and_remove_prefix: ["agent_receiver_node: [/AGENT_NS] "]
+        timeout: 5.0
+
+      bag_recorder_node:
+        type: diagnostic_aggregator/GenericAnalyzer
+        path: "bag_recorder_node"
+        find_and_remove_prefix: ["bag_recorder_node: [/AGENT_NS] "]
+        timeout: 5.0
+
+    base_station:
+      type: diagnostic_aggregator/AnalyzerGroup
+      path: base_station
+      analyzers: ["base_dispatcher_node", "base_status_poller_node", "navsat_odom_node"]
+
+      base_dispatcher_node:
+        type: diagnostic_aggregator/GenericAnalyzer
+        path: "base_dispatcher_node"
+        find_and_remove_prefix: ["base_dispatcher_node: [/base_station] "]
+        timeout: 5.0
+
+      base_status_poller_node:
+        type: diagnostic_aggregator/GenericAnalyzer
+        path: "base_status_poller_node"
+        find_and_remove_prefix: ["base_status_poller_node: [/base_station] "]
+        timeout: 5.0
+
+      navsat_odom_node:
+        type: diagnostic_aggregator/GenericAnalyzer
+        path: "navsat_odom_node"
+        find_and_remove_prefix: ["navsat_odom_node: [/base_station] "]
+        timeout: 5.0

@@ -1,0 +1,268 @@
+displays:
+  - Class: rviz_common/Group
+    Name: AGENT_NS
+    Enabled: true
+    Displays:
+      - Alpha: 1
+        Class: rviz_default_plugins/RobotModel
+        Collision Enabled: false
+        Description File: ""
+        Description Source: Topic
+        Description Topic:
+          Depth: 5
+          Durability Policy: Volatile
+          History Policy: Keep Last
+          Reliability Policy: Reliable
+          Value: /AGENT_NS/robot_description
+        Enabled: true
+        Links:
+          All Links Enabled: true
+          Expand Joint Details: false
+          Expand Link Details: false
+          Expand Tree: false
+          Link Tree Style: Links in Alphabetic Order
+        Mass Properties:
+          Inertia: false
+          Mass: false
+        Name: RobotModel
+        TF Prefix: AGENT_NS
+        Update Interval: 0
+        Value: true
+        Visual Enabled: true
+      - Angle Tolerance: 0.10000000149011612
+        Class: rviz_default_plugins/Odometry
+        Covariance:
+          Orientation:
+            Alpha: 0.5
+            Color: 255; 255; 127
+            Color Style: Unique
+            Frame: Local
+            Offset: 1
+            Scale: 1
+            Value: true
+          Position:
+            Alpha: 0.30000001192092896
+            Color: 204; 51; 204
+            Scale: 1
+            Value: true
+          Value: false
+        Enabled: true
+        Keep: 1
+        Name: GT
+        Position Tolerance: 0.10000000149011612
+        Shape:
+          Alpha: 1
+          Axes Length: 1
+          Axes Radius: 0.10000000149011612
+          Color: 255; 255; 255
+          Head Length: 0.30000001192092896
+          Head Radius: 0.10000000149011612
+          Shaft Length: 1
+          Shaft Radius: 0.05000000074505806
+          Value: Arrow
+        Topic:
+          Depth: 5
+          Durability Policy: Volatile
+          Filter size: 10
+          History Policy: Keep Last
+          Reliability Policy: Reliable
+          Value: /AGENT_NS/odometry/truth
+        Value: true
+      - Angle Tolerance: 0.10000000149011612
+        Class: rviz_default_plugins/Odometry
+        Covariance:
+          Orientation:
+            Alpha: 0.5
+            Color: 255; 255; 127
+            Color Style: Unique
+            Frame: Local
+            Offset: 1
+            Scale: 1
+            Value: true
+          Position:
+            Alpha: 0.30000001192092896
+            Color: 204; 51; 204
+            Scale: 1
+            Value: true
+          Value: true
+        Enabled: true
+        Keep: 1
+        Name: NBR
+        Position Tolerance: 0.10000000149011612
+        Shape:
+          Alpha: 1
+          Axes Length: 1
+          Axes Radius: 0.10000000149011612
+          Color: 255; 170; 0
+          Head Length: 0.30000001192092896
+          Head Radius: 0.10000000149011612
+          Shaft Length: 1
+          Shaft Radius: 0.05000000074505806
+          Value: Arrow
+        Topic:
+          Depth: 5
+          Durability Policy: Volatile
+          Filter size: 10
+          History Policy: Keep Last
+          Reliability Policy: Reliable
+          Value: /AGENT_NS/base/odometry/global_nbr
+        Value: true
+      - Angle Tolerance: 0.10000000149011612
+        Class: rviz_default_plugins/Odometry
+        Covariance:
+          Orientation:
+            Alpha: 0.5
+            Color: 255; 255; 127
+            Color Style: Unique
+            Frame: Local
+            Offset: 1
+            Scale: 1
+            Value: true
+          Position:
+            Alpha: 0.30000001192092896
+            Color: 204; 51; 204
+            Scale: 1
+            Value: true
+          Value: true
+        Enabled: true
+        Keep: 1
+        Name: FG
+        Position Tolerance: 0.10000000149011612
+        Shape:
+          Alpha: 1
+          Axes Length: 1
+          Axes Radius: 0.10000000149011612
+          Color: 0; 255; 0
+          Head Length: 0.30000001192092896
+          Head Radius: 0.10000000149011612
+          Shaft Length: 1
+          Shaft Radius: 0.05000000074505806
+          Value: Arrow
+        Topic:
+          Depth: 5
+          Durability Policy: Volatile
+          Filter size: 10
+          History Policy: Keep Last
+          Reliability Policy: Reliable
+          Value: /AGENT_NS/odometry/global
+        Value: true
+      - Alpha: 1
+        Buffer Length: 1
+        Class: rviz_default_plugins/Path
+        Color: 170; 0; 255
+        Enabled: true
+        Head Diameter: 0.30000001192092896
+        Head Length: 0.20000000298023224
+        Length: 0.30000001192092896
+        Line Style: Lines
+        Line Width: 0.029999999329447746
+        Name: Smoothed Path
+        Offset:
+          X: 0
+          Y: 0
+          Z: 0
+        Pose Color: 255; 85; 255
+        Pose Style: None
+        Radius: 0.029999999329447746
+        Shaft Diameter: 0.10000000149011612
+        Shaft Length: 0.10000000149011612
+        Topic:
+          Depth: 5
+          Durability Policy: Volatile
+          Filter size: 10
+          History Policy: Keep Last
+          Reliability Policy: Reliable
+          Value: /AGENT_NS/smoothed_path
+        Value: true
+      - Alpha: 1
+        Arrow Length: 0.30000001192092896
+        Axes Length: 0.30000001192092896
+        Axes Radius: 0.009999999776482582
+        Class: rviz_default_plugins/PoseArray
+        Color: 255; 25; 0
+        Enabled: true
+        Head Length: 0.07000000029802322
+        Head Radius: 0.029999999329447746
+        Name: PoseArray
+        Shaft Length: 0.23000000417232513
+        Shaft Radius: 0.009999999776482582
+        Shape: Arrow (Flat)
+        Topic:
+          Depth: 5
+          Durability Policy: Volatile
+          Filter size: 10
+          History Policy: Keep Last
+          Reliability Policy: Reliable
+          Value: /AGENT_NS/waypoints_nav2
+        Value: true
+      - Class: rviz_common/Group
+        Displays:
+          - Alpha: 0.5
+            Buffer Length: 1
+            Class: rviz_default_plugins/Range
+            Color: 255; 255; 255
+            Enabled: true
+            Name: Beam0
+            Topic:
+              Depth: 5
+              Durability Policy: Volatile
+              Filter size: 10
+              History Policy: Keep Last
+              Reliability Policy: Reliable
+              Value: /AGENT_NS/dvl/beam0/range
+            Value: true
+          - Alpha: 0.5
+            Buffer Length: 1
+            Class: rviz_default_plugins/Range
+            Color: 255; 255; 255
+            Enabled: true
+            Name: Beam1
+            Topic:
+              Depth: 5
+              Durability Policy: Volatile
+              Filter size: 10
+              History Policy: Keep Last
+              Reliability Policy: Reliable
+              Value: /AGENT_NS/dvl/beam1/range
+            Value: true
+          - Alpha: 0.5
+            Buffer Length: 1
+            Class: rviz_default_plugins/Range
+            Color: 255; 255; 255
+            Enabled: true
+            Name: Beam2
+            Topic:
+              Depth: 5
+              Durability Policy: Volatile
+              Filter size: 10
+              History Policy: Keep Last
+              Reliability Policy: Reliable
+              Value: /AGENT_NS/dvl/beam2/range
+            Value: true
+          - Alpha: 0.5
+            Buffer Length: 1
+            Class: rviz_default_plugins/Range
+            Color: 255; 255; 255
+            Enabled: true
+            Name: Beam3
+            Topic:
+              Depth: 5
+              Durability Policy: Volatile
+              Filter size: 10
+              History Policy: Keep Last
+              Reliability Policy: Reliable
+              Value: /AGENT_NS/dvl/beam3/range
+            Value: true
+        Enabled: true
+        Name: DVL Beams
+      - Class: voxblox_rviz_plugin/VoxbloxMesh
+        Enabled: true
+        Name: VoxbloxMesh
+        Topic:
+          Depth: 5
+          Durability Policy: Volatile
+          Filter size: 10
+          History Policy: Keep Last
+          Reliability Policy: Reliable
+          Value: /AGENT_NS/mesh
+        Value: true
