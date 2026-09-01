@@ -34,6 +34,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: false
 
+permissions:
+  contents: read
+
 env:
   DOCKER_USERNAME: frostlab
   DOCKER_REPO: frostlab/cougars
