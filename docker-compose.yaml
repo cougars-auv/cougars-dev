@@ -16,9 +16,9 @@ services:
   builder:
     image: frostlab/cougars:runtime-${VERSION:-latest}
     container_name: cougars-builder-ct
+    profiles: ["build"]
     volumes:
       - ./ros2_ws:/ros2_ws
-    profiles: ["build"]
     command: colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release
 
   router:

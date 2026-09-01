@@ -28,9 +28,9 @@ services:
     network_mode: host
     ipc: host
     pid: host
+    runtime: nvidia
     depends_on:
       - router
-    runtime: nvidia
     environment:
       - DISPLAY=${DISPLAY}
       - RMW_IMPLEMENTATION=rmw_zenoh_cpp
