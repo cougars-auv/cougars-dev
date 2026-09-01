@@ -14,6 +14,8 @@
 
 name: Docker Build
 
+run-name: ${{ github.event.client_payload.repo }}
+
 on:
   push:
     branches: ["main"]
@@ -25,8 +27,12 @@ on:
       - "*.repos"
       - "**/package.xml"
   repository_dispatch:
-    types: [docker_dispatch]
+    types: [rebuild-images]
   workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
 
 env:
   DOCKER_USERNAME: frostlab

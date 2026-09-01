@@ -14,14 +14,20 @@
 
 name: ROS 2 Build & Test
 
+run-name: ${{ github.event.client_payload.repo }}
+
 on:
   push:
     branches: ["main"]
   pull_request:
     branches: ["main"]
   repository_dispatch:
-    types: [ros2_dispatch]
+    types: [rebuild-workspace]
   workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 env:
   DOCKER_REPO: frostlab/cougars
