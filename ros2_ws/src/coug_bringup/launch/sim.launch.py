@@ -113,7 +113,6 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
 
         actions.append(
             GroupAction(
-                # The depth camera pipeline feeds both the per-agent and shared servers
                 condition=IfCondition(
                     OrSubstitution(enable_mapping, enable_shared_mapping)
                 ),
