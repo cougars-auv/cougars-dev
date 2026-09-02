@@ -37,17 +37,11 @@ class BagRecorderNode(Node):
         self.declare_parameter("bag_record_service", "bag_record")
         self.declare_parameter("log_dir", "")
 
-        publish_diagnostics = (
-            self.get_parameter("publish_diagnostics").get_parameter_value().bool_value
-        )
-        self.agent_ns = (
-            self.get_parameter("agent_ns").get_parameter_value().string_value
-        )
+        publish_diagnostics = self.get_parameter("publish_diagnostics").value
+        self.agent_ns = self.get_parameter("agent_ns").value
         self.bag_dir = os.environ.get("BAGS_DIR", "")
-        self.log_dir = self.get_parameter("log_dir").get_parameter_value().string_value
-        bag_record_service = (
-            self.get_parameter("bag_record_service").get_parameter_value().string_value
-        )
+        self.log_dir = self.get_parameter("log_dir").value
+        bag_record_service = self.get_parameter("bag_record_service").value
         self.bag_path: str | None = None
         self.bag_process: subprocess.Popen | None = None
 
