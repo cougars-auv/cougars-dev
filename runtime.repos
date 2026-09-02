@@ -5,7 +5,7 @@ repositories:
     version: main
   coug_comms:
     type: git
-    url: https://github.com/cougars-auv/coug_comms.git
+    url: git@github.com:cougars-auv/coug_comms.git
     version: main
   coug_description:
     type: git
