@@ -46,6 +46,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
     loc_comparison = LaunchConfiguration("loc_comparison")
     add_noise = LaunchConfiguration("add_noise")
     enable_mapping = LaunchConfiguration("enable_mapping")
+    enable_shared_mapping = LaunchConfiguration("enable_shared_mapping")
     enable_direct_comms = LaunchConfiguration("enable_direct_comms")
     enable_acoustic_comms = LaunchConfiguration("enable_acoustic_comms")
     hitl_mode = LaunchConfiguration("hitl_mode")
@@ -137,6 +138,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                         package="voxblox_ros",
                         executable="tsdf_server",
                         name="voxblox_node",
+                        condition=UnlessCondition(enable_shared_mapping),
                         remappings=[
                             ("pointcloud_1", "depth/points"),
                         ],
@@ -146,13 +148,39 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                                 "world_frame": "map",
                                 "tsdf_voxel_size": 0.05,
                                 "method": "fast",
-                                "update_mesh_every_n_sec": 0.25,
                             }
                         ],
                     ),
                 ],
             )
         )
+
+    actions.append(
+        GroupAction(
+            condition=IfCondition(enable_mapping),
+            actions=[
+                Node(
+                    package="voxblox_ros",
+                    executable="tsdf_server",
+                    name="shared_voxblox_node",
+                    condition=IfCondition(enable_shared_mapping),
+                    remappings=[
+                        (f"pointcloud_{index}", f"/{agent_ns}/depth/points")
+                        for index, agent_ns in enumerate(agent_list, start=1)
+                    ],
+                    parameters=[
+                        {
+                            "use_sim_time": use_sim_time,
+                            "world_frame": "map",
+                            "num_pointcloud_subs": len(agent_list),
+                            "tsdf_voxel_size": 0.05,
+                            "method": "fast",
+                        }
+                    ],
+                )
+            ],
+        )
+    )
 
     actions.append(
         Node(
@@ -308,6 +336,11 @@ def generate_launch_description() -> LaunchDescription:
                 "enable_mapping",
                 default_value="false",
                 description="Launch the depth camera and voxblox mapping pipeline",
+            ),
+            DeclareLaunchArgument(
+                "enable_shared_mapping",
+                default_value="false",
+                description="Fuse all agent depth clouds into one Voxblox mesh",
             ),
             DeclareLaunchArgument(
                 "enable_direct_comms",

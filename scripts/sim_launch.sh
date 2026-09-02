@@ -25,6 +25,7 @@ options=$(gum choose --no-limit --header "Select options:" \
   "Localization comparison" \
   "Disable sensor noise" \
   "Enable voxblox mapping" \
+  "Enable shared voxblox mapping" \
   "Specify lead agent" \
   "Acomms simulation" \
   "HITL mode") || exit 0
@@ -33,6 +34,7 @@ record_bag_path=""
 loc_comparison="false"
 add_noise="true"
 enable_mapping="false"
+enable_shared_mapping="false"
 lead_agent=""
 enable_direct_comms="true"
 enable_acoustic_comms="true"
@@ -53,6 +55,11 @@ fi
 
 if [[ "${options}" == *"Enable voxblox mapping"* ]]; then
   enable_mapping="true"
+fi
+
+if [[ "${options}" == *"Enable shared voxblox mapping"* ]]; then
+  enable_mapping="true"
+  enable_shared_mapping="true"
 fi
 
 if [[ "${options}" == *"Specify lead agent"* ]]; then
@@ -82,6 +89,7 @@ args+=(
   "loc_comparison:=${loc_comparison}"
   "add_noise:=${add_noise}"
   "enable_mapping:=${enable_mapping}"
+  "enable_shared_mapping:=${enable_shared_mapping}"
 )
 args+=(
   "enable_direct_comms:=${enable_direct_comms}"
