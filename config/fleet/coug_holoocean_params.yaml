@@ -1,42 +1,27 @@
 /**:
-  imu_converter_node:
+  cmd_vel_converter_node:
     ros__parameters:
       # --- Node Settings ---
-      sync_slop_sec: 0.05 # [s] Max stamp difference to sync the IMU and AHRS messages.
-      # SBG Ellipse-N noise densities scaled to discrete per-sample sigmas at 200 Hz
-      # (57 µg/√Hz -> 7.9e-3 m/s^2, 0.18 °/√h -> 7.4e-4 rad/s).
-      # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/performance-specifications
-      accel_noise_sigmas: [7.9e-3, 7.9e-3, 7.9e-3] # [m/s^2] Accelerometer measurement noise sigmas.
-      gyro_noise_sigmas: [7.4e-4, 7.4e-4, 7.4e-4] # [rad/s] Gyroscope measurement noise sigmas.
-      # SBG Ellipse-N AHRS: 0.4° roll/pitch, 1.0° magnetic heading (typical dynamics).
-      # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/performance-specifications
-      ahrs_noise_sigmas: [0.00698, 0.00698, 0.01745] # [roll, pitch, yaw] [rad] AHRS orientation uncertainty sigmas.
-      # Derived from the SBG Ellipse-N in-run bias instabilities (14 µg accel, 7 °/h gyro).
-      # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/performance-specifications
-      # Gauss-Markov fit K ≈ 2.3 * B / √tau_c at tau_c = 500 s.
-      accel_bias_rw_sigmas: [1.4e-5, 1.4e-5, 1.4e-5] # [m/s^2/√s] Continuous-time accel bias random walk spectral density sigmas.
-      gyro_bias_rw_sigmas: [3.5e-6, 3.5e-6, 3.5e-6] # [rad/s/√s] Continuous-time gyro bias random walk spectral density sigmas.
+      agent_type: "bluerov2"
 
-      # --- ROS Topics and Frames ---
-      imu_input_topic: "IMUSensor"
-      ahrs_input_topic: "RotationSensor"
-      output_topic: "imu/data"
-      bias_topic: "imu/bias"
+      # --- ROS Topics ---
+      input_topic: "cmd_vel_out"
+      output_topic: "/command/agent"
 
-  gps_converter_node:
+  depth_camera_converter_node:
     ros__parameters:
       # --- Node Settings ---
-      origin_latitude: 40.33940
-      origin_longitude: -111.90721
-      origin_altitude: 1412.0
-
-      # SBG Ellipse-N internal GNSS, RTK: 1 cm + 1 ppm horizontal position accuracy.
-      # https://www.sbg-systems.com/ins/ellipse-n/
-      noise_sigmas: [0.015, 0.015, 0.025] # [east, north, up] [m] GPS position uncertainty sigmas.
+      sync_slop_sec: 0.05 # [s] Max stamp difference to sync the depth, info and color messages.
+      min_range: 0.2 # [m] Depth readings below this are marked invalid (NaN).
+      max_range: 20.0 # [m] Depth readings above this are marked invalid (NaN).
 
       # --- ROS Topics and Frames ---
-      input_topic: "GPSSensor"
-      output_topic: "gps/fix"
+      depth_input_topic: "DepthCameraDepth"
+      info_input_topic: "DepthCameraInfo"
+      color_input_topic: "RGBCameraDepth"
+      depth_output_topic: "depth/image_rect"
+      info_output_topic: "depth/camera_info"
+      color_output_topic: "depth/image_rect_color"
 
   depth_converter_node:
     ros__parameters:
@@ -48,38 +33,6 @@
       # --- ROS Topics and Frames ---
       input_topic: "DepthSensor"
       output_topic: "depth/odometry_null"
-
-  pressure_converter_node:
-    ros__parameters:
-      # --- Node Settings ---
-      water_density: 997.0 # [kg/m^3]
-      gravity: 9.81 # [m/s^2]
-      atmospheric_pressure: 101325.0 # [Pa]
-
-      # TE MS5837-02BA (Bar02): ±2 mbar (~2 cm H2O) accuracy over 0-60 °C.
-      # https://www.te.com/en/product-CAT-BLPS0059.html
-      noise_sigma: 195.61 # [Pa]
-
-      # --- ROS Topics and Frames ---
-      input_topic: "DepthSensor"
-      output_topic: "pressure/data"
-
-  mag_converter_node:
-    ros__parameters:
-      # --- Node Settings ---
-      # IMPORTANT! This must match sbg_imu_mag_node's au_to_tesla.
-      au_to_tesla: 5.0446e-05
-
-      # SBG Ellipse magnetometer: 3 mGauss RMS noise -> 3e-07 T.
-      # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/hardware-documentation/aiding-sensors
-      noise_sigmas: [3.0e-07, 3.0e-07, 3.0e-07] # [T] Magnetic field uncertainty sigmas.
-      # No published SBG hard-iron spec; assumes ~20% of the local field magnitude.
-      bias_sigmas: [1.0e-05, 1.0e-05, 1.0e-05] # [T] Hard-iron bias sigmas.
-
-      # --- ROS Topics and Frames ---
-      input_topic: "MagnetometerSensor"
-      output_topic: "imu/mag_au"
-      bias_topic: "imu/mag/bias"
 
   dvl_converter_node:
     ros__parameters:
@@ -115,64 +68,25 @@
       output_topic: "dvl/position"
       config_command_topic: "dvl/config/command"
 
-  stereo_converter_node:
-    ros__parameters:
-      # --- Node Settings ---
-      sync_slop_sec: 0.05 # [s] Max stamp difference to sync the stereo images.
-
-      # --- ROS Topics and Frames ---
-      front_input_topic: "RGBCameraFront"
-      back_input_topic: "RGBCameraBack"
-      front_output_topic: "stereo/front/image_raw"
-      back_output_topic: "stereo/back/image_raw"
-      front_stereo_info_topic: "stereo/front/camera_info"
-      back_stereo_info_topic: "stereo/back/camera_info"
-
-  depth_camera_converter_node:
-    ros__parameters:
-      # --- Node Settings ---
-      sync_slop_sec: 0.05 # [s] Max stamp difference to sync the depth, info and color messages.
-      min_range: 0.2 # [m] Depth readings below this are marked invalid (NaN).
-      max_range: 20.0 # [m] Depth readings above this are marked invalid (NaN).
-
-      # --- ROS Topics and Frames ---
-      depth_input_topic: "DepthCameraDepth"
-      info_input_topic: "DepthCameraInfo"
-      color_input_topic: "RGBCameraDepth"
-      depth_output_topic: "depth/image_rect"
-      info_output_topic: "depth/camera_info"
-      color_output_topic: "depth/image_rect_color"
-
-  wrench_converter_node:
-    ros__parameters:
-      control_topic: "ControlCommand"
-      odom_topic: "DynamicsSensorOdom"
-      wrench_raw_topic: "cmd_wrench_raw"
-      wrench_topic: "cmd_wrench"
-
-  truth_converter_node:
-    ros__parameters:
-      # --- Node Settings ---
-      publish_tf: false # Whether to publish the map->base_link transform
-      tf_timeout_sec: 0.1 # [s] How long to wait for the map transform.
-
-      # --- ROS Topics and Frames ---
-      input_topic: "DynamicsSensorOdom"
-      output_topic: "odometry/truth"
-
   fin_state_publisher_node:
     ros__parameters:
       input_topic: "ControlCommand"
       output_topic: "joint_states"
 
-  cmd_vel_converter_node:
+  gps_converter_node:
     ros__parameters:
       # --- Node Settings ---
-      agent_type: "bluerov2"
+      origin_latitude: 40.33940
+      origin_longitude: -111.90721
+      origin_altitude: 1412.0
 
-      # --- ROS Topics ---
-      input_topic: "cmd_vel_out"
-      output_topic: "/command/agent"
+      # SBG Ellipse-N internal GNSS, RTK: 1 cm + 1 ppm horizontal position accuracy.
+      # https://www.sbg-systems.com/ins/ellipse-n/
+      noise_sigmas: [0.015, 0.015, 0.025] # [east, north, up] [m] GPS position uncertainty sigmas.
+
+      # --- ROS Topics and Frames ---
+      input_topic: "GPSSensor"
+      output_topic: "gps/fix"
 
   hsd_converter_node:
     ros__parameters:
@@ -180,6 +94,81 @@
       output_heading_topic: "/heading"
       output_speed_topic: "/speed"
       output_depth_topic: "/depth"
+
+  imu_converter_node:
+    ros__parameters:
+      # --- Node Settings ---
+      sync_slop_sec: 0.05 # [s] Max stamp difference to sync the IMU and AHRS messages.
+      # SBG Ellipse-N noise densities scaled to discrete per-sample sigmas at 200 Hz
+      # (57 µg/√Hz -> 7.9e-3 m/s^2, 0.18 °/√h -> 7.4e-4 rad/s).
+      # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/performance-specifications
+      accel_noise_sigmas: [7.9e-3, 7.9e-3, 7.9e-3] # [m/s^2] Accelerometer measurement noise sigmas.
+      gyro_noise_sigmas: [7.4e-4, 7.4e-4, 7.4e-4] # [rad/s] Gyroscope measurement noise sigmas.
+      # SBG Ellipse-N AHRS: 0.4° roll/pitch, 1.0° magnetic heading (typical dynamics).
+      # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/performance-specifications
+      ahrs_noise_sigmas: [0.00698, 0.00698, 0.01745] # [roll, pitch, yaw] [rad] AHRS orientation uncertainty sigmas.
+      # Derived from the SBG Ellipse-N in-run bias instabilities (14 µg accel, 7 °/h gyro).
+      # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/performance-specifications
+      # Gauss-Markov fit K ≈ 2.3 * B / √tau_c at tau_c = 500 s.
+      accel_bias_rw_sigmas: [1.4e-5, 1.4e-5, 1.4e-5] # [m/s^2/√s] Continuous-time accel bias random walk spectral density sigmas.
+      gyro_bias_rw_sigmas: [3.5e-6, 3.5e-6, 3.5e-6] # [rad/s/√s] Continuous-time gyro bias random walk spectral density sigmas.
+
+      # --- ROS Topics and Frames ---
+      imu_input_topic: "IMUSensor"
+      ahrs_input_topic: "RotationSensor"
+      output_topic: "imu/data"
+      bias_topic: "imu/bias"
+
+  mag_converter_node:
+    ros__parameters:
+      # --- Node Settings ---
+      # IMPORTANT! This must match sbg_imu_mag_node's au_to_tesla.
+      au_to_tesla: 5.0446e-05
+
+      # SBG Ellipse magnetometer: 3 mGauss RMS noise -> 3e-07 T.
+      # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/hardware-documentation/aiding-sensors
+      noise_sigmas: [3.0e-07, 3.0e-07, 3.0e-07] # [T] Magnetic field uncertainty sigmas.
+      # No published SBG hard-iron spec; assumes ~20% of the local field magnitude.
+      bias_sigmas: [1.0e-05, 1.0e-05, 1.0e-05] # [T] Hard-iron bias sigmas.
+
+      # --- ROS Topics and Frames ---
+      input_topic: "MagnetometerSensor"
+      output_topic: "imu/mag_au"
+      bias_topic: "imu/mag/bias"
+
+  modem_converter_node:
+    ros__parameters:
+      # --- Node Settings ---
+      tick_period_sec: 0.1 # [s] Timer period for servicing the send queue.
+      send_delay_sec: 0.4 # [s] Channel busy time after each transmission.
+      resp_delay_sec: 0.0 # [s] Delay before answering a REQ with its RESP.
+      resp_timeout_sec: 4.0 # [s] How long to wait for a RESP before timing out.
+      beacon_id: 1
+
+      # Blueprint Subsea SeaTrac X150 USBL: ±1° angular accuracy (typ. 2% of acoustic range).
+      # https://www.blueprintsubsea.com/seatrac/seatrac-standard
+      bearing_noise_sigmas: [0.01745, 0.01745] # [azimuth, elevation] [rad] Bearing uncertainty sigmas.
+      # Blueprint Subsea SeaTrac X150 USBL: ±0.1 m range accuracy (dependent on VOS accuracy).
+      # https://www.blueprintsubsea.com/seatrac/seatrac-standard
+      range_noise_sigma: 0.1 # [m] Two-way time-of-flight range uncertainty sigma.
+
+      # --- ROS Topics and Frames ---
+      beacon_rec_topic: "AcousticBeaconSensor"
+      beacon_send_topic: "/acoustic_beacon_send"
+      modem_rec_topic: "modem_rec"
+      modem_send_topic: "modem_send"
+      modem_cmd_update_topic: "modem_cmd_update"
+      depth_topic: "modem/depth/odometry"
+  modem_depth_converter_node:
+    ros__parameters:
+      # --- Node Settings ---
+      # SeaTrac X150 depth telemetry resolution: 0.1 m (SeaTrac Developer Guide UM-140).
+      # https://www.blueprintsubsea.com/seatrac/support
+      noise_sigma: 0.1 # [m] Depth sensor Z-position uncertainty sigma.
+
+      # --- ROS Topics and Frames ---
+      input_topic: "ModemDepthSensor"
+      output_topic: "modem/depth/odometry"
 
   modem_imu_converter_node:
     ros__parameters:
@@ -205,17 +194,6 @@
       output_topic: "modem/imu/data"
       bias_topic: "modem/imu/bias"
 
-  modem_depth_converter_node:
-    ros__parameters:
-      # --- Node Settings ---
-      # SeaTrac X150 depth telemetry resolution: 0.1 m (SeaTrac Developer Guide UM-140).
-      # https://www.blueprintsubsea.com/seatrac/support
-      noise_sigma: 0.1 # [m] Depth sensor Z-position uncertainty sigma.
-
-      # --- ROS Topics and Frames ---
-      input_topic: "ModemDepthSensor"
-      output_topic: "modem/depth/odometry"
-
   modem_status_converter_node:
     ros__parameters:
       # --- Node Settings ---
@@ -226,26 +204,47 @@
       depth_input_topic: "modem/depth/odometry"
       output_topic: "modem_status"
 
-  modem_converter_node:
+  pressure_converter_node:
     ros__parameters:
       # --- Node Settings ---
-      tick_period_sec: 0.1 # [s] Timer period for servicing the send queue.
-      send_delay_sec: 0.4 # [s] Channel busy time after each transmission.
-      resp_delay_sec: 0.0 # [s] Delay before answering a REQ with its RESP.
-      resp_timeout_sec: 4.0 # [s] How long to wait for a RESP before timing out.
-      beacon_id: 1
+      water_density: 997.0 # [kg/m^3]
+      gravity: 9.81 # [m/s^2]
+      atmospheric_pressure: 101325.0 # [Pa]
 
-      # Blueprint Subsea SeaTrac X150 USBL: ±1° angular accuracy (typ. 2% of acoustic range).
-      # https://www.blueprintsubsea.com/seatrac/seatrac-standard
-      bearing_noise_sigmas: [0.01745, 0.01745] # [azimuth, elevation] [rad] Bearing uncertainty sigmas.
-      # Blueprint Subsea SeaTrac X150 USBL: ±0.1 m range accuracy (dependent on VOS accuracy).
-      # https://www.blueprintsubsea.com/seatrac/seatrac-standard
-      range_noise_sigma: 0.1 # [m] Two-way time-of-flight range uncertainty sigma.
+      # TE MS5837-02BA (Bar02): ±2 mbar (~2 cm H2O) accuracy over 0-60 °C.
+      # https://www.te.com/en/product-CAT-BLPS0059.html
+      noise_sigma: 195.61 # [Pa]
 
       # --- ROS Topics and Frames ---
-      beacon_rec_topic: "AcousticBeaconSensor"
-      beacon_send_topic: "/acoustic_beacon_send"
-      modem_rec_topic: "modem_rec"
-      modem_send_topic: "modem_send"
-      modem_cmd_update_topic: "modem_cmd_update"
-      depth_topic: "modem/depth/odometry"
+      input_topic: "DepthSensor"
+      output_topic: "pressure/data"
+
+  stereo_converter_node:
+    ros__parameters:
+      # --- Node Settings ---
+      sync_slop_sec: 0.05 # [s] Max stamp difference to sync the stereo images.
+
+      # --- ROS Topics and Frames ---
+      front_input_topic: "RGBCameraFront"
+      back_input_topic: "RGBCameraBack"
+      front_output_topic: "stereo/front/image_raw"
+      back_output_topic: "stereo/back/image_raw"
+      front_stereo_info_topic: "stereo/front/camera_info"
+      back_stereo_info_topic: "stereo/back/camera_info"
+
+  truth_converter_node:
+    ros__parameters:
+      # --- Node Settings ---
+      publish_tf: false # Whether to publish the map->base_link transform
+      tf_timeout_sec: 0.1 # [s] How long to wait for the map transform.
+
+      # --- ROS Topics and Frames ---
+      input_topic: "DynamicsSensorOdom"
+      output_topic: "odometry/truth"
+
+  wrench_converter_node:
+    ros__parameters:
+      control_topic: "ControlCommand"
+      odom_topic: "DynamicsSensorOdom"
+      wrench_raw_topic: "cmd_wrench_raw"
+      wrench_topic: "cmd_wrench"
