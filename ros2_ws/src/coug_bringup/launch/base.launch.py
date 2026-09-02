@@ -71,14 +71,22 @@ def create_rviz_config(agent_list: list[str]) -> str:
     config_dir = os.environ["CONFIG_DIR"]
     gui_dir = os.path.join(config_dir, "gui")
     with open(os.path.join(gui_dir, "rviz.rviz.template")) as template:
-        config = yaml.safe_load(template.read().replace("AGENT_NS", agent_list[0]))
+        config = yaml.safe_load(
+            template.read()
+            .replace("/AGENT_NS/mesh", "/mesh")
+            .replace("AGENT_NS", agent_list[0])
+        )
 
     displays = config["Visualization Manager"]["Displays"]
     displays[:] = [
         display
         for display in displays
         if display.get("Class")
-        in {"rviz_default_plugins/Grid", "rviz_default_plugins/TF"}
+        in {
+            "rviz_default_plugins/Grid",
+            "rviz_default_plugins/TF",
+            "voxblox_rviz_plugin/VoxbloxMesh",
+        }
     ]
     with open(os.path.join(gui_dir, "multi_rviz.rviz.template")) as template:
         agent_template = template.read()

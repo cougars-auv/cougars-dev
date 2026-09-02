@@ -1,0 +1,48 @@
+/blue2sim:
+  coug_comms_base_launch:
+    ros__parameters:
+      beacon_id: 6
+
+  coug_description_launch:
+    ros__parameters:
+      urdf_file: "bluerov2_holoocean.urdf.xacro"
+
+  "**":
+    ros__parameters:
+      publish_velocity_cov: true
+      publish_imu_bias_cov: true
+
+      gps:
+        enable_gps: false
+        enable_gps_init_priors: false
+
+      mag:
+        enable_mag: false
+
+      ahrs:
+        enable_ahrs: true
+
+      priors:
+        parameter_priors:
+          initial_position: [0.0, 20.0, -275.0]
+
+  behavior_server:
+    ros__parameters:
+      local_frame: "blue2sim/odom"
+      robot_base_frame: "blue2sim/base_link"
+
+  global_costmap:
+    global_costmap:
+      ros__parameters:
+        global_frame: "map"
+        robot_base_frame: "blue2sim/base_link"
+
+  local_costmap:
+    local_costmap:
+      ros__parameters:
+        global_frame: "blue2sim/odom"
+        robot_base_frame: "blue2sim/base_link"
+
+  modem_converter_node:
+    ros__parameters:
+      beacon_id: 6

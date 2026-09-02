@@ -32,6 +32,7 @@ from launch.logging import launch_config
 from launch.substitutions import (
     EnvironmentVariable,
     LaunchConfiguration,
+    OrSubstitution,
     PathJoinSubstitution,
 )
 from launch_ros.actions import ComposableNodeContainer, Node, PushRosNamespace
@@ -112,7 +113,10 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
 
         actions.append(
             GroupAction(
-                condition=IfCondition(enable_mapping),
+                # The depth camera pipeline feeds both the per-agent and shared servers
+                condition=IfCondition(
+                    OrSubstitution(enable_mapping, enable_shared_mapping)
+                ),
                 actions=[
                     PushRosNamespace(agent_ns),
                     ComposableNodeContainer(
@@ -138,7 +142,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                         package="voxblox_ros",
                         executable="tsdf_server",
                         name="voxblox_node",
-                        condition=UnlessCondition(enable_shared_mapping),
+                        condition=IfCondition(enable_mapping),
                         remappings=[
                             ("pointcloud_1", "depth/points"),
                         ],
@@ -156,28 +160,23 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
         )
 
     actions.append(
-        GroupAction(
-            condition=IfCondition(enable_mapping),
-            actions=[
-                Node(
-                    package="voxblox_ros",
-                    executable="tsdf_server",
-                    name="shared_voxblox_node",
-                    condition=IfCondition(enable_shared_mapping),
-                    remappings=[
-                        (f"pointcloud_{index}", f"/{agent_ns}/depth/points")
-                        for index, agent_ns in enumerate(agent_list, start=1)
-                    ],
-                    parameters=[
-                        {
-                            "use_sim_time": use_sim_time,
-                            "world_frame": "map",
-                            "num_pointcloud_subs": len(agent_list),
-                            "tsdf_voxel_size": 0.05,
-                            "method": "fast",
-                        }
-                    ],
-                )
+        Node(
+            package="voxblox_ros",
+            executable="tsdf_server",
+            name="shared_voxblox_node",
+            condition=IfCondition(enable_shared_mapping),
+            remappings=[
+                (f"pointcloud_{index}", f"/{agent_ns}/depth/points")
+                for index, agent_ns in enumerate(agent_list, start=1)
+            ],
+            parameters=[
+                {
+                    "use_sim_time": use_sim_time,
+                    "world_frame": "map",
+                    "num_pointcloud_subs": len(agent_list),
+                    "tsdf_voxel_size": 0.05,
+                    "method": "fast",
+                }
             ],
         )
     )

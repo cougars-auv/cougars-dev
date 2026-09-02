@@ -120,7 +120,10 @@ def generate_launch_description() -> LaunchDescription:
             NotSubstitution(
                 OrSubstitution(
                     EqualsSubstitution(agent_ns, "blue1sim"),
-                    EqualsSubstitution(agent_ns, "wamv1sim"),
+                    OrSubstitution(
+                        EqualsSubstitution(agent_ns, "blue2sim"),
+                        EqualsSubstitution(agent_ns, "wamv1sim"),
+                    ),
                 )
             )
         ),
@@ -137,7 +140,10 @@ def generate_launch_description() -> LaunchDescription:
         condition=IfCondition(
             OrSubstitution(
                 EqualsSubstitution(agent_ns, "blue1sim"),
-                EqualsSubstitution(agent_ns, "wamv1sim"),
+                OrSubstitution(
+                    EqualsSubstitution(agent_ns, "blue2sim"),
+                    EqualsSubstitution(agent_ns, "wamv1sim"),
+                ),
             )
         ),
     )
@@ -150,7 +156,12 @@ def generate_launch_description() -> LaunchDescription:
             "use_sim_time": use_sim_time,
             "agent_ns": agent_ns,
         }.items(),
-        condition=IfCondition(EqualsSubstitution(agent_ns, "blue1sim")),
+        condition=IfCondition(
+            OrSubstitution(
+                EqualsSubstitution(agent_ns, "blue1sim"),
+                EqualsSubstitution(agent_ns, "blue2sim"),
+            )
+        ),
     )
 
     bag_recorder_node = Node(

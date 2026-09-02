@@ -127,9 +127,9 @@
           "sensor_type": "DVLSensor",
           "socket": "Payload",
           "rotation": [
-            0.0,
-            -90.0,
-            0.0
+            0,
+            -90,
+            0
           ],
           "Hz": 10,
           "configuration": {
@@ -203,9 +203,9 @@
           "sensor_type": "IMUSensor",
           "socket": "IMUSocket",
           "rotation": [
-            180.0,
-            0.0,
-            0.0
+            180,
+            0,
+            0
           ],
           "Hz": 200,
           "configuration": {},
@@ -231,9 +231,9 @@
           "sensor_type": "MagnetometerSensor",
           "socket": "IMUSocket",
           "rotation": [
-            180.0,
-            0.0,
-            0.0
+            180,
+            0,
+            0
           ],
           "Hz": 50,
           "configuration": {
@@ -249,9 +249,9 @@
           "sensor_type": "RotationSensor",
           "socket": "IMUSocket",
           "rotation": [
-            180.0,
-            0.0,
-            0.0
+            180,
+            0,
+            0
           ],
           "Hz": 200,
           "ros_publish": true
@@ -408,7 +408,7 @@
       ],
       "actuator": {
         "fin_count": 3,
-        "fin_offset_deg": 90.0
+        "fin_offset_deg": 90
       }
     }
   ]

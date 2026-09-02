@@ -9,6 +9,7 @@ scenario=$(gum choose --header "Choose a HoloOcean scenario:" \
   "BlueROV2" \
   "WAM-V" \
   "CougUV Multi-Agent" \
+  "BlueROV2 Multi-Agent" \
   "Mixed Multi-Agent")
 
 case ${scenario} in
@@ -16,6 +17,7 @@ case ${scenario} in
   "BlueROV2") agent_list="[blue1sim]";;
   "WAM-V") agent_list="[wamv1sim]";;
   "CougUV Multi-Agent") agent_list="[coug1sim, coug2sim, coug3sim]";;
+  "BlueROV2 Multi-Agent") agent_list="[blue1sim, blue2sim]";;
   "Mixed Multi-Agent") agent_list="[wamv1sim, blue1sim, coug2sim]";;
 esac
 
@@ -58,7 +60,6 @@ if [[ "${options}" == *"Enable voxblox mapping"* ]]; then
 fi
 
 if [[ "${options}" == *"Enable shared voxblox mapping"* ]]; then
-  enable_mapping="true"
   enable_shared_mapping="true"
 fi
 

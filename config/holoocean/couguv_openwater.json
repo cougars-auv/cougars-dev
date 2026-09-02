@@ -162,7 +162,7 @@
       ],
       "actuator": {
         "fin_count": 3,
-        "fin_offset_deg": 90.0
+        "fin_offset_deg": 90
       }
     }
   ]

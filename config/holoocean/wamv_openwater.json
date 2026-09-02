@@ -127,9 +127,9 @@
           "sensor_type": "DVLSensor",
           "socket": "Payload",
           "rotation": [
-            0.0,
-            -90.0,
-            0.0
+            0,
+            -90,
+            0
           ],
           "Hz": 10,
           "configuration": {

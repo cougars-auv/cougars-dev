@@ -1,5 +1,5 @@
 {
-  "name": "bluerov2_openwater",
+  "name": "multi_bluerov2_openwater",
   "package_name": "Ocean",
   "world": "OpenWater",
   "main_agent": "blue1sim",
@@ -149,37 +149,158 @@
           "ros_publish": true
         },
         {
-          "sensor_name": "RGBCameraFront",
-          "sensor_type": "RGBCamera",
+          "sensor_name": "DepthCamera",
+          "sensor_type": "DepthCamera",
           "socket": "DVLSocket",
-          "location": [
-            0.1,
-            0,
-            0
-          ],
           "rotation": [
             0,
             90,
             0
           ],
-          "Hz": 20,
+          "Hz": 5,
+          "configuration": {
+            "TicksPerCapture": 40
+          },
           "ros_publish": true
         },
         {
-          "sensor_name": "RGBCameraBack",
+          "sensor_name": "RGBCameraDepth",
           "sensor_type": "RGBCamera",
           "socket": "DVLSocket",
-          "location": [
-            -0.1,
-            0,
-            0
-          ],
           "rotation": [
             0,
             90,
             0
           ],
+          "Hz": 5,
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "DynamicsSensor",
+          "configuration": {
+            "UseCOM": true,
+            "UseRPY": false
+          },
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "VelocitySensor",
+          "socket": "DVLSocket",
+          "ros_publish": true
+        }
+      ],
+      "control_scheme": 0,
+      "location": [
+        0,
+        0,
+        -275
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "agent_name": "blue2sim",
+      "agent_type": "BlueROV2",
+      "sensors": [
+        {
+          "sensor_type": "AcousticBeaconSensor",
+          "socket": "COM",
+          "configuration": {
+            "id": 6
+          },
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "DepthSensor",
+          "sensor_name": "ModemDepthSensor",
+          "socket": "COM",
+          "Hz": 10,
+          "configuration": {},
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "IMUSensor",
+          "sensor_name": "ModemIMUSensor",
+          "socket": "COM",
+          "Hz": 10,
+          "configuration": {},
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "RotationSensor",
+          "sensor_name": "ModemRotationSensor",
+          "socket": "COM",
+          "Hz": 10,
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "IMUSensor",
+          "socket": "IMUSocket",
+          "rotation": [
+            180,
+            0,
+            0
+          ],
+          "Hz": 200,
+          "configuration": {},
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "GPSSensor",
+          "socket": "COM",
+          "Hz": 5,
+          "configuration": {
+            "Depth": 0.5
+          },
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "DepthSensor",
+          "socket": "DepthSocket",
           "Hz": 20,
+          "configuration": {},
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "MagnetometerSensor",
+          "socket": "IMUSocket",
+          "rotation": [
+            180,
+            0,
+            0
+          ],
+          "Hz": 50,
+          "configuration": {
+            "MagneticVector": [
+              3.9634e-06,
+              2.08423e-05,
+              -4.57678e-05
+            ]
+          },
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "RotationSensor",
+          "socket": "IMUSocket",
+          "rotation": [
+            180,
+            0,
+            0
+          ],
+          "Hz": 200,
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "DVLSensor",
+          "socket": "DVLSocket",
+          "Hz": 10,
+          "configuration": {
+            "MaxRange": 50,
+            "DebugLines": false
+          },
           "ros_publish": true
         },
         {
@@ -226,7 +347,7 @@
       "control_scheme": 0,
       "location": [
         0,
-        0,
+        20,
         -275
       ],
       "rotation": [
