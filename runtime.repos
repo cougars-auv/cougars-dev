@@ -1,35 +1,35 @@
 repositories:
   coug_belief_mppi:
     type: git
-    url: https://github.com/cougars-auv/coug_belief_mppi.git
+    url: git@github.com:cougars-auv/coug_belief_mppi.git
     version: main
   coug_comms:
     type: git
-    url: https://github.com/cougars-auv/coug_comms.git
+    url: git@github.com:cougars-auv/coug_comms.git
     version: main
   coug_description:
     type: git
-    url: https://github.com/cougars-auv/coug_description.git
+    url: git@github.com:cougars-auv/coug_description.git
     version: main
   coug_fg:
     type: git
-    url: https://github.com/cougars-auv/coug_fg.git
+    url: git@github.com:cougars-auv/coug_fg.git
     version: main
   coug_helm:
     type: git
-    url: https://github.com/cougars-auv/coug_helm.git
+    url: git@github.com:cougars-auv/coug_helm.git
     version: main
   coug_interfaces:
     type: git
-    url: https://github.com/cougars-auv/coug_interfaces.git
+    url: git@github.com:cougars-auv/coug_interfaces.git
     version: main
   coug_template:
     type: git
-    url: https://github.com/cougars-auv/coug_template.git
+    url: git@github.com:cougars-auv/coug_template.git
     version: main
   coug_visual_dvl:
     type: git
-    url: https://github.com/cougars-auv/coug_visual_dvl.git
+    url: git@github.com:cougars-auv/coug_visual_dvl.git
     version: main
   dvl_msgs:
     type: zip

@@ -1,15 +1,15 @@
 repositories:
   coug_holoocean:
     type: git
-    url: https://github.com/cougars-auv/coug_holoocean.git
+    url: git@github.com:cougars-auv/coug_holoocean.git
     version: main
   coug_mapviz:
     type: git
-    url: https://github.com/cougars-auv/coug_mapviz.git
+    url: git@github.com:cougars-auv/coug_mapviz.git
     version: main
   coug_rqt:
     type: git
-    url: https://github.com/cougars-auv/coug_rqt.git
+    url: git@github.com:cougars-auv/coug_rqt.git
     version: main
   eigen_checks:
     type: zip

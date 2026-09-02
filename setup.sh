@@ -30,7 +30,7 @@ if [ ! -f "config/${agent_ns}_params.yaml" ]; then
   exit 1
 fi
 
-vcs import ros2_ws/src < runtime.repos
+sed 's|git@github.com:|https://github.com/|g' runtime.repos | vcs import ros2_ws/src
 vcs custom -n --git --args submodule update --init --recursive
 
 for git_dir in $(find ros2_ws/src -maxdepth 2 -name .git -prune); do
