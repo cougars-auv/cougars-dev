@@ -26,7 +26,7 @@ from launch.actions import (
     OpaqueFunction,
     SetEnvironmentVariable,
 )
-from launch.conditions import UnlessCondition
+from launch.conditions import IfCondition, UnlessCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.logging import launch_config
 from launch.substitutions import (
@@ -34,7 +34,8 @@ from launch.substitutions import (
     LaunchConfiguration,
     PathJoinSubstitution,
 )
-from launch_ros.actions import Node, PushRosNamespace
+from launch_ros.actions import ComposableNodeContainer, Node, PushRosNamespace
+from launch_ros.descriptions import ComposableNode
 
 
 def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Action]:
@@ -44,6 +45,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
     record_bag_path = LaunchConfiguration("record_bag_path")
     loc_comparison = LaunchConfiguration("loc_comparison")
     add_noise = LaunchConfiguration("add_noise")
+    enable_mapping = LaunchConfiguration("enable_mapping")
     enable_direct_comms = LaunchConfiguration("enable_direct_comms")
     enable_acoustic_comms = LaunchConfiguration("enable_acoustic_comms")
     hitl_mode = LaunchConfiguration("hitl_mode")
@@ -71,9 +73,9 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                 "use_sim_time": use_sim_time,
                 "agent_list": agent_list_str,
                 "lead_agent": lead_agent,
+                "record_bag_path": record_bag_path,
                 "enable_direct_comms": enable_direct_comms,
                 "enable_acoustic_comms": enable_acoustic_comms,
-                "record_bag_path": record_bag_path,
             }.items(),
         )
     )
@@ -87,8 +89,8 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                 launch_arguments={
                     "use_sim_time": use_sim_time,
                     "agent_ns": agent_ns,
-                    "loc_comparison": loc_comparison,
                     "lead_agent": lead_agent,
+                    "loc_comparison": loc_comparison,
                 }.items(),
                 condition=UnlessCondition(hitl_mode),
             )
@@ -106,6 +108,51 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
         )
 
         actions.append(GroupAction(actions=[PushRosNamespace(agent_ns), bridge_launch]))
+
+        actions.append(
+            GroupAction(
+                condition=IfCondition(enable_mapping),
+                actions=[
+                    PushRosNamespace(agent_ns),
+                    ComposableNodeContainer(
+                        package="rclcpp_components",
+                        executable="component_container",
+                        name="depth_camera_container",
+                        namespace="",
+                        composable_node_descriptions=[
+                            ComposableNode(
+                                package="depth_image_proc",
+                                plugin="depth_image_proc::PointCloudXyzrgbNode",
+                                name="depth_camera_cloud_node",
+                                remappings=[
+                                    ("depth_registered/image_rect", "depth/image_rect"),
+                                    ("rgb/image_rect_color", "depth/image_rect_color"),
+                                    ("points", "depth/points"),
+                                ],
+                                parameters=[{"use_sim_time": use_sim_time}],
+                            ),
+                        ],
+                    ),
+                    Node(
+                        package="voxblox_ros",
+                        executable="tsdf_server",
+                        name="voxblox_node",
+                        remappings=[
+                            ("pointcloud_1", "depth/points"),
+                        ],
+                        parameters=[
+                            {
+                                "use_sim_time": use_sim_time,
+                                "world_frame": "map",
+                                "tsdf_voxel_size": 0.05,
+                                "method": "fast",
+                                "update_mesh_every_n_sec": 0.25,
+                            }
+                        ],
+                    ),
+                ],
+            )
+        )
 
     actions.append(
         Node(
@@ -256,6 +303,11 @@ def generate_launch_description() -> LaunchDescription:
                 "add_noise",
                 default_value="true",
                 description="Whether to add noise to sensor data",
+            ),
+            DeclareLaunchArgument(
+                "enable_mapping",
+                default_value="false",
+                description="Launch the depth camera and voxblox mapping pipeline",
             ),
             DeclareLaunchArgument(
                 "enable_direct_comms",

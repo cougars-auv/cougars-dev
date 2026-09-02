@@ -183,6 +183,33 @@
           "ros_publish": true
         },
         {
+          "sensor_name": "DepthCamera",
+          "sensor_type": "DepthCamera",
+          "socket": "DVLSocket",
+          "rotation": [
+            0.0,
+            90.0,
+            0.0
+          ],
+          "Hz": 5,
+          "configuration": {
+            "TicksPerCapture": 40
+          },
+          "ros_publish": true
+        },
+        {
+          "sensor_name": "RGBCameraDepth",
+          "sensor_type": "RGBCamera",
+          "socket": "DVLSocket",
+          "rotation": [
+            0.0,
+            90.0,
+            0.0
+          ],
+          "Hz": 5,
+          "ros_publish": true
+        },
+        {
           "sensor_type": "DynamicsSensor",
           "configuration": {
             "UseCOM": true,

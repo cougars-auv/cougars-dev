@@ -100,9 +100,9 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
     use_sim_time = LaunchConfiguration("use_sim_time")
     agent_list_config = LaunchConfiguration("agent_list")
     lead_agent = LaunchConfiguration("lead_agent")
+    record_bag_path = LaunchConfiguration("record_bag_path")
     enable_direct_comms = LaunchConfiguration("enable_direct_comms")
     enable_acoustic_comms = LaunchConfiguration("enable_acoustic_comms")
-    record_bag_path = LaunchConfiguration("record_bag_path")
 
     agent_list_str = agent_list_config.perform(context)
     record_bag_path_str = record_bag_path.perform(context)

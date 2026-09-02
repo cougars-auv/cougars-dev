@@ -63,11 +63,11 @@ def save_artifacts_on_exit(context: LaunchContext, record_bag_path: str) -> None
 
 def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Action]:
     use_sim_time = LaunchConfiguration("use_sim_time")
-    start_delay = LaunchConfiguration("start_delay")
-    playback_rate = LaunchConfiguration("playback_rate")
     agent_list_config = LaunchConfiguration("agent_list")
     play_bag_path = LaunchConfiguration("play_bag_path")
     record_bag_path = LaunchConfiguration("record_bag_path")
+    start_delay = LaunchConfiguration("start_delay")
+    playback_rate = LaunchConfiguration("playback_rate")
     loc_comparison = LaunchConfiguration("loc_comparison")
     hitl_mode = LaunchConfiguration("hitl_mode")
 
@@ -221,7 +221,6 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                     "world_frame": "map",
                     "tsdf_voxel_size": 0.05,
                     "method": "fast",
-                    "min_time_between_msgs_sec": 0.0,
                 }
             ],
             condition=IfCondition(EqualsSubstitution(agent_ns, "turtlmap")),
@@ -241,14 +240,6 @@ def generate_launch_description() -> LaunchDescription:
                 description="Use simulation/rosbag clock if true",
             ),
             DeclareLaunchArgument(
-                "start_delay",
-                default_value="0.0",
-                description=(
-                    "Time in seconds to skip from the beginning of the bag file "
-                    "(start offset)"
-                ),
-            ),
-            DeclareLaunchArgument(
                 "agent_list",
                 default_value="[auv0]",
                 description=(
@@ -265,6 +256,14 @@ def generate_launch_description() -> LaunchDescription:
                 "record_bag_path",
                 default_value="",
                 description="Path to record rosbag (if empty, no recording)",
+            ),
+            DeclareLaunchArgument(
+                "start_delay",
+                default_value="0.0",
+                description=(
+                    "Time in seconds to skip from the beginning of the bag file "
+                    "(start offset)"
+                ),
             ),
             DeclareLaunchArgument(
                 "playback_rate",
