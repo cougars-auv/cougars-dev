@@ -1,4 +1,8 @@
 /**:
+  waypoint_nav2_node:
+    ros__parameters:
+      waypoint_topic: "waypoints_nav2"
+
   belief_state_monitor_node:
     ros__parameters:
       fg_odom_topic: "odometry/global"
@@ -6,33 +10,17 @@
       fg_bias_topic: "factor_graph_node/imu/bias"
       norm_trace_topic: "~/norm_trace"
 
-  waypoint_nav2_node:
+  twist_mux:
     ros__parameters:
-      waypoint_topic: "waypoints_nav2"
-
-  waypoint_follower:
-    ros__parameters:
-      stop_on_failure: true
-      waypoint_task_executor_plugin: "wait_at_waypoint"
-      wait_at_waypoint:
-        plugin: "nav2_waypoint_follower::WaitAtWaypoint"
-        waypoint_pause_duration: 0
-
-  bt_navigator:
-    ros__parameters:
-      odom_topic: "odometry/local"
-      default_bt_xml_filename: "navigate_to_pose_w_replanning_and_recovery.xml"
-      transform_tolerance: 2.0
-
-  planner_server:
-    ros__parameters:
-      expected_planner_frequency: 1.0
-      transform_tolerance: 2.0
-      costmap_update_timeout: 3.0
-      planner_plugins: ["GridBased"]
-      GridBased:
-        plugin: "nav2_smac_planner::SmacPlanner2D"
-        tolerance: 0.5
+      topics:
+        nav2:
+          topic: "cmd_vel"
+          timeout: 0.5
+          priority: 10
+        joy:
+          topic: "cmd_vel_joy"
+          timeout: 0.5
+          priority: 20
 
   controller_server:
     ros__parameters:
@@ -119,31 +107,6 @@
           ahrs_update_rate_hz: 10.0 # [Hz]
           yaw_noise_sigma: 0.01745 # [rad]
 
-  twist_mux:
-    ros__parameters:
-      topics:
-        nav2:
-          topic: "cmd_vel"
-          timeout: 0.5
-          priority: 10
-        joy:
-          topic: "cmd_vel_joy"
-          timeout: 0.5
-          priority: 20
-
-  behavior_server:
-    ros__parameters:
-      cycle_frequency: 10.0
-      enable_stamped_cmd_vel: true
-      transform_tolerance: 2.0
-      behavior_plugins: ["spin", "backup", "wait"]
-      spin:
-        plugin: "nav2_behaviors::Spin"
-      backup:
-        plugin: "nav2_behaviors::BackUp"
-      wait:
-        plugin: "nav2_behaviors::Wait"
-
   global_costmap:
     global_costmap:
       ros__parameters:
@@ -177,3 +140,40 @@
           plugin: "nav2_costmap_2d::ObstacleLayer"
           enabled: True
           observation_sources: ""
+
+  planner_server:
+    ros__parameters:
+      expected_planner_frequency: 1.0
+      transform_tolerance: 2.0
+      costmap_update_timeout: 3.0
+      planner_plugins: ["GridBased"]
+      GridBased:
+        plugin: "nav2_smac_planner::SmacPlanner2D"
+        tolerance: 0.5
+
+  behavior_server:
+    ros__parameters:
+      cycle_frequency: 10.0
+      enable_stamped_cmd_vel: true
+      transform_tolerance: 2.0
+      behavior_plugins: ["spin", "backup", "wait"]
+      spin:
+        plugin: "nav2_behaviors::Spin"
+      backup:
+        plugin: "nav2_behaviors::BackUp"
+      wait:
+        plugin: "nav2_behaviors::Wait"
+
+  bt_navigator:
+    ros__parameters:
+      odom_topic: "odometry/local"
+      default_bt_xml_filename: "navigate_to_pose_w_replanning_and_recovery.xml"
+      transform_tolerance: 2.0
+
+  waypoint_follower:
+    ros__parameters:
+      stop_on_failure: true
+      waypoint_task_executor_plugin: "wait_at_waypoint"
+      wait_at_waypoint:
+        plugin: "nav2_waypoint_follower::WaitAtWaypoint"
+        waypoint_pause_duration: 0
