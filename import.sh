@@ -14,6 +14,7 @@ if [ -z "${ip}" ]; then
   exit 1
 fi
 
+# TODO: Add SSH key instructions for the CougUVs to support private repos
 sed 's|git@github.com:|https://github.com/|g' runtime.repos | vcs import ros2_ws/src
 vcs custom -n --git --args submodule update --init --recursive
 
