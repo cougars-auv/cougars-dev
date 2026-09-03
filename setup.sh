@@ -2,25 +2,25 @@
 set -e
 
 use_sim_time="false"
-version="latest"
 
 args=()
 while [ $# -gt 0 ]; do
   case "$1" in
     --hitl) use_sim_time="true"; shift ;;
-    --version) version="$2"; shift 2 ;;
-    --version=*) version="${1#*=}"; shift ;;
     *) args+=("$1"); shift ;;
   esac
 done
 set -- "${args[@]}"
 
 if [ -z "$1" ] || [ -z "$2" ]; then
-  echo "Usage: ./setup.sh <agent-ns> <base-station-ip> [--hitl] [--version <tag>]"
+  echo "Usage: ./setup.sh <agent-ns> <base-station-ip> [--hitl]"
   exit 1
 fi
 
 cd "$(dirname "$0")"
+
+version="$(git describe --tags --exact-match 2>/dev/null || echo "latest")"
+echo "CoUGARs ${version}"
 
 agent_ns="$1"
 ip="$2"

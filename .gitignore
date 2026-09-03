@@ -8,26 +8,8 @@ log
 bags/*
 !bags/.gitkeep
 
-coug_belief_mppi
-coug_comms
-coug_description
-coug_fg
-coug_helm
-coug_holoocean
-coug_interfaces
-coug_mapviz
-coug_rqt
-coug_template
-coug_visual_dvl
-dvl_msgs
-eigen_checks
-HoloOcean
-holoocean_interfaces
-holoocean-ros
-mapviz
-seatrac_interfaces
-TURTLMap
-voxblox_ros2
+ros2_ws/src/*
+!ros2_ws/src/coug_bringup
 
 .env
 __pycache__
