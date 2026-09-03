@@ -36,22 +36,22 @@ ENV DOCKER_USER=root \
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
   --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
   apt-get update && apt-get install -y --no-install-recommends \
-  vim \
-  tmux \
   openssh-client \
-  && echo "Host *" >> /etc/ssh/ssh_config \
-  && echo "    StrictHostKeyChecking no" >> /etc/ssh/ssh_config
+  tmux \
+  vim \
+  && mkdir -p /etc/ssh/ssh_config.d \
+  && printf 'Host github.com\n    StrictHostKeyChecking accept-new\n' > /etc/ssh/ssh_config.d/10-github.conf
 
 # Install ROS packages
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
   --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
   apt-get update && apt-get install -y --no-install-recommends \
+  ros-${ROS_DISTRO}-joy \
   ros-${ROS_DISTRO}-rmw-cyclonedds-cpp \
   ros-${ROS_DISTRO}-rmw-zenoh-cpp \
-  ros-${ROS_DISTRO}-joy \
+  ros-${ROS_DISTRO}-teleop-tools \
   ros-${ROS_DISTRO}-teleop-twist-joy \
-  ros-${ROS_DISTRO}-teleop-twist-keyboard \
-  ros-${ROS_DISTRO}-teleop-tools
+  ros-${ROS_DISTRO}-teleop-twist-keyboard
 
 # Install ROS dependencies (rosdep)
 WORKDIR /tmp/packages

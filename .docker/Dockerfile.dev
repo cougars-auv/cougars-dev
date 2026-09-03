@@ -36,9 +36,12 @@ ENV DOCKER_USER=${DOCKER_USER} \
 RUN groupmod -n "${DOCKER_USER}" ubuntu \
   && usermod -l "${DOCKER_USER}" -d /home/${DOCKER_USER} -m ubuntu \
   && usermod -aG sudo "${DOCKER_USER}" \
-  && echo "%sudo ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers \
+  && echo "%sudo ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/nopasswd \
+  && chmod 0440 /etc/sudoers.d/nopasswd \
+  && visudo -c \
   && echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> /home/${DOCKER_USER}/.bashrc \
   && echo "[ -f ${OVERLAY_WS}/install/setup.bash ] && source ${OVERLAY_WS}/install/setup.bash" >> /home/${DOCKER_USER}/.bashrc \
+  && echo "export PATH=\"\${HOME}/.local/bin:\${PATH}\"" >> /home/${DOCKER_USER}/.bashrc \
   && touch /home/${DOCKER_USER}/.hushlogin \
   && chown -R ${DOCKER_USER}:${DOCKER_USER} /home/${DOCKER_USER}
 
@@ -47,14 +50,15 @@ WORKDIR ${OVERLAY_WS}
 # Install development tools
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
   --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
-  echo 'deb [trusted=yes] https://repo.charm.sh/apt/ /' | sudo tee /etc/apt/sources.list.d/charm.list \
+  mkdir -p /etc/apt/keyrings \
+  && curl -fsSL https://repo.charm.sh/apt/gpg.key | gpg --dearmor -o /etc/apt/keyrings/charm.gpg \
+  && echo "deb [signed-by=/etc/apt/keyrings/charm.gpg] https://repo.charm.sh/apt/ * *" > /etc/apt/sources.list.d/charm.list \
   && apt-get update && apt-get install -y --no-install-recommends \
-  python3-pip \
-  python3-venv \
-  gum \
-  ros-${ROS_DISTRO}-rqt* \
   cm-super \
   dvipng \
+  gum \
+  python3-pip \
+  python3-venv \
   texlive-latex-base \
   texlive-latex-extra \
   texlive-publishers \
@@ -63,6 +67,12 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
   x11-utils \
   x11-xserver-utils \
   xauth
+
+# Install ROS packages
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+  --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
+  apt-get update && apt-get install -y --no-install-recommends \
+  ros-${ROS_DISTRO}-rqt*
 
 # Install ROS dependencies (rosdep)
 WORKDIR /tmp/packages
@@ -81,19 +91,19 @@ WORKDIR ${OVERLAY_WS}
 USER ${DOCKER_USER}
 RUN --mount=type=cache,target=/home/${DOCKER_USER}/.cache/pip,uid=1000,gid=1000 \
   pip3 install --break-system-packages \
-  vcstool \
-  pre-commit \
-  tmuxp \
-  daft-pgm \
-  pandas \
-  seaborn \
-  scienceplots \
-  rosbags \
-  tqdm \
   colorlog \
+  daft-pgm \
   evo \
   optuna \
-  optuna-dashboard
+  optuna-dashboard \
+  pandas \
+  pre-commit \
+  rosbags \
+  scienceplots \
+  seaborn \
+  tmuxp \
+  tqdm \
+  vcstool
 
 USER root
 

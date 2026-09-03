@@ -29,7 +29,7 @@ services:
     pid: host
     environment:
       - ZENOH_CONFIG_OVERRIDE=connect/endpoints=["tcp/${ZENOH_ROUTER_IP}:7447"]
-    restart: unless-stopped
+    # restart: unless-stopped
     command: ros2 run rmw_zenoh_cpp rmw_zenohd
 
   runtime:
@@ -54,7 +54,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - /run/udev:/run/udev:ro
       - /dev:/dev
-    restart: unless-stopped
+    # restart: unless-stopped
     command: >
       ros2 launch coug_bringup agent.launch.py
       agent_ns:=${AGENT_NS}
