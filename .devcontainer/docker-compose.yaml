@@ -31,7 +31,7 @@ services:
     restart: unless-stopped
 
   router:
-    image: frostlab/cougars:runtime-${VERSION:-latest}
+    image: frostlab/cougars:runtime-latest
     container_name: cougars-router-ct
     network_mode: host
     ipc: host
@@ -40,12 +40,10 @@ services:
     command: ros2 run rmw_zenoh_cpp rmw_zenohd
 
   dev:
-    image: frostlab/cougars:dev-${VERSION:-latest}
+    image: frostlab/cougars:dev-latest
     # build:
     #   context: ..
     #   dockerfile: .docker/Dockerfile.dev
-    #   args:
-    #     - VERSION=${VERSION:-latest}
     container_name: cougars-dev-ct
     network_mode: host
     ipc: host

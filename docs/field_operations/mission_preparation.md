@@ -12,13 +12,6 @@
 
 ## Software Updates
 
-- To run a specific CoUGARs software version, check out its release tag (e.g., `v1.2.3`) in `cougars-dev`. Then add the same release tag (e.g., `VERSION=v1.2.3`) to a `.env` file in `cougars-dev/.devcontainer`.
-
-  ```bash
-  cd ~/cougars-dev && git fetch --tags origin && git checkout v1.2.3
-  cd ~/cougars-dev/.devcontainer && echo "VERSION=$(git describe --tags --exact-match)" > .env
-  ```
-
 - Update the Docker images.
 
   ```bash
@@ -42,23 +35,12 @@
     cd ~/cougars-dev && ./connect.sh <agent-ns>
     ```
 
-  - To run a specific CoUGARs software version, check out its release tag (e.g., `v1.2.3`) in `cougars-dev`.
-
-    ```bash
-    cd ~/cougars-dev && git fetch --tags origin && git checkout v1.2.3
-    ```
-
-  - Set up the CoUGARs software stack with `./setup.sh $(hostname) <base-station-ip>`.
-
-    ```bash
-    cd ~/cougars-dev && ./setup.sh $(hostname) <base-station-ip>
-    ```
-
-  - Use the configured aliases to pull the latest code from both remotes, update the Docker image, rebuild the `ros2_ws` workspace, and restart the ROS 2 software.
+  - Use the configured aliases to pull the latest code from both remotes, import the vcs-pinned packages, update the Docker image, rebuild the `ros2_ws` workspace, and restart the ROS 2 software.
 
     ```bash
     pull
     pull-base
+    vcs-import
     docker-pull
     build
     restart

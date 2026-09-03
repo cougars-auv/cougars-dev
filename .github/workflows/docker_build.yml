@@ -19,8 +19,6 @@ run-name: ${{ github.event.client_payload.repo }}
 on:
   push:
     branches: ["main"]
-    tags:
-      - "v*"
     paths:
       - ".github/workflows/docker_build.yml"
       - ".docker/**"
@@ -40,7 +38,6 @@ permissions:
 env:
   DOCKER_USERNAME: frostlab
   DOCKER_REPO: frostlab/cougars
-  VERSION: ${{ github.ref_type == 'tag' && github.ref_name || 'latest' }}
 
 jobs:
   build-gtsam:
@@ -67,7 +64,6 @@ jobs:
           push: true
           tags: |
             ${{ env.DOCKER_REPO }}:gtsam-latest-${{ matrix.arch }}
-            ${{ env.VERSION != 'latest' && format('{0}:gtsam-{1}-{2}', env.DOCKER_REPO, env.VERSION, matrix.arch) || '' }}
           provenance: false
           cache-from: type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-gtsam-${{ matrix.arch }}
           cache-to: type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-gtsam-${{ matrix.arch }},mode=max
@@ -85,11 +81,6 @@ jobs:
           docker buildx imagetools create -t ${{ env.DOCKER_REPO }}:gtsam-latest \
             ${{ env.DOCKER_REPO }}:gtsam-latest-amd64 \
             ${{ env.DOCKER_REPO }}:gtsam-latest-arm64
-          if [ "${{ env.VERSION }}" != "latest" ]; then
-            docker buildx imagetools create -t ${{ env.DOCKER_REPO }}:gtsam-${{ env.VERSION }} \
-              ${{ env.DOCKER_REPO }}:gtsam-${{ env.VERSION }}-amd64 \
-              ${{ env.DOCKER_REPO }}:gtsam-${{ env.VERSION }}-arm64
-          fi
 
   build-runtime:
     needs: manifest-gtsam
@@ -124,11 +115,8 @@ jobs:
           platforms: linux/${{ matrix.arch }}
           pull: true
           push: true
-          build-args: |
-            VERSION=${{ env.VERSION }}
           tags: |
             ${{ env.DOCKER_REPO }}:runtime-latest-${{ matrix.arch }}
-            ${{ env.VERSION != 'latest' && format('{0}:runtime-{1}-{2}', env.DOCKER_REPO, env.VERSION, matrix.arch) || '' }}
           provenance: false
           cache-from: type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-runtime-${{ matrix.arch }}
           cache-to: type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-runtime-${{ matrix.arch }},mode=max
@@ -146,11 +134,6 @@ jobs:
           docker buildx imagetools create -t ${{ env.DOCKER_REPO }}:runtime-latest \
             ${{ env.DOCKER_REPO }}:runtime-latest-amd64 \
             ${{ env.DOCKER_REPO }}:runtime-latest-arm64
-          if [ "${{ env.VERSION }}" != "latest" ]; then
-            docker buildx imagetools create -t ${{ env.DOCKER_REPO }}:runtime-${{ env.VERSION }} \
-              ${{ env.DOCKER_REPO }}:runtime-${{ env.VERSION }}-amd64 \
-              ${{ env.DOCKER_REPO }}:runtime-${{ env.VERSION }}-arm64
-          fi
 
   build-dev:
     needs: manifest-runtime
@@ -179,11 +162,8 @@ jobs:
           platforms: linux/amd64
           pull: true
           push: true
-          build-args: |
-            VERSION=${{ env.VERSION }}
           tags: |
             ${{ env.DOCKER_REPO }}:dev-latest
-            ${{ env.VERSION != 'latest' && format('{0}:dev-{1}', env.DOCKER_REPO, env.VERSION) || '' }}
           provenance: false
           cache-from: type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-dev-amd64
           cache-to: type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-dev-amd64,mode=max

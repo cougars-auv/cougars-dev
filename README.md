@@ -95,34 +95,9 @@ CoUGARs is a low-cost, configurable AUV platform designed for multi-agent autono
 
   > All pull requests must use [squash and merge](https://docs.github.com/en/pull-requests/reference/pull-request-merges#squash-and-merge-your-commits).
 
-- **Submit Final PR:** After all package PRs have merged, revert the temporary `.repos` changes in your `cougars-dev` branch and open a pull request. Once merged, GitHub Actions will build and push the updated Docker images to Docker Hub. Delete the branch after merging.
+- **Submit Final PR:** After all package PRs have merged, revert the temporary `.repos` changes in your `cougars-dev` branch and open a pull request. Ensure required tests pass, then merge once approved.
 
-## Releasing
-
-This repository follows the **Semantic Versioning (SemVer 2.0.0)** standard:
-> Given a version number **`MAJOR.MINOR.PATCH`**, increment the:
-> - **MAJOR** version when you make incompatible API changes
-> - **MINOR** version when you add functionality in a backward compatible manner
-> - **PATCH** version when you make backward compatible bug fixes
-
-- **Create a Release Branch:** Create a minor release branch (e.g., `release/v1.2.x`) from `main`.
-
-  > Do not create separate branches for patch versions (e.g., `v1.2.0` to `v1.2.1`). Merge fixes into the minor release branch, then bump the patch version in a new tag when ready to release.
-
-- **Tag Packages:** Check the packages listed in `runtime.repos` and `dev.repos`. For each package with recent untagged updates, release a new version (e.g., `v2.3.4`). Packages version independently of `cougars-dev`.
-
-- **Lock Dependencies:** On the release branch, pin each package in the `.repos` files to the most recent tag. Commit these updates.
-
-- **Tag and Push:** Create and push the new version tag (e.g., `v1.2.3`) on your release commit:
-
-  ```bash
-  git tag v1.2.3
-  git push origin v1.2.3
-  ```
-
-  Pushing the tag automatically rebuilds and publishes Docker images using the `<target>-<version>` format (e.g., `frostlab/cougars:runtime-v1.2.3`) and creates a draft GitHub Release with auto-generated notes.
-
-- **Publish a GitHub Release:** Review the draft release in GitHub and click **Publish**.
+> Once merged, GitHub Actions will build and push the updated Docker images to Docker Hub.
 
 ## Citations
 

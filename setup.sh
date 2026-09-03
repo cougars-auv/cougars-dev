@@ -19,9 +19,6 @@ fi
 
 cd "$(dirname "$0")"
 
-version="$(git describe --tags --exact-match 2>/dev/null || echo "latest")"
-echo "CoUGARs ${version}"
-
 agent_ns="$1"
 ip="$2"
 
@@ -30,23 +27,16 @@ if [ ! -f "config/${agent_ns}_params.yaml" ]; then
   exit 1
 fi
 
-sed 's|git@github.com:|https://github.com/|g' runtime.repos | vcs import ros2_ws/src
-vcs custom -n --git --args submodule update --init --recursive
-
-for git_dir in $(find ros2_ws/src -maxdepth 2 -name .git -prune); do
-  repo="$(dirname "${git_dir}")"
-  git -C "${repo}" remote add base "git://${ip}/cougars-dev/${repo}" 2>/dev/null || \
-    git -C "${repo}" remote set-url base "git://${ip}/cougars-dev/${repo}"
-done
-git remote add base "git://${ip}/cougars-dev" 2>/dev/null || \
-  git remote set-url base "git://${ip}/cougars-dev"
-
 cat > .env <<EOF
 AGENT_NS=${agent_ns}
 ZENOH_ROUTER_IP=${ip}
 USE_SIM_TIME=${use_sim_time}
-VERSION=${version}
 EOF
+
+git remote add base "git://${ip}/cougars-dev" 2>/dev/null || \
+  git remote set-url base "git://${ip}/cougars-dev"
+
+./import.sh
 
 sudo cp cougars.service /etc/systemd/system/
 sudo systemctl daemon-reload
