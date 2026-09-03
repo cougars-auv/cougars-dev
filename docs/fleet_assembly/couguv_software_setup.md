@@ -35,7 +35,7 @@
 
   - Install [Docker Engine](https://docs.docker.com/engine/install/debian/#install-using-the-repository), including the [Linux post-installation steps](https://docs.docker.com/engine/install/linux-postinstall).
   
-  - Install project dependencies.
+  - Install the project dependencies.
   
     ```bash
     sudo apt-get update && sudo apt-get install -y git vim mosh tmux rsync chrony linuxptp gpsd gpsd-clients python3-setuptools python3-pip
