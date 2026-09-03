@@ -57,7 +57,6 @@
 - Close the direct SSH connection, then attach via tmux with `./connect.sh <agent-ns>`.
 
   ```bash
-  exit
   cd ~/cougars-dev && ./connect.sh <agent-ns>
   ```
  

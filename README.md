@@ -89,7 +89,7 @@ CoUGARs is a low-cost, configurable AUV platform designed for multi-agent autono
 
   > If you need to add dependencies, update the relevant `package.xml` files, Dockerfiles under `.docker/`, `runtime.repos`, `dev.repos`, or `dependencies.repos`. Test building the Docker images locally.
 
-- **Sync Frequently:** Regularly update your branches with the latest `main` (via rebase or merge) to catch conflicts early.
+- **Sync Frequently:** Regularly update your branches with the latest `main` (via rebase or merge).
 
 - **Submit Package PRs:** Open a pull request for each package branch. Ensure required tests pass, then merge once approved. After merging, delete the branch and create a new branch from `main` for any follow-up work.
 
