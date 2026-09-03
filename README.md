@@ -91,13 +91,13 @@ CoUGARs is a low-cost, configurable AUV platform designed for multi-agent autono
 
 - **Sync Frequently:** Regularly update your branches with the latest `main` (via rebase or merge).
 
-- **Submit Package PRs:** Open a pull request for each package branch. Ensure required tests pass, then merge once approved. After merging, delete the branch and create a new branch from `main` for any follow-up work.
-
-  > All pull requests must use [squash and merge](https://docs.github.com/en/pull-requests/reference/pull-request-merges#squash-and-merge-your-commits).
+- **Submit Package PRs:** Open a pull request for each package branch. Ensure required tests pass, then merge once approved.
 
 - **Submit Final PR:** After all package PRs have merged, revert the temporary `.repos` changes in your `cougars-dev` branch and open a pull request. Ensure required tests pass, then merge once approved.
 
-> Once merged, GitHub Actions will build and push the updated Docker images to Docker Hub.
+  > Once merged, GitHub Actions will build and push the updated Docker images to Docker Hub.
+
+- **Delete Branches:** Remove all the merged branches. Create a new branch from `main` for any follow-up work.
 
 ## Citations
 
