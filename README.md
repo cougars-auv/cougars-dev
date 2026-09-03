@@ -8,6 +8,10 @@
 
 CoUGARs is a low-cost, configurable AUV platform designed for multi-agent autonomy research by the [Field Robotic Systems Lab (FROST Lab)](https://frostlab.byu.edu) at [Brigham Young University](https://byu.edu).
 
+<p align="left">
+  <img src=".github/assets/couguv.jpg" width="600">
+</p>
+
 ## Get Started
 
 > **Prerequisites:** 64-bit Linux, 15+ GB of free disk space, and a dedicated NVIDIA GPU (for HoloOcean simulation).
