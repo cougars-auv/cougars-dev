@@ -26,3 +26,10 @@ updates:
       github-actions:
         patterns:
           - "*"
+
+  - package-ecosystem: "pip"
+    directory: "/.docker"
+    schedule:
+      interval: "monthly"
+    commit-message:
+      prefix: "🐍"
