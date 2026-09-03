@@ -46,32 +46,29 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
   --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
   apt-get update && apt-get install -y --no-install-recommends \
-  ros-${ROS_DISTRO}-joy \
-  ros-${ROS_DISTRO}-rmw-cyclonedds-cpp \
-  ros-${ROS_DISTRO}-rmw-zenoh-cpp \
-  ros-${ROS_DISTRO}-teleop-tools \
-  ros-${ROS_DISTRO}-teleop-twist-joy \
-  ros-${ROS_DISTRO}-teleop-twist-keyboard
+  "ros-${ROS_DISTRO}-joy" \
+  "ros-${ROS_DISTRO}-rmw-cyclonedds-cpp" \
+  "ros-${ROS_DISTRO}-rmw-zenoh-cpp" \
+  "ros-${ROS_DISTRO}-teleop-tools" \
+  "ros-${ROS_DISTRO}-teleop-twist-joy" \
+  "ros-${ROS_DISTRO}-teleop-twist-keyboard"
 
 # Install ROS dependencies (rosdep)
-WORKDIR /tmp/packages
-COPY --from=cacher /tmp/packages .
-RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+RUN --mount=type=bind,from=cacher,source=/tmp/packages,target=/tmp/packages \
+  --mount=type=cache,target=/var/cache/apt,sharing=locked \
   --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
   --mount=type=cache,target=/root/.ros/rosdep \
   apt-get update \
   && rosdep update \
-  && rosdep install --from-paths . --ignore-src -y \
-  && rm -rf ./*
+  && rosdep install --from-paths /tmp/packages --ignore-src -y
 
 # Install GeographicLib datasets required by MAVROS
-RUN /opt/ros/${ROS_DISTRO}/lib/mavros/install_geographiclib_datasets.sh
+RUN "/opt/ros/${ROS_DISTRO}/lib/mavros/install_geographiclib_datasets.sh"
 
 RUN echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> /root/.bashrc \
   && echo "[ -f ${OVERLAY_WS}/install/setup.bash ] && source ${OVERLAY_WS}/install/setup.bash" >> /root/.bashrc
 
 COPY .docker/entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
 
 WORKDIR ${OVERLAY_WS}
 

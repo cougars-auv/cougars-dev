@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-source ${OVERLAY_WS}/install/setup.bash
+source "${OVERLAY_WS}/install/setup.bash"
 
 # --- Selection ---
 while true; do
@@ -27,6 +27,7 @@ if [[ "${options}" == *"Record rosbag"* ]]; then
 fi
 
 if [[ "${options}" == *"Specify lead agent"* ]]; then
+  # shellcheck disable=SC2086
   lead_agent=$(gum choose --header "Select lead agent:" ${selection}) || exit 0
 fi
 

@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-source ${OVERLAY_WS}/install/setup.bash
+source "${OVERLAY_WS}/install/setup.bash"
 
 ros2 topic pub --once /origin sensor_msgs/msg/NavSatFix "{
   header: {frame_id: 'map'},

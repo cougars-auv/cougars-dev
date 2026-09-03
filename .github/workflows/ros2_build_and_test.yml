@@ -70,6 +70,8 @@ jobs:
           TARGET_WORKSPACE: ros2_ws
           CCACHE_DIR: ${{ github.workspace }}/.ccache
           BASEDIR: ${{ github.workspace }}/.work
+          CLANG_TIDY: true
+          CLANG_TIDY_BASE_REF: ${{ github.base_ref || '' }}
           TARGET_CMAKE_ARGS: >
             -DCMAKE_BUILD_TYPE=Debug
             -DCMAKE_CXX_FLAGS="--coverage"

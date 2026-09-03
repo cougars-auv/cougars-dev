@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-source ${OVERLAY_WS}/install/setup.bash
+source "${OVERLAY_WS}/install/setup.bash"
 
 # --- Selection ---
 bag_name=$(cd "${BAGS_DIR}" && find . -name "metadata.yaml" -exec dirname {} \; | \

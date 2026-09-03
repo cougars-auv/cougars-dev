@@ -27,8 +27,8 @@ ARG DEBIAN_FRONTEND=noninteractive \
 
 SHELL [ "/bin/bash", "-c" ]
 
-ENV DOCKER_USER=${DOCKER_USER} \
-  OVERLAY_WS=/home/${DOCKER_USER}/cougars-dev/ros2_ws \
+ENV DOCKER_USER=${DOCKER_USER}
+ENV OVERLAY_WS=/home/${DOCKER_USER}/cougars-dev/ros2_ws \
   CONFIG_DIR=/home/${DOCKER_USER}/cougars-dev/config \
   BAGS_DIR=/home/${DOCKER_USER}/cougars-dev/bags
 
@@ -51,8 +51,8 @@ WORKDIR ${OVERLAY_WS}
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
   --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
   mkdir -p /etc/apt/keyrings \
-  && curl -fsSL https://repo.charm.sh/apt/gpg.key | gpg --dearmor -o /etc/apt/keyrings/charm.gpg \
-  && echo "deb [signed-by=/etc/apt/keyrings/charm.gpg] https://repo.charm.sh/apt/ * *" > /etc/apt/sources.list.d/charm.list \
+  && curl -fsSL https://repo.charm.sh/apt/gpg.key -o /etc/apt/keyrings/charm.asc \
+  && echo "deb [signed-by=/etc/apt/keyrings/charm.asc] https://repo.charm.sh/apt/ * *" > /etc/apt/sources.list.d/charm.list \
   && apt-get update && apt-get install -y --no-install-recommends \
   cm-super \
   dvipng \
@@ -72,38 +72,24 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
   --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
   apt-get update && apt-get install -y --no-install-recommends \
-  ros-${ROS_DISTRO}-rqt*
+  "ros-${ROS_DISTRO}-rqt*"
 
 # Install ROS dependencies (rosdep)
-WORKDIR /tmp/packages
-COPY --from=cacher /tmp/packages .
-RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+RUN --mount=type=bind,from=cacher,source=/tmp/packages,target=/tmp/packages \
+  --mount=type=cache,target=/var/cache/apt,sharing=locked \
   --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
   --mount=type=cache,target=/root/.ros/rosdep \
   apt-get update \
   && rosdep update \
-  && rosdep install --from-paths . --ignore-src -y \
-  && rm -rf ./*
+  && rosdep install --from-paths /tmp/packages --ignore-src -y
 
 WORKDIR ${OVERLAY_WS}
 
 # Install Python development tools
 USER ${DOCKER_USER}
-RUN --mount=type=cache,target=/home/${DOCKER_USER}/.cache/pip,uid=1000,gid=1000 \
-  pip3 install --break-system-packages \
-  colorlog \
-  daft-pgm \
-  evo \
-  optuna \
-  optuna-dashboard \
-  pandas \
-  pre-commit \
-  rosbags \
-  scienceplots \
-  seaborn \
-  tmuxp \
-  tqdm \
-  vcstool
+RUN --mount=type=bind,source=.docker/requirements.txt,target=/tmp/requirements.txt \
+  --mount=type=cache,target=/home/${DOCKER_USER}/.cache/pip,uid=1000,gid=1000 \
+  pip3 install --break-system-packages -r /tmp/requirements.txt
 
 USER root
 

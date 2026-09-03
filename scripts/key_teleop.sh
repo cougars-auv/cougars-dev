@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-source ${OVERLAY_WS}/install/setup.bash
+source "${OVERLAY_WS}/install/setup.bash"
 
 # --- Selection ---
 agent_ns=$(basename -a "${CONFIG_DIR}"/*_params.yaml | sed 's/_params.yaml$//' | sort | \

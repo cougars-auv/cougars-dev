@@ -37,7 +37,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 WORKDIR /tmp/gtsam-build
 RUN --mount=type=cache,target=/root/.ccache \
   ccache -z \
-  && git clone --depth 1 --branch ${GTSAM_VERSION} https://github.com/borglab/gtsam.git . \
+  && git clone --depth 1 --branch "${GTSAM_VERSION}" https://github.com/borglab/gtsam.git . \
   && cmake -B build -S . \
   -DCMAKE_BUILD_TYPE=Release \
   -DGTSAM_BUILD_WITH_MARCH_NATIVE=OFF \
@@ -49,7 +49,7 @@ RUN --mount=type=cache,target=/root/.ccache \
   -DGTSAM_ENABLE_BOOST_SERIALIZATION=OFF \
   -DCMAKE_C_COMPILER_LAUNCHER=ccache \
   -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
-  && make -C build -j$(nproc) \
+  && make -C build -j"$(nproc)" \
   && make -C build install \
   && ccache -s
 

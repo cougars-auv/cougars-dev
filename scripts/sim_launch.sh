@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-source ${OVERLAY_WS}/install/setup.bash
+source "${OVERLAY_WS}/install/setup.bash"
 
 # --- Selection ---
 scenario=$(gum choose --header "Choose a HoloOcean scenario:" \
@@ -65,6 +65,7 @@ fi
 
 if [[ "${options}" == *"Specify lead agent"* ]]; then
   agents_raw=$(echo "${agent_list}" | tr -d '[]' | tr -d ',')
+  # shellcheck disable=SC2086
   lead_agent=$(gum choose --header "Select lead agent:" ${agents_raw}) || exit 0
 fi
 
