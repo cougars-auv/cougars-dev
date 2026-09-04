@@ -8,7 +8,7 @@ scenario=$(gum choose --header "Choose a HoloOcean scenario:" \
   "WAM-V" \
   "CougUV Multi-Agent" \
   "BlueROV2 Multi-Agent" \
-  "Mixed Multi-Agent")
+  "Mixed Multi-Agent") || exit 0
 
 case ${scenario} in
   "CougUV") params="couguv_openwater_params.yaml";;

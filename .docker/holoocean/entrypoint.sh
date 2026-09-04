@@ -5,12 +5,8 @@ set -e
 target_uid=$(stat -c '%u' "${CONFIG_DIR}")
 target_gid=$(stat -c '%g' "${CONFIG_DIR}")
 
-if [ -n "${target_gid}" ]; then
-  groupmod -o -g "${target_gid}" "${DOCKER_USER}"
-fi
-if [ -n "${target_uid}" ]; then
-  usermod -o -u "${target_uid}" "${DOCKER_USER}"
-fi
+groupmod -o -g "${target_gid}" "${DOCKER_USER}"
+usermod -o -u "${target_uid}" "${DOCKER_USER}"
 
 chown "${DOCKER_USER}:${DOCKER_USER}" "/home/${DOCKER_USER}"
 find "/home/${DOCKER_USER}" -maxdepth 1 -not -user "${DOCKER_USER}" \
