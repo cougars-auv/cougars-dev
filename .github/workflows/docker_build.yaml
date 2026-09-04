@@ -20,7 +20,7 @@ on:
   push:
     branches: ["main"]
     paths:
-      - ".github/workflows/docker_build.yml"
+      - ".github/workflows/docker_build.yaml"
       - ".docker/**"
       - "*.repos"
       - "**/package.xml"

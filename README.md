@@ -2,7 +2,7 @@
 
 [![arXiv](https://img.shields.io/badge/arXiv-2511.08822-b31b1b.svg)](https://arxiv.org/pdf/2511.08822)
 [![ROS 2 Build & Test](https://github.com/cougars-auv/cougars-dev/actions/workflows/ros2_build_test.yaml/badge.svg)](https://github.com/cougars-auv/cougars-dev/actions/workflows/ros2_build_test.yaml)
-[![Docker Build](https://github.com/cougars-auv/cougars-dev/actions/workflows/docker_build.yml/badge.svg)](https://github.com/cougars-auv/cougars-dev/actions/workflows/docker_build.yml)
+[![Docker Build](https://github.com/cougars-auv/cougars-dev/actions/workflows/docker_build.yaml/badge.svg)](https://github.com/cougars-auv/cougars-dev/actions/workflows/docker_build.yaml)
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/cougars-auv/cougars-dev/main.svg)](https://results.pre-commit.ci/latest/github/cougars-auv/cougars-dev/main)
 [![codecov](https://codecov.io/gh/cougars-auv/cougars-dev/graph/badge.svg?token=5OBYXUBZR8)](https://codecov.io/gh/cougars-auv/cougars-dev)
 
