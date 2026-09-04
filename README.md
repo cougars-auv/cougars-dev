@@ -91,7 +91,7 @@ CoUGARs is a low-cost, configurable AUV platform designed for multi-agent autono
 
 - **Make Changes:** Develop, debug, and test your changes.
 
-  > If you need to add dependencies, update the relevant `package.xml` files, Dockerfiles under `.docker/`, `runtime.repos`, `dev.repos`, or `dependencies.repos`. Test building the Docker images locally.
+  > If you need to add dependencies, update the relevant `package.xml` files, Dockerfiles under `.docker/`, `runtime.repos`, `dev.repos`, `upstream.repos`, or `downstream.repos`. Test building the Docker images locally.
 
 - **Sync Frequently:** Regularly update your branches with the latest `main` (via rebase or merge).
 
