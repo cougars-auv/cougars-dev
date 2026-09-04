@@ -38,14 +38,14 @@ class BagRecorderNode(Node):
         self.declare_parameter("log_dir", "")
 
         publish_diagnostics = self.get_parameter("publish_diagnostics").value
-        self.agent_ns = self.get_parameter("agent_ns").value
-        self.bag_dir = os.environ.get("BAGS_DIR", "")
-        self.log_dir = self.get_parameter("log_dir").value
+        self._agent_ns = self.get_parameter("agent_ns").value
+        self._bag_dir = os.environ.get("BAGS_DIR", "")
+        self._log_dir = self.get_parameter("log_dir").value
         bag_record_service = self.get_parameter("bag_record_service").value
-        self.bag_path: str | None = None
-        self.bag_process: subprocess.Popen | None = None
+        self._bag_path: str | None = None
+        self._bag_process: subprocess.Popen | None = None
 
-        if not self.bag_dir:
+        if not self._bag_dir:
             self.get_logger().error("BAGS_DIR is not set.")
 
         self.create_service(BagRecord, bag_record_service, self._bag_record_callback)
@@ -53,10 +53,10 @@ class BagRecorderNode(Node):
         if publish_diagnostics:
             ns = self.get_namespace()
             clean_ns = "" if ns == "/" else ns
-            self.diagnostic_updater = diagnostic_updater.Updater(self)
-            self.diagnostic_updater.setHardwareID(f"{clean_ns}/bag_recorder_node")
+            self._diagnostic_updater = diagnostic_updater.Updater(self)
+            self._diagnostic_updater.setHardwareID(f"{clean_ns}/bag_recorder_node")
             prefix = f"[{clean_ns}] " if clean_ns else ""
-            self.diagnostic_updater.add(
+            self._diagnostic_updater.add(
                 f"{prefix}Recording Status", self._check_recording_status
             )
 
@@ -65,25 +65,25 @@ class BagRecorderNode(Node):
     def _bag_record_callback(
         self, request: BagRecord.Request, response: BagRecord.Response
     ) -> BagRecord.Response:
-        if self.bag_process is not None and self.bag_process.poll() is not None:
-            self.bag_process = None
+        if self._bag_process is not None and self._bag_process.poll() is not None:
+            self._bag_process = None
 
         if request.start:
-            if self.bag_process is not None:
+            if self._bag_process is not None:
                 response.success = False
                 response.message = "Already recording."
                 return response
 
-            if not self.bag_dir:
+            if not self._bag_dir:
                 response.success = False
                 response.message = "BAGS_DIR is not set."
                 return response
 
             base = request.prefix if request.prefix else "rosbag"
             timestamp = datetime.now(tz=timezone.utc).strftime("%Y-%m-%d-%H-%M-%S")
-            path = os.path.join(self.bag_dir, f"{base}_{self.agent_ns}_{timestamp}")
-            self.bag_path = path
-            self.bag_process = subprocess.Popen(
+            path = os.path.join(self._bag_dir, f"{base}_{self._agent_ns}_{timestamp}")
+            self._bag_path = path
+            self._bag_process = subprocess.Popen(
                 [
                     "ros2",
                     "bag",
@@ -101,7 +101,7 @@ class BagRecorderNode(Node):
             response.message = f"Recording started: {os.path.basename(path)}"
             self.get_logger().info(f"Bag recording started: {path}")
         else:
-            if self.bag_process is None:
+            if self._bag_process is None:
                 response.success = False
                 response.message = "Not recording."
                 return response
@@ -109,7 +109,7 @@ class BagRecorderNode(Node):
             self._stop_bag_process()
             self._save_config()
             self._save_logs()
-            self.bag_path = None
+            self._bag_path = None
             response.success = True
             response.message = "Recording stopped."
             self.get_logger().info("Bag recording stopped.")
@@ -119,47 +119,47 @@ class BagRecorderNode(Node):
     def _check_recording_status(
         self, stat: diagnostic_updater.DiagnosticStatusWrapper
     ) -> diagnostic_updater.DiagnosticStatusWrapper:
-        if self.bag_process is not None and self.bag_process.poll() is None:
+        if self._bag_process is not None and self._bag_process.poll() is None:
             stat.summary(DiagnosticStatus.OK, "Recording in progress.")
             stat.add(
-                "Bag Path", os.path.basename(self.bag_path) if self.bag_path else ""
+                "Bag Path", os.path.basename(self._bag_path) if self._bag_path else ""
             )
         else:
             stat.summary(DiagnosticStatus.OK, "Idle.")
         return stat
 
     def _stop_bag_process(self) -> None:
-        self.bag_process.send_signal(signal.SIGINT)
+        self._bag_process.send_signal(signal.SIGINT)
         try:
-            self.bag_process.wait(timeout=PROCESS_WAIT_TIMEOUT_SEC)
+            self._bag_process.wait(timeout=PROCESS_WAIT_TIMEOUT_SEC)
         except subprocess.TimeoutExpired:
             self.get_logger().error("Bag recorder did not stop cleanly. Killing it.")
-            self.bag_process.kill()
-            self.bag_process.wait()
-        self.bag_process = None
+            self._bag_process.kill()
+            self._bag_process.wait()
+        self._bag_process = None
 
     def _save_config(self) -> None:
-        if self.bag_path is None or not os.path.isdir(self.bag_path):
+        if self._bag_path is None or not os.path.isdir(self._bag_path):
             return
 
         config_dir = os.environ.get("CONFIG_DIR", "")
         if config_dir and os.path.isdir(config_dir):
-            dest = os.path.join(self.bag_path, "config")
+            dest = os.path.join(self._bag_path, "config")
             shutil.copytree(config_dir, dest, dirs_exist_ok=True)
             self.get_logger().info(f"Config saved: {dest}")
 
     def _save_logs(self) -> None:
-        if self.bag_path is None or not os.path.isdir(self.bag_path):
+        if self._bag_path is None or not os.path.isdir(self._bag_path):
             return
 
-        log_dir = self.log_dir or rclpy.logging.get_logging_directory()
+        log_dir = self._log_dir or rclpy.logging.get_logging_directory()
         if log_dir and os.path.isdir(log_dir):
-            dest = os.path.join(self.bag_path, "log")
+            dest = os.path.join(self._bag_path, "log")
             shutil.copytree(log_dir, dest, dirs_exist_ok=True)
             self.get_logger().info(f"Logs saved: {dest}")
 
     def destroy_node(self) -> None:
-        if self.bag_process is not None:
+        if self._bag_process is not None:
             self._stop_bag_process()
             self._save_config()
             self._save_logs()

@@ -12,12 +12,18 @@ Checks: >
   readability-*,
   -bugprone-easily-swappable-parameters,
   -cppcoreguidelines-avoid-magic-numbers,
+  -cppcoreguidelines-pro-bounds-constant-array-index,
   -cppcoreguidelines-pro-type-vararg,
-  -misc-include-cleaner,
+  -openmp-use-default-none,
   -readability-function-cognitive-complexity,
   -readability-identifier-length,
   -readability-magic-numbers
+
+CheckOptions:
+  misc-include-cleaner.IgnoreHeaders: 'Eigen/.*;Qt.*/.*'
+
 FormatStyle: file
+
 WarningsAsErrors: >
   bugprone-*,
   clang-analyzer-*,
