@@ -20,7 +20,7 @@ COPY ros2_ws/src .
 RUN find . -type f \! -name "package.xml" -delete
 
 # --- Main Stage ---
-FROM frostlab/cougars:gtsam-latest AS runtime
+FROM frostlab/cougars:gtsam AS runtime
 
 ARG DEBIAN_FRONTEND=noninteractive
 

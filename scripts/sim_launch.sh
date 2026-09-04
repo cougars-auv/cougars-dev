@@ -13,13 +13,15 @@ scenario=$(gum choose --header "Choose a HoloOcean scenario:" \
   "Mixed Multi-Agent")
 
 case ${scenario} in
-  "CougUV") agent_list="[coug1sim]";;
-  "BlueROV2") agent_list="[blue1sim]";;
-  "WAM-V") agent_list="[wamv1sim]";;
-  "CougUV Multi-Agent") agent_list="[coug1sim, coug2sim, coug3sim]";;
-  "BlueROV2 Multi-Agent") agent_list="[blue1sim, blue2sim]";;
-  "Mixed Multi-Agent") agent_list="[wamv1sim, blue1sim, coug2sim]";;
+  "CougUV") agents=(coug1sim);;
+  "BlueROV2") agents=(blue1sim);;
+  "WAM-V") agents=(wamv1sim);;
+  "CougUV Multi-Agent") agents=(coug1sim coug2sim coug3sim);;
+  "BlueROV2 Multi-Agent") agents=(blue1sim blue2sim);;
+  "Mixed Multi-Agent") agents=(wamv1sim blue1sim coug2sim);;
 esac
+
+agent_list="[$(printf '%s\n' "${agents[@]}" | paste -sd, | sed 's/,/, /g')]"
 
 # --- Options ---
 options=$(gum choose --no-limit --header "Select options:" \
@@ -64,9 +66,7 @@ if [[ "${options}" == *"Enable shared voxblox mapping"* ]]; then
 fi
 
 if [[ "${options}" == *"Specify lead agent"* ]]; then
-  agents_raw=$(echo "${agent_list}" | tr -d '[]' | tr -d ',')
-  # shellcheck disable=SC2086
-  lead_agent=$(gum choose --header "Select lead agent:" ${agents_raw}) || exit 0
+  lead_agent=$(gum choose --header "Select lead agent:" "${agents[@]}") || exit 0
 fi
 
 if [[ "${options}" == *"Acomms simulation"* ]]; then

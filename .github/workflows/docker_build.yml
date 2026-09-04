@@ -63,7 +63,7 @@ jobs:
           platforms: linux/${{ matrix.arch }}
           push: true
           tags: |
-            ${{ env.DOCKER_REPO }}:gtsam-latest-${{ matrix.arch }}
+            ${{ env.DOCKER_REPO }}:gtsam-${{ matrix.arch }}
           provenance: false
           cache-from: type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-gtsam-${{ matrix.arch }}
           cache-to: type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-gtsam-${{ matrix.arch }},mode=max
@@ -78,9 +78,9 @@ jobs:
           username: ${{ env.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
       - run: |
-          docker buildx imagetools create -t ${{ env.DOCKER_REPO }}:gtsam-latest \
-            ${{ env.DOCKER_REPO }}:gtsam-latest-amd64 \
-            ${{ env.DOCKER_REPO }}:gtsam-latest-arm64
+          docker buildx imagetools create -t ${{ env.DOCKER_REPO }}:gtsam \
+            ${{ env.DOCKER_REPO }}:gtsam-amd64 \
+            ${{ env.DOCKER_REPO }}:gtsam-arm64
 
   build-runtime:
     needs: manifest-gtsam
@@ -116,7 +116,7 @@ jobs:
           pull: true
           push: true
           tags: |
-            ${{ env.DOCKER_REPO }}:runtime-latest-${{ matrix.arch }}
+            ${{ env.DOCKER_REPO }}:runtime-${{ matrix.arch }}
           provenance: false
           cache-from: type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-runtime-${{ matrix.arch }}
           cache-to: type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-runtime-${{ matrix.arch }},mode=max
@@ -131,9 +131,9 @@ jobs:
           username: ${{ env.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
       - run: |
-          docker buildx imagetools create -t ${{ env.DOCKER_REPO }}:runtime-latest \
-            ${{ env.DOCKER_REPO }}:runtime-latest-amd64 \
-            ${{ env.DOCKER_REPO }}:runtime-latest-arm64
+          docker buildx imagetools create -t ${{ env.DOCKER_REPO }}:runtime \
+            ${{ env.DOCKER_REPO }}:runtime-amd64 \
+            ${{ env.DOCKER_REPO }}:runtime-arm64
 
   build-dev:
     needs: manifest-runtime
@@ -163,7 +163,7 @@ jobs:
           pull: true
           push: true
           tags: |
-            ${{ env.DOCKER_REPO }}:dev-latest
+            ${{ env.DOCKER_REPO }}:dev
           provenance: false
           cache-from: type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-dev-amd64
           cache-to: type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-dev-amd64,mode=max

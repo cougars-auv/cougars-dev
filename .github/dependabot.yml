@@ -1,21 +1,5 @@
 version: 2
 updates:
-  - package-ecosystem: "devcontainers"
-    directory: "/"
-    schedule:
-      interval: "monthly"
-    commit-message:
-      prefix: "🐙"
-
-  - package-ecosystem: "docker"
-    directories:
-      - "/.docker"
-      - "/.docker/holoocean"
-    schedule:
-      interval: "monthly"
-    commit-message:
-      prefix: "🐳"
-
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
@@ -26,10 +10,3 @@ updates:
       github-actions:
         patterns:
           - "*"
-
-  - package-ecosystem: "pip"
-    directory: "/.docker"
-    schedule:
-      interval: "monthly"
-    commit-message:
-      prefix: "🐍"

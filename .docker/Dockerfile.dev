@@ -20,7 +20,7 @@ COPY ros2_ws/src .
 RUN find . -type f \! -name "package.xml" -delete
 
 # --- Main Stage ---
-FROM frostlab/cougars:runtime-latest AS dev
+FROM frostlab/cougars:runtime AS dev
 
 ARG DEBIAN_FRONTEND=noninteractive \
   DOCKER_USER=frostlab-docker
@@ -87,9 +87,21 @@ WORKDIR ${OVERLAY_WS}
 
 # Install Python development tools
 USER ${DOCKER_USER}
-RUN --mount=type=bind,source=.docker/requirements.txt,target=/tmp/requirements.txt \
-  --mount=type=cache,target=/home/${DOCKER_USER}/.cache/pip,uid=1000,gid=1000 \
-  pip3 install --break-system-packages -r /tmp/requirements.txt
+RUN --mount=type=cache,target=/home/${DOCKER_USER}/.cache/pip,uid=1000,gid=1000 \
+  pip3 install --break-system-packages \
+  colorlog==6.12.0 \
+  daft-pgm==0.1.4 \
+  evo==1.37.1 \
+  optuna==4.9.0 \
+  optuna-dashboard==0.20.0 \
+  pandas==3.0.5 \
+  pre-commit==4.6.2 \
+  rosbags==0.11.5 \
+  scienceplots==2.2.2 \
+  seaborn==0.13.2 \
+  tmuxp==1.74.0 \
+  tqdm==4.70.0 \
+  vcstool==0.3.0
 
 USER root
 

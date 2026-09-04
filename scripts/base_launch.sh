@@ -11,7 +11,8 @@ while true; do
   [ -n "${selection}" ] && break
 done
 
-agent_list="[$(paste -sd, <<< "${selection}" | sed 's/,/, /g')]"
+mapfile -t agents <<< "${selection}"
+agent_list="[$(printf '%s\n' "${agents[@]}" | paste -sd, | sed 's/,/, /g')]"
 
 # --- Options ---
 options=$(gum choose --no-limit --header "Select options:" \
@@ -27,8 +28,7 @@ if [[ "${options}" == *"Record rosbag"* ]]; then
 fi
 
 if [[ "${options}" == *"Specify lead agent"* ]]; then
-  # shellcheck disable=SC2086
-  lead_agent=$(gum choose --header "Select lead agent:" ${selection}) || exit 0
+  lead_agent=$(gum choose --header "Select lead agent:" "${agents[@]}") || exit 0
 fi
 
 # --- Launch ---

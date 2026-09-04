@@ -1,10 +1,15 @@
 ci:
-  autofix_commit_msg: "🐡 [pre-commit.ci] autofix"
-  autoupdate_commit_msg: "🪼 [pre-commit.ci] autoupdate"
+  autofix_commit_msg: "🪼 [pre-commit.ci] autofix"
+  autoupdate_commit_msg: "🐙 [pre-commit.ci] autoupdate"
   autoupdate_schedule: monthly
   submodules: false
 
 repos:
+  - repo: https://github.com/rhysd/actionlint
+    rev: v1.7.12
+    hooks:
+      - id: actionlint
+
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
     hooks:
@@ -27,34 +32,34 @@ repos:
         exclude: \.md$
 
   - repo: https://github.com/python-jsonschema/check-jsonschema
-    rev: 0.37.4
+    rev: 0.38.0
     hooks:
-      - id: check-github-workflows
-        args: ["--verbose"]
       - id: check-dependabot
         args: ["--verbose"]
-
-  - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.16.1
-    hooks:
-      - id: ruff-check
-        args: [--fix]
-      - id: ruff-format
+      - id: check-github-workflows
+        args: ["--verbose"]
 
   - repo: https://github.com/pre-commit/mirrors-clang-format
-    rev: v22.1.8
+    rev: v23.1.0
     hooks:
       - id: clang-format
         types_or: [c++, c]
-
-  - repo: https://github.com/shellcheck-py/shellcheck-py
-    rev: v0.11.0.1-1
-    hooks:
-      - id: shellcheck
-        args: ["--exclude=SC1090,SC1091"]
 
   - repo: https://github.com/AleksaC/hadolint-py
     rev: v2.15.1
     hooks:
       - id: hadolint
         args: ["--ignore=DL3008", "--ignore=DL3002", "--ignore=DL3066"]
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.16.6
+    hooks:
+      - id: ruff-check
+        args: [--fix]
+      - id: ruff-format
+
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.11.0.1-1
+    hooks:
+      - id: shellcheck
+        args: ["--exclude=SC1090,SC1091"]

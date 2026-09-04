@@ -64,7 +64,7 @@ jobs:
           ssh-private-key: ${{ secrets.SSH_KEY }}
       - uses: ros-industrial/industrial_ci@master
         env:
-          DOCKER_IMAGE: ${{ env.DOCKER_REPO }}:${{ matrix.target }}-latest
+          DOCKER_IMAGE: ${{ env.DOCKER_REPO }}:${{ matrix.target }}
           DOCKER_PULL: true
           UPSTREAM_WORKSPACE: ${{ matrix.repos }}
           TARGET_WORKSPACE: ros2_ws

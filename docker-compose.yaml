@@ -14,7 +14,7 @@
 
 services:
   builder:
-    image: frostlab/cougars:runtime-latest
+    image: frostlab/cougars:runtime
     container_name: cougars-builder-ct
     profiles: ["build"]
     volumes:
@@ -22,7 +22,7 @@ services:
     command: colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release
 
   router:
-    image: frostlab/cougars:runtime-latest
+    image: frostlab/cougars:runtime
     container_name: cougars-router-ct
     network_mode: host
     ipc: host
@@ -33,7 +33,7 @@ services:
     command: ros2 run rmw_zenoh_cpp rmw_zenohd
 
   runtime:
-    image: frostlab/cougars:runtime-latest
+    image: frostlab/cougars:runtime
     # build:
     #   context: .
     #   dockerfile: .docker/Dockerfile.runtime
