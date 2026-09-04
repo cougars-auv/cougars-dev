@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-if [ -z "$1" ]; then
+if [[ -z $1 ]]; then
   echo "Usage: ./connect.sh <agent-ns>"
   exit 1
 fi

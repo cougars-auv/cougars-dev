@@ -7,13 +7,13 @@ source "${OVERLAY_WS}/install/setup.bash"
 bag_name=$(cd "${BAGS_DIR}" && find . -name "metadata.yaml" -exec dirname {} \; | \
   sed 's|^\./||' | sort -r | \
   gum filter --placeholder "Select a bag to play...") || exit 0
-[ -z "${bag_name}" ] && exit 0
+[[ -z ${bag_name} ]] && exit 0
 play_bag_path="${BAGS_DIR}/${bag_name}"
 
 agent_ns=$(basename -a "${CONFIG_DIR}"/*_params.yaml | \
   sed 's/_params.yaml$//' | sort | \
   gum filter --placeholder "Select an agent to launch...") || exit 0
-[ -z "${agent_ns}" ] && exit 0
+[[ -z ${agent_ns} ]] && exit 0
 agent_list="[${agent_ns}]"
 
 # --- Options ---
@@ -58,19 +58,19 @@ if [[ "${options}" == *"HITL mode"* ]]; then
 fi
 
 # --- Launch ---
-args=(
+launch_args=(
   "agent_list:=${agent_list}"
   "play_bag_path:=${play_bag_path}"
 )
-if [ -n "${record_bag_path}" ]; then
-  args+=("record_bag_path:=${record_bag_path}")
+if [[ -n ${record_bag_path} ]]; then
+  launch_args+=("record_bag_path:=${record_bag_path}")
 fi
-args+=(
+launch_args+=(
   "start_delay:=${start_delay}"
   "playback_rate:=${playback_rate}"
   "loc_comparison:=${loc_comparison}"
   "hitl_mode:=${hitl_mode}"
 )
 
-echo "ros2 launch coug_bringup bag.launch.py ${args[*]}"
-ros2 launch coug_bringup bag.launch.py "${args[@]}"
+echo "ros2 launch coug_bringup bag.launch.py ${launch_args[*]}"
+ros2 launch coug_bringup bag.launch.py "${launch_args[@]}"

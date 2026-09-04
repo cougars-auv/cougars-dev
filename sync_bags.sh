@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-if [ -z "$1" ]; then
+if [[ -z $1 ]]; then
   echo "Usage: ./sync_bags.sh <agent-ns>"
   exit 1
 fi

@@ -1,11 +1,11 @@
 # shellcheck shell=bash
-[ -f ~/.bashrc ] && source ~/.bashrc
+[[ -f ~/.bashrc ]] && source ~/.bashrc
 
 pull_all() {
   while IFS= read -r git_dir; do
     repo="$(dirname "${git_dir}")"
     branch="$(git -C "${repo}" branch --show-current)"
-    [ -n "${branch}" ] || continue
+    [[ -n ${branch} ]] || continue
     git -C "${repo}" pull "$1" "${branch}"
   done < <(find ~/cougars-dev -name .git -prune)
 }

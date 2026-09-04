@@ -3,13 +3,13 @@ set -e
 
 cd "$(dirname "$0")"
 
-if [ ! -f .env ]; then
+if [[ ! -f .env ]]; then
   echo "Error: .env not found, run ./setup.sh first"
   exit 1
 fi
 
 ip="$(grep '^ZENOH_ROUTER_IP=' .env | cut -d= -f2-)"
-if [ -z "${ip}" ]; then
+if [[ -z ${ip} ]]; then
   echo "Error: ZENOH_ROUTER_IP not set in .env"
   exit 1
 fi

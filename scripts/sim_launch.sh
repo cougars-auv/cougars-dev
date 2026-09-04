@@ -13,15 +13,15 @@ scenario=$(gum choose --header "Choose a HoloOcean scenario:" \
   "Mixed Multi-Agent") || exit 0
 
 case ${scenario} in
-  "CougUV") agents=(coug1sim);;
-  "BlueROV2") agents=(blue1sim);;
-  "WAM-V") agents=(wamv1sim);;
-  "CougUV Multi-Agent") agents=(coug1sim coug2sim coug3sim);;
-  "BlueROV2 Multi-Agent") agents=(blue1sim blue2sim);;
-  "Mixed Multi-Agent") agents=(wamv1sim blue1sim coug2sim);;
+  "CougUV") selected_agents=(coug1sim);;
+  "BlueROV2") selected_agents=(blue1sim);;
+  "WAM-V") selected_agents=(wamv1sim);;
+  "CougUV Multi-Agent") selected_agents=(coug1sim coug2sim coug3sim);;
+  "BlueROV2 Multi-Agent") selected_agents=(blue1sim blue2sim);;
+  "Mixed Multi-Agent") selected_agents=(wamv1sim blue1sim coug2sim);;
 esac
 
-agent_list="[$(printf '%s\n' "${agents[@]}" | paste -sd, | sed 's/,/, /g')]"
+agent_list="[$(printf '%s\n' "${selected_agents[@]}" | paste -sd, | sed 's/,/, /g')]"
 
 # --- Options ---
 options=$(gum choose --no-limit --header "Select options:" \
@@ -66,7 +66,7 @@ if [[ "${options}" == *"Enable shared voxblox mapping"* ]]; then
 fi
 
 if [[ "${options}" == *"Specify lead agent"* ]]; then
-  lead_agent=$(gum choose --header "Select lead agent:" "${agents[@]}") || exit 0
+  lead_agent=$(gum choose --header "Select lead agent:" "${selected_agents[@]}") || exit 0
 fi
 
 if [[ "${options}" == *"Acomms simulation"* ]]; then
@@ -78,26 +78,26 @@ if [[ "${options}" == *"HITL mode"* ]]; then
 fi
 
 # --- Launch ---
-args=(
+launch_args=(
   "agent_list:=${agent_list}"
 )
-if [ -n "${lead_agent}" ]; then
-  args+=("lead_agent:=${lead_agent}")
+if [[ -n ${lead_agent} ]]; then
+  launch_args+=("lead_agent:=${lead_agent}")
 fi
-if [ -n "${record_bag_path}" ]; then
-  args+=("record_bag_path:=${record_bag_path}")
+if [[ -n ${record_bag_path} ]]; then
+  launch_args+=("record_bag_path:=${record_bag_path}")
 fi
-args+=(
+launch_args+=(
   "loc_comparison:=${loc_comparison}"
   "add_noise:=${add_noise}"
   "enable_mapping:=${enable_mapping}"
   "enable_shared_mapping:=${enable_shared_mapping}"
 )
-args+=(
+launch_args+=(
   "enable_direct_comms:=${enable_direct_comms}"
   "enable_acoustic_comms:=${enable_acoustic_comms}"
   "hitl_mode:=${hitl_mode}"
 )
 
-echo "ros2 launch coug_bringup sim.launch.py ${args[*]}"
-ros2 launch coug_bringup sim.launch.py "${args[@]}"
+echo "ros2 launch coug_bringup sim.launch.py ${launch_args[*]}"
+ros2 launch coug_bringup sim.launch.py "${launch_args[@]}"

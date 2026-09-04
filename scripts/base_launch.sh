@@ -5,14 +5,14 @@ source "${OVERLAY_WS}/install/setup.bash"
 
 # --- Selection ---
 while true; do
-  selection=$(basename -a "${CONFIG_DIR}"/*_params.yaml | \
+  selected_agents=$(basename -a "${CONFIG_DIR}"/*_params.yaml | \
     sed 's/_params.yaml$//' | sort | \
     gum choose --no-limit --header "Select agents to launch:") || exit 0
-  [ -n "${selection}" ] && break
+  [[ -n ${selected_agents} ]] && break
 done
 
-mapfile -t agents <<< "${selection}"
-agent_list="[$(printf '%s\n' "${agents[@]}" | paste -sd, | sed 's/,/, /g')]"
+mapfile -t selected_agents <<< "${selected_agents}"
+agent_list="[$(printf '%s\n' "${selected_agents[@]}" | paste -sd, | sed 's/,/, /g')]"
 
 # --- Options ---
 options=$(gum choose --no-limit --header "Select options:" \
@@ -28,19 +28,19 @@ if [[ "${options}" == *"Record rosbag"* ]]; then
 fi
 
 if [[ "${options}" == *"Specify lead agent"* ]]; then
-  lead_agent=$(gum choose --header "Select lead agent:" "${agents[@]}") || exit 0
+  lead_agent=$(gum choose --header "Select lead agent:" "${selected_agents[@]}") || exit 0
 fi
 
 # --- Launch ---
-args=(
+launch_args=(
   "agent_list:=${agent_list}"
 )
-if [ -n "${lead_agent}" ]; then
-  args+=("lead_agent:=${lead_agent}")
+if [[ -n ${lead_agent} ]]; then
+  launch_args+=("lead_agent:=${lead_agent}")
 fi
-if [ -n "${record_bag_path}" ]; then
-  args+=("record_bag_path:=${record_bag_path}")
+if [[ -n ${record_bag_path} ]]; then
+  launch_args+=("record_bag_path:=${record_bag_path}")
 fi
 
-echo "ros2 launch coug_bringup base.launch.py ${args[*]}"
-ros2 launch coug_bringup base.launch.py "${args[@]}"
+echo "ros2 launch coug_bringup base.launch.py ${launch_args[*]}"
+ros2 launch coug_bringup base.launch.py "${launch_args[@]}"
