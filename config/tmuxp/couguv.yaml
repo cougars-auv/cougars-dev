@@ -8,10 +8,10 @@ windows:
     layout: tiled
     panes:
       - shell_command:
-          - logs
-      - shell_command:
           - cmd: build && restart
             enter: false
       - shell_command:
           - cmd: pull-base
             enter: false
+      - shell_command:
+          - logs
