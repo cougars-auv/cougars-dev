@@ -12,6 +12,12 @@
 
 ## Software Updates
 
+- Pull the latest code.
+
+  ```bash
+  cd ~/cougars-dev && git pull
+  ```
+
 - Update the Docker images.
 
   ```bash
