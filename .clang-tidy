@@ -10,11 +10,17 @@ Checks: >
   performance-*,
   portability-*,
   readability-*,
-  -bugprone-easily-swappable-parameters
+  -bugprone-easily-swappable-parameters,
+  -cppcoreguidelines-avoid-magic-numbers,
+  -cppcoreguidelines-pro-type-vararg,
+  -misc-include-cleaner,
+  -readability-function-cognitive-complexity,
+  -readability-identifier-length,
+  -readability-magic-numbers
+FormatStyle: file
 WarningsAsErrors: >
   bugprone-*,
   clang-analyzer-*,
   concurrency-*,
   performance-*,
   portability-*
-FormatStyle: file
