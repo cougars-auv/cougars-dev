@@ -12,7 +12,7 @@
   cd ~/cougars-dev/scripts && ./base_launch.sh
   ```
 
-## On-Site Changes
+## Field Changes
 
 - Make any code or config changes on the base station in VSCode, then commit them locally.
 
