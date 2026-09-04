@@ -14,7 +14,9 @@
 
 ## Field Changes
 
-- Make any code or config changes on the base station in VSCode, then commit them locally.
+- Create a field branch (e.g., `field/utah-lake-jan-1`) in each repository you plan to edit.
+
+- Make any code or config changes on the base station in VSCode, then commit them to the field branches locally.
 
   > Do not edit code directly on the CougUVs. Make changes on the base station, then roll them out to the fleet with Git.
 
@@ -31,6 +33,13 @@
 
     ```bash
     cd ~/cougars-dev && ./connect.sh <agent-ns>
+    ```
+
+  - Check out the field branches created on the base station.
+
+    ```bash
+    git fetch base
+    git switch -c field/utah-lake-jan-1 base/field/utah-lake-jan-1
     ```
 
   - Use the configured aliases to pull the latest code from the base station remote, rebuild the `ros2_ws` workspace, and restart the ROS 2 software.
