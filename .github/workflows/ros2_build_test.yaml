@@ -22,7 +22,7 @@ on:
   pull_request:
     branches: ["main"]
   repository_dispatch:
-    types: [rebuild-workspace]
+    types: [ros2-build-test]
   workflow_dispatch:
 
 concurrency:

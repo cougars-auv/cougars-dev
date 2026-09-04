@@ -25,7 +25,7 @@ on:
       - "*.repos"
       - "**/package.xml"
   repository_dispatch:
-    types: [rebuild-images]
+    types: [docker-build]
   workflow_dispatch:
 
 concurrency:
