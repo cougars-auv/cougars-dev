@@ -82,3 +82,8 @@ repos:
     hooks:
       - id: shellcheck
         args: ["--exclude=SC1090,SC1091"]
+
+  - repo: https://github.com/scop/pre-commit-shfmt
+    rev: v3.13.1-1
+    hooks:
+      - id: shfmt

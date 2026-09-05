@@ -20,8 +20,14 @@ use_sim_time="false"
 args=()
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    --hitl) use_sim_time="true"; shift ;;
-    *) args+=("$1"); shift ;;
+  --hitl)
+    use_sim_time="true"
+    shift
+    ;;
+  *)
+    args+=("$1")
+    shift
+    ;;
   esac
 done
 set -- "${args[@]}"
@@ -41,13 +47,13 @@ if [[ ! -f "config/${agent_ns}_params.yaml" ]]; then
   exit 1
 fi
 
-cat > .env <<EOF
+cat >.env <<EOF
 AGENT_NS=${agent_ns}
 ZENOH_ROUTER_IP=${ip}
 USE_SIM_TIME=${use_sim_time}
 EOF
 
-git remote add base "git://${ip}/cougars-dev" 2>/dev/null || \
+git remote add base "git://${ip}/cougars-dev" 2>/dev/null ||
   git remote set-url base "git://${ip}/cougars-dev"
 
 ./import.sh

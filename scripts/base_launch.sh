@@ -19,13 +19,13 @@ source "${OVERLAY_WS}/install/setup.bash"
 
 # --- Selection ---
 while true; do
-  selected_agents=$(basename -a "${CONFIG_DIR}"/*_params.yaml | \
-    sed 's/_params.yaml$//' | sort | \
+  selected_agents=$(basename -a "${CONFIG_DIR}"/*_params.yaml |
+    sed 's/_params.yaml$//' | sort |
     gum choose --no-limit --header "Select agents to launch:") || exit 0
   [[ -n ${selected_agents} ]] && break
 done
 
-mapfile -t selected_agents <<< "${selected_agents}"
+mapfile -t selected_agents <<<"${selected_agents}"
 agent_list="[$(printf '%s\n' "${selected_agents[@]}" | paste -sd, | sed 's/,/, /g')]"
 
 # --- Options ---

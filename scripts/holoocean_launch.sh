@@ -25,12 +25,12 @@ scenario=$(gum choose --header "Choose a HoloOcean scenario:" \
   "Mixed Multi-Agent") || exit 0
 
 case ${scenario} in
-  "CougUV") params="couguv_openwater_params.yaml";;
-  "BlueROV2") params="bluerov2_openwater_params.yaml";;
-  "WAM-V") params="wamv_openwater_params.yaml";;
-  "CougUV Multi-Agent") params="multi_couguv_openwater_params.yaml";;
-  "BlueROV2 Multi-Agent") params="multi_bluerov2_openwater_params.yaml";;
-  "Mixed Multi-Agent") params="multi_mixed_openwater_params.yaml";;
+"CougUV") params="couguv_openwater_params.yaml" ;;
+"BlueROV2") params="bluerov2_openwater_params.yaml" ;;
+"WAM-V") params="wamv_openwater_params.yaml" ;;
+"CougUV Multi-Agent") params="multi_couguv_openwater_params.yaml" ;;
+"BlueROV2 Multi-Agent") params="multi_bluerov2_openwater_params.yaml" ;;
+"Mixed Multi-Agent") params="multi_mixed_openwater_params.yaml" ;;
 esac
 
 # --- Launch ---

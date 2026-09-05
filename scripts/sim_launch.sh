@@ -27,12 +27,12 @@ scenario=$(gum choose --header "Choose a HoloOcean scenario:" \
   "Mixed Multi-Agent") || exit 0
 
 case ${scenario} in
-  "CougUV") selected_agents=(coug1sim);;
-  "BlueROV2") selected_agents=(blue1sim);;
-  "WAM-V") selected_agents=(wamv1sim);;
-  "CougUV Multi-Agent") selected_agents=(coug1sim coug2sim coug3sim);;
-  "BlueROV2 Multi-Agent") selected_agents=(blue1sim blue2sim);;
-  "Mixed Multi-Agent") selected_agents=(wamv1sim blue1sim coug2sim);;
+"CougUV") selected_agents=(coug1sim) ;;
+"BlueROV2") selected_agents=(blue1sim) ;;
+"WAM-V") selected_agents=(wamv1sim) ;;
+"CougUV Multi-Agent") selected_agents=(coug1sim coug2sim coug3sim) ;;
+"BlueROV2 Multi-Agent") selected_agents=(blue1sim blue2sim) ;;
+"Mixed Multi-Agent") selected_agents=(wamv1sim blue1sim coug2sim) ;;
 esac
 
 agent_list="[$(printf '%s\n' "${selected_agents[@]}" | paste -sd, | sed 's/,/, /g')]"
