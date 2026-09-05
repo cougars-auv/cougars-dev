@@ -9,7 +9,7 @@
 CoUGARs is a low-cost, configurable AUV platform designed for multi-agent autonomy research by the [Field Robotic Systems Lab (FROST Lab)](https://frostlab.byu.edu) at [Brigham Young University](https://byu.edu).
 
 <p align="left">
-  <img src=".github/assets/couguv.jpg" width="600">
+  <img src=".github/assets/couguv.jpg" width="600" alt="CougUV">
 </p>
 
 ## Get Started
@@ -59,7 +59,7 @@ CoUGARs is a low-cost, configurable AUV platform designed for multi-agent autono
     ```
 
 > If you run into crashes or out-of-memory errors while building the workspace, restrict the compiler to a single worker using `colcon build --parallel-workers 1`.
-
+>
 > If not all repositories appear in the Git sidebar in VSCode, open settings (`Ctrl + ,`), set "Git: Repository Scan Max Depth" to 3, and reload the window.
 
 ## Documentation
@@ -108,6 +108,7 @@ CoUGARs is a low-cost, configurable AUV platform designed for multi-agent autono
 If you use this repository in your research, please cite the following publications:
 
 ### CoUGARs
+
 ```bibtex
 @misc{durrant2025lowcostmultiagentfleetacoustic,
   title={Low-cost Multi-agent Fleet for Acoustic Cooperative Localization Research},
@@ -121,6 +122,7 @@ If you use this repository in your research, please cite the following publicati
 ```
 
 ### HoloOcean-ROS
+
 ```bibtex
 @misc{meyers2025testingevaluationunderwatervehicle,
   title={Testing and Evaluation of Underwater Vehicle Using Hardware-In-The-Loop Simulation with HoloOcean},
@@ -134,6 +136,7 @@ If you use this repository in your research, please cite the following publicati
 ```
 
 ### HoloOcean
+
 ```bibtex
 @inproceedings{potokar2022holooceanunderwaterroboticssim,
   author={Easton Potokar and Spencer Ashford and Michael Kaess and Joshua G. Mangelson},

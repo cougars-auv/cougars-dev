@@ -43,7 +43,7 @@ class BagRecorderNode(Node):
         self._log_dir = self.get_parameter("log_dir").value
         bag_record_service = self.get_parameter("bag_record_service").value
         self._bag_path: str | None = None
-        self._bag_process: subprocess.Popen | None = None
+        self._bag_process: subprocess.Popen[bytes] | None = None
 
         if not self._bag_dir:
             self.get_logger().error("BAGS_DIR is not set.")
@@ -129,13 +129,17 @@ class BagRecorderNode(Node):
         return stat
 
     def _stop_bag_process(self) -> None:
-        self._bag_process.send_signal(signal.SIGINT)
+        process = self._bag_process
+        if process is None:
+            return
+
+        process.send_signal(signal.SIGINT)
         try:
-            self._bag_process.wait(timeout=PROCESS_WAIT_TIMEOUT_SEC)
+            process.wait(timeout=PROCESS_WAIT_TIMEOUT_SEC)
         except subprocess.TimeoutExpired:
             self.get_logger().error("Bag recorder did not stop cleanly. Killing it.")
-            self._bag_process.kill()
-            self._bag_process.wait()
+            process.kill()
+            process.wait()
         self._bag_process = None
 
     def _save_config(self) -> None:

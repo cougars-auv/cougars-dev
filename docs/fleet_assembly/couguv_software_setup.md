@@ -59,7 +59,7 @@
   ```bash
   cd ~/cougars-dev && ./connect.sh <agent-ns>
   ```
- 
+
 - Use the configured aliases to pull the latest code from both remotes, import the vcs-pinned packages, update the Docker images, rebuild the `ros2_ws` workspace, and restart the ROS 2 software.
   
     ```bash
@@ -71,4 +71,3 @@
     restart
     logs
     ```
-    
