@@ -17,8 +17,10 @@ repos:
         args: ["-l", "apache", "-c", "BYU FROST Lab", "-v"]
         exclude: |
           (?x)^(
+            (.*/)?(config|params)/.*\.ya?ml|
             (.*/)?__init__\.py|
-            (.*/)?config/.*\.ya?ml|
+            (.*/)?cleanup\.yaml|
+            (.*/)?metadata\.yaml|
             (.*/)?package\.xml|
             (.*/)?setup\.py|
             \.github/(dependabot|release)\.yaml|
