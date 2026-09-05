@@ -10,6 +10,23 @@ repos:
     hooks:
       - id: actionlint
 
+  - repo: https://github.com/google/addlicense
+    rev: v1.2.0
+    hooks:
+      - id: addlicense
+        args: ["-l", "apache", "-c", "BYU FROST Lab", "-v"]
+        exclude: |
+          (?x)^(
+            (.*/)?__init__\.py|
+            (.*/)?config/.*\.ya?ml|
+            (.*/)?package\.xml|
+            (.*/)?setup\.py|
+            \.github/(dependabot|release)\.yaml|
+            \.pre-commit-config\.yaml|
+            \.ruff\.toml|
+            codecov\.yml
+          )$
+
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
     hooks:
