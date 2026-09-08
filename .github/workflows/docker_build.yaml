@@ -28,10 +28,6 @@ on:
     types: [docker-build]
   workflow_dispatch:
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: false
-
 permissions:
   contents: read
 
@@ -62,8 +58,7 @@ jobs:
           file: .docker/Dockerfile.gtsam
           platforms: linux/${{ matrix.arch }}
           push: true
-          tags: |
-            ${{ env.DOCKER_REPO }}:gtsam-${{ matrix.arch }}
+          tags: ${{ env.DOCKER_REPO }}:gtsam-${{ matrix.arch }}
           provenance: false
           cache-from: type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-gtsam-${{ matrix.arch }}
           cache-to: type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-gtsam-${{ matrix.arch }},mode=max
@@ -115,8 +110,7 @@ jobs:
           platforms: linux/${{ matrix.arch }}
           pull: true
           push: true
-          tags: |
-            ${{ env.DOCKER_REPO }}:runtime-${{ matrix.arch }}
+          tags: ${{ env.DOCKER_REPO }}:runtime-${{ matrix.arch }}
           provenance: false
           cache-from: type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-runtime-${{ matrix.arch }}
           cache-to: type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-runtime-${{ matrix.arch }},mode=max
@@ -162,8 +156,7 @@ jobs:
           platforms: linux/amd64
           pull: true
           push: true
-          tags: |
-            ${{ env.DOCKER_REPO }}:dev
+          tags: ${{ env.DOCKER_REPO }}:dev
           provenance: false
           cache-from: type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-dev-amd64
           cache-to: type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-dev-amd64,mode=max
