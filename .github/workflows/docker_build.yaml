@@ -20,6 +20,12 @@ on:
   push:
     branches: ["main"]
     tags: ["*"]
+    paths:
+      - ".github/workflows/docker_build.yaml"
+      - ".docker/**"
+      - ".dockerignore"
+      - "*.repos"
+      - "**/package.xml"
   pull_request:
     branches: ["main"]
   repository_dispatch:
@@ -32,11 +38,7 @@ permissions:
 env:
   DOCKER_USERNAME: frostlab
   DOCKER_REPO: frostlab/cougars
-  VERSION: >-
-    ${{ (github.event.pull_request.number && format('pr-{0}', github.event.pull_request.number))
-     || (github.ref_type == 'tag' && github.ref_name)
-     || (github.event.client_payload.sha && format('{0}-{1}', github.event.client_payload.repo, github.event.client_payload.sha))
-     || format('sha-{0}', github.sha) }}
+  VERSION: ${{ (github.event.pull_request.number && format('pr-{0}', github.event.pull_request.number)) || (github.ref_type == 'tag' && github.ref_name) || 'latest' }}
   CACHE_SUFFIX: ${{ github.event.pull_request.number && format('-pr-{0}', github.event.pull_request.number) || '' }}
 
 jobs:
@@ -81,7 +83,6 @@ jobs:
       - run: |
           docker buildx imagetools create \
             -t ${{ env.DOCKER_REPO }}:gtsam-${{ env.VERSION }} \
-            ${{ github.ref == 'refs/heads/main' && format('-t {0}:gtsam-latest', env.DOCKER_REPO) || '' }} \
             ${{ env.DOCKER_REPO }}:gtsam-${{ env.VERSION }}-amd64 \
             ${{ env.DOCKER_REPO }}:gtsam-${{ env.VERSION }}-arm64
 
@@ -138,7 +139,6 @@ jobs:
       - run: |
           docker buildx imagetools create \
             -t ${{ env.DOCKER_REPO }}:runtime-${{ env.VERSION }} \
-            ${{ github.ref == 'refs/heads/main' && format('-t {0}:runtime-latest', env.DOCKER_REPO) || '' }} \
             ${{ env.DOCKER_REPO }}:runtime-${{ env.VERSION }}-amd64 \
             ${{ env.DOCKER_REPO }}:runtime-${{ env.VERSION }}-arm64
 
@@ -196,7 +196,6 @@ jobs:
       - run: |
           docker buildx imagetools create \
             -t ${{ env.DOCKER_REPO }}:dev-${{ env.VERSION }} \
-            ${{ github.ref == 'refs/heads/main' && format('-t {0}:dev-latest', env.DOCKER_REPO) || '' }} \
             ${{ env.DOCKER_REPO }}:dev-${{ env.VERSION }}-amd64 \
             ${{ env.DOCKER_REPO }}:dev-${{ env.VERSION }}-arm64
 
