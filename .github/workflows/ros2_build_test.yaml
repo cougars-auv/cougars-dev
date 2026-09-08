@@ -36,15 +36,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        target: [runtime, dev]
+        runner: [ubuntu-24.04, ubuntu-24.04-arm]
         include:
           - target: runtime
-            runner: ubuntu-24.04
-            repos: "runtime.repos"
-          - target: runtime
-            runner: ubuntu-24.04-arm
             repos: "runtime.repos"
           - target: dev
-            runner: ubuntu-24.04
             repos: "runtime.repos dev.repos"
     runs-on: ${{ matrix.runner }}
     steps:
