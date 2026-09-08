@@ -1,6 +1,9 @@
 .mapproxy/*
 !.mapproxy/.gitkeep
 
+.vscode/*
+!.vscode/settings.json
+
 bags/*
 !bags/.gitkeep
 
@@ -9,5 +12,4 @@ ros2_ws/*
 
 .env
 .venv
-.vscode
 __pycache__

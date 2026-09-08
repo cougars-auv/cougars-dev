@@ -35,72 +35,7 @@
         "redhat.vscode-yaml",
         "timonwong.shellcheck",
         "twxs.cmake"
-      ],
-      "settings": {
-        "C_Cpp.codeAnalysis.clangTidy.enabled": true,
-        "C_Cpp.codeAnalysis.clangTidy.path": "/usr/bin/clang-tidy",
-        "C_Cpp.codeAnalysis.clangTidy.useBuildPath": true,
-        "C_Cpp.default.compileCommands": "${workspaceFolder}/ros2_ws/build/compile_commands.json",
-        "editor.formatOnSave": true,
-        "files.associations": {
-          "*.config": "xml",
-          "*.launch": "xml",
-          "*.mvc": "yaml",
-          "*.mvc.template": "yaml",
-          "*.perspective": "json",
-          "*.repos": "yaml",
-          "*.rviz": "yaml",
-          "*.rviz.template": "yaml",
-          "*.sdf": "xml",
-          "*.service": "ini",
-          "*.srdf": "xml",
-          "*.ui": "xml",
-          "*.urdf": "xml",
-          "*.world": "xml",
-          "*.xacro": "xml",
-          "*.xml.template": "xml",
-          "*.yaml.template": "yaml",
-          ".env": "properties",
-          ".env.example": "properties"
-        },
-        "[c]": {
-          "editor.defaultFormatter": "ms-vscode.cpptools",
-          "editor.rulers": [100]
-        },
-        "[cpp]": {
-          "editor.defaultFormatter": "ms-vscode.cpptools",
-          "editor.rulers": [100]
-        },
-        "[dockerfile]": {
-          "editor.defaultFormatter": "docker.docker"
-        },
-        "[json]": {
-          "editor.defaultFormatter": "esbenp.prettier-vscode"
-        },
-        "[jsonc]": {
-          "editor.defaultFormatter": "esbenp.prettier-vscode"
-        },
-        "[markdown]": {
-          "editor.codeActionsOnSave": {
-            "source.fixAll.markdownlint": "explicit"
-          },
-          "editor.defaultFormatter": "esbenp.prettier-vscode"
-        },
-        "[python]": {
-          "editor.codeActionsOnSave": {
-            "source.fixAll": "explicit",
-            "source.organizeImports": "explicit"
-          },
-          "editor.defaultFormatter": "charliermarsh.ruff",
-          "editor.rulers": [100]
-        },
-        "[xml]": {
-          "editor.defaultFormatter": "redhat.vscode-xml"
-        },
-        "[yaml]": {
-          "editor.defaultFormatter": "esbenp.prettier-vscode"
-        }
-      }
+      ]
     }
   },
   "postCreateCommand": ["/bin/bash", ".devcontainer/post-create-command.sh"],
