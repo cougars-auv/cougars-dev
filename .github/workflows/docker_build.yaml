@@ -32,7 +32,11 @@ permissions:
 env:
   DOCKER_USERNAME: frostlab
   DOCKER_REPO: frostlab/cougars
-  VERSION: ${{ (github.event.pull_request.number && format('pr-{0}', github.event.pull_request.number)) || (github.ref_type == 'tag' && github.ref_name) || format('sha-{0}', github.sha) }}
+  VERSION: >-
+    ${{ (github.event.pull_request.number && format('pr-{0}', github.event.pull_request.number))
+     || (github.ref_type == 'tag' && github.ref_name)
+     || (github.event.client_payload.sha && format('{0}-{1}', github.event.client_payload.repo, github.event.client_payload.sha))
+     || format('sha-{0}', github.sha) }}
   CACHE_SUFFIX: ${{ github.event.pull_request.number && format('-pr-{0}', github.event.pull_request.number) || '' }}
 
 jobs:
