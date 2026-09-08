@@ -59,8 +59,6 @@ CoUGARs is a low-cost, configurable AUV platform designed for multi-agent autono
     ```
 
 > If you run into crashes or out-of-memory errors while building the workspace, restrict the compiler to a single worker using `colcon build --parallel-workers 1`.
->
-> If not all repositories appear in the Git sidebar in VSCode, open settings (`Ctrl + ,`), set "Git: Repository Scan Max Depth" to 3, and reload the window.
 
 ## Documentation
 
