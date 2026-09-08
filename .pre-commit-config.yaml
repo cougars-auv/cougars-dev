@@ -68,11 +68,13 @@ repos:
     rev: v2.4.3
     hooks:
       - id: codespell
+        args: ["--ignore-words-list=fom,ned,te", "--write-changes"]
 
   - repo: https://github.com/BlankSpruce/gersemi-pre-commit
     rev: 0.28.1
     hooks:
       - id: gersemi
+        args: ["-i", "--indent", "2", "--line-length", "100"]
 
   - repo: https://github.com/AleksaC/hadolint-py
     rev: v2.15.1
