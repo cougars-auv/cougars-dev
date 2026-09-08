@@ -54,6 +54,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
   && curl -fsSL https://repo.charm.sh/apt/gpg.key -o /etc/apt/keyrings/charm.asc \
   && echo "deb [signed-by=/etc/apt/keyrings/charm.asc] https://repo.charm.sh/apt/ * *" > /etc/apt/sources.list.d/charm.list \
   && apt-get update && apt-get install -y --no-install-recommends \
+  clang-tidy \
   cm-super \
   dvipng \
   gum \

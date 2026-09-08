@@ -25,9 +25,8 @@
         "ms-python.python",
         "ms-toolsai.jupyter",
         "ms-vscode.cpptools",
+        "nonanonno.vscode-ros2",
         "openai.chatgpt",
-        "Ranch-Hand-Robotics.rde-ros-2",
-        "Ranch-Hand-Robotics.urdf-editor",
         "redhat.vscode-xml",
         "redhat.vscode-yaml",
         "timonwong.shellcheck",
@@ -35,6 +34,8 @@
       ],
       "settings": {
         "C_Cpp.codeAnalysis.clangTidy.enabled": true,
+        "C_Cpp.codeAnalysis.clangTidy.path": "/usr/bin/clang-tidy",
+        "C_Cpp.codeAnalysis.clangTidy.useBuildPath": true,
         "C_Cpp.default.compileCommands": "${workspaceFolder}/ros2_ws/build/compile_commands.json",
         "editor.formatOnSave": true,
         "files.associations": {
