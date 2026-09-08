@@ -19,10 +19,10 @@ Checks: >
   -readability-function-cognitive-complexity,
   -readability-identifier-length,
   -readability-magic-numbers
-HeaderFilterRegex: ".*/src/.*/include/.*"
 CheckOptions:
   misc-include-cleaner.IgnoreHeaders: "Eigen/.*;math.h"
 FormatStyle: file
+HeaderFilterRegex: ".*/src/.*/include/.*"
 WarningsAsErrors: >
   bugprone-*,
   clang-analyzer-*,
