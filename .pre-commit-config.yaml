@@ -74,7 +74,7 @@ repos:
     rev: 0.28.1
     hooks:
       - id: gersemi
-        args: ["-i", "--indent", "2", "--line-length", "100"]
+        args: ["-i", "--indent", "2"]
 
   - repo: https://github.com/AleksaC/hadolint-py
     rev: v2.15.1

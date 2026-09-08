@@ -1,17 +1,13 @@
-build
-install
-log
-
 .mapproxy/*
 !.mapproxy/.gitkeep
 
 bags/*
 !bags/.gitkeep
 
-ros2_ws/src/*
+ros2_ws/*
 !ros2_ws/src/coug_bringup
 
 .env
-__pycache__
 .venv
 .vscode
+__pycache__
