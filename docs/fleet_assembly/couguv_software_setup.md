@@ -11,7 +11,7 @@
     coug_description_launch:
       ros__parameters:
         urdf_file: "<agent-type>.urdf.xacro"
-  
+
     coug_comms_base_launch:
       ros__parameters:
         beacon_id: <beacon-id>
@@ -34,22 +34,22 @@
 - On the Raspberry Pi 5:
 
   - Install [Docker Engine](https://docs.docker.com/engine/install/debian/#install-using-the-repository), including the [Linux post-installation steps](https://docs.docker.com/engine/install/linux-postinstall).
-  
+
   - Install the project dependencies.
-  
+
     ```bash
     sudo apt-get update && sudo apt-get install -y git vim mosh tmux rsync chrony linuxptp gpsd gpsd-clients python3-setuptools python3-pip
     sudo pip install --break-system-packages tmuxp vcstool
     ```
-  
+
   - Clone the `cougars-dev` repository.
-  
+
     ```bash
     cd ~ && git clone https://github.com/cougars-auv/cougars-dev.git
     ```
-  
+
   - Set up the CoUGARs software stack with `./setup.sh $(hostname) <base-station-ip>`.
-  
+
     ```bash
     cd ~/cougars-dev && ./setup.sh $(hostname) <base-station-ip>
     ```
@@ -61,13 +61,13 @@
   ```
 
 - Use the configured aliases to pull the latest code from both remotes, import the vcs-pinned packages, update the Docker images, rebuild the `ros2_ws` workspace, and restart the ROS 2 software.
-  
-    ```bash
-    pull
-    pull-base
-    vcs-import
-    docker-pull
-    build
-    restart
-    logs
-    ```
+
+  ```bash
+  pull
+  pull-base
+  vcs-import
+  docker-pull
+  build
+  restart
+  logs
+  ```

@@ -1,7 +1,7 @@
 session_name: couguv
 start_directory: "~/cougars-dev"
 options:
-  mouse: on
+  mouse: "on"
   default-command: bash --rcfile ~/cougars-dev/config/tmuxp/aliases.sh
 windows:
   - window_name: main

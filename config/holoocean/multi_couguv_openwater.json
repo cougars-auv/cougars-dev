@@ -35,16 +35,8 @@
         }
       ],
       "control_scheme": 1,
-      "location": [
-        -5,
-        0,
-        0
-      ],
-      "rotation": [
-        0,
-        0,
-        0
-      ]
+      "location": [-5, 0, 0],
+      "rotation": [0, 0, 0]
     },
     {
       "agent_name": "coug1sim",
@@ -109,11 +101,7 @@
           "socket": "IMUSocket",
           "Hz": 50,
           "configuration": {
-            "MagneticVector": [
-              3.9634e-06,
-              2.08423e-05,
-              -4.57678e-05
-            ]
+            "MagneticVector": [3.9634e-6, 2.08423e-5, -4.57678e-5]
           },
           "ros_publish": true
         },
@@ -150,16 +138,8 @@
       "fossen_model": "torpedo",
       "control_mode": "depthHeadingAutopilot",
       "control_scheme": 1,
-      "location": [
-        0,
-        0,
-        0
-      ],
-      "rotation": [
-        0,
-        0,
-        0
-      ],
+      "location": [0, 0, 0],
+      "rotation": [0, 0, 0],
       "actuator": {
         "fin_count": 3,
         "fin_offset_deg": 90
@@ -228,11 +208,7 @@
           "socket": "IMUSocket",
           "Hz": 50,
           "configuration": {
-            "MagneticVector": [
-              3.9634e-06,
-              2.08423e-05,
-              -4.57678e-05
-            ]
+            "MagneticVector": [3.9634e-6, 2.08423e-5, -4.57678e-5]
           },
           "ros_publish": true
         },
@@ -269,16 +245,8 @@
       "fossen_model": "torpedo",
       "control_mode": "depthHeadingAutopilot",
       "control_scheme": 1,
-      "location": [
-        0,
-        20,
-        0
-      ],
-      "rotation": [
-        0,
-        0,
-        0
-      ],
+      "location": [0, 20, 0],
+      "rotation": [0, 0, 0],
       "actuator": {
         "fin_count": 3,
         "fin_offset_deg": 90
@@ -347,11 +315,7 @@
           "socket": "IMUSocket",
           "Hz": 50,
           "configuration": {
-            "MagneticVector": [
-              3.9634e-06,
-              2.08423e-05,
-              -4.57678e-05
-            ]
+            "MagneticVector": [3.9634e-6, 2.08423e-5, -4.57678e-5]
           },
           "ros_publish": true
         },
@@ -388,16 +352,8 @@
       "fossen_model": "torpedo",
       "control_mode": "depthHeadingAutopilot",
       "control_scheme": 1,
-      "location": [
-        0,
-        40,
-        0
-      ],
-      "rotation": [
-        0,
-        0,
-        0
-      ],
+      "location": [0, 40, 0],
+      "rotation": [0, 0, 0],
       "actuator": {
         "fin_count": 3,
         "fin_offset_deg": 90

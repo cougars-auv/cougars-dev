@@ -41,7 +41,7 @@
         plugin: "nav2_controller::SimpleGoalChecker"
         xy_goal_tolerance: 1.5
         yaw_goal_tolerance: 6.28
-        stateful: True
+        stateful: true
 
       FollowPath:
         plugin: "nav2_mppi_controller::MPPIController"
@@ -121,7 +121,7 @@
         plugins: ["obstacle_layer"]
         obstacle_layer:
           plugin: "nav2_costmap_2d::ObstacleLayer"
-          enabled: True
+          enabled: true
           observation_sources: ""
 
   local_costmap:
@@ -138,7 +138,7 @@
         plugins: ["obstacle_layer"]
         obstacle_layer:
           plugin: "nav2_costmap_2d::ObstacleLayer"
-          enabled: True
+          enabled: true
           observation_sources: ""
 
   planner_server:

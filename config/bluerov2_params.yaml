@@ -20,7 +20,7 @@
         use_parameter_covariance: true
 
       # ahrs:
-        # enable_ahrs: true
+      #   enable_ahrs: true
 
       dvl:
         robust_kernel: "Huber"

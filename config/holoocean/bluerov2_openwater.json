@@ -35,16 +35,8 @@
         }
       ],
       "control_scheme": 1,
-      "location": [
-        -5,
-        0,
-        0
-      ],
-      "rotation": [
-        0,
-        0,
-        0
-      ]
+      "location": [-5, 0, 0],
+      "rotation": [0, 0, 0]
     },
     {
       "agent_name": "blue1sim",
@@ -84,11 +76,7 @@
         {
           "sensor_type": "IMUSensor",
           "socket": "IMUSocket",
-          "rotation": [
-            180,
-            0,
-            0
-          ],
+          "rotation": [180, 0, 0],
           "Hz": 200,
           "configuration": {},
           "ros_publish": true
@@ -112,29 +100,17 @@
         {
           "sensor_type": "MagnetometerSensor",
           "socket": "IMUSocket",
-          "rotation": [
-            180,
-            0,
-            0
-          ],
+          "rotation": [180, 0, 0],
           "Hz": 50,
           "configuration": {
-            "MagneticVector": [
-              3.9634e-06,
-              2.08423e-05,
-              -4.57678e-05
-            ]
+            "MagneticVector": [3.9634e-6, 2.08423e-5, -4.57678e-5]
           },
           "ros_publish": true
         },
         {
           "sensor_type": "RotationSensor",
           "socket": "IMUSocket",
-          "rotation": [
-            180,
-            0,
-            0
-          ],
+          "rotation": [180, 0, 0],
           "Hz": 200,
           "ros_publish": true
         },
@@ -152,16 +128,8 @@
           "sensor_name": "RGBCameraFront",
           "sensor_type": "RGBCamera",
           "socket": "DVLSocket",
-          "location": [
-            0.1,
-            0,
-            0
-          ],
-          "rotation": [
-            0,
-            90,
-            0
-          ],
+          "location": [0.1, 0, 0],
+          "rotation": [0, 90, 0],
           "Hz": 20,
           "ros_publish": true
         },
@@ -169,16 +137,8 @@
           "sensor_name": "RGBCameraBack",
           "sensor_type": "RGBCamera",
           "socket": "DVLSocket",
-          "location": [
-            -0.1,
-            0,
-            0
-          ],
-          "rotation": [
-            0,
-            90,
-            0
-          ],
+          "location": [-0.1, 0, 0],
+          "rotation": [0, 90, 0],
           "Hz": 20,
           "ros_publish": true
         },
@@ -186,11 +146,7 @@
           "sensor_name": "DepthCamera",
           "sensor_type": "DepthCamera",
           "socket": "DVLSocket",
-          "rotation": [
-            0,
-            90,
-            0
-          ],
+          "rotation": [0, 90, 0],
           "Hz": 5,
           "configuration": {
             "TicksPerCapture": 40
@@ -201,11 +157,7 @@
           "sensor_name": "RGBCameraDepth",
           "sensor_type": "RGBCamera",
           "socket": "DVLSocket",
-          "rotation": [
-            0,
-            90,
-            0
-          ],
+          "rotation": [0, 90, 0],
           "Hz": 5,
           "ros_publish": true
         },
@@ -224,16 +176,8 @@
         }
       ],
       "control_scheme": 0,
-      "location": [
-        0,
-        0,
-        -275
-      ],
-      "rotation": [
-        0,
-        0,
-        0
-      ]
+      "location": [0, 0, -275],
+      "rotation": [0, 0, 0]
     }
   ]
 }

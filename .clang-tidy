@@ -20,10 +20,10 @@ Checks: >
   -readability-identifier-length,
   -readability-magic-numbers
 
-HeaderFilterRegex: '.*/src/[^/]+/[^/]+/include/.*'
+HeaderFilterRegex: ".*/src/[^/]+/[^/]+/include/.*"
 
 CheckOptions:
-  misc-include-cleaner.IgnoreHeaders: 'Eigen/.*;math.h'
+  misc-include-cleaner.IgnoreHeaders: "Eigen/.*;math.h"
 
 FormatStyle: file
 
