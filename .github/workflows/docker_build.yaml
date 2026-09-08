@@ -19,11 +19,9 @@ run-name: ${{ github.event.client_payload.repo && format('{0}@{1}', github.event
 on:
   push:
     branches: ["main"]
-    paths:
-      - ".github/workflows/docker_build.yaml"
-      - ".docker/**"
-      - "*.repos"
-      - "**/package.xml"
+    tags: ["*"]
+  pull_request:
+    branches: ["main"]
   repository_dispatch:
     types: [docker-build]
   workflow_dispatch:
@@ -34,6 +32,8 @@ permissions:
 env:
   DOCKER_USERNAME: frostlab
   DOCKER_REPO: frostlab/cougars
+  VERSION: ${{ (github.event.pull_request.number && format('pr-{0}', github.event.pull_request.number)) || (github.ref_type == 'tag' && github.ref_name) || format('sha-{0}', github.sha) }}
+  CACHE_SUFFIX: ${{ github.event.pull_request.number && format('-pr-{0}', github.event.pull_request.number) || '' }}
 
 jobs:
   build-gtsam:
@@ -58,10 +58,12 @@ jobs:
           file: .docker/Dockerfile.gtsam
           platforms: linux/${{ matrix.arch }}
           push: true
-          tags: ${{ env.DOCKER_REPO }}:gtsam-${{ matrix.arch }}
+          tags: ${{ env.DOCKER_REPO }}:gtsam-${{ env.VERSION }}-${{ matrix.arch }}
           provenance: false
-          cache-from: type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-gtsam-${{ matrix.arch }}
-          cache-to: type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-gtsam-${{ matrix.arch }},mode=max
+          cache-from: |
+            type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-gtsam-${{ matrix.arch }}
+            type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-gtsam-${{ matrix.arch }}${{ env.CACHE_SUFFIX }}
+          cache-to: type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-gtsam-${{ matrix.arch }}${{ env.CACHE_SUFFIX }},mode=max
 
   manifest-gtsam:
     needs: build-gtsam
@@ -73,9 +75,11 @@ jobs:
           username: ${{ env.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
       - run: |
-          docker buildx imagetools create -t ${{ env.DOCKER_REPO }}:gtsam \
-            ${{ env.DOCKER_REPO }}:gtsam-amd64 \
-            ${{ env.DOCKER_REPO }}:gtsam-arm64
+          docker buildx imagetools create \
+            -t ${{ env.DOCKER_REPO }}:gtsam-${{ env.VERSION }} \
+            ${{ github.ref == 'refs/heads/main' && format('-t {0}:gtsam-latest', env.DOCKER_REPO) || '' }} \
+            ${{ env.DOCKER_REPO }}:gtsam-${{ env.VERSION }}-amd64 \
+            ${{ env.DOCKER_REPO }}:gtsam-${{ env.VERSION }}-arm64
 
   build-runtime:
     needs: manifest-gtsam
@@ -110,10 +114,13 @@ jobs:
           platforms: linux/${{ matrix.arch }}
           pull: true
           push: true
-          tags: ${{ env.DOCKER_REPO }}:runtime-${{ matrix.arch }}
+          build-args: VERSION=${{ env.VERSION }}
+          tags: ${{ env.DOCKER_REPO }}:runtime-${{ env.VERSION }}-${{ matrix.arch }}
           provenance: false
-          cache-from: type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-runtime-${{ matrix.arch }}
-          cache-to: type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-runtime-${{ matrix.arch }},mode=max
+          cache-from: |
+            type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-runtime-${{ matrix.arch }}
+            type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-runtime-${{ matrix.arch }}${{ env.CACHE_SUFFIX }}
+          cache-to: type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-runtime-${{ matrix.arch }}${{ env.CACHE_SUFFIX }},mode=max
 
   manifest-runtime:
     needs: build-runtime
@@ -125,9 +132,11 @@ jobs:
           username: ${{ env.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
       - run: |
-          docker buildx imagetools create -t ${{ env.DOCKER_REPO }}:runtime \
-            ${{ env.DOCKER_REPO }}:runtime-amd64 \
-            ${{ env.DOCKER_REPO }}:runtime-arm64
+          docker buildx imagetools create \
+            -t ${{ env.DOCKER_REPO }}:runtime-${{ env.VERSION }} \
+            ${{ github.ref == 'refs/heads/main' && format('-t {0}:runtime-latest', env.DOCKER_REPO) || '' }} \
+            ${{ env.DOCKER_REPO }}:runtime-${{ env.VERSION }}-amd64 \
+            ${{ env.DOCKER_REPO }}:runtime-${{ env.VERSION }}-arm64
 
   build-dev:
     needs: manifest-runtime
@@ -163,10 +172,13 @@ jobs:
           platforms: linux/${{ matrix.arch }}
           pull: true
           push: true
-          tags: ${{ env.DOCKER_REPO }}:dev-${{ matrix.arch }}
+          build-args: VERSION=${{ env.VERSION }}
+          tags: ${{ env.DOCKER_REPO }}:dev-${{ env.VERSION }}-${{ matrix.arch }}
           provenance: false
-          cache-from: type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-dev-${{ matrix.arch }}
-          cache-to: type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-dev-${{ matrix.arch }},mode=max
+          cache-from: |
+            type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-dev-${{ matrix.arch }}
+            type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-dev-${{ matrix.arch }}${{ env.CACHE_SUFFIX }}
+          cache-to: type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-dev-${{ matrix.arch }}${{ env.CACHE_SUFFIX }},mode=max
 
   manifest-dev:
     needs: build-dev
@@ -178,6 +190,16 @@ jobs:
           username: ${{ env.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
       - run: |
-          docker buildx imagetools create -t ${{ env.DOCKER_REPO }}:dev \
-            ${{ env.DOCKER_REPO }}:dev-amd64 \
-            ${{ env.DOCKER_REPO }}:dev-arm64
+          docker buildx imagetools create \
+            -t ${{ env.DOCKER_REPO }}:dev-${{ env.VERSION }} \
+            ${{ github.ref == 'refs/heads/main' && format('-t {0}:dev-latest', env.DOCKER_REPO) || '' }} \
+            ${{ env.DOCKER_REPO }}:dev-${{ env.VERSION }}-amd64 \
+            ${{ env.DOCKER_REPO }}:dev-${{ env.VERSION }}-arm64
+
+  docker-build-status:
+    needs: manifest-dev
+    if: always()
+    runs-on: ubuntu-24.04
+    steps:
+      - if: needs.manifest-dev.result != 'success'
+        run: exit 1
