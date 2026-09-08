@@ -14,7 +14,7 @@
 
 name: Docker Build
 
-run-name: ${{ github.event.client_payload.repo }}
+run-name: ${{ github.event.client_payload.repo && format('{0}@{1}', github.event.client_payload.repo, github.event.client_payload.sha) || '' }}
 
 on:
   push:
