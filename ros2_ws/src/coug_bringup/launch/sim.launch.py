@@ -68,9 +68,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
 
     actions.append(
         IncludeLaunchDescription(
-            PythonLaunchDescriptionSource(
-                os.path.join(coug_bringup_launch_dir, "base.launch.py")
-            ),
+            PythonLaunchDescriptionSource(os.path.join(coug_bringup_launch_dir, "base.launch.py")),
             launch_arguments={
                 "use_sim_time": use_sim_time,
                 "agent_list": agent_list_str,
@@ -113,9 +111,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
 
         actions.append(
             GroupAction(
-                condition=IfCondition(
-                    OrSubstitution(enable_mapping, enable_shared_mapping)
-                ),
+                condition=IfCondition(OrSubstitution(enable_mapping, enable_shared_mapping)),
                 actions=[
                     PushRosNamespace(agent_ns),
                     ComposableNodeContainer(
@@ -306,8 +302,7 @@ def generate_launch_description() -> LaunchDescription:
                 "agent_list",
                 default_value="[coug1sim]",
                 description=(
-                    "YAML list of agent namespaces "
-                    "(e.g. '[coug1sim]' or '[coug1sim, coug2sim]')"
+                    "YAML list of agent namespaces (e.g. '[coug1sim]' or '[coug1sim, coug2sim]')"
                 ),
             ),
             DeclareLaunchArgument(

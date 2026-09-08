@@ -56,9 +56,7 @@ class BagRecorderNode(Node):
             self._diagnostic_updater = diagnostic_updater.Updater(self)
             self._diagnostic_updater.setHardwareID(f"{clean_ns}/bag_recorder_node")
             prefix = f"[{clean_ns}] " if clean_ns else ""
-            self._diagnostic_updater.add(
-                f"{prefix}Recording Status", self._check_recording_status
-            )
+            self._diagnostic_updater.add(f"{prefix}Recording Status", self._check_recording_status)
 
         self.get_logger().info("Initialization complete.")
 
@@ -121,9 +119,7 @@ class BagRecorderNode(Node):
     ) -> diagnostic_updater.DiagnosticStatusWrapper:
         if self._bag_process is not None and self._bag_process.poll() is None:
             stat.summary(DiagnosticStatus.OK, "Recording in progress.")
-            stat.add(
-                "Bag Path", os.path.basename(self._bag_path) if self._bag_path else ""
-            )
+            stat.add("Bag Path", os.path.basename(self._bag_path) if self._bag_path else "")
         else:
             stat.summary(DiagnosticStatus.OK, "Idle.")
         return stat

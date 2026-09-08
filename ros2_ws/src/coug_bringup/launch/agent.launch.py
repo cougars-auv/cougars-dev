@@ -85,9 +85,7 @@ def generate_launch_description() -> LaunchDescription:
     )
 
     coug_fg_launch = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(coug_fg_launch_dir, "coug_fg.launch.py")
-        ),
+        PythonLaunchDescriptionSource(os.path.join(coug_fg_launch_dir, "coug_fg.launch.py")),
         launch_arguments={
             "use_sim_time": use_sim_time,
             "agent_ns": agent_ns,
@@ -98,9 +96,7 @@ def generate_launch_description() -> LaunchDescription:
     )
 
     coug_fg_ekf_launch = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(coug_fg_launch_dir, "coug_fg_ekf.launch.py")
-        ),
+        PythonLaunchDescriptionSource(os.path.join(coug_fg_launch_dir, "coug_fg_ekf.launch.py")),
         launch_arguments={
             "use_sim_time": use_sim_time,
             "agent_ns": agent_ns,
@@ -109,9 +105,7 @@ def generate_launch_description() -> LaunchDescription:
     )
 
     coug_helm_launch = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(coug_helm_launch_dir, "coug_helm.launch.py")
-        ),
+        PythonLaunchDescriptionSource(os.path.join(coug_helm_launch_dir, "coug_helm.launch.py")),
         launch_arguments={
             "use_sim_time": use_sim_time,
             "agent_ns": agent_ns,

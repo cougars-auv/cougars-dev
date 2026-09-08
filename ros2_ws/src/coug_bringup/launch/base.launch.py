@@ -57,9 +57,7 @@ def create_gui_config(template_name: str, agent_ns: str, suffix: str) -> str:
     with open(template_path) as template:
         content = template.read().replace("AGENT_NS", agent_ns)
 
-    with tempfile.NamedTemporaryFile(
-        mode="w", delete=False, suffix=suffix
-    ) as rendered_config:
+    with tempfile.NamedTemporaryFile(mode="w", delete=False, suffix=suffix) as rendered_config:
         rendered_config.write(content)
         return rendered_config.name
 
@@ -72,9 +70,7 @@ def create_rviz_config(agent_list: list[str]) -> str:
     gui_dir = os.path.join(config_dir, "gui")
     with open(os.path.join(gui_dir, "rviz.rviz.template")) as template:
         config = yaml.safe_load(
-            template.read()
-            .replace("/AGENT_NS/mesh", "/mesh")
-            .replace("AGENT_NS", agent_list[0])
+            template.read().replace("/AGENT_NS/mesh", "/mesh").replace("AGENT_NS", agent_list[0])
         )
 
     displays = config["Visualization Manager"]["Displays"]
@@ -93,13 +89,9 @@ def create_rviz_config(agent_list: list[str]) -> str:
     displays.extend(
         display
         for agent_ns in agent_list
-        for display in yaml.safe_load(agent_template.replace("AGENT_NS", agent_ns))[
-            "displays"
-        ]
+        for display in yaml.safe_load(agent_template.replace("AGENT_NS", agent_ns))["displays"]
     )
-    with tempfile.NamedTemporaryFile(
-        mode="w", delete=False, suffix=".rviz"
-    ) as rendered_config:
+    with tempfile.NamedTemporaryFile(mode="w", delete=False, suffix=".rviz") as rendered_config:
         yaml.safe_dump(config, rendered_config, sort_keys=False)
         return rendered_config.name
 
@@ -141,9 +133,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
     )
 
     coug_fg_base_launch = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(coug_fg_launch_dir, "coug_fg_base.launch.py")
-        ),
+        PythonLaunchDescriptionSource(os.path.join(coug_fg_launch_dir, "coug_fg_base.launch.py")),
         launch_arguments={
             "use_sim_time": use_sim_time,
             "agent_list": agent_list_str,
@@ -180,9 +170,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
     )
 
     coug_rqt_launch = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(coug_rqt_launch_dir, "coug_rqt.launch.py")
-        ),
+        PythonLaunchDescriptionSource(os.path.join(coug_rqt_launch_dir, "coug_rqt.launch.py")),
         launch_arguments={
             "use_sim_time": use_sim_time,
             "agent_list": agent_list_str,
@@ -242,8 +230,7 @@ def generate_launch_description() -> LaunchDescription:
                 "agent_list",
                 default_value="[auv0]",
                 description=(
-                    "YAML list of agent namespaces "
-                    "(e.g. '[coug1sim]' or '[coug1sim, coug2sim]')"
+                    "YAML list of agent namespaces (e.g. '[coug1sim]' or '[coug1sim, coug2sim]')"
                 ),
             ),
             DeclareLaunchArgument(

@@ -180,9 +180,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
 
     actions.append(
         IncludeLaunchDescription(
-            PythonLaunchDescriptionSource(
-                os.path.join(coug_bringup_launch_dir, "base.launch.py")
-            ),
+            PythonLaunchDescriptionSource(os.path.join(coug_bringup_launch_dir, "base.launch.py")),
             launch_arguments={
                 "use_sim_time": use_sim_time,
                 "agent_list": agent_list_str,
@@ -193,9 +191,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
 
     actions.append(
         IncludeLaunchDescription(
-            PythonLaunchDescriptionSource(
-                os.path.join(coug_bringup_launch_dir, "agent.launch.py")
-            ),
+            PythonLaunchDescriptionSource(os.path.join(coug_bringup_launch_dir, "agent.launch.py")),
             launch_arguments={
                 "use_sim_time": use_sim_time,
                 "agent_ns": agent_ns,
@@ -243,8 +239,7 @@ def generate_launch_description() -> LaunchDescription:
                 "agent_list",
                 default_value="[auv0]",
                 description=(
-                    "YAML list of agent namespaces "
-                    "(e.g. '[coug1sim]' or '[coug1sim, coug2sim]')"
+                    "YAML list of agent namespaces (e.g. '[coug1sim]' or '[coug1sim, coug2sim]')"
                 ),
             ),
             DeclareLaunchArgument(
@@ -261,16 +256,14 @@ def generate_launch_description() -> LaunchDescription:
                 "start_delay",
                 default_value="0.0",
                 description=(
-                    "Time in seconds to skip from the beginning of the bag file "
-                    "(start offset)"
+                    "Time in seconds to skip from the beginning of the bag file (start offset)"
                 ),
             ),
             DeclareLaunchArgument(
                 "playback_rate",
                 default_value="1.0",
                 description=(
-                    "Bag playback rate multiplier "
-                    "(e.g. 0.5 for half speed, 2.0 for double)"
+                    "Bag playback rate multiplier (e.g. 0.5 for half speed, 2.0 for double)"
                 ),
             ),
             DeclareLaunchArgument(

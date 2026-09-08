@@ -62,13 +62,7 @@
         vy_std: 0.2
         wz_std: 0.1
 
-        critics:
-          [
-            "ConstraintCritic",
-            "GoalCritic",
-            "PathFollowCritic",
-            "BeliefStateCritic",
-          ]
+        critics: ["ConstraintCritic", "GoalCritic", "PathFollowCritic", "BeliefStateCritic"]
 
         ConstraintCritic:
           enabled: true
