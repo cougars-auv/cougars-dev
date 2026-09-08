@@ -25,6 +25,10 @@
     ".env": "properties",
     ".env.example": "properties"
   },
+  "python.analysis.extraPaths": [
+    "${workspaceFolder}/ros2_ws/install",
+    "/opt/ros/jazzy/lib/python3.12/site-packages"
+  ],
   "[c]": {
     "editor.defaultFormatter": "ms-vscode.cpptools",
     "editor.rulers": [100]
