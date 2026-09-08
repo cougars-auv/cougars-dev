@@ -11,6 +11,10 @@ repositories:
     type: git
     url: git@github.com:cougars-auv/coug_rqt.git
     version: main
+  coug_template:
+    type: git
+    url: git@github.com:cougars-auv/coug_template.git
+    version: main
   eigen_checks:
     type: zip
     url: https://github.com/cougars-auv/eigen_checks/archive/refs/heads/ros2.zip

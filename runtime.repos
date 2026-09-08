@@ -23,10 +23,6 @@ repositories:
     type: git
     url: git@github.com:cougars-auv/coug_interfaces.git
     version: main
-  coug_template:
-    type: git
-    url: git@github.com:cougars-auv/coug_template.git
-    version: main
   coug_visual_dvl:
     type: git
     url: git@github.com:cougars-auv/coug_visual_dvl.git
