@@ -26,6 +26,7 @@
   <exec_depend>mavros</exec_depend>
   <exec_depend>ntrip_client</exec_depend>
   <exec_depend>plotjuggler</exec_depend>
+  <exec_depend>plotjuggler_ros</exec_depend>
   <exec_depend>python3-yaml</exec_depend>
   <exec_depend>rclcpp_components</exec_depend>
   <exec_depend>rclpy</exec_depend>
