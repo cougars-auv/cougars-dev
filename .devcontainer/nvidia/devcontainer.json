@@ -1,5 +1,5 @@
 {
-  "name": "CoUGARs Dev (GPU)",
+  "name": "CoUGARs Dev (NVIDIA)",
   "dockerComposeFile": ["../docker-compose.yaml", "docker-compose.yaml"],
   "service": "dev",
   "workspaceFolder": "/home/frostlab-docker/cougars-dev",

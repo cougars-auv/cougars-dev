@@ -30,7 +30,7 @@ CoUGARs is a low-cost, configurable AUV platform designed for multi-agent autono
 
   - Build the runtime image from the `cougars-auv` fork of [HoloOcean-ROS](https://github.com/cougars-auv/holoocean-ros/tree/main/docker/runtime). When prompted to run `./build_container.sh`, specify the `nelson/cougars-dev` branch with `./build_container.sh -b nelson/cougars-dev`.
 
-  - Open the `cougars-dev` repository in VSCode and use the Command Palette (`Ctrl + Shift + P`) to select "Dev Containers: Reopen in Container." When prompted, click "CoUGARs Dev (GPU)."
+  - Open the `cougars-dev` repository in VSCode and use the Command Palette (`Ctrl + Shift + P`) to select "Dev Containers: Reopen in Container." When prompted, click "CoUGARs Dev (NVIDIA)."
 
   - Once the containers load, open a new terminal window using `` Ctrl + Alt + Shift + ` `` and launch a HoloOcean scenario in the `cougars-holoocean-ct` container using `./holoocean_launch.sh`.
 
@@ -47,7 +47,7 @@ CoUGARs is a low-cost, configurable AUV platform designed for multi-agent autono
 
   **Recorded Data (`rosbag2`):**
 
-  - Open the `cougars-dev` repository in VSCode and use the Command Palette (`Ctrl + Shift + P`) to select "Dev Containers: Reopen in Container." When prompted, click "CoUGARs Dev" or "CoUGARs Dev (GPU)."
+  - Open the `cougars-dev` repository in VSCode and use the Command Palette (`Ctrl + Shift + P`) to select "Dev Containers: Reopen in Container." When prompted, click "CoUGARs Dev" or "CoUGARs Dev (NVIDIA)."
 
   - Once the containers load, copy your `rosbag2` bag into the repository's `bags` folder.
 
