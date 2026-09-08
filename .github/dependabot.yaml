@@ -4,8 +4,6 @@ updates:
     directory: "/"
     schedule:
       interval: "quarterly"
-    commit-message:
-      prefix: "🦈"
     groups:
       github-actions:
         patterns:
