@@ -38,21 +38,21 @@
 
       odom0: "dvl/odometry"
       odom0_config: [
-          true, # X
-          true, # Y
-          false, # Z
-          true, # Roll
-          true, # Pitch
-          true, # Yaw
-          false, # Vx
-          false, # Vy
-          false, # Vz
-          false, # Vroll
-          false, # Vpitch
-          false, # Vyaw
-          false, # Ax
-          false, # Ay
-          false, # Az
+          true,
+          true,
+          false, # X, Y, Z
+          true,
+          true,
+          true, # Roll, Pitch, Yaw
+          false,
+          false,
+          false, # Vx, Vy, Vz
+          false,
+          false,
+          false, # Vroll, Vpitch, Vyaw
+          false,
+          false,
+          false, # Ax, Ay, Az
         ]
       odom0_differential: true
 

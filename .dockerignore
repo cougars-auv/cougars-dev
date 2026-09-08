@@ -1,6 +1,8 @@
+bags/
 ros2_ws/build/
 ros2_ws/install/
 ros2_ws/log/
-bags/
+
 **/assets/
+**/demo/
 **/hawaii_data/
