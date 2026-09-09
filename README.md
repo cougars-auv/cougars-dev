@@ -97,7 +97,7 @@ CoUGARs is a low-cost, configurable AUV platform designed for multi-agent autono
 
 - **Submit Final PR:** After all package PRs have merged, revert the temporary `.repos` changes in your `cougars-dev` branch and open a pull request. Ensure required tests pass, then merge once approved.
 
-  > Once merged, GitHub Actions will build and push the updated Docker images to Docker Hub under `frostlab/cougars:gtsam-latest`, `frostlab/cougars:runtime-latest`, and `frostlab/cougars:dev-latest`.
+  > Once merged, GitHub Actions will build and push the updated Docker images to Docker Hub under `frostlab/cougars:runtime-latest` and `frostlab/cougars:dev-latest`.
 
 - **Delete Branches:** Remove all the merged branches. Create a new branch from `main` for any follow-up work.
 
