@@ -20,7 +20,9 @@
       default_speed_rpm: 1500.0 # [RPM]
 
       odom_timeout_sec: 2.0 # [s] Max odometry dropout before the emergency-surface recovery.
+      altitude_timeout_sec: 2.0 # [s] Max DVL bottom-lock dropout before altitude is unhealthy.
       odom_recovery_timeout_sec: 30.0 # [s] Time to wait for odometry to recover before aborting.
+      altitude_recovery_timeout_sec: 30.0 # [s] Time to wait for bottom lock to recover before aborting.
 
       progress_timeout_sec: 15.0 # [s] Max no-progress time before a recovery is triggered.
       progress_threshold: 0.5 # [m] Min moved distance required for progress check.
@@ -34,6 +36,7 @@
       # --- ROS Topics ---
       waypoint_topic: "waypoints"
       odom_topic: "odometry/global"
+      beams_topic: "dvl/beams"
       hsd_topic: "cmd_hsd"
 
       start_service: "start"
