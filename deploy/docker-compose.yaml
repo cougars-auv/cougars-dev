@@ -18,7 +18,7 @@ services:
     container_name: cougars-builder-ct
     profiles: ["build"]
     volumes:
-      - ./ros2_ws:/ros2_ws
+      - ../ros2_ws:/ros2_ws
     command: colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release
 
   router:
@@ -35,7 +35,7 @@ services:
   runtime:
     image: frostlab/cougars:runtime-${VERSION:-latest}
     # build:
-    #   context: .
+    #   context: ..
     #   dockerfile: .docker/Dockerfile.runtime
     #   args:
     #     - VERSION=${VERSION:-latest}
@@ -50,9 +50,9 @@ services:
       - RMW_IMPLEMENTATION=rmw_zenoh_cpp
       - ROS_DOMAIN_ID=24
     volumes:
-      - ./ros2_ws:/ros2_ws
-      - ./config:/config
-      - ./bags:/bags
+      - ../ros2_ws:/ros2_ws
+      - ../config:/config
+      - ../bags:/bags
       - /etc/localtime:/etc/localtime:ro
       - /run/udev:/run/udev:ro
       - /dev:/dev
