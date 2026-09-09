@@ -51,7 +51,7 @@
   - Set up the CoUGARs software stack with `./setup.sh $(hostname) <base-station-ip>`.
 
     ```bash
-    cd ~/cougars-dev/ops && ./setup.sh $(hostname) <base-station-ip>
+    cd ~/cougars-dev/ops && ./setup.sh $(hostname) <base-station-ip> # --hitl
     ```
 
 - Close the direct SSH connection, then attach via tmux with `./connect.sh <agent-ns>`.
