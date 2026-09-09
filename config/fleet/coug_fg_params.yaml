@@ -336,6 +336,10 @@
       # https://waterlinked.com/dvl-a50
       beam_min_range: 0.05 # [m] Minimum reportable beam distance.
       beam_max_range: 500.0 # [m] Maximum reportable beam distance.
+      # Water Linked DVL A50: 22.5° 4-beam Janus array (body sigma is 1.848x per-beam sigma).
+      # https://waterlinked.com/dvl-a50
+      beam_velocity_noise_sigma: 0.011 # [m/s] Per-beam radial velocity uncertainty sigma.
+      beam_distance_noise_sigma: 0.1 # [m] Per-beam distance uncertainty sigma.
 
       # --- ROS Topics and Frames ---
       input_topic: "dvl/data"
