@@ -143,10 +143,17 @@ class BagRecorderNode(Node):
             return
 
         config_dir = os.environ.get("CONFIG_DIR", "")
-        if config_dir and os.path.isdir(config_dir):
-            dest = os.path.join(self._bag_path, "config")
-            shutil.copytree(config_dir, dest, dirs_exist_ok=True)
-            self.get_logger().info(f"Config saved: {dest}")
+        if not config_dir:
+            self.get_logger().warning("CONFIG_DIR is not set, config not saved.")
+            return
+
+        if not os.path.isdir(config_dir):
+            self.get_logger().warning(f"CONFIG_DIR is not a directory: {config_dir}")
+            return
+
+        dest = os.path.join(self._bag_path, "config")
+        shutil.copytree(config_dir, dest, dirs_exist_ok=True)
+        self.get_logger().info(f"Config saved: {dest}")
 
     def _save_logs(self) -> None:
         if self._bag_path is None or not os.path.isdir(self._bag_path):
