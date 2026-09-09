@@ -12,6 +12,8 @@
   cd ~/cougars-dev/scripts && ./base_launch.sh
   ```
 
+  > The base station sets the fleet-wide origin from the first GPS fix of the first selected agent. Relaunching `./base_launch.sh` mid-mission will cause the shared origin to fall out of sync. Restart the ROS 2 software on each CougUV whenever you restart the base station.
+
 ## Field Changes
 
 - Create a field branch (e.g., `field/utah-lake-jan-1`) in each repository you plan to edit.
