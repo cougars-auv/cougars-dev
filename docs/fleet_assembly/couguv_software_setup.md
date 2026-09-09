@@ -51,13 +51,13 @@
   - Set up the CoUGARs software stack with `./setup.sh $(hostname) <base-station-ip>`.
 
     ```bash
-    cd ~/cougars-dev/deploy && ./setup.sh $(hostname) <base-station-ip>
+    cd ~/cougars-dev/ops && ./setup.sh $(hostname) <base-station-ip>
     ```
 
 - Close the direct SSH connection, then attach via tmux with `./connect.sh <agent-ns>`.
 
   ```bash
-  cd ~/cougars-dev/deploy && ./connect.sh <agent-ns>
+  cd ~/cougars-dev/ops && ./connect.sh <agent-ns>
   ```
 
 - Use the configured aliases to pull the latest code from both remotes, import the vcs-pinned packages, update the Docker images, rebuild the `ros2_ws` workspace, and restart the ROS 2 software.

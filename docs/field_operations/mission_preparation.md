@@ -38,7 +38,7 @@
   - Outside of the dev container, attach to a tmux session on the CougUV using `./connect.sh <agent-ns>`.
 
     ```bash
-    cd ~/cougars-dev/deploy && ./connect.sh <agent-ns>
+    cd ~/cougars-dev/ops && ./connect.sh <agent-ns>
     ```
 
   - Use the configured aliases to pull the latest code from both remotes, import the vcs-pinned packages, update the Docker image, rebuild the `ros2_ws` workspace, and restart the ROS 2 software.

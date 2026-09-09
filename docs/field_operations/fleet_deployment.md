@@ -32,7 +32,7 @@
   - Outside of the dev container, attach to a tmux session on the CougUV using `./connect.sh <agent-ns>`.
 
     ```bash
-    cd ~/cougars-dev/deploy && ./connect.sh <agent-ns>
+    cd ~/cougars-dev/ops && ./connect.sh <agent-ns>
     ```
 
   - Check out the field branches created on the base station.

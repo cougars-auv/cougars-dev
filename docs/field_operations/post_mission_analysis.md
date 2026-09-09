@@ -7,7 +7,7 @@
   - Outside the dev container, copy the bags recorded by the agent to the base station with `./sync_bags.sh <agent-ns>`.
 
     ```bash
-    cd ~/cougars-dev/deploy && ./sync_bags.sh <agent-ns>
+    cd ~/cougars-dev/ops && ./sync_bags.sh <agent-ns>
     ```
 
 ## Field Changes
