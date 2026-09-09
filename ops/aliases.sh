@@ -13,8 +13,6 @@
 # limitations under the License.
 
 # shellcheck shell=bash
-[[ -f ~/.bashrc ]] && source ~/.bashrc
-
 pull_all() {
   while IFS= read -r git_dir; do
     repo="$(dirname "${git_dir}")"

@@ -61,3 +61,6 @@ git remote add base "git://${ip}/cougars-dev" 2>/dev/null ||
 sudo cp ops/cougars.service /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl enable cougars.service
+
+grep -qxF "source ~/cougars-dev/ops/aliases.sh" ~/.bashrc 2>/dev/null ||
+  echo "source ~/cougars-dev/ops/aliases.sh" >>~/.bashrc

@@ -22,7 +22,11 @@ if [[ ! -f ops/.env ]]; then
   exit 1
 fi
 
-ip="$(grep '^ZENOH_ROUTER_IP=' ops/.env | cut -d= -f2-)"
+set -a
+source ops/.env
+set +a
+
+ip="${ZENOH_ROUTER_IP}"
 if [[ -z ${ip} ]]; then
   echo "Error: ZENOH_ROUTER_IP not set in .env"
   exit 1
