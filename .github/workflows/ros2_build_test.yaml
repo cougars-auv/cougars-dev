@@ -32,7 +32,27 @@ env:
   DOCKER_REPO: frostlab/cougars
 
 jobs:
+  changes:
+    runs-on: ubuntu-24.04
+    outputs:
+      ros2: ${{ steps.filter.outputs.ros2 }}
+    steps:
+      - uses: actions/checkout@v7
+      - id: filter
+        if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref_type == 'branch')
+        uses: dorny/paths-filter@v4
+        with:
+          filters: |
+            ros2:
+              - ".github/workflows/ros2_build_test.yaml"
+              - "ros2_ws/**"
+              - "*.repos"
+              - "**/package.xml"
+              - ".clang-tidy"
+
   build-test:
+    needs: changes
+    if: needs.changes.outputs.ros2 != 'false'
     strategy:
       fail-fast: false
       matrix:
@@ -78,9 +98,9 @@ jobs:
           fail_ci_if_error: false
 
   build-test-status:
-    needs: build-test
+    needs: [changes, build-test]
     if: always()
     runs-on: ubuntu-24.04
     steps:
-      - if: needs.build-test.result != 'success'
+      - if: needs.changes.outputs.ros2 != 'false' && needs.build-test.result != 'success'
         run: exit 1
