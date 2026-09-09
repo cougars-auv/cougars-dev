@@ -20,8 +20,6 @@ if [[ -z $1 ]]; then
   exit 1
 fi
 
-cd "$(dirname "$0")/.."
-
 agent_ns="$1"
 
 ssh frostlab@"${agent_ns}".local \

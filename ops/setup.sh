@@ -37,7 +37,7 @@ if [[ -z $1 || -z $2 ]]; then
   exit 1
 fi
 
-cd "$(dirname "$0")/.."
+cd ~/cougars-dev
 
 agent_ns="$1"
 ip="$2"

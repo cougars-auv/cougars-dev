@@ -15,7 +15,7 @@
 
 set -e
 
-cd "$(dirname "$0")/.."
+cd ~/cougars-dev
 
 if [[ ! -f ops/.env ]]; then
   echo "Error: .env not found, run ./setup.sh first"
