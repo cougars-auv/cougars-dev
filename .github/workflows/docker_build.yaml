@@ -213,7 +213,7 @@ jobs:
             ${{ env.DOCKER_REPO }}:dev-${{ env.VERSION }}-amd64 \
             ${{ env.DOCKER_REPO }}:dev-${{ env.VERSION }}-arm64
 
-  build-status:
+  docker-build-status:
     needs: [changes, manifest-dev]
     if: always()
     runs-on: ubuntu-24.04

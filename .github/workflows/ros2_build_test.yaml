@@ -97,7 +97,7 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: false
 
-  build-test-status:
+  ros2-build-test-status:
     needs: [changes, build-test]
     if: always()
     runs-on: ubuntu-24.04
