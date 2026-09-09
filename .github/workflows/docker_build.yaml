@@ -20,12 +20,6 @@ on:
   push:
     branches: ["main"]
     tags: ["*"]
-    paths:
-      - ".github/workflows/docker_build.yaml"
-      - ".docker/**"
-      - ".dockerignore"
-      - "*.repos"
-      - "**/package.xml"
   pull_request:
     branches: ["main"]
   repository_dispatch:
@@ -42,7 +36,27 @@ env:
   CACHE_SUFFIX: ${{ github.event.pull_request.number && format('-pr-{0}', github.event.pull_request.number) || '' }}
 
 jobs:
+  changes:
+    runs-on: ubuntu-24.04
+    outputs:
+      docker: ${{ steps.filter.outputs.docker }}
+    steps:
+      - uses: actions/checkout@v7
+      - id: filter
+        if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref_type == 'branch')
+        uses: dorny/paths-filter@v4
+        with:
+          filters: |
+            docker:
+              - ".github/workflows/docker_build.yaml"
+              - ".docker/**"
+              - ".dockerignore"
+              - "*.repos"
+              - "**/package.xml"
+
   build-gtsam:
+    needs: changes
+    if: needs.changes.outputs.docker != 'false'
     strategy:
       matrix:
         include:
@@ -200,9 +214,9 @@ jobs:
             ${{ env.DOCKER_REPO }}:dev-${{ env.VERSION }}-arm64
 
   build-status:
-    needs: manifest-dev
+    needs: [changes, manifest-dev]
     if: always()
     runs-on: ubuntu-24.04
     steps:
-      - if: needs.manifest-dev.result != 'success'
+      - if: needs.changes.outputs.docker != 'false' && needs.manifest-dev.result != 'success'
         run: exit 1
