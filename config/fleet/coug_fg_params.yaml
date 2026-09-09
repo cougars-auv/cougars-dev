@@ -335,7 +335,7 @@
       # Water Linked DVL A50: 5 cm - 50 m altitude range.
       # https://waterlinked.com/dvl-a50
       beam_min_range: 0.05 # [m] Minimum reportable beam distance.
-      beam_max_range: 50.0 # [m] Maximum reportable beam distance.
+      beam_max_range: 500.0 # [m] Maximum reportable beam distance.
 
       # --- ROS Topics and Frames ---
       input_topic: "dvl/data"

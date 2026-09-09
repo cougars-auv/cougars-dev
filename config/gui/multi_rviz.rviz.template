@@ -253,7 +253,7 @@ displays:
               Reliability Policy: Reliable
               Value: /AGENT_NS/dvl/beam3/range
             Value: true
-        Enabled: true
+        Enabled: false
         Name: DVL Beams
       - Class: voxblox_rviz_plugin/VoxbloxMesh
         Enabled: true
