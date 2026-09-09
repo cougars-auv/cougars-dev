@@ -40,7 +40,9 @@
       # Water Linked DVL A50: ±1.01% long-term velocity accuracy (~0.01 m/s at 1 m/s).
       # https://waterlinked.com/dvl-a50
       velocity_noise_sigmas: [0.02, 0.02, 0.02] # [m/s] DVL body-velocity uncertainty sigmas.
-      beam_velocity_noise_sigma: 0.02 # [m/s] Per-beam radial velocity uncertainty sigma.
+      # Water Linked DVL A50: 22.5° 4-beam Janus array (body sigma is 1.848x per-beam sigma).
+      # https://waterlinked.com/dvl-a50
+      beam_velocity_noise_sigma: 0.011 # [m/s] Per-beam radial velocity uncertainty sigma.
       range_noise_sigma: 0.1 # [m] Per-beam range uncertainty sigma.
 
       # IMPORTANT! This must match HoloOcean's MaxRange for the DVLSensor.
