@@ -36,6 +36,7 @@ options=$(gum choose --no-limit --header "Select options:" \
   "Set start delay" \
   "Set playback rate" \
   "Set playback duration" \
+  "Start paused" \
   "Localization comparison" \
   "HITL mode") || exit 0
 
@@ -43,6 +44,7 @@ record_bag_path=""
 start_delay="0.0"
 playback_rate="1.0"
 playback_duration="-1.0"
+start_paused="false"
 loc_comparison="false"
 hitl_mode="false"
 
@@ -72,6 +74,10 @@ if [[ "${options}" == *"Set playback duration"* ]]; then
   fi
 fi
 
+if [[ "${options}" == *"Start paused"* ]]; then
+  start_paused="true"
+fi
+
 if [[ "${options}" == *"Localization comparison"* ]]; then
   loc_comparison="true"
 fi
@@ -92,6 +98,7 @@ launch_args+=(
   "start_delay:=${start_delay}"
   "playback_rate:=${playback_rate}"
   "playback_duration:=${playback_duration}"
+  "start_paused:=${start_paused}"
   "loc_comparison:=${loc_comparison}"
   "hitl_mode:=${hitl_mode}"
 )

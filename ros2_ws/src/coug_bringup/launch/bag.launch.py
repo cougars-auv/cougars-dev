@@ -69,6 +69,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
     start_delay = LaunchConfiguration("start_delay")
     playback_rate = LaunchConfiguration("playback_rate")
     playback_duration = LaunchConfiguration("playback_duration")
+    start_paused = LaunchConfiguration("start_paused")
     loc_comparison = LaunchConfiguration("loc_comparison")
     hitl_mode = LaunchConfiguration("hitl_mode")
 
@@ -122,12 +123,16 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
         atexit.register(save_artifacts, record_bag_path_str)
 
     if play_bag_path_str:
+        start_paused_args = (
+            ["--start-paused"] if IfCondition(start_paused).evaluate(context) else []
+        )
         play_process = ExecuteProcess(
             cmd=[
                 "ros2",
                 "bag",
                 "play",
                 play_bag_path_str,
+                *start_paused_args,
                 "--clock",
                 "--rate",
                 playback_rate,
@@ -296,6 +301,10 @@ def generate_launch_description() -> LaunchDescription:
             DeclareLaunchArgument(
                 "playback_duration",
                 default_value="-1.0",
+            ),
+            DeclareLaunchArgument(
+                "start_paused",
+                default_value="false",
             ),
             DeclareLaunchArgument(
                 "loc_comparison",
