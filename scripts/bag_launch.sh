@@ -35,12 +35,14 @@ options=$(gum choose --no-limit --header "Select options:" \
   "Record rosbag" \
   "Set start delay" \
   "Set playback rate" \
+  "Set playback duration" \
   "Localization comparison" \
   "HITL mode") || exit 0
 
 record_bag_path=""
 start_delay="0.0"
 playback_rate="1.0"
+playback_duration="-1.0"
 loc_comparison="false"
 hitl_mode="false"
 
@@ -63,6 +65,13 @@ if [[ "${options}" == *"Set playback rate"* ]]; then
   fi
 fi
 
+if [[ "${options}" == *"Set playback duration"* ]]; then
+  playback_duration=$(gum input --placeholder "Set playback duration (s; -1 for full bag)..." || echo "-1.0")
+  if ! [[ "${playback_duration}" =~ ^[0-9]+(\.[0-9]+)?$|^-1(\.0+)?$ ]]; then
+    playback_duration="-1.0"
+  fi
+fi
+
 if [[ "${options}" == *"Localization comparison"* ]]; then
   loc_comparison="true"
 fi
@@ -82,6 +91,7 @@ fi
 launch_args+=(
   "start_delay:=${start_delay}"
   "playback_rate:=${playback_rate}"
+  "playback_duration:=${playback_duration}"
   "loc_comparison:=${loc_comparison}"
   "hitl_mode:=${hitl_mode}"
 )

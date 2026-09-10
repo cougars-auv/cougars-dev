@@ -68,6 +68,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
     record_bag_path = LaunchConfiguration("record_bag_path")
     start_delay = LaunchConfiguration("start_delay")
     playback_rate = LaunchConfiguration("playback_rate")
+    playback_duration = LaunchConfiguration("playback_duration")
     loc_comparison = LaunchConfiguration("loc_comparison")
     hitl_mode = LaunchConfiguration("hitl_mode")
 
@@ -130,6 +131,8 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                 "--clock",
                 "--rate",
                 playback_rate,
+                "--playback-duration",
+                playback_duration,
                 "--start-offset",
                 start_delay,
                 "--remap",
@@ -289,6 +292,10 @@ def generate_launch_description() -> LaunchDescription:
             DeclareLaunchArgument(
                 "playback_rate",
                 default_value="1.0",
+            ),
+            DeclareLaunchArgument(
+                "playback_duration",
+                default_value="-1.0",
             ),
             DeclareLaunchArgument(
                 "loc_comparison",
