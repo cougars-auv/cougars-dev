@@ -136,9 +136,29 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                 # FROST Lab BlueROV2 bags
                 "/tf:=/tf_discard",
                 "/tf_static:=/tf_static_discard",
+                "/diagnostics:=/diagnostics_discard",
                 "/diagnostics_agg:=/diagnostics_agg_discard",
                 "/origin:=/origin_discard",
+                f"{agent_ns}/odometry/local:=/{agent_ns}/odometry/local_discard",
                 f"{agent_ns}/odometry/global:=/{agent_ns}/odometry/global_discard",
+                f"{agent_ns}/smoothed_path:=/{agent_ns}/smoothed_path_discard",
+                (
+                    f"{agent_ns}/factor_graph_node/velocity:="
+                    f"/{agent_ns}/factor_graph_node/velocity_discard"
+                ),
+                (
+                    f"{agent_ns}/factor_graph_node/metrics:="
+                    f"/{agent_ns}/factor_graph_node/metrics_discard"
+                ),
+                (
+                    f"{agent_ns}/factor_graph_node/imu/bias:="
+                    f"/{agent_ns}/factor_graph_node/imu/bias_discard"
+                ),
+                (
+                    f"{agent_ns}/factor_graph_node/imu/mag/bias:="
+                    f"/{agent_ns}/factor_graph_node/imu/mag/bias_discard"
+                ),
+                f"{agent_ns}/gps/odometry:=/{agent_ns}/gps/odometry_discard",
                 f"{agent_ns}/dvl/twist:=/{agent_ns}/dvl/twist_discard",
                 f"{agent_ns}/dvl/odometry:=/{agent_ns}/dvl/odometry_discard",
                 f"{agent_ns}/imu/nav_sat_fix:=/{agent_ns}/gps/fix",
@@ -198,6 +218,22 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                 "loc_comparison": loc_comparison,
             }.items(),
             condition=UnlessCondition(hitl_mode),
+        )
+    )
+
+    actions.append(
+        Node(
+            package="tf2_ros",
+            executable="static_transform_publisher",
+            name="sonar_frame_alias",
+            arguments=[
+                "--frame-id",
+                f"{agent_ns}/sonar_link",
+                "--child-frame-id",
+                "sonar_frame",
+            ],
+            parameters=[{"use_sim_time": use_sim_time}],
+            condition=IfCondition(EqualsSubstitution(agent_ns, "bluerov2")),
         )
     )
 

@@ -29,6 +29,10 @@
         use_parameter_priors: false
         use_parameter_priors_covariance: false
 
+  factor_graph_node:
+    ros__parameters:
+      transform_time_offset: 0.3 # [s] Fix for sonar timestamps
+
   fluid_pressure_odom_node:
     ros__parameters:
       atmospheric_pressure: 86039.8 # Utah Lake (~1358 m elevation)
