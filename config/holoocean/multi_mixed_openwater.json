@@ -245,14 +245,14 @@
       "rotation": [0, 0, 0]
     },
     {
-      "agent_name": "coug2sim",
+      "agent_name": "coug1sim",
       "agent_type": "CougUV",
       "sensors": [
         {
           "sensor_type": "AcousticBeaconSensor",
           "socket": "AcousticModemSocket",
           "configuration": {
-            "id": 2
+            "id": 1
           },
           "ros_publish": true
         },
