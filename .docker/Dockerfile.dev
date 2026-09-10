@@ -76,6 +76,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
   --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
   apt-get update && apt-get install -y --no-install-recommends \
+  "ros-${ROS_DISTRO}-image-transport-plugins" \
   "ros-${ROS_DISTRO}-rqt*"
 
 # Install ROS dependencies (rosdep)
