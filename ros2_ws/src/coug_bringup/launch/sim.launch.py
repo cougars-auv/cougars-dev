@@ -12,10 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import json
+import math
 import os
 from typing import Any
 
-import yaml
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchContext, LaunchDescription
 from launch.action import Action
@@ -39,9 +40,17 @@ from launch_ros.actions import ComposableNodeContainer, Node, PushRosNamespace
 from launch_ros.descriptions import ComposableNode
 
 
+def as_meters(position: list[float]) -> list[float]:
+    return [float(value) for value in position]
+
+
+def as_radians(orientation: list[float]) -> list[float]:
+    return [math.radians(float(value)) for value in orientation]
+
+
 def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Action]:
     use_sim_time = LaunchConfiguration("use_sim_time")
-    agent_list_config = LaunchConfiguration("agent_list")
+    scenario = LaunchConfiguration("scenario")
     lead_agent = LaunchConfiguration("lead_agent")
     record_bag_path = LaunchConfiguration("record_bag_path")
     loc_comparison = LaunchConfiguration("loc_comparison")
@@ -52,9 +61,16 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
     enable_acoustic_comms = LaunchConfiguration("enable_acoustic_comms")
     hitl_mode = LaunchConfiguration("hitl_mode")
 
-    agent_list_str = agent_list_config.perform(context)
+    scenario_file = os.path.join(
+        os.environ["CONFIG_DIR"], "holoocean", f"{scenario.perform(context)}.json"
+    )
+    with open(scenario_file) as scenario_config:
+        agents = json.load(scenario_config)["agents"]
 
-    agent_list = yaml.safe_load(agent_list_str)
+    poses = {agent["agent_name"]: agent for agent in agents}
+    base_station = poses.pop("base_station")
+    agent_list = list(poses)
+    agent_list_str = f"[{', '.join(agent_list)}]"
 
     coug_bringup_dir = get_package_share_directory("coug_bringup")
     coug_bringup_launch_dir = os.path.join(coug_bringup_dir, "launch")
@@ -91,6 +107,10 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                     "agent_ns": agent_ns,
                     "lead_agent": lead_agent,
                     "loc_comparison": loc_comparison,
+                    "initial_position": str(as_meters(poses[agent_ns]["location"])),
+                    "initial_orientation": str(
+                        as_radians(poses[agent_ns].get("rotation", [0, 0, 0]))
+                    ),
                 }.items(),
                 condition=UnlessCondition(hitl_mode),
             )
@@ -181,12 +201,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
             package="tf2_ros",
             executable="static_transform_publisher",
             name="map_to_holoocean_transform",
-            # Match this to the starting XY location of the first agent
             arguments=[
-                "--x",
-                "0",
-                "--y",
-                "0",
                 "--frame-id",
                 "map",
                 "--child-frame-id",
@@ -232,6 +247,8 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
         )
     )
 
+    base_station_position = as_meters(base_station["location"])
+    base_station_orientation = as_radians(base_station.get("rotation", [0, 0, 0]))
     actions.append(
         Node(
             package="tf2_ros",
@@ -239,17 +256,17 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
             name="map_to_base_station_transform",
             arguments=[
                 "--x",
-                "-5",
+                str(base_station_position[0]),
                 "--y",
-                "0",
+                str(base_station_position[1]),
                 "--z",
-                "0",
-                "--yaw",
-                "0",
-                "--pitch",
-                "0",
+                str(base_station_position[2]),
                 "--roll",
-                "0",
+                str(base_station_orientation[0]),
+                "--pitch",
+                str(base_station_orientation[1]),
+                "--yaw",
+                str(base_station_orientation[2]),
                 "--frame-id",
                 "map",
                 "--child-frame-id",
@@ -296,59 +313,46 @@ def generate_launch_description() -> LaunchDescription:
             DeclareLaunchArgument(
                 "use_sim_time",
                 default_value="true",
-                description="Use simulation/rosbag clock if true",
             ),
             DeclareLaunchArgument(
-                "agent_list",
-                default_value="[coug1sim]",
-                description=(
-                    "YAML list of agent namespaces (e.g. '[coug1sim]' or '[coug1sim, coug2sim]')"
-                ),
+                "scenario",
+                default_value="couguv_openwater",
             ),
             DeclareLaunchArgument(
                 "lead_agent",
                 default_value="",
-                description="Namespace of the lead agent (optional)",
             ),
             DeclareLaunchArgument(
                 "record_bag_path",
                 default_value="",
-                description="Path to record rosbag (if empty, no recording)",
             ),
             DeclareLaunchArgument(
                 "loc_comparison",
                 default_value="false",
-                description="Launch additional localization nodes if true",
             ),
             DeclareLaunchArgument(
                 "add_noise",
                 default_value="true",
-                description="Whether to add noise to sensor data",
             ),
             DeclareLaunchArgument(
                 "enable_mapping",
                 default_value="false",
-                description="Launch the depth camera and voxblox mapping pipeline",
             ),
             DeclareLaunchArgument(
                 "enable_shared_mapping",
                 default_value="false",
-                description="Fuse all agent depth clouds into one Voxblox mesh",
             ),
             DeclareLaunchArgument(
                 "enable_direct_comms",
                 default_value="true",
-                description="Enable direct ROS service communications",
             ),
             DeclareLaunchArgument(
                 "enable_acoustic_comms",
                 default_value="true",
-                description="Enable acoustic communications",
             ),
             DeclareLaunchArgument(
                 "hitl_mode",
                 default_value="false",
-                description="HITL mode (skip launching local AUV nodes)",
             ),
             OpaqueFunction(function=launch_setup),
         ]

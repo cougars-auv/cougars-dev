@@ -42,6 +42,8 @@ def generate_launch_description() -> LaunchDescription:
     agent_ns = LaunchConfiguration("agent_ns")
     lead_agent = LaunchConfiguration("lead_agent")
     loc_comparison = LaunchConfiguration("loc_comparison")
+    initial_position = LaunchConfiguration("initial_position")
+    initial_orientation = LaunchConfiguration("initial_orientation")
 
     fleet_param_file = PathJoinSubstitution(
         [
@@ -91,6 +93,8 @@ def generate_launch_description() -> LaunchDescription:
             "agent_ns": agent_ns,
             "lead_agent": lead_agent,
             "loc_comparison": loc_comparison,
+            "initial_position": initial_position,
+            "initial_orientation": initial_orientation,
         }.items(),
         condition=IfCondition(NotEqualsSubstitution(agent_ns, "coug2")),
     )
@@ -178,22 +182,26 @@ def generate_launch_description() -> LaunchDescription:
             DeclareLaunchArgument(
                 "use_sim_time",
                 default_value="false",
-                description="Use simulation/rosbag clock if true",
             ),
             DeclareLaunchArgument(
                 "agent_ns",
                 default_value="auv0",
-                description="Namespace for the agent (e.g. auv0)",
             ),
             DeclareLaunchArgument(
                 "lead_agent",
                 default_value="",
-                description="Namespace of the lead agent (optional)",
             ),
             DeclareLaunchArgument(
                 "loc_comparison",
                 default_value="false",
-                description="Launch additional localization nodes if true",
+            ),
+            DeclareLaunchArgument(
+                "initial_position",
+                default_value="",
+            ),
+            DeclareLaunchArgument(
+                "initial_orientation",
+                default_value="",
             ),
             GroupAction(
                 actions=[

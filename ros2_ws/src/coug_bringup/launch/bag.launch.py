@@ -233,48 +233,34 @@ def generate_launch_description() -> LaunchDescription:
             DeclareLaunchArgument(
                 "use_sim_time",
                 default_value="true",
-                description="Use simulation/rosbag clock if true",
             ),
             DeclareLaunchArgument(
                 "agent_list",
                 default_value="[auv0]",
-                description=(
-                    "YAML list of agent namespaces (e.g. '[coug1sim]' or '[coug1sim, coug2sim]')"
-                ),
             ),
             DeclareLaunchArgument(
                 "play_bag_path",
                 default_value="",
-                description="Path to play rosbag from",
             ),
             DeclareLaunchArgument(
                 "record_bag_path",
                 default_value="",
-                description="Path to record rosbag (if empty, no recording)",
             ),
             DeclareLaunchArgument(
                 "start_delay",
                 default_value="0.0",
-                description=(
-                    "Time in seconds to skip from the beginning of the bag file (start offset)"
-                ),
             ),
             DeclareLaunchArgument(
                 "playback_rate",
                 default_value="1.0",
-                description=(
-                    "Bag playback rate multiplier (e.g. 0.5 for half speed, 2.0 for double)"
-                ),
             ),
             DeclareLaunchArgument(
                 "loc_comparison",
                 default_value="false",
-                description="Launch additional localization nodes if true",
             ),
             DeclareLaunchArgument(
                 "hitl_mode",
                 default_value="false",
-                description="HITL mode (skip launching local AUV nodes)",
             ),
             OpaqueFunction(function=launch_setup),
         ]

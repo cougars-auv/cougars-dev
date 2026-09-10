@@ -18,24 +18,8 @@ set -e
 source "${OVERLAY_WS}/install/setup.bash"
 
 # --- Selection ---
-scenario=$(gum choose --header "Choose a HoloOcean scenario:" \
-  "CougUV" \
-  "BlueROV2" \
-  "WAM-V" \
-  "CougUV Multi-Agent" \
-  "BlueROV2 Multi-Agent" \
-  "Mixed Multi-Agent") || exit 0
-
-case ${scenario} in
-"CougUV") selected_agents=(coug1sim) ;;
-"BlueROV2") selected_agents=(blue1sim) ;;
-"WAM-V") selected_agents=(wamv1sim) ;;
-"CougUV Multi-Agent") selected_agents=(coug1sim coug2sim coug3sim) ;;
-"BlueROV2 Multi-Agent") selected_agents=(blue1sim blue2sim) ;;
-"Mixed Multi-Agent") selected_agents=(wamv1sim blue1sim coug2sim) ;;
-esac
-
-agent_list="[$(printf '%s\n' "${selected_agents[@]}" | paste -sd, | sed 's/,/, /g')]"
+scenario=$(basename -a "${CONFIG_DIR}"/holoocean/*.json | sed 's/.json$//' | sort |
+  gum choose --header "Choose a HoloOcean scenario:") || exit 0
 
 # --- Options ---
 options=$(gum choose --no-limit --header "Select options:" \
@@ -80,7 +64,9 @@ if [[ "${options}" == *"Enable shared voxblox mapping"* ]]; then
 fi
 
 if [[ "${options}" == *"Specify lead agent"* ]]; then
-  lead_agent=$(gum choose --header "Select lead agent:" "${selected_agents[@]}") || exit 0
+  lead_agent=$(jq -r '.agents[].agent_name | select(. != "base_station")' \
+    "${CONFIG_DIR}/holoocean/${scenario}.json" |
+    gum choose --header "Select lead agent:") || exit 0
 fi
 
 if [[ "${options}" == *"Acomms simulation"* ]]; then
@@ -93,7 +79,7 @@ fi
 
 # --- Launch ---
 launch_args=(
-  "agent_list:=${agent_list}"
+  "scenario:=${scenario}"
 )
 if [[ -n ${lead_agent} ]]; then
   launch_args+=("lead_agent:=${lead_agent}")

@@ -96,7 +96,6 @@ def generate_launch_description() -> LaunchDescription:
             DeclareLaunchArgument(
                 "agent_ns",
                 default_value="auv0",
-                description="Namespace for the agent (e.g. auv0)",
             ),
             Node(
                 package="seatrac",
