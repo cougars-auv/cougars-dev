@@ -19,7 +19,7 @@ run-name: ${{ github.event.client_payload.repo && format('{0}@{1}', github.event
 on:
   push:
     branches: ["main"]
-    tags: ["*"]
+    tags: ["v*"]
   pull_request:
     branches: ["main"]
   repository_dispatch:
