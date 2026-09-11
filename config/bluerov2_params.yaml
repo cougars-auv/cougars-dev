@@ -33,6 +33,14 @@
     ros__parameters:
       transform_time_offset: 0.3 # [s] Fix for sonar timestamps
 
+  dvl_a50_odom_node:
+    ros__parameters:
+      use_parameter_frame: true
+
+  seatrac_x150_imu_depth_node:
+    ros__parameters:
+      use_parameter_frame: true
+
   fluid_pressure_odom_node:
     ros__parameters:
       atmospheric_pressure: 86039.8 # Utah Lake (~1358 m elevation)
