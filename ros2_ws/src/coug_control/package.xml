@@ -3,7 +3,7 @@
 <package format="3">
   <name>coug_control</name>
   <version>0.0.0</version>
-  <description>Control setpoint conversion between the helm and vehicle controllers.</description>
+  <description>Low-level control and setpoint handling.</description>
   <maintainer email="snelsond@byu.edu">snelsondurrant</maintainer>
   <license>Apache-2.0</license>
 
