@@ -36,12 +36,21 @@ from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node, PushRosNamespace
 
 
-def save_artifacts(record_bag_path: str) -> None:
+def snapshot_config() -> str:
+    config_dir = os.environ.get("CONFIG_DIR", "")
+    if not os.path.isdir(config_dir):
+        return ""
+    snapshot = tempfile.mkdtemp(prefix="config_")
+    shutil.copytree(config_dir, snapshot, dirs_exist_ok=True)
+    return snapshot
+
+
+def save_artifacts(record_bag_path: str, config_snapshot: str) -> None:
     if not record_bag_path or not os.path.isdir(record_bag_path):
         return
 
     artifacts = (
-        ("Config", os.environ.get("CONFIG_DIR", ""), "config"),
+        ("Config", config_snapshot, "config"),
         ("Logs", launch_config.log_dir, "log"),
     )
     for label, source, directory in artifacts:
@@ -212,7 +221,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
         )
         actions.append(record_process)
 
-        atexit.register(save_artifacts, record_bag_path_str)
+        atexit.register(save_artifacts, record_bag_path_str, snapshot_config())
 
     return actions
 

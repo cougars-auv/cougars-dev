@@ -16,6 +16,7 @@ import atexit
 import os
 import shutil
 import signal
+import tempfile
 from typing import Any
 
 import yaml
@@ -42,12 +43,21 @@ from launch.substitutions import EqualsSubstitution, LaunchConfiguration, TextSu
 from launch_ros.actions import Node
 
 
-def save_artifacts(record_bag_path: str) -> None:
+def snapshot_config() -> str:
+    config_dir = os.environ.get("CONFIG_DIR", "")
+    if not os.path.isdir(config_dir):
+        return ""
+    snapshot = tempfile.mkdtemp(prefix="config_")
+    shutil.copytree(config_dir, snapshot, dirs_exist_ok=True)
+    return snapshot
+
+
+def save_artifacts(record_bag_path: str, config_snapshot: str) -> None:
     if not record_bag_path or not os.path.isdir(record_bag_path):
         return
 
     artifacts = (
-        ("Config", os.environ.get("CONFIG_DIR", ""), "config"),
+        ("Config", config_snapshot, "config"),
         ("Logs", launch_config.log_dir, "log"),
     )
     for label, source, directory in artifacts:
@@ -57,8 +67,10 @@ def save_artifacts(record_bag_path: str) -> None:
             print(f"{label} saved: {destination}")
 
 
-def save_artifacts_on_exit(context: LaunchContext, record_bag_path: str) -> None:
-    save_artifacts(record_bag_path)
+def save_artifacts_on_exit(
+    context: LaunchContext, record_bag_path: str, config_snapshot: str
+) -> None:
+    save_artifacts(record_bag_path, config_snapshot)
 
 
 def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Action]:
@@ -88,6 +100,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
     record_process = None
 
     if record_bag_path_str:
+        config_snapshot = snapshot_config()
         record_process = ExecuteProcess(
             cmd=[
                 "ros2",
@@ -113,14 +126,17 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                     on_exit=[
                         OpaqueFunction(
                             function=save_artifacts_on_exit,
-                            kwargs={"record_bag_path": record_bag_path_str},
+                            kwargs={
+                                "record_bag_path": record_bag_path_str,
+                                "config_snapshot": config_snapshot,
+                            },
                         )
                     ],
                 )
             )
         )
 
-        atexit.register(save_artifacts, record_bag_path_str)
+        atexit.register(save_artifacts, record_bag_path_str, config_snapshot)
 
     if play_bag_path_str:
         start_paused_args = (

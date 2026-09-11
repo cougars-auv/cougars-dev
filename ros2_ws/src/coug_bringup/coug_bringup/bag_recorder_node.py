@@ -16,6 +16,7 @@ import os
 import shutil
 import signal
 import subprocess
+import tempfile
 from datetime import datetime
 
 import diagnostic_updater
@@ -47,6 +48,8 @@ class BagRecorderNode(Node):
 
         if not self._bag_dir:
             self.get_logger().error("BAGS_DIR is not set.")
+
+        self._config_snapshot = self._snapshot_config()
 
         self.create_service(BagRecord, bag_record_service, self._bag_record_callback)
 
@@ -138,21 +141,26 @@ class BagRecorderNode(Node):
             process.wait()
         self._bag_process = None
 
-    def _save_config(self) -> None:
-        if self._bag_path is None or not os.path.isdir(self._bag_path):
-            return
-
+    def _snapshot_config(self) -> str:
         config_dir = os.environ.get("CONFIG_DIR", "")
         if not config_dir:
-            self.get_logger().warning("CONFIG_DIR is not set, config not saved.")
-            return
+            self.get_logger().warning("CONFIG_DIR is not set, config will not be saved.")
+            return ""
 
         if not os.path.isdir(config_dir):
             self.get_logger().warning(f"CONFIG_DIR is not a directory: {config_dir}")
+            return ""
+
+        snapshot = tempfile.mkdtemp(prefix="config_")
+        shutil.copytree(config_dir, snapshot, dirs_exist_ok=True)
+        return snapshot
+
+    def _save_config(self) -> None:
+        if self._bag_path is None or not os.path.isdir(self._bag_path) or not self._config_snapshot:
             return
 
         dest = os.path.join(self._bag_path, "config")
-        shutil.copytree(config_dir, dest, dirs_exist_ok=True)
+        shutil.copytree(self._config_snapshot, dest, dirs_exist_ok=True)
         self.get_logger().info(f"Config saved: {dest}")
 
     def _save_logs(self) -> None:
