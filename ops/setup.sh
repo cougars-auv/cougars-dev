@@ -19,10 +19,10 @@ use_sim_time="false"
 
 args=()
 for arg in "$@"; do
-  if [[ $arg == --hitl ]]; then
+  if [[ ${arg} == --hitl ]]; then
     use_sim_time="true"
   else
-    args+=("$arg")
+    args+=("${arg}")
   fi
 done
 set -- "${args[@]}"

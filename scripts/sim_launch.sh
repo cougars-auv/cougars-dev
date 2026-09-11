@@ -18,8 +18,9 @@ set -e
 source "${OVERLAY_WS}/install/setup.bash"
 
 # --- Selection ---
-scenario=$(basename -a "${CONFIG_DIR}"/holoocean/*.json | sed 's/.json$//' | sort |
-  gum choose --header "Choose a HoloOcean scenario:") || exit 0
+scenario=$(basename -a "${CONFIG_DIR}"/holoocean/*.json |
+  sed 's/.json$//' | sort |
+  gum choose --header "Select a HoloOcean scenario:") || exit 0
 
 # --- Options ---
 options=$(gum choose --no-limit --header "Select options:" \

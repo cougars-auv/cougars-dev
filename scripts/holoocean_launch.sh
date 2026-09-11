@@ -16,8 +16,9 @@
 set -e
 
 # --- Selection ---
-scenario=$(basename -a "${CONFIG_DIR}"/holoocean/*.json | sed 's/.json$//' | sort |
-  gum choose --header "Choose a HoloOcean scenario:") || exit 0
+scenario=$(basename -a "${CONFIG_DIR}"/holoocean/*.json |
+  sed 's/.json$//' | sort |
+  gum choose --header "Select a HoloOcean scenario:") || exit 0
 
 # --- Launch ---
 params_file="/home/ue4/config/holoocean/${scenario}_params.yaml"
