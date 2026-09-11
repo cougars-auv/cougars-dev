@@ -101,6 +101,33 @@ CoUGARs is a low-cost, configurable AUV platform designed for multi-agent autono
 
 - **Delete Branches:** Remove all the merged branches. Create a new branch from `main` for any follow-up work.
 
+## Releasing
+
+This repository follows the **Semantic Versioning (SemVer 2.0.0)** standard:
+
+> Given a version number **`MAJOR.MINOR.PATCH`**, increment the:
+>
+> - **MAJOR** version when you make incompatible API changes
+> - **MINOR** version when you add functionality in a backward compatible manner
+> - **PATCH** version when you make backward compatible bug fixes
+
+- **Create a Release Branch:** Create a release branch (e.g., `release/v1.2.3`) from `main`.
+
+- **Release Packages:** Check the packages listed in `runtime.repos` and `dev.repos`. For each package with recent untagged updates, release a new version (e.g., `v2.3.4`) following the "Releasing" section of its `README.md`. External packages version independently of `cougars-dev`.
+
+- **Lock Dependencies:** On the release branch, pin each package in the `.repos` files to the most recent version.
+
+- **Update Package Versions:** Before tagging, update the `<version>` in `package.xml` for each package in `cougars-dev` without its own repository. Match the release branch (e.g. `1.2.3`). For Python packages, also update the `version` in `setup.py`. Commit and push your updates.
+
+- **Tag and Push:** Create and push the new version tag (e.g., `v1.2.3`) on your release branch:
+
+  ```bash
+  git tag v1.2.3
+  git push origin v1.2.3
+  ```
+
+  Pushing the tag will automatically publish a GitHub Release with auto-generated notes, and build and push new Docker images to Docker Hub under `frostlab/cougars:runtime-v1.2.3` and `frostlab/cougars:dev-v1.2.3`.
+
 ## Citations
 
 If you use this repository in your research, please cite the following publications:
