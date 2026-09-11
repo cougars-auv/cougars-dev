@@ -125,7 +125,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
         ),
         launch_arguments={
             "use_sim_time": use_sim_time,
-            "agent_list": agent_list_str,
+            "agent_list": agent_list_config,
             "lead_agent": lead_agent,
             "enable_direct_comms": enable_direct_comms,
             "enable_acoustic_comms": enable_acoustic_comms,
@@ -136,7 +136,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
         PythonLaunchDescriptionSource(os.path.join(coug_fg_launch_dir, "coug_fg_base.launch.py")),
         launch_arguments={
             "use_sim_time": use_sim_time,
-            "agent_list": agent_list_str,
+            "agent_list": agent_list_config,
         }.items(),
     )
 
@@ -165,7 +165,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
         ),
         launch_arguments={
             "use_sim_time": use_sim_time,
-            "agent_list": agent_list_str,
+            "agent_list": agent_list_config,
         }.items(),
     )
 
@@ -173,7 +173,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
         PythonLaunchDescriptionSource(os.path.join(coug_rqt_launch_dir, "coug_rqt.launch.py")),
         launch_arguments={
             "use_sim_time": use_sim_time,
-            "agent_list": agent_list_str,
+            "agent_list": agent_list_config,
         }.items(),
     )
 

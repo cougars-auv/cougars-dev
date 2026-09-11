@@ -38,7 +38,7 @@ from launch.events import matches_action
 from launch.events.process import SignalProcess
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.logging import launch_config
-from launch.substitutions import EqualsSubstitution, LaunchConfiguration
+from launch.substitutions import EqualsSubstitution, LaunchConfiguration, TextSubstitution
 from launch_ros.actions import Node
 
 
@@ -185,7 +185,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
         )
         actions.append(play_process)
 
-        exit_event = [LogInfo(msg="Bag playback finished, no recording to kill.")]
+        exit_event: list[Action] = [LogInfo(msg="Bag playback finished, no recording to kill.")]
         if record_process is not None:
             exit_event = [
                 LogInfo(msg="Bag playback finished, killing recording."),
@@ -211,8 +211,8 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
             PythonLaunchDescriptionSource(os.path.join(coug_bringup_launch_dir, "base.launch.py")),
             launch_arguments={
                 "use_sim_time": use_sim_time,
-                "agent_list": agent_list_str,
-                "record_bag_path": "",
+                "agent_list": agent_list_config,
+                "record_bag_path": TextSubstitution(text=""),
             }.items(),
         )
     )
