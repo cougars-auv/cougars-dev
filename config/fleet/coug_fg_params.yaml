@@ -416,9 +416,11 @@
       # IMPORTANT! This must match the magnitude of factor_graph_node's mag reference_field.
       au_to_tesla: 5.0446e-05
 
-      # --- ROS Topics ---
+      # --- ROS Topics and Frames ---
       input_topic: "imu/mag_au"
       output_topic: "imu/mag"
+
+      use_parameter_frame: false
 
   seatrac_x150_imu_depth_node:
     ros__parameters:
