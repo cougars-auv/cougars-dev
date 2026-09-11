@@ -18,17 +18,12 @@ set -e
 use_sim_time="false"
 
 args=()
-while [[ $# -gt 0 ]]; do
-  case "$1" in
-  --hitl)
+for arg in "$@"; do
+  if [[ $arg == --hitl ]]; then
     use_sim_time="true"
-    shift
-    ;;
-  *)
-    args+=("$1")
-    shift
-    ;;
-  esac
+  else
+    args+=("$arg")
+  fi
 done
 set -- "${args[@]}"
 
