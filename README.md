@@ -117,7 +117,7 @@ This repository follows the **Semantic Versioning (SemVer 2.0.0)** standard:
 
 - **Lock Dependencies:** On the release branch, pin each package in the `.repos` files to the most recent version.
 
-- **Update Package Versions:** Before tagging, update the `<version>` in `package.xml` for each package in `cougars-dev` without its own repository. Match the release branch (e.g. `1.2.3`). For Python packages, also update the `version` in `setup.py`. Commit and push your updates.
+- **Update Package Versions:** Before tagging, update the `<version>` in `package.xml` for each package in `cougars-dev` without its own repository. Match the release branch (e.g., `1.2.3`). For Python packages, also update the `version` in `setup.py`. Commit and push your updates.
 
 - **Tag and Push:** Create and push the new version tag (e.g., `v1.2.3`) on your release branch:
 
