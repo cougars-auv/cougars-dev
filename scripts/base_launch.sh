@@ -37,8 +37,8 @@ record_bag_path=""
 lead_agent=""
 
 if [[ "${options}" == *"Record rosbag"* ]]; then
-  suffix=$(gum input --placeholder "Set bag suffix..." || true)
-  record_bag_path="${BAGS_DIR}/${suffix:-rosbag}$(date +'_%Y-%m-%d-%H-%M-%S')"
+  prefix=$(gum input --placeholder "Set bag prefix..." || true)
+  record_bag_path="${BAGS_DIR}/${prefix:-rosbag}$(date +'_%Y-%m-%d-%H-%M-%S')"
 fi
 
 if [[ "${options}" == *"Specify lead agent"* ]]; then

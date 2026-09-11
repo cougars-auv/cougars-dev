@@ -49,8 +49,8 @@ loc_comparison="false"
 hitl_mode="false"
 
 if [[ "${options}" == *"Record rosbag"* ]]; then
-  suffix=$(gum input --placeholder "Set bag suffix..." || true)
-  record_bag_path="${BAGS_DIR}/${suffix:-rosbag}$(date +'_%Y-%m-%d-%H-%M-%S')"
+  prefix=$(gum input --placeholder "Set bag prefix..." || true)
+  record_bag_path="${BAGS_DIR}/${prefix:-rosbag}$(date +'_%Y-%m-%d-%H-%M-%S')"
 fi
 
 if [[ "${options}" == *"Set start delay"* ]]; then
