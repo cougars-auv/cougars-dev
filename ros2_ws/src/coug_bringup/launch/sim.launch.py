@@ -51,14 +51,15 @@ def as_radians(orientation: list[float]) -> list[float]:
 def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Action]:
     use_sim_time = LaunchConfiguration("use_sim_time")
     scenario = LaunchConfiguration("scenario")
-    lead_agent = LaunchConfiguration("lead_agent")
     record_bag_path = LaunchConfiguration("record_bag_path")
-    loc_comparison = LaunchConfiguration("loc_comparison")
     add_noise = LaunchConfiguration("add_noise")
-    enable_mapping = LaunchConfiguration("enable_mapping")
-    enable_shared_mapping = LaunchConfiguration("enable_shared_mapping")
+    loc_comparison = LaunchConfiguration("loc_comparison")
+    lead_agent = LaunchConfiguration("lead_agent")
     enable_direct_comms = LaunchConfiguration("enable_direct_comms")
     enable_acoustic_comms = LaunchConfiguration("enable_acoustic_comms")
+    use_spawn_pose = LaunchConfiguration("use_spawn_pose").perform(context) == "true"
+    enable_mapping = LaunchConfiguration("enable_mapping")
+    enable_shared_mapping = LaunchConfiguration("enable_shared_mapping")
     hitl_mode = LaunchConfiguration("hitl_mode")
 
     scenario_file = os.path.join(
@@ -80,7 +81,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
         [EnvironmentVariable("CONFIG_DIR"), "fleet", "coug_holoocean_params.yaml"]
     )
 
-    actions = []
+    actions: list[Action] = []
 
     actions.append(
         IncludeLaunchDescription(
@@ -97,6 +98,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
     )
 
     for agent_ns in agent_list:
+        spawn: dict[str, Any] = poses[agent_ns] if use_spawn_pose else {"location": [0, 0, 0]}
         actions.append(
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(
@@ -107,10 +109,8 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                     "agent_ns": agent_ns,
                     "lead_agent": lead_agent,
                     "loc_comparison": loc_comparison,
-                    "initial_position": str(as_meters(poses[agent_ns]["location"])),
-                    "initial_orientation": str(
-                        as_radians(poses[agent_ns].get("rotation", [0, 0, 0]))
-                    ),
+                    "initial_position": str(as_meters(spawn["location"])),
+                    "initial_orientation": str(as_radians(spawn.get("rotation", [0, 0, 0]))),
                 }.items(),
                 condition=UnlessCondition(hitl_mode),
             )
@@ -319,19 +319,31 @@ def generate_launch_description() -> LaunchDescription:
                 default_value="couguv_openwater",
             ),
             DeclareLaunchArgument(
-                "lead_agent",
+                "record_bag_path",
                 default_value="",
             ),
             DeclareLaunchArgument(
-                "record_bag_path",
-                default_value="",
+                "add_noise",
+                default_value="true",
             ),
             DeclareLaunchArgument(
                 "loc_comparison",
                 default_value="false",
             ),
             DeclareLaunchArgument(
-                "add_noise",
+                "lead_agent",
+                default_value="",
+            ),
+            DeclareLaunchArgument(
+                "enable_direct_comms",
+                default_value="true",
+            ),
+            DeclareLaunchArgument(
+                "enable_acoustic_comms",
+                default_value="true",
+            ),
+            DeclareLaunchArgument(
+                "use_spawn_pose",
                 default_value="true",
             ),
             DeclareLaunchArgument(
@@ -341,14 +353,6 @@ def generate_launch_description() -> LaunchDescription:
             DeclareLaunchArgument(
                 "enable_shared_mapping",
                 default_value="false",
-            ),
-            DeclareLaunchArgument(
-                "enable_direct_comms",
-                default_value="true",
-            ),
-            DeclareLaunchArgument(
-                "enable_acoustic_comms",
-                default_value="true",
             ),
             DeclareLaunchArgument(
                 "hitl_mode",

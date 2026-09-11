@@ -33,17 +33,17 @@ agent_list="[${agent_ns}]"
 # --- Options ---
 options=$(gum choose --no-limit --header "Select options:" \
   "Record rosbag" \
-  "Set start delay" \
-  "Set playback rate" \
+  "Set start offset" \
   "Set playback duration" \
+  "Set playback rate" \
   "Start paused" \
   "Localization comparison" \
   "HITL mode") || exit 0
 
 record_bag_path=""
-start_delay="0.0"
-playback_rate="1.0"
+start_offset="0.0"
 playback_duration="-1.0"
+playback_rate="1.0"
 start_paused="false"
 loc_comparison="false"
 hitl_mode="false"
@@ -53,17 +53,10 @@ if [[ "${options}" == *"Record rosbag"* ]]; then
   record_bag_path="${BAGS_DIR}/${prefix:-rosbag}$(date +'_%Y-%m-%d-%H-%M-%S')"
 fi
 
-if [[ "${options}" == *"Set start delay"* ]]; then
-  start_delay=$(gum input --placeholder "Set start delay (s)..." || echo "0.0")
-  if ! [[ "${start_delay}" =~ ^[0-9]+(\.[0-9]+)?$ ]]; then
-    start_delay="0.0"
-  fi
-fi
-
-if [[ "${options}" == *"Set playback rate"* ]]; then
-  playback_rate=$(gum input --placeholder "Set playback rate (e.g. 0.5, 2.0)..." || echo "1.0")
-  if ! [[ "${playback_rate}" =~ ^[0-9]+(\.[0-9]+)?$ ]]; then
-    playback_rate="1.0"
+if [[ "${options}" == *"Set start offset"* ]]; then
+  start_offset=$(gum input --placeholder "Set start offset (s)..." || echo "0.0")
+  if ! [[ "${start_offset}" =~ ^[0-9]+(\.[0-9]+)?$ ]]; then
+    start_offset="0.0"
   fi
 fi
 
@@ -71,6 +64,13 @@ if [[ "${options}" == *"Set playback duration"* ]]; then
   playback_duration=$(gum input --placeholder "Set playback duration (s; -1 for full bag)..." || echo "-1.0")
   if ! [[ "${playback_duration}" =~ ^[0-9]+(\.[0-9]+)?$|^-1(\.0+)?$ ]]; then
     playback_duration="-1.0"
+  fi
+fi
+
+if [[ "${options}" == *"Set playback rate"* ]]; then
+  playback_rate=$(gum input --placeholder "Set playback rate (e.g. 0.5, 2.0)..." || echo "1.0")
+  if ! [[ "${playback_rate}" =~ ^[0-9]+(\.[0-9]+)?$ ]]; then
+    playback_rate="1.0"
   fi
 fi
 
@@ -95,9 +95,9 @@ if [[ -n ${record_bag_path} ]]; then
   launch_args+=("record_bag_path:=${record_bag_path}")
 fi
 launch_args+=(
-  "start_delay:=${start_delay}"
-  "playback_rate:=${playback_rate}"
+  "start_offset:=${start_offset}"
   "playback_duration:=${playback_duration}"
+  "playback_rate:=${playback_rate}"
   "start_paused:=${start_paused}"
   "loc_comparison:=${loc_comparison}"
   "hitl_mode:=${hitl_mode}"

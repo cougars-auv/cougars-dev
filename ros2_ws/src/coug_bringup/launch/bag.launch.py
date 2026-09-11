@@ -66,9 +66,9 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
     agent_list_config = LaunchConfiguration("agent_list")
     play_bag_path = LaunchConfiguration("play_bag_path")
     record_bag_path = LaunchConfiguration("record_bag_path")
-    start_delay = LaunchConfiguration("start_delay")
-    playback_rate = LaunchConfiguration("playback_rate")
+    start_offset = LaunchConfiguration("start_offset")
     playback_duration = LaunchConfiguration("playback_duration")
+    playback_rate = LaunchConfiguration("playback_rate")
     start_paused = LaunchConfiguration("start_paused")
     loc_comparison = LaunchConfiguration("loc_comparison")
     hitl_mode = LaunchConfiguration("hitl_mode")
@@ -83,7 +83,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
     coug_bringup_dir = get_package_share_directory("coug_bringup")
     coug_bringup_launch_dir = os.path.join(coug_bringup_dir, "launch")
 
-    actions = []
+    actions: list[Action] = []
 
     record_process = None
 
@@ -132,14 +132,14 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                 "bag",
                 "play",
                 play_bag_path_str,
-                *start_paused_args,
                 "--clock",
-                "--rate",
-                playback_rate,
+                "--start-offset",
+                start_offset,
                 "--playback-duration",
                 playback_duration,
-                "--start-offset",
-                start_delay,
+                "--rate",
+                playback_rate,
+                *start_paused_args,
                 "--remap",
                 # FROST Lab BlueROV2 bags
                 "/tf:=/tf_discard",
@@ -291,16 +291,16 @@ def generate_launch_description() -> LaunchDescription:
                 default_value="",
             ),
             DeclareLaunchArgument(
-                "start_delay",
+                "start_offset",
                 default_value="0.0",
-            ),
-            DeclareLaunchArgument(
-                "playback_rate",
-                default_value="1.0",
             ),
             DeclareLaunchArgument(
                 "playback_duration",
                 default_value="-1.0",
+            ),
+            DeclareLaunchArgument(
+                "playback_rate",
+                default_value="1.0",
             ),
             DeclareLaunchArgument(
                 "start_paused",

@@ -24,22 +24,24 @@ scenario=$(basename -a "${CONFIG_DIR}"/holoocean/*.json | sed 's/.json$//' | sor
 # --- Options ---
 options=$(gum choose --no-limit --header "Select options:" \
   "Record rosbag" \
-  "Localization comparison" \
   "Disable sensor noise" \
-  "Enable voxblox mapping" \
-  "Enable shared voxblox mapping" \
+  "Localization comparison" \
   "Specify lead agent" \
   "Acomms simulation" \
+  "Unknown initial poses" \
+  "Enable voxblox mapping" \
+  "Enable shared voxblox mapping" \
   "HITL mode") || exit 0
 
 record_bag_path=""
-loc_comparison="false"
 add_noise="true"
-enable_mapping="false"
-enable_shared_mapping="false"
+loc_comparison="false"
 lead_agent=""
 enable_direct_comms="true"
 enable_acoustic_comms="true"
+use_spawn_pose="true"
+enable_mapping="false"
+enable_shared_mapping="false"
 hitl_mode="false"
 
 if [[ "${options}" == *"Record rosbag"* ]]; then
@@ -47,20 +49,12 @@ if [[ "${options}" == *"Record rosbag"* ]]; then
   record_bag_path="${BAGS_DIR}/${prefix:-rosbag}$(date +'_%Y-%m-%d-%H-%M-%S')"
 fi
 
-if [[ "${options}" == *"Localization comparison"* ]]; then
-  loc_comparison="true"
-fi
-
 if [[ "${options}" == *"Disable sensor noise"* ]]; then
   add_noise="false"
 fi
 
-if [[ "${options}" == *"Enable voxblox mapping"* ]]; then
-  enable_mapping="true"
-fi
-
-if [[ "${options}" == *"Enable shared voxblox mapping"* ]]; then
-  enable_shared_mapping="true"
+if [[ "${options}" == *"Localization comparison"* ]]; then
+  loc_comparison="true"
 fi
 
 if [[ "${options}" == *"Specify lead agent"* ]]; then
@@ -73,6 +67,18 @@ if [[ "${options}" == *"Acomms simulation"* ]]; then
   enable_direct_comms="false"
 fi
 
+if [[ "${options}" == *"Unknown initial poses"* ]]; then
+  use_spawn_pose="false"
+fi
+
+if [[ "${options}" == *"Enable voxblox mapping"* ]]; then
+  enable_mapping="true"
+fi
+
+if [[ "${options}" == *"Enable shared voxblox mapping"* ]]; then
+  enable_shared_mapping="true"
+fi
+
 if [[ "${options}" == *"HITL mode"* ]]; then
   hitl_mode="true"
 fi
@@ -81,21 +87,22 @@ fi
 launch_args=(
   "scenario:=${scenario}"
 )
-if [[ -n ${lead_agent} ]]; then
-  launch_args+=("lead_agent:=${lead_agent}")
-fi
 if [[ -n ${record_bag_path} ]]; then
   launch_args+=("record_bag_path:=${record_bag_path}")
 fi
 launch_args+=(
-  "loc_comparison:=${loc_comparison}"
   "add_noise:=${add_noise}"
-  "enable_mapping:=${enable_mapping}"
-  "enable_shared_mapping:=${enable_shared_mapping}"
+  "loc_comparison:=${loc_comparison}"
 )
+if [[ -n ${lead_agent} ]]; then
+  launch_args+=("lead_agent:=${lead_agent}")
+fi
 launch_args+=(
   "enable_direct_comms:=${enable_direct_comms}"
   "enable_acoustic_comms:=${enable_acoustic_comms}"
+  "use_spawn_pose:=${use_spawn_pose}"
+  "enable_mapping:=${enable_mapping}"
+  "enable_shared_mapping:=${enable_shared_mapping}"
   "hitl_mode:=${hitl_mode}"
 )
 
