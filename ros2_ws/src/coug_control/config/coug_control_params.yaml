@@ -1,0 +1,6 @@
+/**:
+  hsd_mode_converter_node:
+    ros__parameters:
+      hsd_topic: "cmd_hsd_helm"
+      output_hsd_topic: "cmd_hsd"
+      beams_topic: "dvl/beams"

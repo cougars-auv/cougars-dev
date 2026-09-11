@@ -1,0 +1,21 @@
+hsd_mode_converter_node:
+  hsd_topic:
+    type: string
+    default_value: "cmd_hsd_helm"
+    validation:
+      not_empty<>: []
+  output_hsd_topic:
+    type: string
+    default_value: "cmd_hsd"
+    validation:
+      not_empty<>: []
+  beams_topic:
+    type: string
+    default_value: "dvl/beams"
+    validation:
+      not_empty<>: []
+  map_frame:
+    type: string
+    default_value: "map"
+    validation:
+      not_empty<>: []

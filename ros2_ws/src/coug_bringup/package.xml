@@ -10,6 +10,7 @@
   <exec_depend>ament_index_python</exec_depend>
   <exec_depend>coug_belief_mppi</exec_depend>
   <exec_depend>coug_comms</exec_depend>
+  <exec_depend>coug_control</exec_depend>
   <exec_depend>coug_description</exec_depend>
   <exec_depend>coug_fg</exec_depend>
   <exec_depend>coug_helm</exec_depend>

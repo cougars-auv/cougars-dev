@@ -57,6 +57,8 @@ def generate_launch_description() -> LaunchDescription:
     coug_des_launch_dir = os.path.join(coug_des_dir, "launch")
     coug_comms_dir = get_package_share_directory("coug_comms")
     coug_comms_launch_dir = os.path.join(coug_comms_dir, "launch")
+    coug_control_dir = get_package_share_directory("coug_control")
+    coug_control_launch_dir = os.path.join(coug_control_dir, "launch")
     coug_fg_dir = get_package_share_directory("coug_fg")
     coug_fg_launch_dir = os.path.join(coug_fg_dir, "launch")
     coug_helm_dir = get_package_share_directory("coug_helm")
@@ -110,6 +112,27 @@ def generate_launch_description() -> LaunchDescription:
 
     coug_helm_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(coug_helm_launch_dir, "coug_helm.launch.py")),
+        launch_arguments={
+            "use_sim_time": use_sim_time,
+            "agent_ns": agent_ns,
+        }.items(),
+        condition=IfCondition(
+            NotSubstitution(
+                OrSubstitution(
+                    EqualsSubstitution(agent_ns, "blue1sim"),
+                    OrSubstitution(
+                        EqualsSubstitution(agent_ns, "blue2sim"),
+                        EqualsSubstitution(agent_ns, "wamv1sim"),
+                    ),
+                )
+            )
+        ),
+    )
+
+    coug_control_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(coug_control_launch_dir, "coug_control.launch.py")
+        ),
         launch_arguments={
             "use_sim_time": use_sim_time,
             "agent_ns": agent_ns,
@@ -212,6 +235,7 @@ def generate_launch_description() -> LaunchDescription:
                     coug_fg_launch,
                     coug_fg_ekf_launch,
                     coug_helm_launch,
+                    coug_control_launch,
                     coug_belief_mppi_launch,
                     coug_visual_dvl_launch,
                 ]

@@ -37,7 +37,7 @@
       waypoint_topic: "waypoints"
       odom_topic: "odometry/global"
       beams_topic: "dvl/beams"
-      hsd_topic: "cmd_hsd"
+      hsd_topic: "cmd_hsd_helm"
 
       start_service: "start"
       stop_service: "stop"
