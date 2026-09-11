@@ -7,6 +7,10 @@ repositories:
     type: git
     url: git@github.com:cougars-auv/coug_comms.git
     version: main
+  coug_control:
+    type: git
+    url: git@github.com:cougars-auv/coug_control.git
+    version: main
   coug_description:
     type: git
     url: git@github.com:cougars-auv/coug_description.git
