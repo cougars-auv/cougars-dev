@@ -39,7 +39,7 @@ from launch.events import matches_action
 from launch.events.process import SignalProcess
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.logging import launch_config
-from launch.substitutions import EqualsSubstitution, LaunchConfiguration, TextSubstitution
+from launch.substitutions import EqualsSubstitution, LaunchConfiguration
 from launch_ros.actions import Node
 
 
@@ -228,7 +228,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
             launch_arguments={
                 "use_sim_time": use_sim_time,
                 "agent_list": agent_list_config,
-                "record_bag_path": TextSubstitution(text=""),
+                "record_bag_path": "",
             }.items(),
         )
     )

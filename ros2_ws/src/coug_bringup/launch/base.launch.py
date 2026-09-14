@@ -30,6 +30,7 @@ from launch.actions import (
     OpaqueFunction,
     SetEnvironmentVariable,
 )
+from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.logging import launch_config
 from launch.substitutions import LaunchConfiguration
@@ -112,6 +113,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
     record_bag_path = LaunchConfiguration("record_bag_path")
     enable_direct_comms = LaunchConfiguration("enable_direct_comms")
     enable_acoustic_comms = LaunchConfiguration("enable_acoustic_comms")
+    enable_base_station = LaunchConfiguration("enable_base_station")
 
     agent_list_str = agent_list_config.perform(context)
     record_bag_path_str = record_bag_path.perform(context)
@@ -187,11 +189,12 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
     )
 
     base_station_group = GroupAction(
+        condition=IfCondition(enable_base_station),
         actions=[
             PushRosNamespace("base_station"),
             coug_comms_base_launch,
             coug_fg_base_launch,
-        ]
+        ],
     )
 
     actions = [
@@ -252,6 +255,10 @@ def generate_launch_description() -> LaunchDescription:
             ),
             DeclareLaunchArgument(
                 "enable_acoustic_comms",
+                default_value="true",
+            ),
+            DeclareLaunchArgument(
+                "enable_base_station",
                 default_value="true",
             ),
             OpaqueFunction(function=launch_setup),

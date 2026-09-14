@@ -35,7 +35,6 @@ from launch.substitutions import (
     LaunchConfiguration,
     OrSubstitution,
     PathJoinSubstitution,
-    TextSubstitution,
 )
 from launch_ros.actions import ComposableNodeContainer, Node, PushRosNamespace
 from launch_ros.descriptions import ComposableNode
@@ -89,7 +88,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
             PythonLaunchDescriptionSource(os.path.join(coug_bringup_launch_dir, "base.launch.py")),
             launch_arguments={
                 "use_sim_time": use_sim_time,
-                "agent_list": TextSubstitution(text=agent_list_str),
+                "agent_list": agent_list_str,
                 "lead_agent": lead_agent,
                 "record_bag_path": record_bag_path,
                 "enable_direct_comms": enable_direct_comms,
