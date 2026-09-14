@@ -4,7 +4,7 @@
   <name>coug_bringup</name>
   <version>0.0.0</version>
   <description>Project-wide launch configurations and bag recording.</description>
-  <maintainer email="snelsond@byu.edu">snelsondurrant</maintainer>
+  <maintainer email="snelsond@byu.edu">Nelson Durrant</maintainer>
   <license>Apache-2.0</license>
 
   <exec_depend>ament_index_python</exec_depend>
