@@ -7,6 +7,10 @@
     ros__parameters:
       multiagent_namespaces: ["coug1sim", "coug3sim"]
 
+      # priors:
+      #   parameter_priors:
+      #     initial_position: [0.0, 20.0, 0.0]
+
   bt_helm_node:
     ros__parameters:
       publish_groot2: true
