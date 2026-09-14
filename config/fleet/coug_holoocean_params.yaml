@@ -12,6 +12,7 @@
     ros__parameters:
       # --- Node Settings ---
       sync_slop_sec: 0.05 # [s] Max stamp difference to sync the depth, info and color messages.
+      stamp_offset_sec: 0.2 # [s] Render age at handover, ~TicksPerCapture / ticks_per_sec.
       min_range: 0.2 # [m] Depth readings below this are marked invalid (NaN).
       max_range: 20.0 # [m] Depth readings above this are marked invalid (NaN).
 

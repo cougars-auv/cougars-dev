@@ -6,9 +6,9 @@
       "z": 3.0,
       "mode": 1,
       "speed_rpm": 750.0,
-      "capture_radius": 1.0,
+      "capture_radius": 1.5,
       "capture_radius_z": 3.0,
-      "slip_radius": 2.0,
+      "slip_radius": 3.0,
       "slip_radius_z": 6.0
     },
     {
@@ -17,9 +17,9 @@
       "z": 3.0,
       "mode": 1,
       "speed_rpm": 750.0,
-      "capture_radius": 1.0,
+      "capture_radius": 1.5,
       "capture_radius_z": 3.0,
-      "slip_radius": 2.0,
+      "slip_radius": 3.0,
       "slip_radius_z": 6.0
     },
     {
@@ -28,9 +28,9 @@
       "z": 3.0,
       "mode": 1,
       "speed_rpm": 750.0,
-      "capture_radius": 1.0,
+      "capture_radius": 1.5,
       "capture_radius_z": 3.0,
-      "slip_radius": 2.0,
+      "slip_radius": 3.0,
       "slip_radius_z": 6.0
     },
     {
@@ -39,9 +39,9 @@
       "z": 3.0,
       "mode": 1,
       "speed_rpm": 750.0,
-      "capture_radius": 1.0,
+      "capture_radius": 1.5,
       "capture_radius_z": 3.0,
-      "slip_radius": 2.0,
+      "slip_radius": 3.0,
       "slip_radius_z": 6.0
     },
     {
@@ -50,9 +50,9 @@
       "z": 3.0,
       "mode": 1,
       "speed_rpm": 750.0,
-      "capture_radius": 1.0,
+      "capture_radius": 1.5,
       "capture_radius_z": 3.0,
-      "slip_radius": 2.0,
+      "slip_radius": 3.0,
       "slip_radius_z": 6.0
     },
     {
@@ -61,9 +61,9 @@
       "z": 3.0,
       "mode": 1,
       "speed_rpm": 750.0,
-      "capture_radius": 1.0,
+      "capture_radius": 1.5,
       "capture_radius_z": 3.0,
-      "slip_radius": 2.0,
+      "slip_radius": 3.0,
       "slip_radius_z": 6.0
     },
     {
@@ -72,9 +72,9 @@
       "z": 3.0,
       "mode": 1,
       "speed_rpm": 750.0,
-      "capture_radius": 1.0,
+      "capture_radius": 1.5,
       "capture_radius_z": 3.0,
-      "slip_radius": 2.0,
+      "slip_radius": 3.0,
       "slip_radius_z": 6.0
     },
     {
@@ -83,9 +83,9 @@
       "z": 3.0,
       "mode": 1,
       "speed_rpm": 750.0,
-      "capture_radius": 1.0,
+      "capture_radius": 1.5,
       "capture_radius_z": 3.0,
-      "slip_radius": 2.0,
+      "slip_radius": 3.0,
       "slip_radius_z": 6.0
     },
     {
@@ -94,9 +94,9 @@
       "z": 3.0,
       "mode": 1,
       "speed_rpm": 750.0,
-      "capture_radius": 1.0,
+      "capture_radius": 1.5,
       "capture_radius_z": 3.0,
-      "slip_radius": 2.0,
+      "slip_radius": 3.0,
       "slip_radius_z": 6.0
     },
     {
@@ -105,9 +105,9 @@
       "z": 3.0,
       "mode": 1,
       "speed_rpm": 750.0,
-      "capture_radius": 1.0,
+      "capture_radius": 1.5,
       "capture_radius_z": 3.0,
-      "slip_radius": 2.0,
+      "slip_radius": 3.0,
       "slip_radius_z": 6.0
     },
     {
@@ -116,9 +116,9 @@
       "z": 3.0,
       "mode": 1,
       "speed_rpm": 750.0,
-      "capture_radius": 1.0,
+      "capture_radius": 1.5,
       "capture_radius_z": 3.0,
-      "slip_radius": 2.0,
+      "slip_radius": 3.0,
       "slip_radius_z": 6.0
     }
   ]
