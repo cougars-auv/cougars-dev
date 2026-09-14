@@ -325,7 +325,6 @@
 
       fom_valid_threshold: 0.01 # [m/s] FOM below this is accepted even if the DVL flags the velocity invalid.
       # TURTLMap-based FOM covariance calculation
-      use_fom_covariance: false
       fom_covariance_scale: 4.0 # Scales the FOM into a velocity variance.
 
       override_timestamp: false # Restamp with ROS receive time if the A50 clock isn't synced.
@@ -345,6 +344,7 @@
       # --- ROS Topics and Frames ---
       input_topic: "dvl/data"
       twist_output_topic: "dvl/twist"
+      twist_fom_output_topic: "dvl/twist_fom"
       beams_output_topic: "dvl/beams"
 
       beam0_range_topic: "dvl/beam0/range"
