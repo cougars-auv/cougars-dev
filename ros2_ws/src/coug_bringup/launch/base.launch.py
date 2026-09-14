@@ -113,7 +113,8 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
     record_bag_path = LaunchConfiguration("record_bag_path")
     enable_direct_comms = LaunchConfiguration("enable_direct_comms")
     enable_acoustic_comms = LaunchConfiguration("enable_acoustic_comms")
-    enable_base_station = LaunchConfiguration("enable_base_station")
+    enable_base_processing = LaunchConfiguration("enable_base_processing")
+    initialize_origin = LaunchConfiguration("initialize_origin")
 
     agent_list_str = agent_list_config.perform(context)
     record_bag_path_str = record_bag_path.perform(context)
@@ -177,6 +178,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
         launch_arguments={
             "use_sim_time": use_sim_time,
             "agent_list": agent_list_config,
+            "initialize_origin": initialize_origin,
         }.items(),
     )
 
@@ -189,7 +191,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
     )
 
     base_station_group = GroupAction(
-        condition=IfCondition(enable_base_station),
+        condition=IfCondition(enable_base_processing),
         actions=[
             PushRosNamespace("base_station"),
             coug_comms_base_launch,
@@ -206,6 +208,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
     ]
 
     if record_bag_path_str:
+        sim_time_args = ["--use-sim-time"] if IfCondition(use_sim_time).evaluate(context) else []
         record_process = ExecuteProcess(
             cmd=[
                 "ros2",
@@ -218,6 +221,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                 "mcap",
                 "--exclude-topics",
                 "/clock",
+                *sim_time_args,
             ],
             sigterm_timeout="15",
             sigkill_timeout="15",
@@ -258,7 +262,11 @@ def generate_launch_description() -> LaunchDescription:
                 default_value="true",
             ),
             DeclareLaunchArgument(
-                "enable_base_station",
+                "enable_base_processing",
+                default_value="true",
+            ),
+            DeclareLaunchArgument(
+                "initialize_origin",
                 default_value="true",
             ),
             OpaqueFunction(function=launch_setup),

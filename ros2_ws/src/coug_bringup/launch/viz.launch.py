@@ -23,13 +23,10 @@ from launch.actions import (
     DeclareLaunchArgument,
     ExecuteProcess,
     IncludeLaunchDescription,
-    LogInfo,
     OpaqueFunction,
-    RegisterEventHandler,
     SetEnvironmentVariable,
 )
 from launch.conditions import IfCondition
-from launch.event_handlers import OnProcessExit
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.logging import launch_config
 from launch.substitutions import LaunchConfiguration
@@ -44,10 +41,9 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
     playback_rate = LaunchConfiguration("playback_rate")
     start_paused = LaunchConfiguration("start_paused")
 
-    agent_list_str = agent_list_config.perform(context)
     play_bag_path_str = play_bag_path.perform(context)
 
-    agent_list = yaml.safe_load(agent_list_str)
+    agent_list = yaml.safe_load(agent_list_config.perform(context))
 
     coug_bringup_dir = get_package_share_directory("coug_bringup")
     coug_bringup_launch_dir = os.path.join(coug_bringup_dir, "launch")
@@ -78,15 +74,6 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
         )
         actions.append(play_process)
 
-        actions.append(
-            RegisterEventHandler(
-                event_handler=OnProcessExit(
-                    target_action=play_process,
-                    on_exit=[LogInfo(msg="Bag playback finished, leaving the GUIs up.")],
-                )
-            )
-        )
-
     actions.append(
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(os.path.join(coug_bringup_launch_dir, "base.launch.py")),
@@ -94,7 +81,8 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                 "use_sim_time": use_sim_time,
                 "agent_list": agent_list_config,
                 "record_bag_path": "",
-                "enable_base_station": "false",
+                "enable_base_processing": "false",
+                "initialize_origin": "false",
             }.items(),
         )
     )

@@ -101,6 +101,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
 
     if record_bag_path_str:
         config_snapshot = snapshot_config()
+        sim_time_args = ["--use-sim-time"] if IfCondition(use_sim_time).evaluate(context) else []
         record_process = ExecuteProcess(
             cmd=[
                 "ros2",
@@ -113,6 +114,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                 "mcap",
                 "--exclude-topics",
                 "/clock",
+                *sim_time_args,
             ],
             sigterm_timeout="15",
             sigkill_timeout="15",
