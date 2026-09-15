@@ -17,12 +17,13 @@
       max_range: 20.0 # [m] Depth readings above this are marked invalid (NaN).
 
       # --- ROS Topics and Frames ---
+      color_input_topic: "RGBCameraDepth"
       depth_input_topic: "DepthCameraDepth"
       info_input_topic: "DepthCameraInfo"
-      color_input_topic: "RGBCameraDepth"
-      depth_output_topic: "camera/depth/image_rect_raw"
-      info_output_topic: "camera/rgb/camera_info"
       color_output_topic: "camera/rgb/image_rect_color"
+      color_info_output_topic: "camera/rgb/camera_info"
+      depth_output_topic: "camera/depth/depth_registered"
+      depth_info_output_topic: "camera/depth/camera_info"
 
   depth_converter_node:
     ros__parameters:

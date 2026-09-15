@@ -17,7 +17,6 @@
   <exec_depend>coug_interfaces</exec_depend>
   <exec_depend>coug_visual_dvl</exec_depend>
   <exec_depend>depth_image_proc</exec_depend>
-  <exec_depend>diagnostic_common_diagnostics</exec_depend>
   <exec_depend>diagnostic_msgs</exec_depend>
   <exec_depend>diagnostic_updater</exec_depend>
   <exec_depend>gps_tools</exec_depend>

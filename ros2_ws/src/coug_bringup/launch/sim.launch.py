@@ -145,10 +145,13 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                                 plugin="depth_image_proc::PointCloudXyzrgbNode",
                                 name="depth_camera_cloud_node",
                                 remappings=[
-                                    ("depth_registered/image_rect", "camera/depth/image_rect_raw"),
+                                    (
+                                        "depth_registered/image_rect",
+                                        "camera/depth/depth_registered",
+                                    ),
                                     ("rgb/image_rect_color", "camera/rgb/image_rect_color"),
                                     ("rgb/camera_info", "camera/rgb/camera_info"),
-                                    ("points", "camera/depth/points"),
+                                    ("points", "camera/point_cloud/cloud_registered"),
                                 ],
                                 parameters=[{"use_sim_time": use_sim_time}],
                             ),
@@ -160,7 +163,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                         name="voxblox_node",
                         condition=IfCondition(enable_mapping),
                         remappings=[
-                            ("pointcloud_1", "camera/depth/points"),
+                            ("pointcloud_1", "camera/point_cloud/cloud_registered"),
                         ],
                         parameters=[
                             {
@@ -182,7 +185,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
             name="shared_voxblox_node",
             condition=IfCondition(enable_shared_mapping),
             remappings=[
-                (f"pointcloud_{index}", f"/{agent_ns}/camera/depth/points")
+                (f"pointcloud_{index}", f"/{agent_ns}/camera/point_cloud/cloud_registered")
                 for index, agent_ns in enumerate(agent_list, start=1)
             ],
             parameters=[
@@ -273,33 +276,6 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                 "--child-frame-id",
                 "base_station",
             ],
-            parameters=[{"use_sim_time": use_sim_time}],
-        )
-    )
-
-    actions.append(
-        Node(
-            package="diagnostic_common_diagnostics",
-            executable="cpu_monitor.py",
-            name="cpu_monitor",
-            parameters=[{"use_sim_time": use_sim_time}],
-        )
-    )
-
-    actions.append(
-        Node(
-            package="diagnostic_common_diagnostics",
-            executable="hd_monitor.py",
-            name="hd_monitor",
-            parameters=[{"use_sim_time": use_sim_time}],
-        )
-    )
-
-    actions.append(
-        Node(
-            package="diagnostic_common_diagnostics",
-            executable="ram_monitor.py",
-            name="ram_monitor",
             parameters=[{"use_sim_time": use_sim_time}],
         )
     )
