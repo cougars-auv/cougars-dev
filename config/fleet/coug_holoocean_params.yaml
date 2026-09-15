@@ -20,9 +20,9 @@
       depth_input_topic: "DepthCameraDepth"
       info_input_topic: "DepthCameraInfo"
       color_input_topic: "RGBCameraDepth"
-      depth_output_topic: "depth/image_rect"
-      info_output_topic: "depth/camera_info"
-      color_output_topic: "depth/image_rect_color"
+      depth_output_topic: "camera/depth/image_rect_raw"
+      info_output_topic: "camera/rgb/camera_info"
+      color_output_topic: "camera/rgb/image_rect_color"
 
   depth_converter_node:
     ros__parameters:
