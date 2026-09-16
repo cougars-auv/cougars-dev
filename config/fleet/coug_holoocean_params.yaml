@@ -28,8 +28,7 @@
   depth_converter_node:
     ros__parameters:
       # --- Node Settings ---
-      # TE MS5837-02BA (Bar02): ±2 mbar (~2 cm H2O) accuracy over 0-60 °C.
-      # https://www.te.com/en/product-CAT-BLPS0059.html
+      # https://www.te.com/commerce/DocumentDelivery/DDEController?Action=srchrtrv&DocNm=MS5837-02BA01&DocType=DS&DocLang=English
       noise_sigma: 0.02 # [m] Depth sensor Z-position uncertainty sigma.
 
       # --- ROS Topics and Frames ---
@@ -39,7 +38,6 @@
   dvl_converter_node:
     ros__parameters:
       # --- Node Settings ---
-      # Water Linked DVL A50: 22.5° 4-beam Janus array (body sigma is 1.848x per-beam sigma).
       # https://waterlinked.com/dvl-a50
       beam_velocity_noise_sigma: 0.011 # [m/s] Per-beam radial velocity uncertainty sigma.
       range_noise_sigma: 0.1 # [m] Per-beam range uncertainty sigma.
@@ -56,10 +54,8 @@
   dvl_odom_converter_node:
     ros__parameters:
       # --- Node Settings ---
-      # Water Linked DVL A50: ±1.01% long-term accuracy (standard version).
       # https://waterlinked.com/dvl-a50
       noise_sigma_scale: 0.0101 # [m/m] Dead-reckoning position uncertainty sigma per meter traveled.
-      # Water Linked DVL A50 dead reckoning: 0.1-0.3°/min calibrated yaw drift.
       # https://docs.waterlinked.com/dvl/dead-reckoning/
       yaw_drift_sigma: 0.3 # [deg/min] Dead-reckoning yaw drift rate sigma.
 
@@ -82,8 +78,7 @@
       origin_longitude: -111.90721
       origin_altitude: 1412.0
 
-      # SBG Ellipse-N internal GNSS, RTK: 1 cm + 1 ppm horizontal position accuracy.
-      # https://www.sbg-systems.com/ins/ellipse-n/
+      # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/hardware-documentation/aiding-sensors
       noise_sigmas: [0.015, 0.015, 0.025] # [east, north, up] [m] GPS position uncertainty sigmas.
 
       # --- ROS Topics and Frames ---
@@ -101,17 +96,16 @@
     ros__parameters:
       # --- Node Settings ---
       sync_slop_sec: 0.05 # [s] Max stamp difference to sync the IMU and AHRS messages.
-      # SBG Ellipse-N noise densities scaled to discrete per-sample sigmas at 200 Hz
-      # (57 µg/√Hz -> 7.9e-3 m/s^2, 0.18 °/√h -> 7.4e-4 rad/s).
+      # 57 µg/√Hz -> 5.6e-4 m/s^2/√Hz * √200 Hz -> 7.9e-3 m/s^2
+      # 0.18 °/√h -> 3.0e-3 °/s/√Hz * √200 Hz -> 7.4e-4 rad/s
+      # https://github.com/SBG-Systems/sbg_ros2_driver/blob/3.4.0/config/sbg_device_uart_default.yaml
       # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/performance-specifications
       accel_noise_sigmas: [7.9e-3, 7.9e-3, 7.9e-3] # [m/s^2] Accelerometer measurement noise sigmas.
       gyro_noise_sigmas: [7.4e-4, 7.4e-4, 7.4e-4] # [rad/s] Gyroscope measurement noise sigmas.
-      # SBG Ellipse-N AHRS: 0.4° roll/pitch, 1.0° magnetic heading (typical dynamics).
       # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/performance-specifications
       ahrs_noise_sigmas: [0.00698, 0.00698, 0.01745] # [roll, pitch, yaw] [rad] AHRS orientation uncertainty sigmas.
-      # Derived from the SBG Ellipse-N in-run bias instabilities (14 µg accel, 7 °/h gyro).
-      # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/performance-specifications
       # Gauss-Markov fit K ≈ 2.3 * B / √tau_c at tau_c = 500 s.
+      # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/performance-specifications
       accel_bias_rw_sigmas: [1.4e-5, 1.4e-5, 1.4e-5] # [m/s^2/√s] Continuous-time accel bias random walk spectral density sigmas.
       gyro_bias_rw_sigmas: [3.5e-6, 3.5e-6, 3.5e-6] # [rad/s/√s] Continuous-time gyro bias random walk spectral density sigmas.
 
@@ -127,7 +121,6 @@
       # IMPORTANT! This must match sbg_imu_mag_node's au_to_tesla.
       au_to_tesla: 5.0446e-05
 
-      # SBG Ellipse magnetometer: 3 mGauss RMS noise -> 3e-07 T.
       # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/hardware-documentation/aiding-sensors
       noise_sigmas: [3.0e-07, 3.0e-07, 3.0e-07] # [T] Magnetic field uncertainty sigmas.
       # No published SBG hard-iron spec; assumes ~20% of the local field magnitude.
@@ -147,11 +140,8 @@
       resp_timeout_sec: 4.0 # [s] How long to wait for a RESP before timing out.
       beacon_id: 1
 
-      # Blueprint Subsea SeaTrac X150 USBL: ±1° angular accuracy (typ. 2% of acoustic range).
       # https://www.blueprintsubsea.com/seatrac/seatrac-standard
       bearing_noise_sigmas: [0.01745, 0.01745] # [azimuth, elevation] [rad] Bearing uncertainty sigmas.
-      # Blueprint Subsea SeaTrac X150 USBL: ±0.1 m range accuracy (dependent on VOS accuracy).
-      # https://www.blueprintsubsea.com/seatrac/seatrac-standard
       range_noise_sigma: 0.1 # [m] Two-way time-of-flight range uncertainty sigma.
 
       # --- ROS Topics and Frames ---
@@ -165,8 +155,7 @@
   modem_depth_converter_node:
     ros__parameters:
       # --- Node Settings ---
-      # SeaTrac X150 depth telemetry resolution: 0.1 m (SeaTrac Developer Guide UM-140).
-      # https://www.blueprintsubsea.com/seatrac/support
+      # https://www.blueprintsubsea.com/downloads/seatrac/UM-140-D00221-13.pdf
       noise_sigma: 0.1 # [m] Depth sensor Z-position uncertainty sigma.
 
       # --- ROS Topics and Frames ---
@@ -177,17 +166,16 @@
     ros__parameters:
       # --- Node Settings ---
       sync_slop_sec: 0.05 # [s] Max stamp difference to sync the IMU and AHRS messages.
-      # The real modem_status arrives at 10 Hz (seatrac-ros2 sets STATUS_MODE_10HZ).
-      # No published SeaTrac accel/gyro specs; matches the SBG Ellipse-N noise densities scaled to discrete per-sample sigmas at 10 Hz.
+
+      # 57 µg/√Hz -> 5.6e-4 m/s^2/√Hz * √10 Hz -> 1.8e-3 m/s^2
+      # 0.18 °/√h -> 3.0e-3 °/s/√Hz * √10 Hz -> 1.7e-4 rad/s
       # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/performance-specifications
       accel_noise_sigmas: [1.8e-3, 1.8e-3, 1.8e-3] # [m/s^2] Accelerometer measurement noise sigmas.
       gyro_noise_sigmas: [1.7e-4, 1.7e-4, 1.7e-4] # [rad/s] Gyroscope measurement noise sigmas.
-      # Blueprint Subsea SeaTrac X150 AHRS: ±0.2° pitch/roll, ±1.0° yaw standard deviation.
       # https://www.blueprintsubsea.com/seatrac/seatrac-standard
       ahrs_noise_sigmas: [0.00349, 0.00349, 0.01745] # [roll, pitch, yaw] [rad] AHRS orientation uncertainty sigmas.
-      # Derived from the SBG Ellipse-N in-run bias instabilities (14 µg accel, 7 °/h gyro).
-      # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/performance-specifications
       # Gauss-Markov fit K ≈ 2.3 * B / √tau_c at tau_c = 500 s.
+      # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/performance-specifications
       accel_bias_rw_sigmas: [1.4e-5, 1.4e-5, 1.4e-5] # [m/s^2/√s] Continuous-time accel bias random walk spectral density sigmas.
       gyro_bias_rw_sigmas: [3.5e-6, 3.5e-6, 3.5e-6] # [rad/s/√s] Continuous-time gyro bias random walk spectral density sigmas.
 
@@ -214,8 +202,7 @@
       gravity: 9.81 # [m/s^2]
       atmospheric_pressure: 101325.0 # [Pa]
 
-      # TE MS5837-02BA (Bar02): ±2 mbar (~2 cm H2O) accuracy over 0-60 °C.
-      # https://www.te.com/en/product-CAT-BLPS0059.html
+      # https://www.te.com/commerce/DocumentDelivery/DDEController?Action=srchrtrv&DocNm=MS5837-02BA01&DocType=DS&DocLang=English
       noise_sigma: 195.61 # [Pa]
 
       # --- ROS Topics and Frames ---

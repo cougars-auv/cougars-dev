@@ -68,13 +68,11 @@
 
   agent_status_stager_node:
     ros__parameters:
-      # --- ROS Topics ---
       modem_send_topic: "modem_send"
       status_topic: "agent/status"
 
   base_status_extractor_node:
     ros__parameters:
-      # --- ROS Topics ---
       status_topic: "base/agent/status"
       odom_topic: "base/odometry/global"
       depth_topic: "base/seatrac/depth/odometry"
@@ -82,7 +80,6 @@
 
   agent_status_bundler_node:
     ros__parameters:
-      # --- ROS Topics and Frames ---
       status_topic: "agent/status"
       odom_topic: "odometry/global"
       depth_topic: "seatrac/depth/odometry"
