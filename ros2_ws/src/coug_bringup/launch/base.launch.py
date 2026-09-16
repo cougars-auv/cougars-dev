@@ -106,6 +106,7 @@ def create_rviz_config(agent_list: list[str]) -> str:
 def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Action]:
     use_sim_time = LaunchConfiguration("use_sim_time")
     agent_list_config = LaunchConfiguration("agent_list")
+    scenario_param_file = LaunchConfiguration("scenario_param_file")
     lead_agent = LaunchConfiguration("lead_agent")
     record_bag_path = LaunchConfiguration("record_bag_path")
     enable_direct_comms = LaunchConfiguration("enable_direct_comms")
@@ -135,6 +136,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
         launch_arguments={
             "use_sim_time": use_sim_time,
             "agent_list": agent_list_config,
+            "scenario_param_file": scenario_param_file,
             "lead_agent": lead_agent,
             "enable_direct_comms": enable_direct_comms,
             "enable_acoustic_comms": enable_acoustic_comms,
@@ -146,6 +148,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
         launch_arguments={
             "use_sim_time": use_sim_time,
             "agent_list": agent_list_config,
+            "scenario_param_file": scenario_param_file,
         }.items(),
     )
 
@@ -175,6 +178,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
         launch_arguments={
             "use_sim_time": use_sim_time,
             "agent_list": agent_list_config,
+            "scenario_param_file": scenario_param_file,
             "initialize_origin": initialize_origin,
         }.items(),
     )
@@ -184,6 +188,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
         launch_arguments={
             "use_sim_time": use_sim_time,
             "agent_list": agent_list_config,
+            "scenario_param_file": scenario_param_file,
         }.items(),
     )
 
@@ -241,6 +246,10 @@ def generate_launch_description() -> LaunchDescription:
             DeclareLaunchArgument(
                 "agent_list",
                 default_value="[auv0]",
+            ),
+            DeclareLaunchArgument(
+                "scenario_param_file",
+                default_value="",
             ),
             DeclareLaunchArgument(
                 "lead_agent",

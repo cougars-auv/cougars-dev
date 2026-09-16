@@ -3,6 +3,8 @@
     ros__parameters:
       scenario_file: "couguv_openwater.json"
       agents: ["rover1sim", "rover2sim"]
+      location: [0.0, 0.0, 0.0] # [x, y, z] [m]
+      rotation: [0.0, 0.0, 0.0] # [roll, pitch, yaw] [deg]
 
   bag_recorder_node:
     ros__parameters:

@@ -59,7 +59,7 @@ def load_launch_params(path: str, top_key: str) -> dict[str, Any]:
 
 def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Action]:
     use_sim_time = LaunchConfiguration("use_sim_time")
-    scenario = LaunchConfiguration("scenario")
+    scenario_param_file = LaunchConfiguration("scenario_param_file")
     record_bag_path = LaunchConfiguration("record_bag_path")
     add_noise = LaunchConfiguration("add_noise")
     loc_comparison = LaunchConfiguration("loc_comparison")
@@ -70,27 +70,27 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
     enable_mapping = LaunchConfiguration("enable_mapping")
     hitl_mode = LaunchConfiguration("hitl_mode")
 
-    scenario_str = scenario.perform(context)
+    scenario_param_file_str = scenario_param_file.perform(context)
 
     config_dir = os.environ["CONFIG_DIR"]
-    gazebo_param_file = os.path.join(config_dir, "gazebo", f"{scenario_str}_params.yaml")
-    use_gazebo = os.path.isfile(gazebo_param_file)
+    scenario_launch_params = load_launch_params(scenario_param_file_str, "/**")
+    use_gazebo = os.path.basename(os.path.dirname(scenario_param_file_str)) == "gazebo"
 
     base_station: dict[str, Any] = {}
     if use_gazebo:
-        world_launch_params = load_launch_params(gazebo_param_file, "/**")
-        poses = {
-            agent_ns: load_launch_params(gazebo_param_file, f"/{agent_ns}")
-            for agent_ns in world_launch_params.get("agents", [])
+        agent_poses = {
+            agent_ns: load_launch_params(scenario_param_file_str, f"/{agent_ns}")
+            for agent_ns in scenario_launch_params.get("agents", [])
         }
     else:
-        scenario_file = os.path.join(config_dir, "holoocean", f"{scenario_str}.json")
+        scenario_filename = scenario_launch_params["scenario_file"]
+        scenario_file = os.path.join(config_dir, "holoocean", scenario_filename)
         with open(scenario_file) as scenario_config:
             agents = json.load(scenario_config)["agents"]
-        poses = {agent["agent_name"]: agent for agent in agents}
-        base_station = poses.pop("base_station")
+        agent_poses = {agent["agent_name"]: agent for agent in agents}
+        base_station = agent_poses.pop("base_station")
 
-    agent_list = list(poses)
+    agent_list = list(agent_poses)
     agent_list_str = f"[{', '.join(agent_list)}]"
 
     coug_bringup_dir = get_package_share_directory("coug_bringup")
@@ -100,7 +100,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
     rover_gazebo_dir = get_package_share_directory("rover_gazebo")
     rover_gazebo_launch_dir = os.path.join(rover_gazebo_dir, "launch")
 
-    fleet_param_file = PathJoinSubstitution(
+    holoocean_fleet_param_file = PathJoinSubstitution(
         [EnvironmentVariable("CONFIG_DIR"), "fleet", "coug_holoocean_params.yaml"]
     )
 
@@ -112,6 +112,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
             launch_arguments={
                 "use_sim_time": use_sim_time,
                 "agent_list": agent_list_str,
+                "scenario_param_file": scenario_param_file,
                 "lead_agent": lead_agent,
                 "record_bag_path": record_bag_path,
                 "enable_direct_comms": enable_direct_comms,
@@ -127,16 +128,14 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                     os.path.join(rover_gazebo_launch_dir, "rover_gazebo_world.launch.py")
                 ),
                 launch_arguments={
-                    "use_sim_time": use_sim_time,
-                    "world": scenario_str,
-                    "agent_list": agent_list_str,
+                    "scenario_param_file": scenario_param_file,
                 }.items(),
             )
         )
 
     for agent_ns in agent_list:
-        position = str(as_meters(poses[agent_ns]["location"]))
-        orientation = str(as_radians(poses[agent_ns].get("rotation", [0, 0, 0])))
+        position = str(as_meters(agent_poses[agent_ns]["location"]))
+        orientation = str(as_radians(agent_poses[agent_ns].get("rotation", [0, 0, 0])))
         actions.append(
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(
@@ -145,6 +144,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                 launch_arguments={
                     "use_sim_time": use_sim_time,
                     "agent_ns": agent_ns,
+                    "scenario_param_file": scenario_param_file,
                     "lead_agent": lead_agent,
                     "loc_comparison": loc_comparison,
                     "initial_position": position if use_spawn_pose else "[0.0, 0.0, 0.0]",
@@ -155,30 +155,32 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
         )
 
         if use_gazebo:
-            bridge_launch = IncludeLaunchDescription(
+            sim_bridge_launch = IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(
                     os.path.join(rover_gazebo_launch_dir, "rover_gazebo_agent.launch.py")
                 ),
                 launch_arguments={
                     "use_sim_time": use_sim_time,
                     "agent_ns": agent_ns,
+                    "scenario_param_file": scenario_param_file,
                     "initial_position": position,
                     "initial_orientation": orientation,
                 }.items(),
             )
         else:
-            bridge_launch = IncludeLaunchDescription(
+            sim_bridge_launch = IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(
                     os.path.join(coug_holoocean_launch_dir, "coug_holoocean.launch.py")
                 ),
                 launch_arguments={
                     "use_sim_time": use_sim_time,
                     "agent_ns": agent_ns,
+                    "scenario_param_file": scenario_param_file,
                     "add_noise": add_noise,
                 }.items(),
             )
 
-        actions.append(GroupAction(actions=[PushRosNamespace(agent_ns), bridge_launch]))
+        actions.append(GroupAction(actions=[PushRosNamespace(agent_ns), sim_bridge_launch]))
 
         actions.append(
             Node(
@@ -226,7 +228,8 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                         executable="depth_converter",
                         name="modem_depth_converter_node",
                         parameters=[
-                            fleet_param_file,
+                            holoocean_fleet_param_file,
+                            scenario_param_file,
                             {
                                 "use_sim_time": use_sim_time,
                                 "depth_frame": "base_station",
@@ -240,7 +243,8 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                         executable="modem_converter",
                         name="modem_converter_node",
                         parameters=[
-                            fleet_param_file,
+                            holoocean_fleet_param_file,
+                            scenario_param_file,
                             {
                                 "use_sim_time": use_sim_time,
                                 "beacon_id": 15,
@@ -294,8 +298,14 @@ def generate_launch_description() -> LaunchDescription:
                 default_value="true",
             ),
             DeclareLaunchArgument(
-                "scenario",
-                default_value="couguv_openwater",
+                "scenario_param_file",
+                default_value=PathJoinSubstitution(
+                    [
+                        EnvironmentVariable("CONFIG_DIR"),
+                        "holoocean",
+                        "couguv_openwater_params.yaml",
+                    ]
+                ),
             ),
             DeclareLaunchArgument(
                 "record_bag_path",

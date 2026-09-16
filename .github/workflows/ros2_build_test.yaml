@@ -47,7 +47,6 @@ jobs:
               - ".github/workflows/ros2_build_test.yaml"
               - "ros2_ws/**"
               - "*.repos"
-              - "**/package.xml"
               - ".clang-tidy"
 
   build-test:

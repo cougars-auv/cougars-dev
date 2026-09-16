@@ -46,6 +46,7 @@ def generate_launch_description() -> LaunchDescription:
     loc_comparison = LaunchConfiguration("loc_comparison")
     initial_position = LaunchConfiguration("initial_position")
     initial_orientation = LaunchConfiguration("initial_orientation")
+    scenario_param_file = LaunchConfiguration("scenario_param_file")
 
     fleet_param_file = PathJoinSubstitution(
         [
@@ -77,6 +78,7 @@ def generate_launch_description() -> LaunchDescription:
         launch_arguments={
             "use_sim_time": use_sim_time,
             "agent_ns": agent_ns,
+            "scenario_param_file": scenario_param_file,
         }.items(),
     )
 
@@ -87,6 +89,7 @@ def generate_launch_description() -> LaunchDescription:
         launch_arguments={
             "use_sim_time": use_sim_time,
             "agent_ns": agent_ns,
+            "scenario_param_file": scenario_param_file,
         }.items(),
     )
 
@@ -95,12 +98,13 @@ def generate_launch_description() -> LaunchDescription:
         launch_arguments={
             "use_sim_time": use_sim_time,
             "agent_ns": agent_ns,
+            "scenario_param_file": scenario_param_file,
             "lead_agent": lead_agent,
             "loc_comparison": loc_comparison,
             "initial_position": initial_position,
             "initial_orientation": initial_orientation,
         }.items(),
-        condition=UnlessCondition(is_agent(agent_ns, "coug2", "rover")),
+        condition=UnlessCondition(is_agent(agent_ns, "coug2", "rover1sim", "rover2sim")),
     )
 
     coug_fg_dvl_ekf_launch = IncludeLaunchDescription(
@@ -110,6 +114,7 @@ def generate_launch_description() -> LaunchDescription:
         launch_arguments={
             "use_sim_time": use_sim_time,
             "agent_ns": agent_ns,
+            "scenario_param_file": scenario_param_file,
         }.items(),
         condition=IfCondition(EqualsSubstitution(agent_ns, "coug2")),
     )
@@ -121,8 +126,9 @@ def generate_launch_description() -> LaunchDescription:
         launch_arguments={
             "use_sim_time": use_sim_time,
             "agent_ns": agent_ns,
+            "scenario_param_file": scenario_param_file,
         }.items(),
-        condition=IfCondition(EqualsSubstitution(agent_ns, "rover")),
+        condition=IfCondition(is_agent(agent_ns, "rover1sim", "rover2sim")),
     )
 
     coug_helm_launch = IncludeLaunchDescription(
@@ -130,8 +136,11 @@ def generate_launch_description() -> LaunchDescription:
         launch_arguments={
             "use_sim_time": use_sim_time,
             "agent_ns": agent_ns,
+            "scenario_param_file": scenario_param_file,
         }.items(),
-        condition=UnlessCondition(is_agent(agent_ns, "blue1sim", "wamv1sim", "rover")),
+        condition=UnlessCondition(
+            is_agent(agent_ns, "blue1sim", "wamv1sim", "rover1sim", "rover2sim")
+        ),
     )
 
     coug_control_launch = IncludeLaunchDescription(
@@ -141,8 +150,11 @@ def generate_launch_description() -> LaunchDescription:
         launch_arguments={
             "use_sim_time": use_sim_time,
             "agent_ns": agent_ns,
+            "scenario_param_file": scenario_param_file,
         }.items(),
-        condition=UnlessCondition(is_agent(agent_ns, "blue1sim", "wamv1sim", "rover")),
+        condition=UnlessCondition(
+            is_agent(agent_ns, "blue1sim", "wamv1sim", "rover1sim", "rover2sim")
+        ),
     )
 
     coug_belief_mppi_launch = IncludeLaunchDescription(
@@ -152,8 +164,9 @@ def generate_launch_description() -> LaunchDescription:
         launch_arguments={
             "use_sim_time": use_sim_time,
             "agent_ns": agent_ns,
+            "scenario_param_file": scenario_param_file,
         }.items(),
-        condition=IfCondition(is_agent(agent_ns, "blue1sim", "wamv1sim", "rover")),
+        condition=IfCondition(is_agent(agent_ns, "blue1sim", "wamv1sim", "rover1sim", "rover2sim")),
     )
 
     coug_visual_dvl_launch = IncludeLaunchDescription(
@@ -163,6 +176,7 @@ def generate_launch_description() -> LaunchDescription:
         launch_arguments={
             "use_sim_time": use_sim_time,
             "agent_ns": agent_ns,
+            "scenario_param_file": scenario_param_file,
         }.items(),
         condition=IfCondition(EqualsSubstitution(agent_ns, "blue1sim")),
     )
@@ -191,6 +205,10 @@ def generate_launch_description() -> LaunchDescription:
             DeclareLaunchArgument(
                 "agent_ns",
                 default_value="auv0",
+            ),
+            DeclareLaunchArgument(
+                "scenario_param_file",
+                default_value="",
             ),
             DeclareLaunchArgument(
                 "lead_agent",

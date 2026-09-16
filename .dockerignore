@@ -7,6 +7,7 @@ ros2_ws/log/
 **/assets/
 **/demo/
 **/hawaii_data/
+**/models/
 
 **/.git/
 **/__pycache__/
