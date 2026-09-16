@@ -1,0 +1,41 @@
+- ros_topic_name: "cmd_vel_out"
+  gz_topic_name: "cmd_vel"
+  ros_type_name: "geometry_msgs/msg/TwistStamped"
+  gz_type_name: "gz.msgs.Twist"
+  direction: ROS_TO_GZ
+
+- ros_topic_name: "joint_states"
+  gz_topic_name: "joint_states"
+  ros_type_name: "sensor_msgs/msg/JointState"
+  gz_type_name: "gz.msgs.Model"
+  direction: GZ_TO_ROS
+
+- ros_topic_name: "camera/odom"
+  gz_topic_name: "camera/odom_with_covariance"
+  ros_type_name: "nav_msgs/msg/Odometry"
+  gz_type_name: "gz.msgs.OdometryWithCovariance"
+  direction: GZ_TO_ROS
+
+- ros_topic_name: "gps/fix_raw"
+  gz_topic_name: "gps/fix"
+  ros_type_name: "sensor_msgs/msg/NavSatFix"
+  gz_type_name: "gz.msgs.NavSat"
+  direction: GZ_TO_ROS
+
+- ros_topic_name: "camera/imu/data_raw"
+  gz_topic_name: "camera/imu/data_raw"
+  ros_type_name: "sensor_msgs/msg/Imu"
+  gz_type_name: "gz.msgs.IMU"
+  direction: GZ_TO_ROS
+
+- ros_topic_name: "camera/imu/mag"
+  gz_topic_name: "camera/imu/mag"
+  ros_type_name: "sensor_msgs/msg/MagneticField"
+  gz_type_name: "gz.msgs.Magnetometer"
+  direction: GZ_TO_ROS
+
+- ros_topic_name: "camera/point_cloud/cloud_registered"
+  gz_topic_name: "camera/depth/points"
+  ros_type_name: "sensor_msgs/msg/PointCloud2"
+  gz_type_name: "gz.msgs.PointCloudPacked"
+  direction: GZ_TO_ROS

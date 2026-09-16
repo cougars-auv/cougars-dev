@@ -16,7 +16,7 @@
 set -e
 
 if [[ -z $1 ]]; then
-  echo "Usage: ./connect.sh <agent-ns>"
+  echo "Usage: ./connect.sh <agent-ns>" >&2
   exit 1
 fi
 

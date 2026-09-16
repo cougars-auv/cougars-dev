@@ -5,10 +5,20 @@
 
   sim_launch:
     ros__parameters:
-      agents: ["rover"]
+      agents: ["rover1sim", "rover2sim"]
 
-/rover:
+  imu_filter_madgwick:
+    ros__parameters:
+      declination: 0.227921 # [rad] WMMHR-2025 (38.1615 N, 122.4546 W, 2026-09-16)
+
+/rover1sim:
   sim_launch:
     ros__parameters:
       location: [2.0, -2.5, 1.0] # [x, y, z] [m]
+      rotation: [0.0, 0.0, 0.0] # [roll, pitch, yaw] [deg]
+
+/rover2sim:
+  sim_launch:
+    ros__parameters:
+      location: [-1.0, -2.5, 1.0] # [x, y, z] [m]
       rotation: [0.0, 0.0, 0.0] # [roll, pitch, yaw] [deg]

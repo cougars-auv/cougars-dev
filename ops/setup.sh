@@ -15,20 +15,8 @@
 
 set -e
 
-use_sim_time="false"
-
-args=()
-for arg in "$@"; do
-  if [[ ${arg} == --hitl ]]; then
-    use_sim_time="true"
-  else
-    args+=("${arg}")
-  fi
-done
-set -- "${args[@]}"
-
 if [[ -z $1 || -z $2 ]]; then
-  echo "Usage: ./setup.sh <agent-ns> <base-station-ip> [--hitl]"
+  echo "Usage: ./setup.sh <agent-ns> <base-station-ip> [--hitl]" >&2
   exit 1
 fi
 
@@ -36,9 +24,11 @@ cd ~/cougars-dev
 
 agent_ns="$1"
 ip="$2"
+use_sim_time="false"
+[[ $3 == --hitl ]] && use_sim_time="true"
 
 if [[ ! -f "config/${agent_ns}_params.yaml" ]]; then
-  echo "Error: unknown agent '${agent_ns}'"
+  echo "Error: unknown agent '${agent_ns}'" >&2
   exit 1
 fi
 

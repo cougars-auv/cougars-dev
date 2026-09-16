@@ -1,3 +1,8 @@
+/**:
+  sim_launch:
+    ros__parameters:
+      scenario_file: "couguv_plane_survey_openwater.json"
+
 holoocean_node:
   ros__parameters:
     publish_commands: true

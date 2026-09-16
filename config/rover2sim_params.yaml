@@ -1,0 +1,191 @@
+/rover2sim:
+  coug_comms_base_launch:
+    ros__parameters:
+      beacon_id: 2
+
+  coug_description_launch:
+    ros__parameters:
+      urdf_file: "rover.urdf.xacro"
+
+  rover_gazebo_agent_launch:
+    ros__parameters:
+      urdf_file: "rover.gazebo.xacro"
+
+  ekf_filter_node_odom:
+    ros__parameters:
+      publish_tf: true
+      two_d_mode: true
+
+      imu0: "camera/imu/data_raw"
+      # IMPORTANT! Handle non-trivial IMU rotation for robot_localization gravity mishandling bug.
+      imu0_config: [
+          false,
+          false,
+          false, # X, Y, Z
+          false,
+          false,
+          false, # Roll, Pitch, Yaw
+          false,
+          false,
+          false, # Vx, Vy, Vz
+          true,
+          true,
+          true, # Vroll, Vpitch, Vyaw
+          false,
+          false,
+          false, # Ax, Ay, Az
+        ]
+
+      odom0: "camera/odom"
+      odom0_config: [
+          true,
+          true,
+          false, # X, Y, Z
+          false,
+          false,
+          true, # Roll, Pitch, Yaw
+          false,
+          false,
+          false, # Vx, Vy, Vz
+          false,
+          false,
+          false, # Vroll, Vpitch, Vyaw
+          false,
+          false,
+          false, # Ax, Ay, Az
+        ]
+      odom0_queue_size: 10
+      odom0_differential: false
+      odom0_relative: false
+
+  ekf_filter_node_map:
+    ros__parameters:
+      publish_tf: true
+      two_d_mode: true
+
+      imu0: "camera/imu/data_raw"
+      # IMPORTANT! Handle non-trivial IMU rotation for robot_localization gravity mishandling bug.
+      imu0_config: [
+          false,
+          false,
+          false, # X, Y, Z
+          false,
+          false,
+          false, # Roll, Pitch, Yaw
+          false,
+          false,
+          false, # Vx, Vy, Vz
+          true,
+          true,
+          true, # Vroll, Vpitch, Vyaw
+          false,
+          false,
+          false, # Ax, Ay, Az
+        ]
+
+      imu1: "camera/imu/data"
+
+      odom2: "camera/odom"
+      odom2_config: [
+          true,
+          true,
+          false, # X, Y, Z
+          false,
+          false,
+          true, # Roll, Pitch, Yaw
+          false,
+          false,
+          false, # Vx, Vy, Vz
+          false,
+          false,
+          false, # Vroll, Vpitch, Vyaw
+          false,
+          false,
+          false, # Ax, Ay, Az
+        ]
+      odom2_queue_size: 10
+      odom2_differential: true
+      odom2_relative: false
+
+  # --- Navigation2, launched through coug_belief_mppi like the wamv ---
+
+  planner_server:
+    ros__parameters:
+      GridBased:
+        plugin: "nav2_navfn_planner::NavfnPlanner"
+        tolerance: 0.5
+
+  controller_server:
+    ros__parameters:
+      progress_checker:
+        plugin: "nav2_controller::PoseProgressChecker"
+        required_movement_radius: 0.5
+        required_movement_angle: 0.25
+        movement_time_allowance: 15.0
+
+      general_goal_checker:
+        xy_goal_tolerance: 0.5
+
+      # The belief-state critic needs the factor graph's velocity and bias
+      # estimates, which a dual-EKF rover never publishes, so follow the path
+      # the same way the wamv does
+      FollowPath:
+        plugin: "nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController"
+        desired_linear_vel: 1.0
+        lookahead_dist: 1.2
+        regulated_linear_scaling_min_radius: 0.9
+        max_angular_accel: 1.5
+
+  behavior_server:
+    ros__parameters:
+      local_frame: "rover2sim/odom"
+      robot_base_frame: "rover2sim/base_link"
+
+  global_costmap:
+    global_costmap:
+      ros__parameters:
+        global_frame: "map"
+        robot_base_frame: "rover2sim/base_link"
+        # The fleet leaves this at 0.0, which means the costmap topic is never
+        # published and rviz reports "No map received"
+        publish_frequency: 1.0
+        # Wheels reach 0.7 m fore and aft of base_xoff and 0.55 m outboard
+        footprint: "[[0.95, 0.55], [0.95, -0.55], [-0.7, -0.55], [-0.7, 0.55]]"
+        obstacle_layer:
+          observation_sources: "depth_camera"
+          depth_camera:
+            topic: "/rover2sim/camera/point_cloud/cloud_registered"
+            data_type: "PointCloud2"
+            marking: true
+            clearing: true
+            # Ground sits ~0.3 m below the odom origin, so 0.0 clips it
+            min_obstacle_height: 0.0
+            max_obstacle_height: 2.0
+            obstacle_max_range: 10.0
+            raytrace_max_range: 12.0
+
+  local_costmap:
+    local_costmap:
+      ros__parameters:
+        global_frame: "rover2sim/odom"
+        robot_base_frame: "rover2sim/base_link"
+        publish_frequency: 5.0
+        footprint: "[[0.95, 0.55], [0.95, -0.55], [-0.7, -0.55], [-0.7, 0.55]]"
+        width: 20
+        height: 20
+        obstacle_layer:
+          observation_sources: "depth_camera"
+          depth_camera:
+            topic: "/rover2sim/camera/point_cloud/cloud_registered"
+            data_type: "PointCloud2"
+            marking: true
+            clearing: true
+            min_obstacle_height: 0.0
+            max_obstacle_height: 2.0
+            obstacle_max_range: 10.0
+            raytrace_max_range: 12.0
+
+/base_station:
+  navsat_odom_node:
+    ros__parameters:
+      use_parameter_origin: false

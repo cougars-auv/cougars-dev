@@ -1,0 +1,23 @@
+/**:
+  rover_gazebo_agent_launch:
+    ros__parameters:
+      urdf_file: "rover.gazebo.xacro"
+
+  rover_gazebo_world_launch:
+    ros__parameters:
+      world_file: "rover_sonoma_raceway.sdf.xacro"
+
+  navsat_covariance_node:
+    ros__parameters:
+      # --- Node Settings ---
+      horizontal_stddev: 0.015 # [m]
+      vertical_stddev: 0.025 # [m]
+
+      # --- ROS Topics ---
+      input_topic: "gps/fix_raw"
+      output_topic: "gps/fix"
+
+  rgb_camera_info_relay:
+    ros__parameters:
+      input_topic: "camera/depth/camera_info"
+      output_topic: "camera/rgb/camera_info"

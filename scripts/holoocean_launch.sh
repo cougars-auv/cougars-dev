@@ -16,12 +16,11 @@
 set -e
 
 # --- Selection ---
-scenario=$(basename -a "${CONFIG_DIR}"/holoocean/*_params.yaml |
-  sed 's/_params.yaml$//' | sort |
+scenario_param_file=$(cd "${CONFIG_DIR}" && printf '%s\n' holoocean/*_params.yaml |
   gum choose --header "Select a HoloOcean scenario:") || exit 0
 
 # --- Launch ---
-params_file="/home/ue4/config/holoocean/${scenario}_params.yaml"
+params_file="/home/ue4/config/${scenario_param_file}"
 
 docker exec -it --user ue4 cougars-holoocean-ct /bin/bash -c \
   "source /opt/ros/${ROS_DISTRO}/setup.bash && source /home/ue4/ros2_ws/install/setup.bash \

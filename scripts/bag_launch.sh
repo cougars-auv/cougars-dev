@@ -18,14 +18,13 @@ set -e
 source "${OVERLAY_WS}/install/setup.bash"
 
 # --- Selection ---
-bag_name=$(cd "${BAGS_DIR}" && find . -name "metadata.yaml" -exec dirname {} \; |
+bag_name=$(cd "${BAGS_DIR}" && find . -name metadata.yaml -printf '%h\n' |
   sed 's|^\./||' | sort -r |
   gum filter --placeholder "Select a bag to play...") || exit 0
 [[ -z ${bag_name} ]] && exit 0
 play_bag_path="${BAGS_DIR}/${bag_name}"
 
-agent_ns=$(basename -a "${CONFIG_DIR}"/*_params.yaml |
-  sed 's/_params.yaml$//' | sort |
+agent_ns=$(basename -s _params.yaml -a "${CONFIG_DIR}"/*_params.yaml |
   gum filter --placeholder "Select an agent to launch...") || exit 0
 [[ -z ${agent_ns} ]] && exit 0
 agent_list="[${agent_ns}]"
@@ -40,68 +39,49 @@ options=$(gum choose --no-limit --header "Select options:" \
   "Localization comparison" \
   "HITL mode") || exit 0
 
-record_bag_path=""
-start_offset="0.0"
-playback_duration="-1.0"
-playback_rate="1.0"
-start_paused="false"
-loc_comparison="false"
-hitl_mode="false"
-
-if [[ "${options}" == *"Record rosbag"* ]]; then
-  prefix=$(gum input --placeholder "Set bag prefix..." || true)
-  record_bag_path="${BAGS_DIR}/${prefix:-rosbag}$(date +'_%Y-%m-%d-%H-%M-%S')"
-fi
-
-if [[ "${options}" == *"Set start offset"* ]]; then
-  start_offset=$(gum input --placeholder "Set start offset (s)..." || echo "0.0")
-  if ! [[ "${start_offset}" =~ ^[0-9]+(\.[0-9]+)?$ ]]; then
-    start_offset="0.0"
-  fi
-fi
-
-if [[ "${options}" == *"Set playback duration"* ]]; then
-  playback_duration=$(gum input --placeholder "Set playback duration (s; -1 for full bag)..." || echo "-1.0")
-  if ! [[ "${playback_duration}" =~ ^[0-9]+(\.[0-9]+)?$|^-1(\.0+)?$ ]]; then
-    playback_duration="-1.0"
-  fi
-fi
-
-if [[ "${options}" == *"Set playback rate"* ]]; then
-  playback_rate=$(gum input --placeholder "Set playback rate (e.g. 0.5, 2.0)..." || echo "1.0")
-  if ! [[ "${playback_rate}" =~ ^[0-9]+(\.[0-9]+)?$ ]]; then
-    playback_rate="1.0"
-  fi
-fi
-
-if [[ "${options}" == *"Start paused"* ]]; then
-  start_paused="true"
-fi
-
-if [[ "${options}" == *"Localization comparison"* ]]; then
-  loc_comparison="true"
-fi
-
-if [[ "${options}" == *"HITL mode"* ]]; then
-  hitl_mode="true"
-fi
-
-# --- Launch ---
 launch_args=(
   "agent_list:=${agent_list}"
   "play_bag_path:=${play_bag_path}"
 )
-if [[ -n ${record_bag_path} ]]; then
-  launch_args+=("record_bag_path:=${record_bag_path}")
-fi
-launch_args+=(
-  "start_offset:=${start_offset}"
-  "playback_duration:=${playback_duration}"
-  "playback_rate:=${playback_rate}"
-  "start_paused:=${start_paused}"
-  "loc_comparison:=${loc_comparison}"
-  "hitl_mode:=${hitl_mode}"
-)
 
+if [[ "${options}" == *"Record rosbag"* ]]; then
+  prefix=$(gum input --placeholder "Set bag prefix..." || true)
+  launch_args+=("record_bag_path:=${BAGS_DIR}/${prefix:-rosbag}$(date +'_%Y-%m-%d-%H-%M-%S')")
+fi
+
+if [[ "${options}" == *"Set start offset"* ]]; then
+  start_offset=$(gum input --placeholder "Set start offset (s)..." || true)
+  if [[ "${start_offset}" =~ ^[0-9]+(\.[0-9]+)?$ ]]; then
+    launch_args+=("start_offset:=${start_offset}")
+  fi
+fi
+
+if [[ "${options}" == *"Set playback duration"* ]]; then
+  playback_duration=$(gum input --placeholder "Set playback duration (s; -1 for full bag)..." || true)
+  if [[ "${playback_duration}" =~ ^[0-9]+(\.[0-9]+)?$|^-1(\.0+)?$ ]]; then
+    launch_args+=("playback_duration:=${playback_duration}")
+  fi
+fi
+
+if [[ "${options}" == *"Set playback rate"* ]]; then
+  playback_rate=$(gum input --placeholder "Set playback rate (e.g. 0.5, 2.0)..." || true)
+  if [[ "${playback_rate}" =~ ^[0-9]+(\.[0-9]+)?$ ]]; then
+    launch_args+=("playback_rate:=${playback_rate}")
+  fi
+fi
+
+if [[ "${options}" == *"Start paused"* ]]; then
+  launch_args+=("start_paused:=true")
+fi
+
+if [[ "${options}" == *"Localization comparison"* ]]; then
+  launch_args+=("loc_comparison:=true")
+fi
+
+if [[ "${options}" == *"HITL mode"* ]]; then
+  launch_args+=("hitl_mode:=true")
+fi
+
+# --- Launch ---
 echo "ros2 launch coug_bringup bag.launch.py ${launch_args[*]}"
 ros2 launch coug_bringup bag.launch.py "${launch_args[@]}"

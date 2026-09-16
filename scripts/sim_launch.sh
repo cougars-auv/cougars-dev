@@ -18,13 +18,12 @@ set -e
 source "${OVERLAY_WS}/install/setup.bash"
 
 # --- Selection ---
-scenario=$({
-  basename -a "${CONFIG_DIR}"/holoocean/*_params.yaml 2>/dev/null | sed 's/_params.yaml$//'
-  basename -a "${CONFIG_DIR}"/gazebo/*_params.yaml 2>/dev/null | sed 's/_params.yaml$//'
-} | sort -u |
+scenario_param_file=$(cd "${CONFIG_DIR}" &&
+  printf '%s\n' holoocean/*_params.yaml gazebo/*_params.yaml |
   gum choose --header "Select a simulation scenario:") || exit 0
+scenario_param_file="${CONFIG_DIR}/${scenario_param_file}"
 
-if [[ -f "${CONFIG_DIR}/gazebo/${scenario}_params.yaml" ]]; then
+if [[ ${scenario_param_file} == */gazebo/* ]]; then
   option_list=(
     "Record rosbag"
     "Enable voxblox mapping"
@@ -47,72 +46,45 @@ fi
 options=$(gum choose --no-limit --header "Select options:" \
   "${option_list[@]}") || exit 0
 
-record_bag_path=""
-add_noise="true"
-loc_comparison="false"
-lead_agent=""
-enable_direct_comms="true"
-enable_acoustic_comms="true"
-use_spawn_pose="true"
-enable_mapping="false"
-hitl_mode="false"
+launch_args=("scenario_param_file:=${scenario_param_file}")
 
 if [[ "${options}" == *"Record rosbag"* ]]; then
   prefix=$(gum input --placeholder "Set bag prefix..." || true)
-  record_bag_path="${BAGS_DIR}/${prefix:-rosbag}$(date +'_%Y-%m-%d-%H-%M-%S')"
+  launch_args+=("record_bag_path:=${BAGS_DIR}/${prefix:-rosbag}$(date +'_%Y-%m-%d-%H-%M-%S')")
 fi
 
 if [[ "${options}" == *"Disable sensor noise"* ]]; then
-  add_noise="false"
+  launch_args+=("add_noise:=false")
 fi
 
 if [[ "${options}" == *"Localization comparison"* ]]; then
-  loc_comparison="true"
+  launch_args+=("loc_comparison:=true")
 fi
 
 if [[ "${options}" == *"Specify lead agent"* ]]; then
+  scenario_file=$(sed -n 's/.*scenario_file: "\(.*\)".*/\1/p' "${scenario_param_file}")
   lead_agent=$(jq -r '.agents[].agent_name | select(. != "base_station")' \
-    "${CONFIG_DIR}/holoocean/${scenario}.json" |
+    "${CONFIG_DIR}/holoocean/${scenario_file}" |
     gum choose --header "Select lead agent:") || exit 0
+  launch_args+=("lead_agent:=${lead_agent}")
 fi
 
 if [[ "${options}" == *"Acomms simulation"* ]]; then
-  enable_direct_comms="false"
+  launch_args+=("enable_direct_comms:=false")
 fi
 
 if [[ "${options}" == *"Unknown initial poses"* ]]; then
-  use_spawn_pose="false"
+  launch_args+=("use_spawn_pose:=false")
 fi
 
 if [[ "${options}" == *"Enable voxblox mapping"* ]]; then
-  enable_mapping="true"
+  launch_args+=("enable_mapping:=true")
 fi
 
 if [[ "${options}" == *"HITL mode"* ]]; then
-  hitl_mode="true"
+  launch_args+=("hitl_mode:=true")
 fi
 
 # --- Launch ---
-launch_args=(
-  "scenario:=${scenario}"
-)
-if [[ -n ${record_bag_path} ]]; then
-  launch_args+=("record_bag_path:=${record_bag_path}")
-fi
-launch_args+=(
-  "add_noise:=${add_noise}"
-  "loc_comparison:=${loc_comparison}"
-)
-if [[ -n ${lead_agent} ]]; then
-  launch_args+=("lead_agent:=${lead_agent}")
-fi
-launch_args+=(
-  "enable_direct_comms:=${enable_direct_comms}"
-  "enable_acoustic_comms:=${enable_acoustic_comms}"
-  "use_spawn_pose:=${use_spawn_pose}"
-  "enable_mapping:=${enable_mapping}"
-  "hitl_mode:=${hitl_mode}"
-)
-
 echo "ros2 launch coug_bringup sim.launch.py ${launch_args[*]}"
 ros2 launch coug_bringup sim.launch.py "${launch_args[@]}"
