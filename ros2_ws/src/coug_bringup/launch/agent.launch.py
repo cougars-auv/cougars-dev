@@ -101,8 +101,10 @@ def generate_launch_description() -> LaunchDescription:
         condition=IfCondition(NotEqualsSubstitution(agent_ns, "coug2")),
     )
 
-    coug_fg_ekf_launch = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(os.path.join(coug_fg_launch_dir, "coug_fg_ekf.launch.py")),
+    coug_fg_dvl_ekf_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(coug_fg_launch_dir, "coug_fg_dvl_ekf.launch.py")
+        ),
         launch_arguments={
             "use_sim_time": use_sim_time,
             "agent_ns": agent_ns,
@@ -219,7 +221,7 @@ def generate_launch_description() -> LaunchDescription:
                     coug_comms_agent_launch,
                     coug_description_launch,
                     coug_fg_launch,
-                    coug_fg_ekf_launch,
+                    coug_fg_dvl_ekf_launch,
                     coug_helm_launch,
                     coug_control_launch,
                     coug_belief_mppi_launch,
