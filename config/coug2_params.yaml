@@ -36,8 +36,11 @@
     ros__parameters:
       publish_tf: true
 
-      odom0: "dvl/odometry"
-      odom0_config: [
+      imu1: "seatrac/imu/data"
+      odom1: gps/odometry_null
+
+      odom2: "dvl/odometry"
+      odom2_config: [
           true,
           true,
           false, # X, Y, Z
@@ -54,10 +57,9 @@
           false,
           false, # Ax, Ay, Az
         ]
-      odom0_differential: true
+      odom2_differential: true
 
-      odom2: gps/odometry_null
-      imu0: "seatrac/imu/data"
+      twist0: dvl/twist_null
 
 /base_station:
   navsat_odom_node:

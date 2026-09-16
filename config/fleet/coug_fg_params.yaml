@@ -457,6 +457,31 @@
       publish_tf: true
       print_diagnostics: true
 
+      imu0: "imu/data"
+      # IMPORTANT! robot_localization in ROS 2 Jazzy has a known bug with mishandling gravity removal for non-trivial IMU to base rotations.
+      # Disable acceleration fusion in the agent-specific config file if the rotation is non-trivial.
+      imu0_config: [
+          false,
+          false,
+          false, # X, Y, Z
+          false,
+          false,
+          false, # Roll, Pitch, Yaw
+          false,
+          false,
+          false, # Vx, Vy, Vz
+          true,
+          true,
+          true, # Vroll, Vpitch, Vyaw
+          true,
+          true,
+          true, # Ax, Ay, Az
+        ]
+      imu0_queue_size: 15
+      imu0_differential: false
+      imu0_relative: false
+      imu0_remove_gravitational_acceleration: true
+
       twist0: "dvl/twist"
       twist0_config: [
           false,
@@ -476,6 +501,15 @@
           false, # Ax, Ay, Az
         ]
       twist0_queue_size: 5
+
+      use_control: false
+
+  ekf_filter_node_map:
+    ros__parameters:
+      frequency: 30.0
+      two_d_mode: false
+      publish_tf: false # Published by FG instead
+      print_diagnostics: true
 
       imu0: "imu/data"
       # IMPORTANT! robot_localization in ROS 2 Jazzy has a known bug with mishandling gravity removal for non-trivial IMU to base rotations.
@@ -502,83 +536,8 @@
       imu0_relative: false
       imu0_remove_gravitational_acceleration: true
 
-      use_control: false
-
-  ekf_filter_node_map:
-    ros__parameters:
-      frequency: 30.0
-      two_d_mode: false
-      publish_tf: false # Published by FG instead
-      print_diagnostics: true
-
-      odom0: "odometry/local"
-      odom0_config: [
-          false,
-          false,
-          false, # X, Y, Z
-          false,
-          false,
-          false, # Roll, Pitch, Yaw
-          true,
-          true,
-          true, # Vx, Vy, Vz
-          true,
-          true,
-          true, # Vroll, Vpitch, Vyaw
-          false,
-          false,
-          false, # Ax, Ay, Az
-        ]
-      odom0_queue_size: 10
-      odom0_differential: false
-      odom0_relative: false
-
-      odom1: "depth/odometry"
-      odom1_config: [
-          false,
-          false,
-          true, # X, Y, Z
-          false,
-          false,
-          false, # Roll, Pitch, Yaw
-          false,
-          false,
-          false, # Vx, Vy, Vz
-          false,
-          false,
-          false, # Vroll, Vpitch, Vyaw
-          false,
-          false,
-          false, # Ax, Ay, Az
-        ]
-      odom1_queue_size: 5
-      odom1_differential: false
-      odom1_relative: false # Absolute depth in the map frame.
-
-      odom2: "gps/odometry"
-      odom2_config: [
-          true,
-          true,
-          false, # X, Y, Z
-          false,
-          false,
-          false, # Roll, Pitch, Yaw
-          false,
-          false,
-          false, # Vx, Vy, Vz
-          false,
-          false,
-          false, # Vroll, Vpitch, Vyaw
-          false,
-          false,
-          false, # Ax, Ay, Az
-        ]
-      odom2_queue_size: 5
-      odom2_differential: false
-      odom2_relative: false # Absolute GPS position in the map frame.
-
-      imu0: "imu/data"
-      imu0_config: [
+      imu1: "imu/data"
+      imu1_config: [
           false,
           false,
           false, # X, Y, Z
@@ -595,9 +554,73 @@
           false,
           false, # Ax, Ay, Az
         ]
-      imu0_queue_size: 15
-      imu0_differential: false
-      imu0_relative: false # Absolute orientation in the map frame.
+      imu1_queue_size: 15
+      imu1_differential: false
+      imu1_relative: false # Absolute orientation in the map frame.
+
+      odom0: "depth/odometry"
+      odom0_config: [
+          false,
+          false,
+          true, # X, Y, Z
+          false,
+          false,
+          false, # Roll, Pitch, Yaw
+          false,
+          false,
+          false, # Vx, Vy, Vz
+          false,
+          false,
+          false, # Vroll, Vpitch, Vyaw
+          false,
+          false,
+          false, # Ax, Ay, Az
+        ]
+      odom0_queue_size: 5
+      odom0_differential: false
+      odom0_relative: false # Absolute depth in the map frame.
+
+      odom1: "gps/odometry"
+      odom1_config: [
+          true,
+          true,
+          false, # X, Y, Z
+          false,
+          false,
+          false, # Roll, Pitch, Yaw
+          false,
+          false,
+          false, # Vx, Vy, Vz
+          false,
+          false,
+          false, # Vroll, Vpitch, Vyaw
+          false,
+          false,
+          false, # Ax, Ay, Az
+        ]
+      odom1_queue_size: 5
+      odom1_differential: false
+      odom1_relative: false # Absolute GPS position in the map frame.
+
+      twist0: "dvl/twist"
+      twist0_config: [
+          false,
+          false,
+          false, # X, Y, Z
+          false,
+          false,
+          false, # Roll, Pitch, Yaw
+          true,
+          true,
+          true, # Vx, Vy, Vz
+          false,
+          false,
+          false, # Vroll, Vpitch, Vyaw
+          false,
+          false,
+          false, # Ax, Ay, Az
+        ]
+      twist0_queue_size: 5
 
   ukf_filter_node_map:
     ros__parameters:
@@ -606,74 +629,33 @@
       publish_tf: false # Published by FG instead
       print_diagnostics: true
 
-      odom0: "odometry/local"
-      odom0_config: [
+      imu0: "imu/data"
+      # IMPORTANT! robot_localization in ROS 2 Jazzy has a known bug with mishandling gravity removal for non-trivial IMU to base rotations.
+      # Disable acceleration fusion in the agent-specific config file if the rotation is non-trivial.
+      imu0_config: [
           false,
           false,
           false, # X, Y, Z
           false,
           false,
           false, # Roll, Pitch, Yaw
-          true,
-          true,
-          true, # Vx, Vy, Vz
+          false,
+          false,
+          false, # Vx, Vy, Vz
           true,
           true,
           true, # Vroll, Vpitch, Vyaw
-          false,
-          false,
-          false, # Ax, Ay, Az
-        ]
-      odom0_queue_size: 10
-      odom0_differential: false
-      odom0_relative: false
-
-      odom1: "depth/odometry"
-      odom1_config: [
-          false,
-          false,
-          true, # X, Y, Z
-          false,
-          false,
-          false, # Roll, Pitch, Yaw
-          false,
-          false,
-          false, # Vx, Vy, Vz
-          false,
-          false,
-          false, # Vroll, Vpitch, Vyaw
-          false,
-          false,
-          false, # Ax, Ay, Az
-        ]
-      odom1_queue_size: 5
-      odom1_differential: false
-      odom1_relative: false # Absolute depth in the map frame.
-
-      odom2: "gps/odometry"
-      odom2_config: [
           true,
           true,
-          false, # X, Y, Z
-          false,
-          false,
-          false, # Roll, Pitch, Yaw
-          false,
-          false,
-          false, # Vx, Vy, Vz
-          false,
-          false,
-          false, # Vroll, Vpitch, Vyaw
-          false,
-          false,
-          false, # Ax, Ay, Az
+          true, # Ax, Ay, Az
         ]
-      odom2_queue_size: 5
-      odom2_differential: false
-      odom2_relative: false # Absolute GPS position in the map frame.
+      imu0_queue_size: 15
+      imu0_differential: false
+      imu0_relative: false
+      imu0_remove_gravitational_acceleration: true
 
-      imu0: "imu/data"
-      imu0_config: [
+      imu1: "imu/data"
+      imu1_config: [
           false,
           false,
           false, # X, Y, Z
@@ -690,6 +672,70 @@
           false,
           false, # Ax, Ay, Az
         ]
-      imu0_queue_size: 15
-      imu0_differential: false
-      imu0_relative: false # Absolute orientation in the map frame.
+      imu1_queue_size: 15
+      imu1_differential: false
+      imu1_relative: false # Absolute orientation in the map frame.
+
+      odom0: "depth/odometry"
+      odom0_config: [
+          false,
+          false,
+          true, # X, Y, Z
+          false,
+          false,
+          false, # Roll, Pitch, Yaw
+          false,
+          false,
+          false, # Vx, Vy, Vz
+          false,
+          false,
+          false, # Vroll, Vpitch, Vyaw
+          false,
+          false,
+          false, # Ax, Ay, Az
+        ]
+      odom0_queue_size: 5
+      odom0_differential: false
+      odom0_relative: false # Absolute depth in the map frame.
+
+      odom1: "gps/odometry"
+      odom1_config: [
+          true,
+          true,
+          false, # X, Y, Z
+          false,
+          false,
+          false, # Roll, Pitch, Yaw
+          false,
+          false,
+          false, # Vx, Vy, Vz
+          false,
+          false,
+          false, # Vroll, Vpitch, Vyaw
+          false,
+          false,
+          false, # Ax, Ay, Az
+        ]
+      odom1_queue_size: 5
+      odom1_differential: false
+      odom1_relative: false # Absolute GPS position in the map frame.
+
+      twist0: "dvl/twist"
+      twist0_config: [
+          false,
+          false,
+          false, # X, Y, Z
+          false,
+          false,
+          false, # Roll, Pitch, Yaw
+          true,
+          true,
+          true, # Vx, Vy, Vz
+          false,
+          false,
+          false, # Vroll, Vpitch, Vyaw
+          false,
+          false,
+          false, # Ax, Ay, Az
+        ]
+      twist0_queue_size: 5
