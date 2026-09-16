@@ -1,0 +1,25 @@
+<?xml version="1.0" ?>
+<sdf version="1.6">
+  <model name="urc_aruco_5">
+    <static>true</static>
+    <link name="link">
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://urc_aruco_5/meshes/urc_aruco_5.dae</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://urc_aruco_5/meshes/urc_aruco_5.dae</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <lighting>false</lighting>
+        </material>
+      </visual>
+    </link>
+  </model>
+</sdf>
