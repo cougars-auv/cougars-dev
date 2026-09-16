@@ -11,7 +11,7 @@
   depth_camera_converter_node:
     ros__parameters:
       # --- Node Settings ---
-      sync_slop_sec: 0.05 # [s] Max stamp difference to sync the depth, info and color messages.
+      sync_slop_sec: 0.05 # [s]
       stamp_offset_sec: 0.2 # [s] Render age at handover, ~TicksPerCapture / ticks_per_sec.
       min_range: 0.2 # [m] Depth readings below this are marked invalid (NaN).
       max_range: 20.0 # [m] Depth readings above this are marked invalid (NaN).
@@ -29,7 +29,7 @@
     ros__parameters:
       # --- Node Settings ---
       # https://www.te.com/commerce/DocumentDelivery/DDEController?Action=srchrtrv&DocNm=MS5837-02BA01&DocType=DS&DocLang=English
-      noise_sigma: 0.02 # [m] Depth sensor Z-position uncertainty sigma.
+      noise_sigma: 0.02 # [m]
 
       # --- ROS Topics and Frames ---
       input_topic: "DepthSensor"
@@ -39,8 +39,8 @@
     ros__parameters:
       # --- Node Settings ---
       # https://waterlinked.com/dvl-a50
-      beam_velocity_noise_sigma: 0.011 # [m/s] Per-beam radial velocity uncertainty sigma.
-      range_noise_sigma: 0.1 # [m] Per-beam range uncertainty sigma.
+      beam_velocity_noise_sigma: 0.011 # [m/s]
+      range_noise_sigma: 0.1 # [m]
 
       # IMPORTANT! This must match HoloOcean's MaxRange for the DVLSensor.
       max_range: 500.0 # [m] Beams at or beyond this are reported lost.
@@ -55,9 +55,9 @@
     ros__parameters:
       # --- Node Settings ---
       # https://waterlinked.com/dvl-a50
-      noise_sigma_scale: 0.0101 # [m/m] Dead-reckoning position uncertainty sigma per meter traveled.
+      noise_sigma_scale: 0.0101 # [m/m]
       # https://docs.waterlinked.com/dvl/dead-reckoning/
-      yaw_drift_sigma: 0.3 # [deg/min] Dead-reckoning yaw drift rate sigma.
+      yaw_drift_sigma: 0.3 # [deg/min]
 
       tf_timeout_sec: 0.1 # [s] How long to wait for the map transform.
 
@@ -79,7 +79,7 @@
       origin_altitude: 1412.0
 
       # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/hardware-documentation/aiding-sensors
-      noise_sigmas: [0.015, 0.015, 0.025] # [east, north, up] [m] GPS position uncertainty sigmas.
+      noise_sigmas: [0.015, 0.015, 0.025] # [east, north, up] [m]
 
       # --- ROS Topics and Frames ---
       input_topic: "GPSSensor"
@@ -95,20 +95,20 @@
   imu_converter_node:
     ros__parameters:
       # --- Node Settings ---
-      sync_slop_sec: 0.05 # [s] Max stamp difference to sync the IMU and AHRS messages.
+      sync_slop_sec: 0.05 # [s]
 
       # 57 µg/√Hz -> 5.6e-4 m/s^2/√Hz * √200 Hz -> 7.9e-3 m/s^2
       # 0.18 °/√h -> 3.0e-3 °/s/√Hz * √200 Hz -> 7.4e-4 rad/s
       # https://github.com/SBG-Systems/sbg_ros2_driver/blob/3.4.0/config/sbg_device_uart_default.yaml
       # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/performance-specifications
-      accel_noise_sigmas: [7.9e-3, 7.9e-3, 7.9e-3] # [m/s^2] Accelerometer measurement noise sigmas.
-      gyro_noise_sigmas: [7.4e-4, 7.4e-4, 7.4e-4] # [rad/s] Gyroscope measurement noise sigmas.
+      accel_noise_sigmas: [7.9e-3, 7.9e-3, 7.9e-3] # [m/s^2]
+      gyro_noise_sigmas: [7.4e-4, 7.4e-4, 7.4e-4] # [rad/s]
       # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/performance-specifications
-      ahrs_noise_sigmas: [0.00698, 0.00698, 0.01745] # [roll, pitch, yaw] [rad] AHRS orientation uncertainty sigmas.
+      ahrs_noise_sigmas: [0.00698, 0.00698, 0.01745] # [roll, pitch, yaw] [rad]
       # Gauss-Markov fit K ≈ 2.3 * B / √tau_c at tau_c = 500 s.
       # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/performance-specifications
-      accel_bias_rw_sigmas: [1.4e-5, 1.4e-5, 1.4e-5] # [m/s^2/√s] Continuous-time accel bias random walk spectral density sigmas.
-      gyro_bias_rw_sigmas: [3.5e-6, 3.5e-6, 3.5e-6] # [rad/s/√s] Continuous-time gyro bias random walk spectral density sigmas.
+      accel_bias_rw_sigmas: [1.4e-5, 1.4e-5, 1.4e-5] # [m/s^2/√s]
+      gyro_bias_rw_sigmas: [3.5e-6, 3.5e-6, 3.5e-6] # [rad/s/√s]
 
       # --- ROS Topics and Frames ---
       imu_input_topic: "IMUSensor"
@@ -123,9 +123,9 @@
       au_to_tesla: 5.0446e-05
 
       # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/hardware-documentation/aiding-sensors
-      noise_sigmas: [3.0e-07, 3.0e-07, 3.0e-07] # [T] Magnetic field uncertainty sigmas.
+      noise_sigmas: [3.0e-07, 3.0e-07, 3.0e-07] # [T]
       # No published SBG hard-iron spec; assumes ~20% of the local field magnitude.
-      bias_sigmas: [1.0e-05, 1.0e-05, 1.0e-05] # [T] Hard-iron bias sigmas.
+      bias_sigmas: [1.0e-05, 1.0e-05, 1.0e-05] # [T]
 
       # --- ROS Topics and Frames ---
       input_topic: "MagnetometerSensor"
@@ -142,8 +142,8 @@
       beacon_id: 1
 
       # https://www.blueprintsubsea.com/seatrac/seatrac-standard
-      bearing_noise_sigmas: [0.01745, 0.01745] # [azimuth, elevation] [rad] Bearing uncertainty sigmas.
-      range_noise_sigma: 0.1 # [m] Two-way time-of-flight range uncertainty sigma.
+      bearing_noise_sigmas: [0.01745, 0.01745] # [azimuth, elevation] [rad]
+      range_noise_sigma: 0.1 # [m]
 
       # --- ROS Topics and Frames ---
       beacon_rec_topic: "AcousticBeaconSensor"
@@ -157,7 +157,7 @@
     ros__parameters:
       # --- Node Settings ---
       # https://www.blueprintsubsea.com/downloads/seatrac/UM-140-D00221-13.pdf
-      noise_sigma: 0.1 # [m] Depth sensor Z-position uncertainty sigma.
+      noise_sigma: 0.1 # [m]
 
       # --- ROS Topics and Frames ---
       input_topic: "ModemDepthSensor"
@@ -166,19 +166,19 @@
   modem_imu_converter_node:
     ros__parameters:
       # --- Node Settings ---
-      sync_slop_sec: 0.05 # [s] Max stamp difference to sync the IMU and AHRS messages.
+      sync_slop_sec: 0.05 # [s]
 
       # 57 µg/√Hz -> 5.6e-4 m/s^2/√Hz * √10 Hz -> 1.8e-3 m/s^2
       # 0.18 °/√h -> 3.0e-3 °/s/√Hz * √10 Hz -> 1.7e-4 rad/s
       # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/performance-specifications
-      accel_noise_sigmas: [1.8e-3, 1.8e-3, 1.8e-3] # [m/s^2] Accelerometer measurement noise sigmas.
-      gyro_noise_sigmas: [1.7e-4, 1.7e-4, 1.7e-4] # [rad/s] Gyroscope measurement noise sigmas.
+      accel_noise_sigmas: [1.8e-3, 1.8e-3, 1.8e-3] # [m/s^2]
+      gyro_noise_sigmas: [1.7e-4, 1.7e-4, 1.7e-4] # [rad/s]
       # https://www.blueprintsubsea.com/seatrac/seatrac-standard
-      ahrs_noise_sigmas: [0.00349, 0.00349, 0.01745] # [roll, pitch, yaw] [rad] AHRS orientation uncertainty sigmas.
+      ahrs_noise_sigmas: [0.00349, 0.00349, 0.01745] # [roll, pitch, yaw] [rad]
       # Gauss-Markov fit K ≈ 2.3 * B / √tau_c at tau_c = 500 s.
       # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/performance-specifications
-      accel_bias_rw_sigmas: [1.4e-5, 1.4e-5, 1.4e-5] # [m/s^2/√s] Continuous-time accel bias random walk spectral density sigmas.
-      gyro_bias_rw_sigmas: [3.5e-6, 3.5e-6, 3.5e-6] # [rad/s/√s] Continuous-time gyro bias random walk spectral density sigmas.
+      accel_bias_rw_sigmas: [1.4e-5, 1.4e-5, 1.4e-5] # [m/s^2/√s]
+      gyro_bias_rw_sigmas: [3.5e-6, 3.5e-6, 3.5e-6] # [rad/s/√s]
 
       # --- ROS Topics and Frames ---
       imu_input_topic: "ModemIMUSensor"
@@ -189,7 +189,7 @@
   modem_status_converter_node:
     ros__parameters:
       # --- Node Settings ---
-      sync_slop_sec: 0.05 # [s] Max stamp difference to sync the IMU and depth messages.
+      sync_slop_sec: 0.05 # [s]
 
       # -- ROS Topics and Frames ---
       imu_input_topic: "modem/imu/data"
@@ -213,7 +213,7 @@
   stereo_converter_node:
     ros__parameters:
       # --- Node Settings ---
-      sync_slop_sec: 0.05 # [s] Max stamp difference to sync the stereo images.
+      sync_slop_sec: 0.05 # [s]
 
       # --- ROS Topics and Frames ---
       front_input_topic: "RGBCameraFront"
@@ -226,7 +226,7 @@
   truth_converter_node:
     ros__parameters:
       # --- Node Settings ---
-      publish_tf: false # Whether to publish the map->base_link transform
+      publish_tf: false # Whether to publish the map -> base transform
       tf_timeout_sec: 0.1 # [s] How long to wait for the map transform.
 
       # --- ROS Topics and Frames ---

@@ -2,8 +2,8 @@
   bt_helm_node:
     ros__parameters:
       # --- Node Settings ---
-      tick_rate_hz: 20.0 # [Hz] Behavior tree tick rate.
-      publish_diagnostics: true # Publish diagnostic information.
+      tick_rate_hz: 20.0 # [Hz]
+      publish_diagnostics: true
 
       # Waypoint reached if normalized ellipse distance < 1.0 (direct hit).
       surface_capture_radius: 1000.0 # [m]
@@ -30,8 +30,8 @@
       backup_duration_sec: 5.0 # [s] Duration of the BackUp recovery maneuver.
 
       # --- Groot2 Connection ---
-      publish_groot2: false # Publish behavior tree state to Groot2.
-      groot2_port: 1667 # [port] Groot2 publisher port (override per-robot to avoid conflicts).
+      publish_groot2: false
+      groot2_port: 1667 # [port] (override per-robot to avoid conflicts)
 
       # --- ROS Topics ---
       waypoint_topic: "waypoints"

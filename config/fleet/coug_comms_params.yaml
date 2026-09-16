@@ -6,7 +6,7 @@
   base_dispatcher_node:
     ros__parameters:
       # --- Node Settings ---
-      publish_diagnostics: true # Publish diagnostic information.
+      publish_diagnostics: true
       service_history_size: 5 # Number of recent service results kept for diagnostics.
 
       direct_timeout_sec: 2.0 # [s] Max direct heartbeat age before falling back to acoustics.
@@ -32,7 +32,7 @@
   agent_receiver_node:
     ros__parameters:
       # --- Node Settings ---
-      publish_diagnostics: true # Publish diagnostic information.
+      publish_diagnostics: true
       service_history_size: 5 # Number of recent service results kept for diagnostics.
 
       # --- ROS Topics ---
@@ -48,7 +48,7 @@
   base_status_poller_node:
     ros__parameters:
       # --- Node Settings ---
-      publish_diagnostics: true # Publish diagnostic information.
+      publish_diagnostics: true
       diagnostic_timeout_sec: 10.0 # [s]
 
       direct_timeout_sec: 2.0 # [s] Max direct heartbeat age before falling back to acoustics.

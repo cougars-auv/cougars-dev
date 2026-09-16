@@ -1,5 +1,5 @@
 /**:
   bag_recorder_node:
     ros__parameters:
-      publish_diagnostics: true # Publish diagnostic information.
+      publish_diagnostics: true
       bag_record_service: "bag_record"
