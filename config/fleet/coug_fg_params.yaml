@@ -430,6 +430,20 @@
       output_topic: "odometry/truth"
 
   # --- Robot Localization Pipeline ---
+  imu_filter_madgwick:
+    ros__parameters:
+      use_mag: true
+      world_frame: "enu"
+      publish_tf: false
+      gain: 0.1
+
+      # East-positive declination (NOAA convention).
+      # https://www.ngdc.noaa.gov/geomag/calculators/magcalc.shtml#declination
+      declination: 0.0 # [rad]
+      yaw_offset: 0.0 # [rad]
+
+      orientation_stddev: 0.05 # [rad]
+
   ekf_filter_node_odom:
     ros__parameters:
       frequency: 30.0
