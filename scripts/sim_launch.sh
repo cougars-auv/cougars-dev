@@ -28,7 +28,6 @@ if [[ -f "${CONFIG_DIR}/gazebo/${scenario}_params.yaml" ]]; then
   option_list=(
     "Record rosbag"
     "Enable voxblox mapping"
-    "Enable shared voxblox mapping"
     "HITL mode"
   )
 else
@@ -40,7 +39,6 @@ else
     "Acomms simulation"
     "Unknown initial poses"
     "Enable voxblox mapping"
-    "Enable shared voxblox mapping"
     "HITL mode"
   )
 fi
@@ -57,7 +55,6 @@ enable_direct_comms="true"
 enable_acoustic_comms="true"
 use_spawn_pose="true"
 enable_mapping="false"
-enable_shared_mapping="false"
 hitl_mode="false"
 
 if [[ "${options}" == *"Record rosbag"* ]]; then
@@ -91,10 +88,6 @@ if [[ "${options}" == *"Enable voxblox mapping"* ]]; then
   enable_mapping="true"
 fi
 
-if [[ "${options}" == *"Enable shared voxblox mapping"* ]]; then
-  enable_shared_mapping="true"
-fi
-
 if [[ "${options}" == *"HITL mode"* ]]; then
   hitl_mode="true"
 fi
@@ -118,7 +111,6 @@ launch_args+=(
   "enable_acoustic_comms:=${enable_acoustic_comms}"
   "use_spawn_pose:=${use_spawn_pose}"
   "enable_mapping:=${enable_mapping}"
-  "enable_shared_mapping:=${enable_shared_mapping}"
   "hitl_mode:=${hitl_mode}"
 )
 
