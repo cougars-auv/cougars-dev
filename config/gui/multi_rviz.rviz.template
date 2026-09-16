@@ -1,6 +1,6 @@
 displays:
   - Class: rviz_common/Group
-    Name: AGENT_NS
+    Name: <agent_ns>
     Enabled: true
     Displays:
       - Alpha: 1
@@ -13,7 +13,7 @@ displays:
           Durability Policy: Volatile
           History Policy: Keep Last
           Reliability Policy: Reliable
-          Value: /AGENT_NS/robot_description
+          Value: /<agent_ns>/robot_description
         Enabled: true
         Links:
           All Links Enabled: true
@@ -25,7 +25,7 @@ displays:
           Inertia: false
           Mass: false
         Name: RobotModel
-        TF Prefix: AGENT_NS
+        TF Prefix: <agent_ns>
         Update Interval: 0
         Value: true
         Visual Enabled: true
@@ -66,7 +66,7 @@ displays:
           Filter size: 10
           History Policy: Keep Last
           Reliability Policy: Reliable
-          Value: /AGENT_NS/odometry/truth
+          Value: /<agent_ns>/odometry/truth
         Value: true
       - Angle Tolerance: 0.10000000149011612
         Class: rviz_default_plugins/Odometry
@@ -105,7 +105,7 @@ displays:
           Filter size: 10
           History Policy: Keep Last
           Reliability Policy: Reliable
-          Value: /AGENT_NS/base/odometry/global_nbr
+          Value: /<agent_ns>/base/odometry/global_nbr
         Value: true
       - Angle Tolerance: 0.10000000149011612
         Class: rviz_default_plugins/Odometry
@@ -144,7 +144,7 @@ displays:
           Filter size: 10
           History Policy: Keep Last
           Reliability Policy: Reliable
-          Value: /AGENT_NS/odometry/global
+          Value: /<agent_ns>/odometry/global
         Value: true
       - Alpha: 1
         Buffer Length: 1
@@ -172,7 +172,7 @@ displays:
           Filter size: 10
           History Policy: Keep Last
           Reliability Policy: Reliable
-          Value: /AGENT_NS/smoothed_path
+          Value: /<agent_ns>/smoothed_path
         Value: true
       - Alpha: 1
         Arrow Length: 0.30000001192092896
@@ -193,7 +193,7 @@ displays:
           Filter size: 10
           History Policy: Keep Last
           Reliability Policy: Reliable
-          Value: /AGENT_NS/waypoints_nav2
+          Value: /<agent_ns>/waypoints_nav2
         Value: true
       - Class: rviz_common/Group
         Displays:
@@ -209,7 +209,7 @@ displays:
               Filter size: 10
               History Policy: Keep Last
               Reliability Policy: Reliable
-              Value: /AGENT_NS/dvl/beam0/range
+              Value: /<agent_ns>/dvl/beam0/range
             Value: true
           - Alpha: 0.5
             Buffer Length: 1
@@ -223,7 +223,7 @@ displays:
               Filter size: 10
               History Policy: Keep Last
               Reliability Policy: Reliable
-              Value: /AGENT_NS/dvl/beam1/range
+              Value: /<agent_ns>/dvl/beam1/range
             Value: true
           - Alpha: 0.5
             Buffer Length: 1
@@ -237,7 +237,7 @@ displays:
               Filter size: 10
               History Policy: Keep Last
               Reliability Policy: Reliable
-              Value: /AGENT_NS/dvl/beam2/range
+              Value: /<agent_ns>/dvl/beam2/range
             Value: true
           - Alpha: 0.5
             Buffer Length: 1
@@ -251,7 +251,7 @@ displays:
               Filter size: 10
               History Policy: Keep Last
               Reliability Policy: Reliable
-              Value: /AGENT_NS/dvl/beam3/range
+              Value: /<agent_ns>/dvl/beam3/range
             Value: true
         Enabled: false
         Name: DVL Beams
@@ -264,5 +264,5 @@ displays:
           Filter size: 10
           History Policy: Keep Last
           Reliability Policy: Reliable
-          Value: /AGENT_NS/mesh
+          Value: /<agent_ns>/mesh
         Value: true

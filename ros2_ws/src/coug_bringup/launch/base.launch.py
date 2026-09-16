@@ -65,7 +65,7 @@ def create_gui_config(template_name: str, agent_ns: str, suffix: str) -> str:
     config_dir = os.environ["CONFIG_DIR"]
     template_path = os.path.join(config_dir, "gui", template_name)
     with open(template_path) as template:
-        content = template.read().replace("AGENT_NS", agent_ns)
+        content = template.read().replace("<agent_ns>", agent_ns)
 
     with tempfile.NamedTemporaryFile(mode="w", delete=False, suffix=suffix) as rendered_config:
         rendered_config.write(content)
@@ -80,7 +80,9 @@ def create_rviz_config(agent_list: list[str]) -> str:
     gui_dir = os.path.join(config_dir, "gui")
     with open(os.path.join(gui_dir, "rviz.rviz.template")) as template:
         config = yaml.safe_load(
-            template.read().replace("/AGENT_NS/mesh", "/mesh").replace("AGENT_NS", agent_list[0])
+            template.read()
+            .replace("/<agent_ns>/mesh", "/mesh")
+            .replace("<agent_ns>", agent_list[0])
         )
 
     displays = config["Visualization Manager"]["Displays"]
@@ -99,7 +101,7 @@ def create_rviz_config(agent_list: list[str]) -> str:
     displays.extend(
         display
         for agent_ns in agent_list
-        for display in yaml.safe_load(agent_template.replace("AGENT_NS", agent_ns))["displays"]
+        for display in yaml.safe_load(agent_template.replace("<agent_ns>", agent_ns))["displays"]
     )
     with tempfile.NamedTemporaryFile(mode="w", delete=False, suffix=".rviz") as rendered_config:
         yaml.safe_dump(config, rendered_config, sort_keys=False)

@@ -1,10 +1,10 @@
 displays:
   - type: mapviz_plugins/tf_frame
-    name: AGENT_NS
+    name: <agent_ns>
     config:
       visible: true
       collapsed: true
-      frame: AGENT_NS/base_link
+      frame: <agent_ns>/base_link
       color: "#00ff00"
       draw_style: arrows
       position_tolerance: 0
@@ -12,11 +12,11 @@ displays:
       static_arrow_sizes: true
       arrow_size: 53
   - type: mapviz_plugins/navsat
-    name: AGENT_NS
+    name: <agent_ns>
     config:
       visible: true
       collapsed: true
-      topic: /AGENT_NS/gps/fix
+      topic: /<agent_ns>/gps/fix
       color: "#55aaff"
       draw_style: points
       position_tolerance: 0
@@ -26,22 +26,22 @@ displays:
       qos_reliability: 1
       qos_durability: 2
   - type: mapviz_plugins/path
-    name: AGENT_NS
+    name: <agent_ns>
     config:
       visible: true
       collapsed: true
-      topic: /AGENT_NS/smoothed_path
+      topic: /<agent_ns>/smoothed_path
       color: "#ff55ff"
       qos_depth: 10
       qos_history: 1
       qos_reliability: 1
       qos_durability: 2
   - type: mapviz_plugins/odometry
-    name: AGENT_NS, GT
+    name: <agent_ns>, GT
     config:
       visible: true
       collapsed: true
-      topic: /AGENT_NS/odometry/truth
+      topic: /<agent_ns>/odometry/truth
       color: "#ffffff"
       draw_style: lines
       position_tolerance: 0
@@ -57,11 +57,11 @@ displays:
       qos_reliability: 1
       qos_durability: 2
   - type: mapviz_plugins/odometry
-    name: AGENT_NS, NBR
+    name: <agent_ns>, NBR
     config:
       visible: true
       collapsed: true
-      topic: /AGENT_NS/base/odometry/global_nbr
+      topic: /<agent_ns>/base/odometry/global_nbr
       color: "#ffaa00"
       draw_style: lines
       position_tolerance: 0
@@ -77,11 +77,11 @@ displays:
       qos_reliability: 1
       qos_durability: 2
   - type: mapviz_plugins/odometry
-    name: AGENT_NS, FGO
+    name: <agent_ns>, FGO
     config:
       visible: true
       collapsed: true
-      topic: /AGENT_NS/base/odometry/global
+      topic: /<agent_ns>/base/odometry/global
       color: "#00ff00"
       draw_style: lines
       position_tolerance: 0

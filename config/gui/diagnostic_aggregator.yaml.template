@@ -1,10 +1,10 @@
 diagnostic_aggregator:
   ros__parameters:
-    analyzers: ["AGENT_NS", "base_station"]
+    analyzers: ["<agent_ns>", "base_station"]
 
-    AGENT_NS:
+    <agent_ns>:
       type: diagnostic_aggregator/AnalyzerGroup
-      path: AGENT_NS
+      path: <agent_ns>
       analyzers:
         [
           "factor_graph_node",
@@ -19,35 +19,35 @@ diagnostic_aggregator:
         path: "factor_graph_node"
         find_and_remove_prefix:
           [
-            "factor_graph_node: [/AGENT_NS] ",
-            "factor_graph_node_isam2: [/AGENT_NS] ",
-            "factor_graph_node_lpi: [/AGENT_NS] ",
-            "factor_graph_node_tpi: [/AGENT_NS] ",
+            "factor_graph_node: [/<agent_ns>] ",
+            "factor_graph_node_isam2: [/<agent_ns>] ",
+            "factor_graph_node_lpi: [/<agent_ns>] ",
+            "factor_graph_node_tpi: [/<agent_ns>] ",
           ]
         timeout: 5.0
 
       navsat_odom_node:
         type: diagnostic_aggregator/GenericAnalyzer
         path: "navsat_odom_node"
-        find_and_remove_prefix: ["navsat_odom_node: [/AGENT_NS] "]
+        find_and_remove_prefix: ["navsat_odom_node: [/<agent_ns>] "]
         timeout: 5.0
 
       bt_helm_node:
         type: diagnostic_aggregator/GenericAnalyzer
         path: "bt_helm_node"
-        find_and_remove_prefix: ["bt_helm_node: [/AGENT_NS] "]
+        find_and_remove_prefix: ["bt_helm_node: [/<agent_ns>] "]
         timeout: 5.0
 
       agent_receiver_node:
         type: diagnostic_aggregator/GenericAnalyzer
         path: "agent_receiver_node"
-        find_and_remove_prefix: ["agent_receiver_node: [/AGENT_NS] "]
+        find_and_remove_prefix: ["agent_receiver_node: [/<agent_ns>] "]
         timeout: 5.0
 
       bag_recorder_node:
         type: diagnostic_aggregator/GenericAnalyzer
         path: "bag_recorder_node"
-        find_and_remove_prefix: ["bag_recorder_node: [/AGENT_NS] "]
+        find_and_remove_prefix: ["bag_recorder_node: [/<agent_ns>] "]
         timeout: 5.0
 
     base_station:
