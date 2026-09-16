@@ -36,8 +36,7 @@
         enable_ahrs: true
         use_parameter_covariance: true # TODO: Test this
         parameter_covariance:
-          # LORD 3DM-GX5-25 EKF attitude: ±0.25° roll/pitch, ±0.8° heading RMS.
-          # https://www.microstrain.com/inertial-sensors/3dm-gx5-25
+          # https://docs.clearpathrobotics.com/assets/files/clearpath_robotics_014603-TDS1-8efeae7b74bd54c43ea676651f063dbf.pdf
           orientation_noise_sigmas: [0.00436, 0.00436, 0.01396] # [roll, pitch, yaw] [rad]
 
       priors:
@@ -45,8 +44,7 @@
         use_parameter_priors_covariance: false
         parameter_priors_covariance:
           initial_velocity_sigmas: [0.1, 0.1, 0.1] # [m/s] TURTLMap PosegraphBackendOnline.cpp callbackDVL()
-        # LORD 3DM-GX5-25: 8 °/hr in-run gyro bias instability.
-        # https://www.microstrain.com/inertial-sensors/3dm-gx5-25
+        # https://docs.clearpathrobotics.com/assets/files/clearpath_robotics_014603-TDS1-8efeae7b74bd54c43ea676651f063dbf.pdf
         initial_gyro_bias_sigmas: [3.9e-5, 3.9e-5, 3.9e-5] # [rad/s]
 
   ekf_filter_node_odom:
