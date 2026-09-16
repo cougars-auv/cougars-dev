@@ -43,12 +43,12 @@
 
   fluid_pressure_odom_node:
     ros__parameters:
-      atmospheric_pressure: 86039.8 # Utah Lake (~1358 m elevation)
+      atmospheric_pressure: 86039.8 # [Pa] Utah Lake (~1358 m elevation)
       max_pressure_delta: 9780.0 # [Pa] ~1 m depth jump
 
   navsat_odom_node:
     ros__parameters:
-      position_covariance_threshold: 0.001 # IMPORTANT! Using RTK GPS ground truth
+      position_covariance_threshold: 0.001 # [m^2] IMPORTANT! Using RTK GPS ground truth
 
       use_parameter_child_frame: true
 

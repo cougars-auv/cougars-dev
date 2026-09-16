@@ -15,7 +15,7 @@
 
   fluid_pressure_odom_node:
     ros__parameters:
-      atmospheric_pressure: 82776.2 # Deer Creek (~1673 m elevation)
+      atmospheric_pressure: 82776.2 # [Pa] Deer Creek (~1673 m elevation)
       max_pressure_delta: 9780.0 # [Pa] ~1 m depth jump
 
       use_parameter_child_frame: true
@@ -26,8 +26,6 @@
 
   seatrac_x150_imu_depth_node:
     ros__parameters:
-      # East-positive declination (NOAA convention).
-      # https://www.ngdc.noaa.gov/geomag/calculators/magcalc.shtml#declination
       mag_declination_radians: 0.187962 # [rad] WMMHR-2025 (40.4166 N, 111.5077 W, 2025-08-28)
 
       use_parameter_frame: true
