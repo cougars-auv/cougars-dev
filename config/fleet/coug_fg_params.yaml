@@ -439,7 +439,7 @@
 
       # East-positive declination (NOAA convention).
       # https://www.ngdc.noaa.gov/geomag/calculators/magcalc.shtml#declination
-      declination: 0.0 # [rad]
+      declination: 0.187918 # [rad] WMMHR-2025 (40.2406 N, 111.741 W, 2026-01-23)
       yaw_offset: 0.0 # [rad]
 
       orientation_stddev: 0.05 # [rad]

@@ -28,7 +28,7 @@
     ros__parameters:
       # East-positive declination (NOAA convention).
       # https://www.ngdc.noaa.gov/geomag/calculators/magcalc.shtml#declination
-      mag_declination_radians: 0.188 # 10.77 degrees
+      mag_declination_radians: 0.187962 # [rad] WMMHR-2025 (40.4166 N, 111.5077 W, 2025-08-28)
 
       use_parameter_frame: true
 
