@@ -17,7 +17,7 @@ repositories:
     version: main
   eigen_checks:
     type: zip
-    url: https://github.com/cougars-auv/eigen_checks/archive/refs/heads/ros2.zip
+    url: https://github.com/tu-darmstadt-ros-pkg/eigen_checks/archive/refs/heads/ros2.zip
     version: eigen_checks-ros2
   holoocean_interfaces:
     type: zip
@@ -29,5 +29,5 @@ repositories:
     version: mapviz-2.6.4
   voxblox_ros2:
     type: zip
-    url: https://github.com/cougars-auv/voxblox_ros2/archive/refs/heads/ros2.zip
+    url: https://github.com/tu-darmstadt-ros-pkg/voxblox_ros2/archive/refs/heads/ros2.zip
     version: voxblox_ros2-ros2
