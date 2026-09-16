@@ -96,6 +96,7 @@
     ros__parameters:
       # --- Node Settings ---
       sync_slop_sec: 0.05 # [s] Max stamp difference to sync the IMU and AHRS messages.
+
       # 57 µg/√Hz -> 5.6e-4 m/s^2/√Hz * √200 Hz -> 7.9e-3 m/s^2
       # 0.18 °/√h -> 3.0e-3 °/s/√Hz * √200 Hz -> 7.4e-4 rad/s
       # https://github.com/SBG-Systems/sbg_ros2_driver/blob/3.4.0/config/sbg_device_uart_default.yaml
