@@ -18,21 +18,36 @@ set -e
 source "${OVERLAY_WS}/install/setup.bash"
 
 # --- Selection ---
-scenario=$(basename -a "${CONFIG_DIR}"/holoocean/*.json |
-  sed 's/.json$//' | sort |
-  gum choose --header "Select a HoloOcean scenario:") || exit 0
+scenario=$({
+  basename -a "${CONFIG_DIR}"/holoocean/*_params.yaml 2>/dev/null | sed 's/_params.yaml$//'
+  basename -a "${CONFIG_DIR}"/gazebo/*_params.yaml 2>/dev/null | sed 's/_params.yaml$//'
+} | sort -u |
+  gum choose --header "Select a simulation scenario:") || exit 0
+
+if [[ -f "${CONFIG_DIR}/gazebo/${scenario}_params.yaml" ]]; then
+  option_list=(
+    "Record rosbag"
+    "Enable voxblox mapping"
+    "Enable shared voxblox mapping"
+    "HITL mode"
+  )
+else
+  option_list=(
+    "Record rosbag"
+    "Disable sensor noise"
+    "Localization comparison"
+    "Specify lead agent"
+    "Acomms simulation"
+    "Unknown initial poses"
+    "Enable voxblox mapping"
+    "Enable shared voxblox mapping"
+    "HITL mode"
+  )
+fi
 
 # --- Options ---
 options=$(gum choose --no-limit --header "Select options:" \
-  "Record rosbag" \
-  "Disable sensor noise" \
-  "Localization comparison" \
-  "Specify lead agent" \
-  "Acomms simulation" \
-  "Unknown initial poses" \
-  "Enable voxblox mapping" \
-  "Enable shared voxblox mapping" \
-  "HITL mode") || exit 0
+  "${option_list[@]}") || exit 0
 
 record_bag_path=""
 add_noise="true"

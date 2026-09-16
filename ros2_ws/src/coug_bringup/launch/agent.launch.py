@@ -29,12 +29,15 @@ from launch.substitutions import (
     EnvironmentVariable,
     EqualsSubstitution,
     LaunchConfiguration,
-    NotEqualsSubstitution,
     NotSubstitution,
-    OrSubstitution,
     PathJoinSubstitution,
+    PythonExpression,
 )
 from launch_ros.actions import Node, PushRosNamespace
+
+
+def is_agent(agent_ns: LaunchConfiguration, *names: str) -> PythonExpression:
+    return PythonExpression(["'", agent_ns, "' in ", str(names)])
 
 
 def generate_launch_description() -> LaunchDescription:
@@ -98,7 +101,7 @@ def generate_launch_description() -> LaunchDescription:
             "initial_position": initial_position,
             "initial_orientation": initial_orientation,
         }.items(),
-        condition=IfCondition(NotEqualsSubstitution(agent_ns, "coug2")),
+        condition=IfCondition(NotSubstitution(is_agent(agent_ns, "coug2", "rover"))),
     )
 
     coug_fg_dvl_ekf_launch = IncludeLaunchDescription(
@@ -112,20 +115,24 @@ def generate_launch_description() -> LaunchDescription:
         condition=IfCondition(EqualsSubstitution(agent_ns, "coug2")),
     )
 
+    coug_fg_dual_ekf_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(coug_fg_launch_dir, "coug_fg_dual_ekf.launch.py")
+        ),
+        launch_arguments={
+            "use_sim_time": use_sim_time,
+            "agent_ns": agent_ns,
+        }.items(),
+        condition=IfCondition(EqualsSubstitution(agent_ns, "rover")),
+    )
+
     coug_helm_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(coug_helm_launch_dir, "coug_helm.launch.py")),
         launch_arguments={
             "use_sim_time": use_sim_time,
             "agent_ns": agent_ns,
         }.items(),
-        condition=IfCondition(
-            NotSubstitution(
-                OrSubstitution(
-                    EqualsSubstitution(agent_ns, "blue1sim"),
-                    EqualsSubstitution(agent_ns, "wamv1sim"),
-                )
-            )
-        ),
+        condition=IfCondition(NotSubstitution(is_agent(agent_ns, "blue1sim", "wamv1sim", "rover"))),
     )
 
     coug_control_launch = IncludeLaunchDescription(
@@ -136,14 +143,7 @@ def generate_launch_description() -> LaunchDescription:
             "use_sim_time": use_sim_time,
             "agent_ns": agent_ns,
         }.items(),
-        condition=IfCondition(
-            NotSubstitution(
-                OrSubstitution(
-                    EqualsSubstitution(agent_ns, "blue1sim"),
-                    EqualsSubstitution(agent_ns, "wamv1sim"),
-                )
-            )
-        ),
+        condition=IfCondition(NotSubstitution(is_agent(agent_ns, "blue1sim", "wamv1sim", "rover"))),
     )
 
     coug_belief_mppi_launch = IncludeLaunchDescription(
@@ -154,12 +154,7 @@ def generate_launch_description() -> LaunchDescription:
             "use_sim_time": use_sim_time,
             "agent_ns": agent_ns,
         }.items(),
-        condition=IfCondition(
-            OrSubstitution(
-                EqualsSubstitution(agent_ns, "blue1sim"),
-                EqualsSubstitution(agent_ns, "wamv1sim"),
-            )
-        ),
+        condition=IfCondition(is_agent(agent_ns, "blue1sim", "wamv1sim", "rover")),
     )
 
     coug_visual_dvl_launch = IncludeLaunchDescription(
@@ -222,6 +217,7 @@ def generate_launch_description() -> LaunchDescription:
                     coug_description_launch,
                     coug_fg_launch,
                     coug_fg_dvl_ekf_launch,
+                    coug_fg_dual_ekf_launch,
                     coug_helm_launch,
                     coug_control_launch,
                     coug_belief_mppi_launch,

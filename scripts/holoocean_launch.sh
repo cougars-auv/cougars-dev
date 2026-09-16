@@ -16,8 +16,8 @@
 set -e
 
 # --- Selection ---
-scenario=$(basename -a "${CONFIG_DIR}"/holoocean/*.json |
-  sed 's/.json$//' | sort |
+scenario=$(basename -a "${CONFIG_DIR}"/holoocean/*_params.yaml |
+  sed 's/_params.yaml$//' | sort |
   gum choose --header "Select a HoloOcean scenario:") || exit 0
 
 # --- Launch ---
