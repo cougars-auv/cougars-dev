@@ -60,14 +60,14 @@
     base:
       use_parameter_tf: false
       parameter_tf: # Relative to the target frame.
-        position: [0.0, 0.0, 0.0] # [x, y, z]
+        position: [0.0, 0.0, 0.0] # [x, y, z] [m]
         orientation: [0.0, 0.0, 0.0, 1.0] # [qx, qy, qz, qw]
 
     imu:
       use_parameter_frame: false
       use_parameter_tf: false
       parameter_tf: # Relative to the target frame.
-        position: [0.0, 0.0, 0.0] # [x, y, z]
+        position: [0.0, 0.0, 0.0] # [x, y, z] [m]
         orientation: [0.0, 0.0, 0.0, 1.0] # [qx, qy, qz, qw]
       covariance_scalar: 1.0
       # https://github.com/SBG-Systems/sbg_ros2_driver/blob/3.4.0/config/sbg_device_uart_default.yaml
@@ -75,14 +75,14 @@
       use_parameter_covariance: false
       parameter_covariance:
         # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/performance-specifications
-        accel_noise_sigmas: [5.6e-4, 5.6e-4, 5.6e-4] # [m/s^2/√Hz]
-        gyro_noise_sigmas: [5.24e-5, 5.24e-5, 5.24e-5] # [rad/s/√Hz]
+        accel_noise_sigmas: [5.6e-4, 5.6e-4, 5.6e-4] # [x, y, z] [m/s^2/√Hz]
+        gyro_noise_sigmas: [5.24e-5, 5.24e-5, 5.24e-5] # [x, y, z] [rad/s/√Hz]
       # Gauss-Markov fit K ≈ 2.3 * B / √tau_c at tau_c = 500 s.
       # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/performance-specifications
-      accel_bias_rw_sigmas: [1.4e-5, 1.4e-5, 1.4e-5] # [m/s^2/√s]
-      gyro_bias_rw_sigmas: [3.5e-6, 3.5e-6, 3.5e-6] # [rad/s/√s]
+      accel_bias_rw_sigmas: [1.4e-5, 1.4e-5, 1.4e-5] # [x, y, z] [m/s^2/√s]
+      gyro_bias_rw_sigmas: [3.5e-6, 3.5e-6, 3.5e-6] # [x, y, z] [rad/s/√s]
       integration_covariance: 1.0e-8
-      gravity: [0.0, 0.0, -9.8] # [m/s^2]
+      gravity: [0.0, 0.0, -9.8] # [x, y, z] [m/s^2]
       diagnostic_timeout_sec: 1.0 # [s]
 
     gps:
@@ -91,7 +91,7 @@
       use_parameter_frame: false
       use_parameter_tf: false
       parameter_tf: # Relative to the target frame.
-        position: [0.0, 0.0, 0.0] # [x, y, z]
+        position: [0.0, 0.0, 0.0] # [x, y, z] [m]
         orientation: [0.0, 0.0, 0.0, 1.0] # [qx, qy, qz, qw]
       covariance_scalar: 1.0
       use_parameter_covariance: false
@@ -108,7 +108,7 @@
       use_parameter_frame: false
       use_parameter_tf: false
       parameter_tf: # Relative to the target frame.
-        position: [0.0, 0.0, 0.0] # [x, y, z]
+        position: [0.0, 0.0, 0.0] # [x, y, z] [m]
         orientation: [0.0, 0.0, 0.0, 1.0] # [qx, qy, qz, qw]
       covariance_scalar: 1.0
       use_parameter_covariance: false
@@ -125,15 +125,15 @@
       use_parameter_frame: false
       use_parameter_tf: false
       parameter_tf: # Relative to the target frame.
-        position: [0.0, 0.0, 0.0] # [x, y, z]
+        position: [0.0, 0.0, 0.0] # [x, y, z] [m]
         orientation: [0.0, 0.0, 0.0, 1.0] # [qx, qy, qz, qw]
       covariance_scalar: 1.0
       use_parameter_covariance: false
       parameter_covariance:
         # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/hardware-documentation/aiding-sensors
-        magnetic_field_noise_sigmas: [3.0e-07, 3.0e-07, 3.0e-07] # [T]
+        magnetic_field_noise_sigmas: [3.0e-07, 3.0e-07, 3.0e-07] # [x, y, z] [T]
       # https://www.ngdc.noaa.gov/geomag/calculators/magcalc.shtml#igrfwmm
-      reference_field: [3.9634e-06, 2.08423e-05, -4.57678e-05] # [T] WMMHR-2025 (40.2406 N, 111.741 W, 2026-01-23)
+      reference_field: [3.9634e-06, 2.08423e-05, -4.57678e-05] # [x, y, z] [T] WMMHR-2025 (40.2406 N, 111.741 W, 2026-01-23)
       diagnostic_timeout_sec: 1.0 # [s]
       robust_kernel: "None"
       robust_k: 1.345
@@ -145,7 +145,7 @@
       use_parameter_frame: false
       use_parameter_tf: false
       parameter_tf: # Relative to the target frame.
-        position: [0.0, 0.0, 0.0] # [x, y, z]
+        position: [0.0, 0.0, 0.0] # [x, y, z] [m]
         orientation: [0.0, 0.0, 0.0, 1.0] # [qx, qy, qz, qw]
       covariance_scalar: 1.0
       use_parameter_covariance: false
@@ -165,13 +165,13 @@
       use_parameter_frame: false
       use_parameter_tf: false
       parameter_tf: # Relative to the target frame.
-        position: [0.0, 0.0, 0.0] # [x, y, z]
+        position: [0.0, 0.0, 0.0] # [x, y, z] [m]
         orientation: [0.0, 0.0, 0.0, 1.0] # [qx, qy, qz, qw]
       covariance_scalar: 1.0
       use_parameter_covariance: false
       parameter_covariance:
         # https://waterlinked.com/dvl-a50
-        velocity_noise_sigmas: [0.02, 0.02, 0.02] # [m/s]
+        velocity_noise_sigmas: [0.02, 0.02, 0.02] # [x, y, z] [m/s]
       diagnostic_timeout_sec: 0.25 # [s]
       robust_kernel: "None"
       robust_k: 1.345
@@ -180,7 +180,7 @@
       enable_const_vel: false
       enable_const_vel_dropout_only: false
       covariance_scalar: 1.0
-      prediction_noise_sigmas: [0.001, 0.001, 0.001] # [m/s/sqrt(s)]
+      prediction_noise_sigmas: [0.001, 0.001, 0.001] # [x, y, z] [m/s/sqrt(s)]
       robust_kernel: "None"
       robust_k: 1.345
 
@@ -190,13 +190,13 @@
       use_parameter_frame: false
       use_parameter_tf: false
       parameter_tf: # Relative to the target frame.
-        position: [0.0, 0.0, 0.0] # [x, y, z]
+        position: [0.0, 0.0, 0.0] # [x, y, z] [m]
         orientation: [0.0, 0.0, 0.0, 1.0] # [qx, qy, qz, qw]
       covariance_scalar: 1.0
-      prediction_noise_sigmas: [0.1, 0.1, 0.1] # [m/s/sqrt(s)]
-      mass: [31.87, 60.46, 60.46] # [kg]
-      linear_drag: [1.59, 3.02, 3.02]
-      quad_drag: [6.11, 196.13, 196.13]
+      prediction_noise_sigmas: [0.1, 0.1, 0.1] # [x, y, z] [m/s/sqrt(s)]
+      mass: [31.87, 60.46, 60.46] # [x, y, z] [kg]
+      linear_drag: [1.59, 3.02, 3.02] # [x, y, z] [kg/s]
+      quad_drag: [6.11, 196.13, 196.13] # [x, y, z] [kg/m]
       diagnostic_timeout_sec: 1.0 # [s]
       robust_kernel: "None"
       robust_k: 1.345
@@ -207,7 +207,7 @@
       use_parameter_frame: false
       use_parameter_tf: false
       parameter_tf: # Relative to the target frame.
-        position: [0.0, 0.0, 0.0] # [x, y, z]
+        position: [0.0, 0.0, 0.0] # [x, y, z] [m]
         orientation: [0.0, 0.0, 0.0, 1.0] # [qx, qy, qz, qw]
       covariance_scalar: 1.0
       enable_bearing: true
@@ -219,7 +219,7 @@
       sound_speed: 1500.0 # [m/s]
       neighbor:
         modem_tf: # Relative to the neighboring agent's base frame.
-          position: [0.3785, 0.0, -0.0985] # [x, y, z]
+          position: [0.3785, 0.0, -0.0985] # [x, y, z] [m]
           orientation: [0.0, 0.0, 0.0, 1.0] # [qx, qy, qz, qw]
         ahrs: # Transformed into the neighboring agent's base frame.
           enable_ahrs: true
@@ -248,31 +248,31 @@
       # Also overrides use_parameter_priors_covariance to set it to true.
       use_parameter_priors: true
       parameter_priors:
-        initial_position: [0.0, 0.0, 0.0] # [m] (of the base frame in the map frame)
+        initial_position: [0.0, 0.0, 0.0] # [x, y, z] [m] (of the base frame in the map frame)
         initial_orientation: [0.0, 0.0, 0.0] # [roll, pitch, yaw] [rad] (of the base frame in the map frame)
-        initial_velocity: [0.0, 0.0, 0.0] # [m/s] (in the base frame)
+        initial_velocity: [0.0, 0.0, 0.0] # [x, y, z] [m/s] (in the base frame)
 
-      initial_accel_bias: [0.0, 0.0, 0.0] # [m/s^2] (in the IMU frame)
-      initial_gyro_bias: [0.0, 0.0, 0.0] # [rad/s] (in the IMU frame)
-      hard_iron_bias: [0.0, 0.0, 0.0] # [T] (in the sensor frame)
+      initial_accel_bias: [0.0, 0.0, 0.0] # [x, y, z] [m/s^2] (in the IMU frame)
+      initial_gyro_bias: [0.0, 0.0, 0.0] # [x, y, z] [rad/s] (in the IMU frame)
+      hard_iron_bias: [0.0, 0.0, 0.0] # [x, y, z] [T] (in the sensor frame)
       # IMPORTANT! The xy delta is seeded from the first range/bearing pair to prevent antipodal trapping.
-      origin_delta_position: [0.0, 0.0, 0.0] # [m] (of the neighbor's base frame in the map frame)
+      origin_delta_position: [0.0, 0.0, 0.0] # [x, y, z] [m] (of the neighbor's base frame in the map frame)
       origin_delta_orientation: [0.0, 0.0, 0.0] # [roll, pitch, yaw] [rad] (of the neighbor's base frame in the map frame)
 
       # If true, forces the initial state covariance to be set by the values below.
       use_parameter_priors_covariance: true
       parameter_priors_covariance:
-        initial_position_sigmas: [0.001, 0.001, 0.001] # [m] (in the map frame)
+        initial_position_sigmas: [0.001, 0.001, 0.001] # [x, y, z] [m] (in the map frame)
         initial_orientation_sigmas: [0.001, 0.001, 0.001] # [roll, pitch, yaw] [rad] (in the map frame)
-        initial_velocity_sigmas: [0.001, 0.001, 0.001] # [m/s] (in the base frame)
+        initial_velocity_sigmas: [0.001, 0.001, 0.001] # [x, y, z] [m/s] (in the base frame)
 
-      initial_accel_bias_sigmas: [0.01, 0.01, 0.01] # [m/s^2] (in the IMU frame)
+      initial_accel_bias_sigmas: [0.01, 0.01, 0.01] # [x, y, z] [m/s^2] (in the IMU frame)
       # IMPORTANT! The gravity-aligned component is unobservable with AHRS/mag/GPS off, so this bounds heading drift.
       # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/performance-specifications
-      initial_gyro_bias_sigmas: [3.4e-5, 3.4e-5, 3.4e-5] # [rad/s] (in the IMU frame)
+      initial_gyro_bias_sigmas: [3.4e-5, 3.4e-5, 3.4e-5] # [x, y, z] [rad/s] (in the IMU frame)
       # No published SBG hard-iron spec; assumes ~20% of the local field magnitude.
-      hard_iron_bias_sigmas: [1.0e-05, 1.0e-05, 1.0e-05] # [T] (in the sensor frame)
-      origin_delta_position_sigmas: [1000.0, 1000.0, 1.0e-04] # [m] (in the map frame)
+      hard_iron_bias_sigmas: [1.0e-05, 1.0e-05, 1.0e-05] # [x, y, z] [T] (in the sensor frame)
+      origin_delta_position_sigmas: [1000.0, 1000.0, 1.0e-04] # [x, y, z] [m] (in the map frame)
       origin_delta_orientation_sigmas: [1.0e-04, 1.0e-04, 1.0e-04] # [roll, pitch, yaw] [rad] (in the map frame)
 
     # --- Comparison Methods ---

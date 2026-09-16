@@ -17,6 +17,7 @@ import math
 import os
 from typing import Any
 
+import yaml
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchContext, LaunchDescription
 from launch.action import Action
@@ -33,11 +34,9 @@ from launch.logging import launch_config
 from launch.substitutions import (
     EnvironmentVariable,
     LaunchConfiguration,
-    OrSubstitution,
     PathJoinSubstitution,
 )
-from launch_ros.actions import ComposableNodeContainer, Node, PushRosNamespace
-from launch_ros.descriptions import ComposableNode
+from launch_ros.actions import Node, PushRosNamespace
 
 
 def as_meters(position: list[float]) -> list[float]:
@@ -46,6 +45,16 @@ def as_meters(position: list[float]) -> list[float]:
 
 def as_radians(orientation: list[float]) -> list[float]:
     return [math.radians(float(value)) for value in orientation]
+
+
+def load_launch_params(path: str, top_key: str) -> dict[str, Any]:
+    try:
+        with open(path) as config_file:
+            config = yaml.safe_load(config_file)
+        params = config[top_key]["sim_launch"]["ros__parameters"]
+        return dict(params)
+    except (KeyError, TypeError, OSError):
+        return {}
 
 
 def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Action]:
@@ -59,24 +68,38 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
     enable_acoustic_comms = LaunchConfiguration("enable_acoustic_comms")
     use_spawn_pose = LaunchConfiguration("use_spawn_pose").perform(context) == "true"
     enable_mapping = LaunchConfiguration("enable_mapping")
-    enable_shared_mapping = LaunchConfiguration("enable_shared_mapping")
     hitl_mode = LaunchConfiguration("hitl_mode")
 
-    scenario_file = os.path.join(
-        os.environ["CONFIG_DIR"], "holoocean", f"{scenario.perform(context)}.json"
-    )
-    with open(scenario_file) as scenario_config:
-        agents = json.load(scenario_config)["agents"]
+    scenario_str = scenario.perform(context)
 
-    poses = {agent["agent_name"]: agent for agent in agents}
-    base_station = poses.pop("base_station")
+    config_dir = os.environ["CONFIG_DIR"]
+    gazebo_param_file = os.path.join(config_dir, "gazebo", f"{scenario_str}_params.yaml")
+    use_gazebo = os.path.isfile(gazebo_param_file)
+
+    base_station: dict[str, Any] = {}
+    if use_gazebo:
+        world_launch_params = load_launch_params(gazebo_param_file, "/**")
+        poses = {
+            agent_ns: load_launch_params(gazebo_param_file, f"/{agent_ns}")
+            for agent_ns in world_launch_params.get("agents", [])
+        }
+    else:
+        scenario_file = os.path.join(config_dir, "holoocean", f"{scenario_str}.json")
+        with open(scenario_file) as scenario_config:
+            agents = json.load(scenario_config)["agents"]
+        poses = {agent["agent_name"]: agent for agent in agents}
+        base_station = poses.pop("base_station")
+
     agent_list = list(poses)
     agent_list_str = f"[{', '.join(agent_list)}]"
 
     coug_bringup_dir = get_package_share_directory("coug_bringup")
     coug_bringup_launch_dir = os.path.join(coug_bringup_dir, "launch")
-    coug_holo_dir = get_package_share_directory("coug_holoocean")
-    coug_holo_launch_dir = os.path.join(coug_holo_dir, "launch")
+    coug_holoocean_dir = get_package_share_directory("coug_holoocean")
+    coug_holoocean_launch_dir = os.path.join(coug_holoocean_dir, "launch")
+    rover_gazebo_dir = get_package_share_directory("rover_gazebo")
+    rover_gazebo_launch_dir = os.path.join(rover_gazebo_dir, "launch")
+
     fleet_param_file = PathJoinSubstitution(
         [EnvironmentVariable("CONFIG_DIR"), "fleet", "coug_holoocean_params.yaml"]
     )
@@ -97,8 +120,23 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
         )
     )
 
+    if use_gazebo:
+        actions.append(
+            IncludeLaunchDescription(
+                PythonLaunchDescriptionSource(
+                    os.path.join(rover_gazebo_launch_dir, "rover_gazebo_world.launch.py")
+                ),
+                launch_arguments={
+                    "use_sim_time": use_sim_time,
+                    "world": scenario_str,
+                    "agent_list": agent_list_str,
+                }.items(),
+            )
+        )
+
     for agent_ns in agent_list:
-        spawn: dict[str, Any] = poses[agent_ns] if use_spawn_pose else {"location": [0, 0, 0]}
+        position = str(as_meters(poses[agent_ns]["location"]))
+        orientation = str(as_radians(poses[agent_ns].get("rotation", [0, 0, 0])))
         actions.append(
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(
@@ -109,176 +147,140 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                     "agent_ns": agent_ns,
                     "lead_agent": lead_agent,
                     "loc_comparison": loc_comparison,
-                    "initial_position": str(as_meters(spawn["location"])),
-                    "initial_orientation": str(as_radians(spawn.get("rotation", [0, 0, 0]))),
+                    "initial_position": position if use_spawn_pose else "[0.0, 0.0, 0.0]",
+                    "initial_orientation": orientation if use_spawn_pose else "[0.0, 0.0, 0.0]",
                 }.items(),
                 condition=UnlessCondition(hitl_mode),
             )
         )
 
-        bridge_launch = IncludeLaunchDescription(
-            PythonLaunchDescriptionSource(
-                os.path.join(coug_holo_launch_dir, "coug_holoocean.launch.py")
-            ),
-            launch_arguments={
-                "use_sim_time": use_sim_time,
-                "agent_ns": agent_ns,
-                "add_noise": add_noise,
-            }.items(),
-        )
+        if use_gazebo:
+            bridge_launch = IncludeLaunchDescription(
+                PythonLaunchDescriptionSource(
+                    os.path.join(rover_gazebo_launch_dir, "rover_gazebo_agent.launch.py")
+                ),
+                launch_arguments={
+                    "use_sim_time": use_sim_time,
+                    "agent_ns": agent_ns,
+                    "initial_position": position,
+                    "initial_orientation": orientation,
+                }.items(),
+            )
+        else:
+            bridge_launch = IncludeLaunchDescription(
+                PythonLaunchDescriptionSource(
+                    os.path.join(coug_holoocean_launch_dir, "coug_holoocean.launch.py")
+                ),
+                launch_arguments={
+                    "use_sim_time": use_sim_time,
+                    "agent_ns": agent_ns,
+                    "add_noise": add_noise,
+                }.items(),
+            )
 
         actions.append(GroupAction(actions=[PushRosNamespace(agent_ns), bridge_launch]))
 
         actions.append(
+            Node(
+                package="voxblox_ros",
+                executable="tsdf_server",
+                name="voxblox_node",
+                namespace=agent_ns,
+                remappings=[
+                    ("pointcloud_1", "camera/point_cloud/cloud_registered"),
+                ],
+                parameters=[
+                    {
+                        "use_sim_time": use_sim_time,
+                        "world_frame": "map",
+                        "tsdf_voxel_size": 0.05,
+                        "method": "fast",
+                    }
+                ],
+                condition=IfCondition(enable_mapping),
+            )
+        )
+
+    if not use_gazebo:
+        actions.append(
+            Node(
+                package="tf2_ros",
+                executable="static_transform_publisher",
+                name="map_to_holoocean_transform",
+                arguments=[
+                    "--frame-id",
+                    "map",
+                    "--child-frame-id",
+                    "holoocean_global_frame",
+                ],
+                parameters=[{"use_sim_time": use_sim_time}],
+            )
+        )
+
+        actions.append(
             GroupAction(
-                condition=IfCondition(OrSubstitution(enable_mapping, enable_shared_mapping)),
                 actions=[
-                    PushRosNamespace(agent_ns),
-                    ComposableNodeContainer(
-                        package="rclcpp_components",
-                        executable="component_container",
-                        name="depth_camera_container",
-                        namespace="",
-                        composable_node_descriptions=[
-                            ComposableNode(
-                                package="depth_image_proc",
-                                plugin="depth_image_proc::PointCloudXyzrgbNode",
-                                name="depth_camera_cloud_node",
-                                remappings=[
-                                    (
-                                        "depth_registered/image_rect",
-                                        "camera/depth/depth_registered",
-                                    ),
-                                    ("rgb/image_rect_color", "camera/rgb/image_rect_color"),
-                                    ("rgb/camera_info", "camera/rgb/camera_info"),
-                                    ("points", "camera/point_cloud/cloud_registered"),
-                                ],
-                                parameters=[{"use_sim_time": use_sim_time}],
-                            ),
+                    PushRosNamespace("base_station"),
+                    Node(
+                        package="coug_holoocean",
+                        executable="depth_converter",
+                        name="modem_depth_converter_node",
+                        parameters=[
+                            fleet_param_file,
+                            {
+                                "use_sim_time": use_sim_time,
+                                "depth_frame": "base_station",
+                                "map_frame": "map",
+                                "add_noise": add_noise,
+                            },
                         ],
                     ),
                     Node(
-                        package="voxblox_ros",
-                        executable="tsdf_server",
-                        name="voxblox_node",
-                        condition=IfCondition(enable_mapping),
-                        remappings=[
-                            ("pointcloud_1", "camera/point_cloud/cloud_registered"),
-                        ],
+                        package="coug_holoocean",
+                        executable="modem_converter",
+                        name="modem_converter_node",
                         parameters=[
+                            fleet_param_file,
                             {
                                 "use_sim_time": use_sim_time,
-                                "world_frame": "map",
-                                "tsdf_voxel_size": 0.05,
-                                "method": "fast",
-                            }
+                                "beacon_id": 15,
+                                "modem_frame": "base_station",
+                                "add_noise": add_noise,
+                            },
                         ],
                     ),
                 ],
             )
         )
 
-    actions.append(
-        Node(
-            package="voxblox_ros",
-            executable="tsdf_server",
-            name="shared_voxblox_node",
-            condition=IfCondition(enable_shared_mapping),
-            remappings=[
-                (f"pointcloud_{index}", f"/{agent_ns}/camera/point_cloud/cloud_registered")
-                for index, agent_ns in enumerate(agent_list, start=1)
-            ],
-            parameters=[
-                {
-                    "use_sim_time": use_sim_time,
-                    "world_frame": "map",
-                    "num_pointcloud_subs": len(agent_list),
-                    "tsdf_voxel_size": 0.05,
-                    "method": "fast",
-                }
-            ],
+        base_station_position = as_meters(base_station["location"])
+        base_station_orientation = as_radians(base_station.get("rotation", [0, 0, 0]))
+        actions.append(
+            Node(
+                package="tf2_ros",
+                executable="static_transform_publisher",
+                name="map_to_base_station_transform",
+                arguments=[
+                    "--x",
+                    str(base_station_position[0]),
+                    "--y",
+                    str(base_station_position[1]),
+                    "--z",
+                    str(base_station_position[2]),
+                    "--roll",
+                    str(base_station_orientation[0]),
+                    "--pitch",
+                    str(base_station_orientation[1]),
+                    "--yaw",
+                    str(base_station_orientation[2]),
+                    "--frame-id",
+                    "map",
+                    "--child-frame-id",
+                    "base_station",
+                ],
+                parameters=[{"use_sim_time": use_sim_time}],
+            )
         )
-    )
-
-    actions.append(
-        Node(
-            package="tf2_ros",
-            executable="static_transform_publisher",
-            name="map_to_holoocean_transform",
-            arguments=[
-                "--frame-id",
-                "map",
-                "--child-frame-id",
-                "holoocean_global_frame",
-            ],
-            parameters=[{"use_sim_time": use_sim_time}],
-        )
-    )
-
-    actions.append(
-        GroupAction(
-            actions=[
-                PushRosNamespace("base_station"),
-                Node(
-                    package="coug_holoocean",
-                    executable="depth_converter",
-                    name="modem_depth_converter_node",
-                    parameters=[
-                        fleet_param_file,
-                        {
-                            "use_sim_time": use_sim_time,
-                            "depth_frame": "base_station",
-                            "map_frame": "map",
-                            "add_noise": add_noise,
-                        },
-                    ],
-                ),
-                Node(
-                    package="coug_holoocean",
-                    executable="modem_converter",
-                    name="modem_converter_node",
-                    parameters=[
-                        fleet_param_file,
-                        {
-                            "use_sim_time": use_sim_time,
-                            "beacon_id": 15,
-                            "modem_frame": "base_station",
-                            "add_noise": add_noise,
-                        },
-                    ],
-                ),
-            ],
-        )
-    )
-
-    base_station_position = as_meters(base_station["location"])
-    base_station_orientation = as_radians(base_station.get("rotation", [0, 0, 0]))
-    actions.append(
-        Node(
-            package="tf2_ros",
-            executable="static_transform_publisher",
-            name="map_to_base_station_transform",
-            arguments=[
-                "--x",
-                str(base_station_position[0]),
-                "--y",
-                str(base_station_position[1]),
-                "--z",
-                str(base_station_position[2]),
-                "--roll",
-                str(base_station_orientation[0]),
-                "--pitch",
-                str(base_station_orientation[1]),
-                "--yaw",
-                str(base_station_orientation[2]),
-                "--frame-id",
-                "map",
-                "--child-frame-id",
-                "base_station",
-            ],
-            parameters=[{"use_sim_time": use_sim_time}],
-        )
-    )
 
     return actions
 
@@ -325,10 +327,6 @@ def generate_launch_description() -> LaunchDescription:
             ),
             DeclareLaunchArgument(
                 "enable_mapping",
-                default_value="false",
-            ),
-            DeclareLaunchArgument(
-                "enable_shared_mapping",
                 default_value="false",
             ),
             DeclareLaunchArgument(

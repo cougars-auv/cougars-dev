@@ -101,14 +101,14 @@
       # 0.18 °/√h -> 3.0e-3 °/s/√Hz * √200 Hz -> 7.4e-4 rad/s
       # https://github.com/SBG-Systems/sbg_ros2_driver/blob/3.4.0/config/sbg_device_uart_default.yaml
       # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/performance-specifications
-      accel_noise_sigmas: [7.9e-3, 7.9e-3, 7.9e-3] # [m/s^2]
-      gyro_noise_sigmas: [7.4e-4, 7.4e-4, 7.4e-4] # [rad/s]
+      accel_noise_sigmas: [7.9e-3, 7.9e-3, 7.9e-3] # [x, y, z] [m/s^2]
+      gyro_noise_sigmas: [7.4e-4, 7.4e-4, 7.4e-4] # [x, y, z] [rad/s]
       # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/performance-specifications
       ahrs_noise_sigmas: [0.00698, 0.00698, 0.01745] # [roll, pitch, yaw] [rad]
       # Gauss-Markov fit K ≈ 2.3 * B / √tau_c at tau_c = 500 s.
       # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/performance-specifications
-      accel_bias_rw_sigmas: [1.4e-5, 1.4e-5, 1.4e-5] # [m/s^2/√s]
-      gyro_bias_rw_sigmas: [3.5e-6, 3.5e-6, 3.5e-6] # [rad/s/√s]
+      accel_bias_rw_sigmas: [1.4e-5, 1.4e-5, 1.4e-5] # [x, y, z] [m/s^2/√s]
+      gyro_bias_rw_sigmas: [3.5e-6, 3.5e-6, 3.5e-6] # [x, y, z] [rad/s/√s]
 
       # --- ROS Topics and Frames ---
       imu_input_topic: "IMUSensor"
@@ -123,9 +123,9 @@
       au_to_tesla: 5.0446e-05
 
       # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/hardware-documentation/aiding-sensors
-      noise_sigmas: [3.0e-07, 3.0e-07, 3.0e-07] # [T]
+      noise_sigmas: [3.0e-07, 3.0e-07, 3.0e-07] # [x, y, z] [T]
       # No published SBG hard-iron spec; assumes ~20% of the local field magnitude.
-      bias_sigmas: [1.0e-05, 1.0e-05, 1.0e-05] # [T]
+      bias_sigmas: [1.0e-05, 1.0e-05, 1.0e-05] # [x, y, z] [T]
 
       # --- ROS Topics and Frames ---
       input_topic: "MagnetometerSensor"
@@ -171,14 +171,14 @@
       # 57 µg/√Hz -> 5.6e-4 m/s^2/√Hz * √10 Hz -> 1.8e-3 m/s^2
       # 0.18 °/√h -> 3.0e-3 °/s/√Hz * √10 Hz -> 1.7e-4 rad/s
       # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/performance-specifications
-      accel_noise_sigmas: [1.8e-3, 1.8e-3, 1.8e-3] # [m/s^2]
-      gyro_noise_sigmas: [1.7e-4, 1.7e-4, 1.7e-4] # [rad/s]
+      accel_noise_sigmas: [1.8e-3, 1.8e-3, 1.8e-3] # [x, y, z] [m/s^2]
+      gyro_noise_sigmas: [1.7e-4, 1.7e-4, 1.7e-4] # [x, y, z] [rad/s]
       # https://www.blueprintsubsea.com/seatrac/seatrac-standard
       ahrs_noise_sigmas: [0.00349, 0.00349, 0.01745] # [roll, pitch, yaw] [rad]
       # Gauss-Markov fit K ≈ 2.3 * B / √tau_c at tau_c = 500 s.
       # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/performance-specifications
-      accel_bias_rw_sigmas: [1.4e-5, 1.4e-5, 1.4e-5] # [m/s^2/√s]
-      gyro_bias_rw_sigmas: [3.5e-6, 3.5e-6, 3.5e-6] # [rad/s/√s]
+      accel_bias_rw_sigmas: [1.4e-5, 1.4e-5, 1.4e-5] # [x, y, z] [m/s^2/√s]
+      gyro_bias_rw_sigmas: [3.5e-6, 3.5e-6, 3.5e-6] # [x, y, z] [rad/s/√s]
 
       # --- ROS Topics and Frames ---
       imu_input_topic: "ModemIMUSensor"

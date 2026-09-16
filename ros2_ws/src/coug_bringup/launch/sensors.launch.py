@@ -18,7 +18,6 @@ from launch.substitutions import (
     EnvironmentVariable,
     LaunchConfiguration,
     PathJoinSubstitution,
-    PythonExpression,
 )
 from launch_ros.actions import Node
 
@@ -28,56 +27,56 @@ from launch_ros.actions import Node
 def generate_launch_description() -> LaunchDescription:
     agent_ns = LaunchConfiguration("agent_ns")
 
-    seatrac_params = PathJoinSubstitution(
+    seatrac_param_file = PathJoinSubstitution(
         [
             EnvironmentVariable("CONFIG_DIR"),
             "fleet",
             "seatrac_params.yaml",
         ]
     )
-    sbg_driver_params = PathJoinSubstitution(
+    sbg_driver_param_file = PathJoinSubstitution(
         [
             EnvironmentVariable("CONFIG_DIR"),
             "fleet",
             "sbg_driver_params.yaml",
         ]
     )
-    dvl_a50_params = PathJoinSubstitution(
+    dvl_a50_param_file = PathJoinSubstitution(
         [
             EnvironmentVariable("CONFIG_DIR"),
             "fleet",
             "dvl_a50_params.yaml",
         ]
     )
-    pressure_sensor_params = PathJoinSubstitution(
+    pressure_sensor_param_file = PathJoinSubstitution(
         [
             EnvironmentVariable("CONFIG_DIR"),
             "fleet",
             "pressure_sensor_params.yaml",
         ]
     )
-    gpsd_client_params = PathJoinSubstitution(
+    gpsd_client_param_file = PathJoinSubstitution(
         [
             EnvironmentVariable("CONFIG_DIR"),
             "fleet",
             "gpsd_client_params.yaml",
         ]
     )
-    nmea_gpsd_params = PathJoinSubstitution(
+    nmea_gpsd_param_file = PathJoinSubstitution(
         [
             EnvironmentVariable("CONFIG_DIR"),
             "fleet",
             "nmea_gpsd_params.yaml",
         ]
     )
-    topic_monitor_params = PathJoinSubstitution(
+    topic_monitor_param_file = PathJoinSubstitution(
         [
             EnvironmentVariable("CONFIG_DIR"),
             "fleet",
             "topic_monitor_params.yaml",
         ]
     )
-    ntrip_client_params = PathJoinSubstitution(
+    ntrip_client_param_file = PathJoinSubstitution(
         [
             EnvironmentVariable("CONFIG_DIR"),
             "fleet",
@@ -87,7 +86,7 @@ def generate_launch_description() -> LaunchDescription:
     agent_param_file = PathJoinSubstitution(
         [
             EnvironmentVariable("CONFIG_DIR"),
-            PythonExpression(["'", agent_ns, "' + '_params.yaml'"]),
+            [agent_ns, "_params.yaml"],
         ]
     )
 
@@ -101,49 +100,49 @@ def generate_launch_description() -> LaunchDescription:
                 package="seatrac",
                 executable="modem",
                 name="modem",
-                parameters=[seatrac_params, agent_param_file],
+                parameters=[seatrac_param_file, agent_param_file],
             ),
             Node(
                 package="sbg_driver",
                 executable="sbg_device",
                 name="sbg_device",
-                parameters=[sbg_driver_params, agent_param_file],
+                parameters=[sbg_driver_param_file, agent_param_file],
             ),
             Node(
                 package="dvl_a50",
                 executable="dvl_a50_sensor",
                 name="dvl_a50_sensor",
-                parameters=[dvl_a50_params, agent_param_file],
+                parameters=[dvl_a50_param_file, agent_param_file],
             ),
             Node(
                 package="pressure_sensor",
                 executable="pressure_pub",
                 name="pressure_pub",
-                parameters=[pressure_sensor_params, agent_param_file],
+                parameters=[pressure_sensor_param_file, agent_param_file],
             ),
             Node(
                 package="gpsd_client",
                 executable="gpsd_client",
                 name="gpsd_client",
-                parameters=[gpsd_client_params, agent_param_file],
+                parameters=[gpsd_client_param_file, agent_param_file],
             ),
             Node(
                 package="nmea_gpsd",
                 executable="nmea_gpsd_udp",
                 name="nmea_gpsd_udp",
-                parameters=[nmea_gpsd_params, agent_param_file],
+                parameters=[nmea_gpsd_param_file, agent_param_file],
             ),
             Node(
                 package="topic_monitor",
                 executable="topic_monitor_node",
                 name="topic_monitor_node",
-                parameters=[topic_monitor_params, agent_param_file],
+                parameters=[topic_monitor_param_file, agent_param_file],
             ),
             Node(
                 package="ntrip_client",
                 executable="ntrip_ros.py",
                 name="ntrip_client",
-                parameters=[ntrip_client_params, agent_param_file],
+                parameters=[ntrip_client_param_file, agent_param_file],
             ),
         ]
     )

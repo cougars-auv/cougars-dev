@@ -3,6 +3,10 @@
     ros__parameters:
       urdf_file: "rover.urdf.xacro"
 
+  rover_gazebo_agent_launch:
+    ros__parameters:
+      urdf_file: "rover.urdf.xacro"
+
   imu_filter_madgwick:
     ros__parameters:
       declination: 0.227921 # [rad] WMMHR-2025 (38.1615 N, 122.4546 W, 2026-09-16)

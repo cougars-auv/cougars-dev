@@ -10,12 +10,12 @@
         sensor_rate_hz: 250.0 # [Hz] /nav/filtered_imu/data
         use_parameter_covariance: true
         parameter_covariance:
-          accel_noise_sigmas: [2.4525e-4, 2.4525e-4, 2.4525e-4] # [m/s^2/√Hz] br2config.yaml
-          gyro_noise_sigmas: [8.726646e-5, 8.726646e-5, 8.726646e-5] # [rad/s/√Hz] br2config.yaml
-        accel_bias_rw_sigmas: [6.20438876e-3, 6.20438876e-3, 6.20438876e-3] # [m/s^2/√s] br2config.yaml
-        gyro_bias_rw_sigmas: [6.1324618e-4, 6.1324618e-4, 6.1324618e-4] # [rad/s/√s] br2config.yaml
+          accel_noise_sigmas: [2.4525e-4, 2.4525e-4, 2.4525e-4] # [x, y, z] [m/s^2/√Hz] br2config.yaml
+          gyro_noise_sigmas: [8.726646e-5, 8.726646e-5, 8.726646e-5] # [x, y, z] [rad/s/√Hz] br2config.yaml
+        accel_bias_rw_sigmas: [6.20438876e-3, 6.20438876e-3, 6.20438876e-3] # [x, y, z] [m/s^2/√s] br2config.yaml
+        gyro_bias_rw_sigmas: [6.1324618e-4, 6.1324618e-4, 6.1324618e-4] # [x, y, z] [rad/s/√s] br2config.yaml
         integration_covariance: 1.0e-8 # TURTLMap Posegraph.cpp setImuParams()
-        gravity: [0.0, 0.0, -9.81007] # [m/s^2] br2config.yaml (g: 9.81007)
+        gravity: [0.0, 0.0, -9.81007] # [x, y, z] [m/s^2] br2config.yaml (g: 9.81007)
 
       dvl_topic: "dvl/twist_fom"
 
@@ -43,9 +43,9 @@
         use_parameter_priors: false
         use_parameter_priors_covariance: false
         parameter_priors_covariance:
-          initial_velocity_sigmas: [0.1, 0.1, 0.1] # [m/s] TURTLMap PosegraphBackendOnline.cpp callbackDVL()
+          initial_velocity_sigmas: [0.1, 0.1, 0.1] # [x, y, z] [m/s] TURTLMap PosegraphBackendOnline.cpp callbackDVL()
         # https://docs.clearpathrobotics.com/assets/files/clearpath_robotics_014603-TDS1-8efeae7b74bd54c43ea676651f063dbf.pdf
-        initial_gyro_bias_sigmas: [3.9e-5, 3.9e-5, 3.9e-5] # [rad/s]
+        initial_gyro_bias_sigmas: [3.9e-5, 3.9e-5, 3.9e-5] # [x, y, z] [rad/s]
 
   ekf_filter_node_odom:
     ros__parameters:

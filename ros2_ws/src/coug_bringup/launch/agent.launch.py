@@ -22,14 +22,13 @@ from launch.actions import (
     IncludeLaunchDescription,
     SetEnvironmentVariable,
 )
-from launch.conditions import IfCondition
+from launch.conditions import IfCondition, UnlessCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.logging import launch_config
 from launch.substitutions import (
     EnvironmentVariable,
     EqualsSubstitution,
     LaunchConfiguration,
-    NotSubstitution,
     PathJoinSubstitution,
     PythonExpression,
 )
@@ -56,8 +55,8 @@ def generate_launch_description() -> LaunchDescription:
         ]
     )
 
-    coug_des_dir = get_package_share_directory("coug_description")
-    coug_des_launch_dir = os.path.join(coug_des_dir, "launch")
+    coug_description_dir = get_package_share_directory("coug_description")
+    coug_description_launch_dir = os.path.join(coug_description_dir, "launch")
     coug_comms_dir = get_package_share_directory("coug_comms")
     coug_comms_launch_dir = os.path.join(coug_comms_dir, "launch")
     coug_control_dir = get_package_share_directory("coug_control")
@@ -68,12 +67,12 @@ def generate_launch_description() -> LaunchDescription:
     coug_helm_launch_dir = os.path.join(coug_helm_dir, "launch")
     coug_belief_mppi_dir = get_package_share_directory("coug_belief_mppi")
     coug_belief_mppi_launch_dir = os.path.join(coug_belief_mppi_dir, "launch")
-    coug_viz_dvl_dir = get_package_share_directory("coug_visual_dvl")
-    coug_viz_dvl_launch_dir = os.path.join(coug_viz_dvl_dir, "launch")
+    coug_visual_dvl_dir = get_package_share_directory("coug_visual_dvl")
+    coug_visual_dvl_launch_dir = os.path.join(coug_visual_dvl_dir, "launch")
 
     coug_description_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            os.path.join(coug_des_launch_dir, "coug_description.launch.py")
+            os.path.join(coug_description_launch_dir, "coug_description.launch.py")
         ),
         launch_arguments={
             "use_sim_time": use_sim_time,
@@ -101,7 +100,7 @@ def generate_launch_description() -> LaunchDescription:
             "initial_position": initial_position,
             "initial_orientation": initial_orientation,
         }.items(),
-        condition=IfCondition(NotSubstitution(is_agent(agent_ns, "coug2", "rover"))),
+        condition=UnlessCondition(is_agent(agent_ns, "coug2", "rover")),
     )
 
     coug_fg_dvl_ekf_launch = IncludeLaunchDescription(
@@ -132,7 +131,7 @@ def generate_launch_description() -> LaunchDescription:
             "use_sim_time": use_sim_time,
             "agent_ns": agent_ns,
         }.items(),
-        condition=IfCondition(NotSubstitution(is_agent(agent_ns, "blue1sim", "wamv1sim", "rover"))),
+        condition=UnlessCondition(is_agent(agent_ns, "blue1sim", "wamv1sim", "rover")),
     )
 
     coug_control_launch = IncludeLaunchDescription(
@@ -143,7 +142,7 @@ def generate_launch_description() -> LaunchDescription:
             "use_sim_time": use_sim_time,
             "agent_ns": agent_ns,
         }.items(),
-        condition=IfCondition(NotSubstitution(is_agent(agent_ns, "blue1sim", "wamv1sim", "rover"))),
+        condition=UnlessCondition(is_agent(agent_ns, "blue1sim", "wamv1sim", "rover")),
     )
 
     coug_belief_mppi_launch = IncludeLaunchDescription(
@@ -159,7 +158,7 @@ def generate_launch_description() -> LaunchDescription:
 
     coug_visual_dvl_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            os.path.join(coug_viz_dvl_launch_dir, "coug_visual_dvl.launch.py")
+            os.path.join(coug_visual_dvl_launch_dir, "coug_visual_dvl.launch.py")
         ),
         launch_arguments={
             "use_sim_time": use_sim_time,

@@ -1,0 +1,14 @@
+/**:
+  rover_gazebo_world_launch:
+    ros__parameters:
+      world_file: "rover_sonoma_raceway.sdf.xacro"
+
+  sim_launch:
+    ros__parameters:
+      agents: ["rover"]
+
+/rover:
+  sim_launch:
+    ros__parameters:
+      location: [2.0, -2.5, 1.0] # [x, y, z] [m]
+      rotation: [0.0, 0.0, 0.0] # [roll, pitch, yaw] [deg]

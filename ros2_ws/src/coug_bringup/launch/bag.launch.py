@@ -67,12 +67,6 @@ def save_artifacts(record_bag_path: str, config_snapshot: str) -> None:
             print(f"{label} saved: {destination}")
 
 
-def save_artifacts_on_exit(
-    context: LaunchContext, record_bag_path: str, config_snapshot: str
-) -> None:
-    save_artifacts(record_bag_path, config_snapshot)
-
-
 def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Action]:
     use_sim_time = LaunchConfiguration("use_sim_time")
     agent_list_config = LaunchConfiguration("agent_list")
@@ -127,11 +121,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                     target_action=record_process,
                     on_exit=[
                         OpaqueFunction(
-                            function=save_artifacts_on_exit,
-                            kwargs={
-                                "record_bag_path": record_bag_path_str,
-                                "config_snapshot": config_snapshot,
-                            },
+                            function=lambda _: save_artifacts(record_bag_path_str, config_snapshot)
                         )
                     ],
                 )
