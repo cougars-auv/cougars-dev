@@ -13,9 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set -e
+set -eu
 
-if [[ -z $1 || -z $2 ]]; then
+if [[ -z ${1:-} || -z ${2:-} ]]; then
   echo "Usage: ./setup.sh <agent-ns> <base-station-ip> [--hitl]" >&2
   exit 1
 fi
@@ -25,7 +25,7 @@ cd ~/cougars-dev
 agent_ns="$1"
 ip="$2"
 use_sim_time="false"
-[[ $3 == --hitl ]] && use_sim_time="true"
+[[ ${3:-} == --hitl ]] && use_sim_time="true"
 
 if [[ ! -f "config/${agent_ns}_params.yaml" ]]; then
   echo "Error: unknown agent '${agent_ns}'" >&2

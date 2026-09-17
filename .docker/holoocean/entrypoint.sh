@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set -e
+set -eu
 
 # Match UID/GID to local user
 target_uid=$(stat -c '%u' "${CONFIG_DIR}")

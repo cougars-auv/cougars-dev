@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set -e
+set -eu
 
 cd ~/cougars-dev
 
@@ -26,7 +26,7 @@ set -a
 source ops/.env
 set +a
 
-ip="${ZENOH_ROUTER_IP}"
+ip="${ZENOH_ROUTER_IP:-}"
 if [[ -z ${ip} ]]; then
   echo "Error: ZENOH_ROUTER_IP not set in .env" >&2
   exit 1

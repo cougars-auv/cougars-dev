@@ -13,9 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set -e
+set -eu
 
-if [[ -z $1 ]]; then
+if [[ -z ${1:-} ]]; then
   echo "Usage: ./connect.sh <agent-ns>" >&2
   exit 1
 fi
