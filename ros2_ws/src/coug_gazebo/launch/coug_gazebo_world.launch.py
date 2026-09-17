@@ -30,11 +30,7 @@ from launch.actions import (
 from launch.conditions import UnlessCondition
 from launch.event_handlers import OnProcessExit, OnShutdown
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import (
-    EnvironmentVariable,
-    LaunchConfiguration,
-    PathJoinSubstitution,
-)
+from launch.substitutions import EnvironmentVariable, LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import ComposableNodeContainer
 from ros_gz_bridge.actions import RosGzBridge
 from ros_gz_sim.actions import GzServer
@@ -69,22 +65,17 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
     world_file = os.path.join(coug_gazebo_dir, "worlds", world_filename)
     world_sdf_file = tempfile.mktemp(prefix="coug_gazebo_", suffix=".sdf")
 
-    actions: list[Action] = []
-
     world_xacro_process = ExecuteProcess(
         cmd=["xacro", "-o", world_sdf_file, ["headless:=", headless], world_file],
     )
-    actions.append(world_xacro_process)
 
-    actions.append(
+    return [
+        world_xacro_process,
         RegisterEventHandler(
             event_handler=OnShutdown(
                 on_shutdown=[OpaqueFunction(function=lambda _: os.remove(world_sdf_file))]
             )
-        )
-    )
-
-    actions.append(
+        ),
         RegisterEventHandler(
             event_handler=OnProcessExit(
                 target_action=world_xacro_process,
@@ -109,20 +100,15 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                     ),
                 ],
             )
-        )
-    )
-
-    actions.append(
+        ),
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(os.path.join(ros_gz_sim_launch_dir, "gz_sim.launch.py")),
             launch_arguments={
                 "gz_args": "-v4 -g",
             }.items(),
             condition=UnlessCondition(headless),
-        )
-    )
-
-    return actions
+        ),
+    ]
 
 
 def generate_launch_description() -> LaunchDescription:
