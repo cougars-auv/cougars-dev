@@ -82,7 +82,11 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
             for agent_ns in scenario_launch_params.get("agents", [])
         }
     else:
-        scenario_filename = scenario_launch_params["scenario_file"]
+        scenario_filename = scenario_launch_params.get("scenario_file")
+        if not scenario_filename:
+            raise RuntimeError(
+                f"No 'scenario_file' set under 'sim_launch' in {scenario_param_file_str}"
+            )
         scenario_file = os.path.join(os.environ["CONFIG_DIR"], "holoocean", scenario_filename)
         with open(scenario_file) as scenario_config:
             agents = json.load(scenario_config)["agents"]
