@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set -eu
+set -e
 
 source "${OVERLAY_WS}/install/setup.bash"
 

@@ -81,7 +81,7 @@
         PathFollowCritic:
           enabled: true
           cost_weight: 8.0
-          offset_from_furthest: 10
+          offset_from_furthest: 3
 
         BeliefStateCritic:
           enabled: true
@@ -141,7 +141,6 @@
   planner_server:
     ros__parameters:
       expected_planner_frequency: 1.0
-      transform_tolerance: 2.0
       costmap_update_timeout: 3.0
       planner_plugins: ["GridBased"]
       GridBased:

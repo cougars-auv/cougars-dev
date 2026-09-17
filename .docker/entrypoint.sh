@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set -eu
+set -e
 
 source "/opt/ros/${ROS_DISTRO}/setup.bash"
 [ -f "${OVERLAY_WS}/install/setup.bash" ] && source "${OVERLAY_WS}/install/setup.bash"
