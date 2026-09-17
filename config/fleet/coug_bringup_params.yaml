@@ -1,4 +1,8 @@
 /**:
+  sim_launch:
+    ros__parameters:
+      scenario_file: "couguv_openwater.json"
+
   bag_recorder_node:
     ros__parameters:
       publish_diagnostics: true

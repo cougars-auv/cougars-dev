@@ -72,22 +72,26 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
 
     scenario_param_file_str = scenario_param_file.perform(context)
 
+    config_dir = os.environ["CONFIG_DIR"]
+    fleet_launch_params = load_launch_params(
+        os.path.join(config_dir, "fleet", "coug_bringup_params.yaml"), "/**"
+    )
     scenario_launch_params = load_launch_params(scenario_param_file_str, "/**")
     use_gazebo = os.path.basename(os.path.dirname(scenario_param_file_str)) == "gazebo"
 
     base_station: dict[str, Any] = {}
     if use_gazebo:
+        pose_source = scenario_param_file_str
         agent_poses = {
             agent_ns: load_launch_params(scenario_param_file_str, f"/{agent_ns}")
             for agent_ns in scenario_launch_params.get("agents", [])
         }
     else:
-        scenario_filename = scenario_launch_params.get("scenario_file")
-        if not scenario_filename:
-            raise RuntimeError(
-                f"No 'scenario_file' set under 'sim_launch' in {scenario_param_file_str}"
-            )
-        scenario_file = os.path.join(os.environ["CONFIG_DIR"], "holoocean", scenario_filename)
+        scenario_filename = scenario_launch_params.get(
+            "scenario_file", fleet_launch_params.get("scenario_file")
+        )
+        scenario_file = os.path.join(config_dir, "holoocean", scenario_filename)
+        pose_source = scenario_file
         with open(scenario_file) as scenario_config:
             agents = json.load(scenario_config)["agents"]
         agent_poses = {agent["agent_name"]: agent for agent in agents}
@@ -139,8 +143,11 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
         )
 
     for agent_ns in agent_list:
-        position = str(as_meters(agent_poses[agent_ns]["location"]))
-        orientation = str(as_radians(agent_poses[agent_ns]["rotation"]))
+        agent_pose = agent_poses[agent_ns]
+        if "location" not in agent_pose or "rotation" not in agent_pose:
+            raise RuntimeError(f"No 'location' and 'rotation' set for {agent_ns} in {pose_source}")
+        position = str(as_meters(agent_pose["location"]))
+        orientation = str(as_radians(agent_pose["rotation"]))
 
         agent_param_file = PathJoinSubstitution(
             [EnvironmentVariable("CONFIG_DIR"), f"{agent_ns}_params.yaml"]
@@ -271,6 +278,10 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
             )
         )
 
+        if "location" not in base_station or "rotation" not in base_station:
+            raise RuntimeError(
+                f"No 'location' and 'rotation' set for base_station in {pose_source}"
+            )
         base_station_position = as_meters(base_station["location"])
         base_station_orientation = as_radians(base_station["rotation"])
         actions.append(
