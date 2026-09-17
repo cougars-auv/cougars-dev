@@ -10,6 +10,12 @@
   gz_type_name: "gz.msgs.Model"
   direction: GZ_TO_ROS
 
+- ros_topic_name: "odometry/truth"
+  gz_topic_name: "odometry/truth"
+  ros_type_name: "nav_msgs/msg/Odometry"
+  gz_type_name: "gz.msgs.Odometry"
+  direction: GZ_TO_ROS
+
 - ros_topic_name: "camera/odom"
   gz_topic_name: "camera/odom_with_covariance"
   ros_type_name: "nav_msgs/msg/Odometry"
