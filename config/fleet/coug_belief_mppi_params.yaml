@@ -102,7 +102,7 @@
           velocity_noise_sigmas: [0.02, 0.02, 0.02] # [x, y, z] [m/s]
 
           ahrs_update_rate_hz: 10.0 # [Hz]
-          yaw_noise_sigma: 0.01745 # [rad]
+          orientation_yaw_noise_sigma: 0.01745 # [rad]
 
   global_costmap:
     global_costmap:
