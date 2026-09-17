@@ -79,7 +79,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
     agent_launch_params = load_launch_params(
         os.path.join(config_dir, f"{agent_ns_str}_params.yaml"), f"/{agent_ns_str}"
     )
-    urdf_filename = agent_launch_params.get("urdf_file", fleet_launch_params["urdf_file"])
+    urdf_filename = agent_launch_params.get("urdf_file", fleet_launch_params.get("urdf_file"))
     urdf_file = os.path.join(coug_description_dir, "urdf", urdf_filename)
 
     actions: list[Action] = [

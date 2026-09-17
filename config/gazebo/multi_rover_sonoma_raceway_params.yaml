@@ -5,7 +5,7 @@
 
   sim_launch:
     ros__parameters:
-      agents: ["rover1sim"]
+      agents: ["rover1sim", "rover2sim"]
 
   imu_filter_madgwick:
     ros__parameters:
@@ -15,4 +15,10 @@
   sim_launch:
     ros__parameters:
       location: [2.0, -2.5, 1.0] # [x, y, z] [m]
+      rotation: [0.0, 0.0, 0.0] # [roll, pitch, yaw] [deg]
+
+/rover2sim:
+  sim_launch:
+    ros__parameters:
+      location: [-1.0, -2.5, 1.0] # [x, y, z] [m]
       rotation: [0.0, 0.0, 0.0] # [roll, pitch, yaw] [deg]

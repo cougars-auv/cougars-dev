@@ -65,7 +65,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
         os.path.join(config_dir, "fleet", "coug_gazebo_params.yaml"), "/**"
     )
     scenario_launch_params = load_launch_params(scenario_param_file.perform(context), "/**")
-    world_filename = scenario_launch_params.get("world_file", fleet_launch_params["world_file"])
+    world_filename = scenario_launch_params.get("world_file", fleet_launch_params.get("world_file"))
     world_file = os.path.join(coug_gazebo_dir, "worlds", world_filename)
     world_sdf_file = tempfile.mktemp(prefix="coug_gazebo_", suffix=".sdf")
 
