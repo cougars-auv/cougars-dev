@@ -71,7 +71,7 @@ CoUGARs is a low-cost, configurable AUV platform designed for multi-agent autono
 
 > If you run into crashes or out-of-memory errors while building the workspace, restrict the compiler to a single worker using `colcon build --parallel-workers 1`.
 >
-> If `clang-tidy` in VSCode is spamming incorrect C++ warnings and errors, build once with `colcon build --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON` and use the Command Palette (`Ctrl + Shift + P`) to select "Developer: Reload Window."
+> If VSCode's `clang-tidy` is spamming incorrect warnings and errors, build once with `colcon build --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON` and use the Command Palette (`Ctrl + Shift + P`) to select "Developer: Reload Window."
 
 ## Documentation
 
