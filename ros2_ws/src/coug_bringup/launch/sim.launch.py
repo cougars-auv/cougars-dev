@@ -94,11 +94,10 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
 
     coug_bringup_dir = get_package_share_directory("coug_bringup")
     coug_bringup_launch_dir = os.path.join(coug_bringup_dir, "launch")
+    coug_gazebo_dir = get_package_share_directory("coug_gazebo")
+    coug_gazebo_launch_dir = os.path.join(coug_gazebo_dir, "launch")
     coug_holoocean_dir = get_package_share_directory("coug_holoocean")
     coug_holoocean_launch_dir = os.path.join(coug_holoocean_dir, "launch")
-    rover_gazebo_dir = get_package_share_directory("rover_gazebo")
-    rover_gazebo_launch_dir = os.path.join(rover_gazebo_dir, "launch")
-
     fleet_param_file = PathJoinSubstitution(
         [EnvironmentVariable("CONFIG_DIR"), "fleet", "coug_bringup_params.yaml"]
     )
@@ -127,7 +126,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
         actions.append(
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(
-                    os.path.join(rover_gazebo_launch_dir, "rover_gazebo_world.launch.py")
+                    os.path.join(coug_gazebo_launch_dir, "coug_gazebo_world.launch.py")
                 ),
                 launch_arguments={
                     "scenario_param_file": scenario_param_file,
@@ -166,7 +165,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
         if use_gazebo:
             sim_bridge_launch = IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(
-                    os.path.join(rover_gazebo_launch_dir, "rover_gazebo_agent.launch.py")
+                    os.path.join(coug_gazebo_launch_dir, "coug_gazebo_agent.launch.py")
                 ),
                 launch_arguments={
                     "use_sim_time": use_sim_time,

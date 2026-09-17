@@ -1,9 +1,9 @@
 /**:
-  rover_gazebo_agent_launch:
+  coug_gazebo_agent_launch:
     ros__parameters:
       urdf_file: "rover.gazebo.xacro"
 
-  rover_gazebo_world_launch:
+  coug_gazebo_world_launch:
     ros__parameters:
       world_file: "rover_sonoma_raceway.sdf.xacro"
 

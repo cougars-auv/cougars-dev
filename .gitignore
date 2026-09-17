@@ -11,7 +11,7 @@ ros2_ws/*
 !ros2_ws/src/
 ros2_ws/src/*
 !ros2_ws/src/coug_bringup/
-!ros2_ws/src/rover_gazebo/
+!ros2_ws/src/coug_gazebo/
 
 .env
 .venv

@@ -7,7 +7,7 @@
     ros__parameters:
       urdf_file: "rover.urdf.xacro"
 
-  rover_gazebo_agent_launch:
+  coug_gazebo_agent_launch:
     ros__parameters:
       urdf_file: "rover.gazebo.xacro"
 
