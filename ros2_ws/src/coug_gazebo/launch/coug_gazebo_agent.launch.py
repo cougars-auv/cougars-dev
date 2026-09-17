@@ -82,7 +82,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
     urdf_filename = agent_launch_params.get("urdf_file", fleet_launch_params.get("urdf_file"))
     urdf_file = os.path.join(coug_description_dir, "urdf", urdf_filename)
 
-    actions: list[Action] = [
+    return [
         Node(
             package="ros_gz_sim",
             executable="create",
@@ -158,8 +158,6 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
             ],
         ),
     ]
-
-    return actions
 
 
 def generate_launch_description() -> LaunchDescription:
