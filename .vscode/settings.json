@@ -23,7 +23,8 @@
     "*.xml.template": "xml",
     "*.yaml.template": "yaml",
     ".env": "properties",
-    ".env.example": "properties"
+    ".env.example": "properties",
+    "LICENSE": "plaintext"
   },
   "git.repositoryScanMaxDepth": 3,
   "python.analysis.typeCheckingMode": "off",
