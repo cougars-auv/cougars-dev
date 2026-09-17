@@ -18,17 +18,15 @@ set -eu
 cd ~/cougars-dev
 
 if [[ ! -f ops/.env ]]; then
-  echo "Error: .env not found, run ./setup.sh first" >&2
+  echo "Error: ops/.env not found, run ./setup.sh first" >&2
   exit 1
 fi
 
-set -a
 source ops/.env
-set +a
 
 ip="${ZENOH_ROUTER_IP:-}"
 if [[ -z ${ip} ]]; then
-  echo "Error: ZENOH_ROUTER_IP not set in .env" >&2
+  echo "Error: ZENOH_ROUTER_IP not set in ops/.env" >&2
   exit 1
 fi
 
