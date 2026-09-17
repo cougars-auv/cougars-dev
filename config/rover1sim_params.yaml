@@ -184,8 +184,3 @@
             max_obstacle_height: 2.0
             obstacle_max_range: 10.0
             raytrace_max_range: 12.0
-
-/base_station:
-  navsat_odom_node:
-    ros__parameters:
-      use_parameter_origin: false

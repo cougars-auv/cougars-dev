@@ -1,8 +1,3 @@
-/**:
-  sim_launch:
-    ros__parameters:
-      scenario_file: "bluerov2_openwater.json"
-
 holoocean_node:
   ros__parameters:
     publish_commands: true
@@ -11,3 +6,13 @@ holoocean_node:
 
     relative_path: false
     scenario_path: "/home/ue4/config/holoocean/bluerov2_openwater.json"
+
+/**:
+  sim_launch:
+    ros__parameters:
+      scenario_file: "bluerov2_openwater.json"
+
+/base_station:
+  navsat_odom_node:
+    ros__parameters:
+      use_parameter_origin: true
