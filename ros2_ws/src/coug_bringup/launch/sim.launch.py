@@ -66,13 +66,12 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
     lead_agent = LaunchConfiguration("lead_agent")
     enable_direct_comms = LaunchConfiguration("enable_direct_comms")
     enable_acoustic_comms = LaunchConfiguration("enable_acoustic_comms")
-    use_spawn_pose = LaunchConfiguration("use_spawn_pose").perform(context) == "true"
+    known_initial_poses = LaunchConfiguration("known_initial_poses").perform(context) == "true"
     enable_mapping = LaunchConfiguration("enable_mapping")
     hitl_mode = LaunchConfiguration("hitl_mode")
 
     scenario_param_file_str = scenario_param_file.perform(context)
 
-    config_dir = os.environ["CONFIG_DIR"]
     scenario_launch_params = load_launch_params(scenario_param_file_str, "/**")
     use_gazebo = os.path.basename(os.path.dirname(scenario_param_file_str)) == "gazebo"
 
@@ -84,7 +83,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
         }
     else:
         scenario_filename = scenario_launch_params["scenario_file"]
-        scenario_file = os.path.join(config_dir, "holoocean", scenario_filename)
+        scenario_file = os.path.join(os.environ["CONFIG_DIR"], "holoocean", scenario_filename)
         with open(scenario_file) as scenario_config:
             agents = json.load(scenario_config)["agents"]
         agent_poses = {agent["agent_name"]: agent for agent in agents}
@@ -100,6 +99,9 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
     rover_gazebo_dir = get_package_share_directory("rover_gazebo")
     rover_gazebo_launch_dir = os.path.join(rover_gazebo_dir, "launch")
 
+    fleet_param_file = PathJoinSubstitution(
+        [EnvironmentVariable("CONFIG_DIR"), "fleet", "coug_bringup_params.yaml"]
+    )
     holoocean_fleet_param_file = PathJoinSubstitution(
         [EnvironmentVariable("CONFIG_DIR"), "fleet", "coug_holoocean_params.yaml"]
     )
@@ -135,7 +137,12 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
 
     for agent_ns in agent_list:
         position = str(as_meters(agent_poses[agent_ns]["location"]))
-        orientation = str(as_radians(agent_poses[agent_ns].get("rotation", [0, 0, 0])))
+        orientation = str(as_radians(agent_poses[agent_ns]["rotation"]))
+
+        agent_param_file = PathJoinSubstitution(
+            [EnvironmentVariable("CONFIG_DIR"), f"{agent_ns}_params.yaml"]
+        )
+
         actions.append(
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(
@@ -145,10 +152,12 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                     "use_sim_time": use_sim_time,
                     "agent_ns": agent_ns,
                     "scenario_param_file": scenario_param_file,
-                    "lead_agent": lead_agent,
                     "loc_comparison": loc_comparison,
-                    "initial_position": position if use_spawn_pose else "[0.0, 0.0, 0.0]",
-                    "initial_orientation": orientation if use_spawn_pose else "[0.0, 0.0, 0.0]",
+                    "lead_agent": lead_agent,
+                    "initial_position": position if known_initial_poses else "[0.0, 0.0, 0.0]",
+                    "initial_orientation": (
+                        orientation if known_initial_poses else "[0.0, 0.0, 0.0]"
+                    ),
                 }.items(),
                 condition=UnlessCondition(hitl_mode),
             )
@@ -192,12 +201,15 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                     ("pointcloud_1", "camera/point_cloud/cloud_registered"),
                 ],
                 parameters=[
+                    fleet_param_file,
+                    agent_param_file,
+                    scenario_param_file,
                     {
                         "use_sim_time": use_sim_time,
                         "world_frame": "map",
                         "tsdf_voxel_size": 0.05,
                         "method": "fast",
-                    }
+                    },
                 ],
                 condition=IfCondition(enable_mapping),
             )
@@ -258,7 +270,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
         )
 
         base_station_position = as_meters(base_station["location"])
-        base_station_orientation = as_radians(base_station.get("rotation", [0, 0, 0]))
+        base_station_orientation = as_radians(base_station["rotation"])
         actions.append(
             Node(
                 package="tf2_ros",
@@ -300,11 +312,7 @@ def generate_launch_description() -> LaunchDescription:
             DeclareLaunchArgument(
                 "scenario_param_file",
                 default_value=PathJoinSubstitution(
-                    [
-                        EnvironmentVariable("CONFIG_DIR"),
-                        "holoocean",
-                        "couguv_openwater_params.yaml",
-                    ]
+                    [EnvironmentVariable("CONFIG_DIR"), "holoocean", "couguv_openwater_params.yaml"]
                 ),
             ),
             DeclareLaunchArgument(
@@ -332,7 +340,7 @@ def generate_launch_description() -> LaunchDescription:
                 default_value="true",
             ),
             DeclareLaunchArgument(
-                "use_spawn_pose",
+                "known_initial_poses",
                 default_value="true",
             ),
             DeclareLaunchArgument(

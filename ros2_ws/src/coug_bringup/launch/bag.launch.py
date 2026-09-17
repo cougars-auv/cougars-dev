@@ -39,7 +39,12 @@ from launch.events import matches_action
 from launch.events.process import SignalProcess
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.logging import launch_config
-from launch.substitutions import EqualsSubstitution, LaunchConfiguration
+from launch.substitutions import (
+    EnvironmentVariable,
+    EqualsSubstitution,
+    LaunchConfiguration,
+    PathJoinSubstitution,
+)
 from launch_ros.actions import Node
 
 
@@ -88,6 +93,13 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
 
     coug_bringup_dir = get_package_share_directory("coug_bringup")
     coug_bringup_launch_dir = os.path.join(coug_bringup_dir, "launch")
+
+    fleet_param_file = PathJoinSubstitution(
+        [EnvironmentVariable("CONFIG_DIR"), "fleet", "coug_bringup_params.yaml"]
+    )
+    agent_param_file = PathJoinSubstitution(
+        [EnvironmentVariable("CONFIG_DIR"), f"{agent_ns}_params.yaml"]
+    )
 
     actions: list[Action] = []
 
@@ -241,7 +253,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
         Node(
             package="tf2_ros",
             executable="static_transform_publisher",
-            name="sonar_frame_alias",
+            name="sonar_link_to_sonar_frame_transform",
             arguments=[
                 "--frame-id",
                 f"{agent_ns}/sonar_link",
@@ -259,17 +271,18 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
             executable="tsdf_server",
             name="voxblox_node",
             namespace=agent_ns,
-            output="screen",
             remappings=[
                 ("pointcloud_1", "/zedm/zed_node/point_cloud/cloud_registered"),
             ],
             parameters=[
+                fleet_param_file,
+                agent_param_file,
                 {
                     "use_sim_time": use_sim_time,
                     "world_frame": "map",
                     "tsdf_voxel_size": 0.05,
                     "method": "fast",
-                }
+                },
             ],
             condition=IfCondition(EqualsSubstitution(agent_ns, "turtlmap")),
         )

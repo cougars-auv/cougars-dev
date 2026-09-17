@@ -152,25 +152,6 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
         }.items(),
     )
 
-    rviz_node = Node(
-        package="rviz2",
-        executable="rviz2",
-        name="rviz2",
-        arguments=["-d", create_rviz_config(agent_list)],
-        parameters=[{"use_sim_time": use_sim_time}],
-    )
-
-    plotjuggler_node = Node(
-        package="plotjuggler",
-        executable="plotjuggler",
-        name="plotjuggler",
-        arguments=[
-            "-l",
-            create_gui_config("plotjuggler.xml.template", agent_ns, ".xml"),
-        ],
-        parameters=[{"use_sim_time": use_sim_time}],
-    )
-
     coug_mapviz_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(coug_mapviz_launch_dir, "coug_mapviz.launch.py")
@@ -192,6 +173,25 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
         }.items(),
     )
 
+    plotjuggler_node = Node(
+        package="plotjuggler",
+        executable="plotjuggler",
+        name="plotjuggler",
+        arguments=[
+            "-l",
+            create_gui_config("plotjuggler.xml.template", agent_ns, ".xml"),
+        ],
+        parameters=[{"use_sim_time": use_sim_time}],
+    )
+
+    rviz_node = Node(
+        package="rviz2",
+        executable="rviz2",
+        name="rviz2",
+        arguments=["-d", create_rviz_config(agent_list)],
+        parameters=[{"use_sim_time": use_sim_time}],
+    )
+
     base_station_group = GroupAction(
         condition=IfCondition(enable_base_processing),
         actions=[
@@ -203,10 +203,10 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
 
     actions = [
         base_station_group,
-        rviz_node,
-        plotjuggler_node,
         coug_mapviz_launch,
         coug_rqt_launch,
+        plotjuggler_node,
+        rviz_node,
     ]
 
     if record_bag_path_str:

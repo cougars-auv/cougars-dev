@@ -28,66 +28,31 @@ def generate_launch_description() -> LaunchDescription:
     agent_ns = LaunchConfiguration("agent_ns")
 
     seatrac_param_file = PathJoinSubstitution(
-        [
-            EnvironmentVariable("CONFIG_DIR"),
-            "fleet",
-            "seatrac_params.yaml",
-        ]
+        [EnvironmentVariable("CONFIG_DIR"), "fleet", "seatrac_params.yaml"]
     )
     sbg_driver_param_file = PathJoinSubstitution(
-        [
-            EnvironmentVariable("CONFIG_DIR"),
-            "fleet",
-            "sbg_driver_params.yaml",
-        ]
+        [EnvironmentVariable("CONFIG_DIR"), "fleet", "sbg_driver_params.yaml"]
     )
     dvl_a50_param_file = PathJoinSubstitution(
-        [
-            EnvironmentVariable("CONFIG_DIR"),
-            "fleet",
-            "dvl_a50_params.yaml",
-        ]
+        [EnvironmentVariable("CONFIG_DIR"), "fleet", "dvl_a50_params.yaml"]
     )
     pressure_sensor_param_file = PathJoinSubstitution(
-        [
-            EnvironmentVariable("CONFIG_DIR"),
-            "fleet",
-            "pressure_sensor_params.yaml",
-        ]
+        [EnvironmentVariable("CONFIG_DIR"), "fleet", "pressure_sensor_params.yaml"]
     )
     gpsd_client_param_file = PathJoinSubstitution(
-        [
-            EnvironmentVariable("CONFIG_DIR"),
-            "fleet",
-            "gpsd_client_params.yaml",
-        ]
+        [EnvironmentVariable("CONFIG_DIR"), "fleet", "gpsd_client_params.yaml"]
     )
     nmea_gpsd_param_file = PathJoinSubstitution(
-        [
-            EnvironmentVariable("CONFIG_DIR"),
-            "fleet",
-            "nmea_gpsd_params.yaml",
-        ]
+        [EnvironmentVariable("CONFIG_DIR"), "fleet", "nmea_gpsd_params.yaml"]
     )
     topic_monitor_param_file = PathJoinSubstitution(
-        [
-            EnvironmentVariable("CONFIG_DIR"),
-            "fleet",
-            "topic_monitor_params.yaml",
-        ]
+        [EnvironmentVariable("CONFIG_DIR"), "fleet", "topic_monitor_params.yaml"]
     )
     ntrip_client_param_file = PathJoinSubstitution(
-        [
-            EnvironmentVariable("CONFIG_DIR"),
-            "fleet",
-            "ntrip_client_params.yaml",
-        ]
+        [EnvironmentVariable("CONFIG_DIR"), "fleet", "ntrip_client_params.yaml"]
     )
     agent_param_file = PathJoinSubstitution(
-        [
-            EnvironmentVariable("CONFIG_DIR"),
-            [agent_ns, "_params.yaml"],
-        ]
+        [EnvironmentVariable("CONFIG_DIR"), [agent_ns, "_params.yaml"]]
     )
 
     return LaunchDescription(

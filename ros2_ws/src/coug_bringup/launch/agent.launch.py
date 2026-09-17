@@ -42,44 +42,47 @@ def is_agent(agent_ns: LaunchConfiguration, *names: str) -> PythonExpression:
 def generate_launch_description() -> LaunchDescription:
     use_sim_time = LaunchConfiguration("use_sim_time")
     agent_ns = LaunchConfiguration("agent_ns")
-    lead_agent = LaunchConfiguration("lead_agent")
     loc_comparison = LaunchConfiguration("loc_comparison")
+    lead_agent = LaunchConfiguration("lead_agent")
     initial_position = LaunchConfiguration("initial_position")
     initial_orientation = LaunchConfiguration("initial_orientation")
     scenario_param_file = LaunchConfiguration("scenario_param_file")
 
     fleet_param_file = PathJoinSubstitution(
-        [
-            EnvironmentVariable("CONFIG_DIR"),
-            "fleet",
-            "coug_bringup_params.yaml",
-        ]
+        [EnvironmentVariable("CONFIG_DIR"), "fleet", "coug_bringup_params.yaml"]
+    )
+    agent_param_file = PathJoinSubstitution(
+        [EnvironmentVariable("CONFIG_DIR"), [agent_ns, "_params.yaml"]]
+    )
+    resolved_scenario_param_file = PythonExpression(
+        ["'", scenario_param_file, "' or '", agent_param_file, "'"]
     )
 
-    coug_description_dir = get_package_share_directory("coug_description")
-    coug_description_launch_dir = os.path.join(coug_description_dir, "launch")
+    coug_belief_mppi_dir = get_package_share_directory("coug_belief_mppi")
+    coug_belief_mppi_launch_dir = os.path.join(coug_belief_mppi_dir, "launch")
     coug_comms_dir = get_package_share_directory("coug_comms")
     coug_comms_launch_dir = os.path.join(coug_comms_dir, "launch")
     coug_control_dir = get_package_share_directory("coug_control")
     coug_control_launch_dir = os.path.join(coug_control_dir, "launch")
+    coug_description_dir = get_package_share_directory("coug_description")
+    coug_description_launch_dir = os.path.join(coug_description_dir, "launch")
     coug_fg_dir = get_package_share_directory("coug_fg")
     coug_fg_launch_dir = os.path.join(coug_fg_dir, "launch")
     coug_helm_dir = get_package_share_directory("coug_helm")
     coug_helm_launch_dir = os.path.join(coug_helm_dir, "launch")
-    coug_belief_mppi_dir = get_package_share_directory("coug_belief_mppi")
-    coug_belief_mppi_launch_dir = os.path.join(coug_belief_mppi_dir, "launch")
     coug_visual_dvl_dir = get_package_share_directory("coug_visual_dvl")
     coug_visual_dvl_launch_dir = os.path.join(coug_visual_dvl_dir, "launch")
 
-    coug_description_launch = IncludeLaunchDescription(
+    coug_belief_mppi_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            os.path.join(coug_description_launch_dir, "coug_description.launch.py")
+            os.path.join(coug_belief_mppi_launch_dir, "coug_belief_mppi.launch.py")
         ),
         launch_arguments={
             "use_sim_time": use_sim_time,
             "agent_ns": agent_ns,
             "scenario_param_file": scenario_param_file,
         }.items(),
+        condition=IfCondition(is_agent(agent_ns, "blue1sim", "wamv1sim", "rover1sim", "rover2sim")),
     )
 
     coug_comms_agent_launch = IncludeLaunchDescription(
@@ -91,56 +94,6 @@ def generate_launch_description() -> LaunchDescription:
             "agent_ns": agent_ns,
             "scenario_param_file": scenario_param_file,
         }.items(),
-    )
-
-    coug_fg_launch = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(os.path.join(coug_fg_launch_dir, "coug_fg.launch.py")),
-        launch_arguments={
-            "use_sim_time": use_sim_time,
-            "agent_ns": agent_ns,
-            "scenario_param_file": scenario_param_file,
-            "lead_agent": lead_agent,
-            "loc_comparison": loc_comparison,
-            "initial_position": initial_position,
-            "initial_orientation": initial_orientation,
-        }.items(),
-        condition=UnlessCondition(is_agent(agent_ns, "coug2", "rover1sim", "rover2sim")),
-    )
-
-    coug_fg_dvl_ekf_launch = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(coug_fg_launch_dir, "coug_fg_dvl_ekf.launch.py")
-        ),
-        launch_arguments={
-            "use_sim_time": use_sim_time,
-            "agent_ns": agent_ns,
-            "scenario_param_file": scenario_param_file,
-        }.items(),
-        condition=IfCondition(EqualsSubstitution(agent_ns, "coug2")),
-    )
-
-    coug_fg_dual_ekf_launch = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(coug_fg_launch_dir, "coug_fg_dual_ekf.launch.py")
-        ),
-        launch_arguments={
-            "use_sim_time": use_sim_time,
-            "agent_ns": agent_ns,
-            "scenario_param_file": scenario_param_file,
-        }.items(),
-        condition=IfCondition(is_agent(agent_ns, "rover1sim", "rover2sim")),
-    )
-
-    coug_helm_launch = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(os.path.join(coug_helm_launch_dir, "coug_helm.launch.py")),
-        launch_arguments={
-            "use_sim_time": use_sim_time,
-            "agent_ns": agent_ns,
-            "scenario_param_file": scenario_param_file,
-        }.items(),
-        condition=UnlessCondition(
-            is_agent(agent_ns, "blue1sim", "wamv1sim", "rover1sim", "rover2sim")
-        ),
     )
 
     coug_control_launch = IncludeLaunchDescription(
@@ -157,16 +110,65 @@ def generate_launch_description() -> LaunchDescription:
         ),
     )
 
-    coug_belief_mppi_launch = IncludeLaunchDescription(
+    coug_description_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            os.path.join(coug_belief_mppi_launch_dir, "coug_belief_mppi.launch.py")
+            os.path.join(coug_description_launch_dir, "coug_description.launch.py")
         ),
         launch_arguments={
             "use_sim_time": use_sim_time,
             "agent_ns": agent_ns,
             "scenario_param_file": scenario_param_file,
         }.items(),
-        condition=IfCondition(is_agent(agent_ns, "blue1sim", "wamv1sim", "rover1sim", "rover2sim")),
+    )
+
+    coug_fg_dual_ekf_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(coug_fg_launch_dir, "coug_fg_dual_ekf.launch.py")
+        ),
+        launch_arguments={
+            "use_sim_time": use_sim_time,
+            "agent_ns": agent_ns,
+            "scenario_param_file": scenario_param_file,
+        }.items(),
+        condition=IfCondition(is_agent(agent_ns, "rover1sim", "rover2sim")),
+    )
+
+    coug_fg_dvl_ekf_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(coug_fg_launch_dir, "coug_fg_dvl_ekf.launch.py")
+        ),
+        launch_arguments={
+            "use_sim_time": use_sim_time,
+            "agent_ns": agent_ns,
+            "scenario_param_file": scenario_param_file,
+        }.items(),
+        condition=IfCondition(EqualsSubstitution(agent_ns, "coug2")),
+    )
+
+    coug_fg_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(os.path.join(coug_fg_launch_dir, "coug_fg.launch.py")),
+        launch_arguments={
+            "use_sim_time": use_sim_time,
+            "agent_ns": agent_ns,
+            "scenario_param_file": scenario_param_file,
+            "loc_comparison": loc_comparison,
+            "lead_agent": lead_agent,
+            "initial_position": initial_position,
+            "initial_orientation": initial_orientation,
+        }.items(),
+        condition=UnlessCondition(is_agent(agent_ns, "coug2", "rover1sim", "rover2sim")),
+    )
+
+    coug_helm_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(os.path.join(coug_helm_launch_dir, "coug_helm.launch.py")),
+        launch_arguments={
+            "use_sim_time": use_sim_time,
+            "agent_ns": agent_ns,
+            "scenario_param_file": scenario_param_file,
+        }.items(),
+        condition=UnlessCondition(
+            is_agent(agent_ns, "blue1sim", "wamv1sim", "rover1sim", "rover2sim")
+        ),
     )
 
     coug_visual_dvl_launch = IncludeLaunchDescription(
@@ -187,6 +189,8 @@ def generate_launch_description() -> LaunchDescription:
         name="bag_recorder_node",
         parameters=[
             fleet_param_file,
+            agent_param_file,
+            resolved_scenario_param_file,
             {
                 "use_sim_time": use_sim_time,
                 "agent_ns": agent_ns,
@@ -211,12 +215,12 @@ def generate_launch_description() -> LaunchDescription:
                 default_value="",
             ),
             DeclareLaunchArgument(
-                "lead_agent",
-                default_value="",
-            ),
-            DeclareLaunchArgument(
                 "loc_comparison",
                 default_value="false",
+            ),
+            DeclareLaunchArgument(
+                "lead_agent",
+                default_value="",
             ),
             DeclareLaunchArgument(
                 "initial_position",
@@ -230,14 +234,14 @@ def generate_launch_description() -> LaunchDescription:
                 actions=[
                     PushRosNamespace(agent_ns),
                     bag_recorder_node,
-                    coug_comms_agent_launch,
-                    coug_description_launch,
-                    coug_fg_launch,
-                    coug_fg_dvl_ekf_launch,
-                    coug_fg_dual_ekf_launch,
-                    coug_helm_launch,
-                    coug_control_launch,
                     coug_belief_mppi_launch,
+                    coug_comms_agent_launch,
+                    coug_control_launch,
+                    coug_description_launch,
+                    coug_fg_dual_ekf_launch,
+                    coug_fg_dvl_ekf_launch,
+                    coug_fg_launch,
+                    coug_helm_launch,
                     coug_visual_dvl_launch,
                 ]
             ),

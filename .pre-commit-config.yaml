@@ -14,18 +14,15 @@ repos:
       - id: addlicense
         args: ["-l", "apache", "-c", "BYU FROST Lab", "-v"]
         exclude: |
-          (?x)^(
-            (.*/)?(cleanup|metadata)\.yaml|
-            (.*/)?(config|params)/.*\.ya?ml|
-            (.*/)?__init__\.py|
-            (.*/)?package\.xml|
-            (.*/)?setup\.py|
-            \.github/(dependabot|release)\.yaml|
-            \.hadolint\.yaml|
-            \.markdownlint\.yaml|
-            \.pre-commit-config\.yaml|
-            \.ruff\.toml|
-            codecov\.yml
+          (?x)^(.*/)?(
+            (config|params)/.*\.ya?ml
+            |(cleanup|metadata)\.yaml
+            |(__init__|setup)\.py
+            |package\.xml
+            |codecov\.yml
+            |\.(hadolint|markdownlint|pre-commit-config)\.yaml
+            |\.ruff\.toml
+            |\.github/(dependabot|release)\.yaml
           )$
 
   - repo: https://github.com/pre-commit/pre-commit-hooks

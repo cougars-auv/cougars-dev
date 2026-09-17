@@ -74,7 +74,7 @@ if [[ "${options}" == *"Acomms simulation"* ]]; then
 fi
 
 if [[ "${options}" == *"Unknown initial poses"* ]]; then
-  launch_args+=("use_spawn_pose:=false")
+  launch_args+=("known_initial_poses:=false")
 fi
 
 if [[ "${options}" == *"Enable voxblox mapping"* ]]; then
