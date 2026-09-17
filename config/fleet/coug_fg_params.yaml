@@ -424,7 +424,7 @@
     ros__parameters:
       input_topic: "dvl/odometry"
 
-  gps_to_truth_relay:
+  rtk_gps_truth_relay:
     ros__parameters:
       input_topic: "gps/odometry"
       output_topic: "odometry/truth"
