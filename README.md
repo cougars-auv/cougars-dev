@@ -45,6 +45,17 @@ CoUGARs is a low-cost, configurable AUV platform designed for multi-agent autono
     cd ~/cougars-dev/scripts && ./sim_launch.sh
     ```
 
+  **Simulation (Gazebo):**
+
+  - Open the `cougars-dev` repository in VSCode and use the Command Palette (`Ctrl + Shift + P`) to select "Dev Containers: Reopen in Container." When prompted, click "CoUGARs Dev" or "CoUGARs Dev (NVIDIA)."
+
+  - Once the containers load, open a new terminal window using `` Ctrl + Alt + Shift + ` ``, build the `ros2_ws` workspace, and launch a Gazebo scenario using `./sim_launch.sh`.
+
+    ```bash
+    cd ~/cougars-dev/ros2_ws && colcon build
+    cd ~/cougars-dev/scripts && ./sim_launch.sh
+    ```
+
   **Recorded Data (`rosbag2`):**
 
   - Open the `cougars-dev` repository in VSCode and use the Command Palette (`Ctrl + Shift + P`) to select "Dev Containers: Reopen in Container." When prompted, click "CoUGARs Dev" or "CoUGARs Dev (NVIDIA)."
@@ -60,7 +71,7 @@ CoUGARs is a low-cost, configurable AUV platform designed for multi-agent autono
 
 > If you run into crashes or out-of-memory errors while building the workspace, restrict the compiler to a single worker using `colcon build --parallel-workers 1`.
 >
-> If `clang-tidy` in VSCode is spamming incorrect C++ warnings and errors, build once with `colcon build --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON` and use the Command Palette (`Ctrl + Shift + P`) to select "Developer: Reload Window."
+> If VSCode's `clang-tidy` is spamming incorrect warnings and errors, build once with `colcon build --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON` and use the Command Palette (`Ctrl + Shift + P`) to select "Developer: Reload Window."
 
 ## Documentation
 
