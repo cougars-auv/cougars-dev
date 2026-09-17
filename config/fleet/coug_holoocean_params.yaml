@@ -239,3 +239,8 @@
       odom_topic: "DynamicsSensorOdom"
       wrench_raw_topic: "cmd_wrench_raw"
       wrench_topic: "cmd_wrench"
+
+/base_station:
+  modem_converter_node:
+    ros__parameters:
+      beacon_id: 15

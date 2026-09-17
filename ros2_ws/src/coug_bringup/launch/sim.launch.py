@@ -244,9 +244,9 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                             scenario_param_file,
                             {
                                 "use_sim_time": use_sim_time,
+                                "add_noise": add_noise,
                                 "depth_frame": "base_station",
                                 "map_frame": "map",
-                                "add_noise": add_noise,
                             },
                         ],
                     ),
@@ -259,9 +259,8 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                             scenario_param_file,
                             {
                                 "use_sim_time": use_sim_time,
-                                "beacon_id": 15,
-                                "modem_frame": "base_station",
                                 "add_noise": add_noise,
+                                "modem_frame": "base_station",
                             },
                         ],
                     ),
