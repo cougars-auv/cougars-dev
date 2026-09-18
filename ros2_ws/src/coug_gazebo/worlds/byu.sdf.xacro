@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+<sdf version="1.9" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:arg name="headless" default="true" />
+
+  <xacro:property name="terrain_dir" value="$(find coug_gazebo)/models/byu_terrain" />
+  <xacro:property name="terrain_size" value="1129.9 1629.95 63.61" />
+  <xacro:property name="terrain_z" value="-30.72" />
+
+  <world name="default">
+    <plugin filename="gz-sim-physics-system" name="gz::sim::systems::Physics" />
+    <plugin filename="gz-sim-user-commands-system" name="gz::sim::systems::UserCommands" />
+    <plugin filename="gz-sim-navsat-system" name="gz::sim::systems::NavSat" />
+    <xacro:unless value="$(arg headless)">
+      <plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster" />
+    </xacro:unless>
+    <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+    <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu" />
+    <plugin filename="gz-sim-magnetometer-system" name="gz::sim::systems::Magnetometer">
+      <use_units_gauss>false</use_units_gauss>
+      <use_earth_frame_ned>false</use_earth_frame_ned>
+    </plugin>
+
+    <spherical_coordinates>
+      <surface_model>EARTH_WGS84</surface_model>
+      <world_frame_orientation>ENU</world_frame_orientation>
+      <latitude_deg>40.2515095</latitude_deg>
+      <longitude_deg>-111.6496175</longitude_deg>
+      <elevation>1424.159</elevation>
+    </spherical_coordinates>
+
+    <light type="directional" name="sun">
+      <cast_shadows>true</cast_shadows>
+      <specular>0 0 0 1</specular>
+      <direction>0 0.6 -0.6</direction>
+    </light>
+
+    <scene>
+      <sky />
+    </scene>
+
+    <!-- Heightmaps need the bullet collision detector -->
+    <physics type="dart">
+      <max_step_size>0.003</max_step_size>
+      <dart>
+        <collision_detector>bullet</collision_detector>
+      </dart>
+    </physics>
+
+    <model name="byu_terrain">
+      <static>true</static>
+      <link name="ground">
+        <collision name="collision">
+          <pose>0 0 ${terrain_z} 0 0 0</pose>
+          <geometry>
+            <heightmap>
+              <uri>${terrain_dir}/height_map.png</uri>
+              <size>${terrain_size}</size>
+            </heightmap>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <heightmap>
+              <uri>${terrain_dir}/height_map.png</uri>
+              <size>${terrain_size}</size>
+              <pos>0 0 ${terrain_z}</pos>
+              <texture>
+                <diffuse>${terrain_dir}/aerial.png</diffuse>
+                <normal>${terrain_dir}/normal_map.png</normal>
+                <size>1629.95</size>
+              </texture>
+            </heightmap>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+
+    <model name="byu_buildings">
+      <static>true</static>
+      <link name="buildings">
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>${terrain_dir}/buildings.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>${terrain_dir}/buildings.dae</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <ambient>0.75 0.75 0.75 1</ambient>
+            <diffuse>0.85 0.85 0.85 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+  </world>
+</sdf>

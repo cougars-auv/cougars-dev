@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<sdf version="1.9" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:arg name="headless" default="true" />
+
+  <world name="default">
+    <plugin filename="gz-sim-physics-system" name="gz::sim::systems::Physics" />
+    <plugin filename="gz-sim-user-commands-system" name="gz::sim::systems::UserCommands" />
+    <plugin filename="gz-sim-navsat-system" name="gz::sim::systems::NavSat" />
+    <xacro:unless value="$(arg headless)">
+      <plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster" />
+    </xacro:unless>
+    <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+    <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu" />
+    <plugin filename="gz-sim-magnetometer-system" name="gz::sim::systems::Magnetometer">
+      <use_units_gauss>false</use_units_gauss>
+      <use_earth_frame_ned>false</use_earth_frame_ned>
+    </plugin>
+
+    <spherical_coordinates>
+      <surface_model>EARTH_WGS84</surface_model>
+      <world_frame_orientation>ENU</world_frame_orientation>
+      <latitude_deg>38.161479</latitude_deg>
+      <longitude_deg>-122.454630</longitude_deg>
+      <elevation>6.39</elevation>
+    </spherical_coordinates>
+
+    <light type="directional" name="sun">
+      <cast_shadows>true</cast_shadows>
+      <direction>0 0.6 -0.6</direction>
+    </light>
+
+    <scene>
+      <sky />
+    </scene>
+
+    <physics type="ode">
+      <max_step_size>0.003</max_step_size>
+    </physics>
+
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Sonoma Raceway</uri>
+      <name>sonoma_raceway</name>
+      <pose>-287.5 143.5 -7.39 0 0 0</pose>
+    </include>
+  </world>
+</sdf>

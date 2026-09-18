@@ -1,7 +1,7 @@
 /**:
   coug_gazebo_world_launch:
     ros__parameters:
-      world_file: "rover_sonoma_raceway.sdf.xacro"
+      world_file: "sonoma_raceway.sdf.xacro"
 
   sim_launch:
     ros__parameters:
@@ -17,7 +17,7 @@
       use_parameter_origin: true
       origin_latitude: 38.161479 # [deg]
       origin_longitude: -122.454630 # [deg]
-      origin_altitude: 0.0 # [m]
+      origin_altitude: 6.39 # [m]
 
 /rover1sim:
   sim_launch:
