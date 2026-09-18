@@ -1,5 +1,14 @@
 /**:
+  sim_launch:
+    ros__parameters:
+      scenario_file: "couguv_openwater.json"
+
   bag_recorder_node:
     ros__parameters:
-      publish_diagnostics: false
+      publish_diagnostics: true
       bag_record_service: "bag_record"
+
+  voxblox_node:
+    ros__parameters:
+      tsdf_voxel_size: 0.05 # [m]
+      method: "fast"
