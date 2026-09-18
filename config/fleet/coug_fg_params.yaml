@@ -8,8 +8,8 @@
     publish_velocity: true
     publish_imu_bias: true
     publish_mag_bias: true
-    publish_diagnostics: true
     publish_graph_metrics: true
+    publish_diagnostics: true
 
     # These are computationally expensive to calculate, so disable if not needed.
     publish_pose_cov: true
@@ -43,11 +43,11 @@
     ahrs_topic: "imu/data"
     dvl_topic: "dvl/twist"
     wrench_topic: "cmd_wrench"
-    global_odom_topic: "odometry/global"
-    smoothed_path_topic: "smoothed_path"
+    global_odom_topic: "odometry/global" # (of the base frame in the map frame)
+    smoothed_path_topic: "smoothed_path" # (of the base frame in the map frame)
     velocity_topic: "~/velocity" # (at the target frame in the map frame)
-    imu_bias_topic: "~/imu/bias"
-    mag_bias_topic: "~/imu/mag/bias"
+    imu_bias_topic: "~/imu/bias" # (in the IMU frame)
+    mag_bias_topic: "~/imu/mag/bias" # (in the magnetometer frame)
     graph_metrics_topic: "~/metrics"
     reset_service: "~/reset"
 
@@ -254,10 +254,10 @@
 
       initial_accel_bias: [0.0, 0.0, 0.0] # [x, y, z] [m/s^2] (in the IMU frame)
       initial_gyro_bias: [0.0, 0.0, 0.0] # [x, y, z] [rad/s] (in the IMU frame)
-      hard_iron_bias: [0.0, 0.0, 0.0] # [x, y, z] [T] (in the sensor frame)
+      hard_iron_bias: [0.0, 0.0, 0.0] # [x, y, z] [T] (in the magnetometer frame)
       # IMPORTANT! The xy delta is seeded from the first range/bearing pair to prevent antipodal trapping.
-      origin_delta_position: [0.0, 0.0, 0.0] # [x, y, z] [m] (of the neighbor's base frame in the map frame)
-      origin_delta_orientation: [0.0, 0.0, 0.0] # [roll, pitch, yaw] [rad] (of the neighbor's base frame in the map frame)
+      origin_delta_position: [0.0, 0.0, 0.0] # [x, y, z] [m] (of the neighbor's map origin in the map frame)
+      origin_delta_orientation: [0.0, 0.0, 0.0] # [roll, pitch, yaw] [rad] (of the neighbor's map origin in the map frame)
 
       # If true, forces the initial state covariance to be set by the values below.
       use_parameter_priors_covariance: true
@@ -271,7 +271,7 @@
       # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/performance-specifications
       initial_gyro_bias_sigmas: [3.4e-5, 3.4e-5, 3.4e-5] # [x, y, z] [rad/s] (in the IMU frame)
       # No published SBG hard-iron spec; assumes ~20% of the local field magnitude.
-      hard_iron_bias_sigmas: [1.0e-05, 1.0e-05, 1.0e-05] # [x, y, z] [T] (in the sensor frame)
+      hard_iron_bias_sigmas: [1.0e-05, 1.0e-05, 1.0e-05] # [x, y, z] [T] (in the magnetometer frame)
       origin_delta_position_sigmas: [1000.0, 1000.0, 1.0e-04] # [x, y, z] [m] (in the map frame)
       origin_delta_orientation_sigmas: [1.0e-04, 1.0e-04, 1.0e-04] # [roll, pitch, yaw] [rad] (in the map frame)
 
@@ -285,14 +285,14 @@
   dvl_a50_twist_beams_node:
     ros__parameters:
       # --- Node Settings ---
-      simulate_dropout: false
-      dropout_frequency_hz: 0.033 # [Hz]
-      dropout_duration_sec: 5.0 # [s]
+      override_timestamp: false # Stamp with receive time (if the A50 clock isn't synced).
 
       fom_valid_threshold: 0.01 # [m/s] FOM below this is accepted even if the DVL flags the velocity invalid.
       fom_covariance_scale: 4.0 # TURTLMap-based FOM covariance calculation.
 
-      override_timestamp: false # Stamp with receive time (if the A50 clock isn't synced).
+      simulate_dropout: false
+      dropout_frequency_hz: 0.033 # [Hz]
+      dropout_duration_sec: 5.0 # [s]
 
       # https://docs.waterlinked.com/dvl/dvl-a50/
       beam_field_of_view_radians: 0.0768 # [rad] Half-power beam width.
@@ -336,14 +336,17 @@
       pressure_scale: 1.0 # Scale factor to convert the input reading to Pascals.
       atmospheric_pressure: 101325.0 # [Pa]
       water_density: 997.0 # [kg/m^3]
-      gravity: 9.81 # [m/s^2]
+      gravity: 9.8 # [m/s^2]
 
       max_pressure_delta: 0.0 # [Pa] Reject larger jumps as spikes. 0.0 disables rejection.
       max_consecutive_rejections: 5 # Accept the new pressure after this many rejections in a row.
 
+      use_ahrs: true # Fuse AHRS for robot_localization odom transform.
+
       # --- ROS Topics and Frames ---
       input_topic: "pressure/data"
       output_topic: "depth/odometry"
+      ahrs_topic: "imu/data"
 
       calibrate_service: "depth/calibrate"
 
@@ -354,19 +357,22 @@
       # --- Node Settings ---
       publish_diagnostics: true
 
-      position_covariance_threshold: 0.0 # [m^2] Max horizontal variance to publish odom. 0.0 disables.
-
       set_origin: false # Whether this node owns and publishes the ENU origin.
       origin_pub_rate_hz: 1.0 # [Hz]
+
+      position_covariance_threshold: 0.0 # [m^2] Max horizontal variance to publish odom. 0.0 disables.
 
       use_parameter_origin: false # Only used if set_origin is true.
       origin_latitude: 40.33940 # [deg]
       origin_longitude: -111.90721 # [deg]
       origin_altitude: 1412.0 # [m]
 
+      use_ahrs: true # Fuse AHRS for robot_localization odom transform.
+
       # --- ROS Topics and Frames ---
       input_topic: "gps/fix"
       output_topic: "gps/odometry"
+      ahrs_topic: "imu/data"
       origin_topic: "/origin"
 
       use_parameter_child_frame: false
@@ -839,7 +845,7 @@
           1.0e-9, # Ax, Ay, Az
         ]
 
-      imu0: "camera/imu/data"
+      imu0: "camera/imu/data_raw"
       # IMPORTANT! robot_localization in ROS 2 Jazzy has a known bug with mishandling gravity removal for non-trivial IMU to base rotations.
       # Disable acceleration fusion in the agent-specific config file if the rotation is non-trivial.
       imu0_config: [
@@ -912,5 +918,4 @@
   navsat_odom_node:
     ros__parameters:
       set_origin: true
-      output_topic: "gps/odometry_null"
       use_ahrs: false
