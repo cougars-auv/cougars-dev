@@ -217,8 +217,6 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                     {
                         "use_sim_time": use_sim_time,
                         "world_frame": "map",
-                        "tsdf_voxel_size": 0.05,
-                        "method": "fast",
                     },
                 ],
                 condition=IfCondition(enable_mapping),
