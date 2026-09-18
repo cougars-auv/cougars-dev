@@ -38,11 +38,6 @@
         regulated_linear_scaling_min_radius: 3.5
         max_angular_accel: 2.0
 
-  behavior_server:
-    ros__parameters:
-      local_frame: "wamv1sim/odom"
-      robot_base_frame: "wamv1sim/base_link"
-
   global_costmap:
     global_costmap:
       ros__parameters:
