@@ -121,9 +121,9 @@ def generate_launch_description() -> LaunchDescription:
         }.items(),
     )
 
-    coug_fg_dual_ekf_launch = IncludeLaunchDescription(
+    coug_fg_rover_ekf_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            os.path.join(coug_fg_launch_dir, "coug_fg_dual_ekf.launch.py")
+            os.path.join(coug_fg_launch_dir, "coug_fg_rover_ekf.launch.py")
         ),
         launch_arguments={
             "use_sim_time": use_sim_time,
@@ -238,7 +238,7 @@ def generate_launch_description() -> LaunchDescription:
                     coug_comms_agent_launch,
                     coug_control_launch,
                     coug_description_launch,
-                    coug_fg_dual_ekf_launch,
+                    coug_fg_rover_ekf_launch,
                     coug_fg_dvl_ekf_launch,
                     coug_fg_launch,
                     coug_helm_launch,
