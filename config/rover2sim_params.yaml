@@ -18,7 +18,7 @@
   ekf_filter_node_odom:
     ros__parameters:
       publish_tf: true
-      two_d_mode: true
+      two_d_mode: false
 
       imu0: "camera/imu/data_raw"
       # IMPORTANT! Handle non-trivial IMU rotation for robot_localization gravity mishandling bug.
@@ -44,9 +44,9 @@
       odom0_config: [
           true,
           true,
-          false, # X, Y, Z
-          false,
-          false,
+          true, # X, Y, Z
+          true,
+          true,
           true, # Roll, Pitch, Yaw
           false,
           false,
@@ -66,7 +66,7 @@
   ekf_filter_node_map:
     ros__parameters:
       publish_tf: true
-      two_d_mode: true
+      two_d_mode: false
 
       imu0: "camera/imu/data_raw"
       # IMPORTANT! Handle non-trivial IMU rotation for robot_localization gravity mishandling bug.
@@ -90,11 +90,29 @@
 
       imu1: "camera/imu/data"
 
+      odom1_config: [
+          true,
+          true,
+          true, # X, Y, Z
+          false,
+          false,
+          false, # Roll, Pitch, Yaw
+          false,
+          false,
+          false, # Vx, Vy, Vz
+          false,
+          false,
+          false, # Vroll, Vpitch, Vyaw
+          false,
+          false,
+          false, # Ax, Ay, Az
+        ]
+
       odom2: "camera/odom"
       odom2_config: [
           true,
           true,
-          false, # X, Y, Z
+          true, # X, Y, Z
           false,
           false,
           true, # Roll, Pitch, Yaw
