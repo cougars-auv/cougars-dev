@@ -29,7 +29,7 @@
     ros__parameters:
       # --- Node Settings ---
       # https://www.te.com/commerce/DocumentDelivery/DDEController?Action=srchrtrv&DocNm=MS5837-02BA01&DocType=DS&DocLang=English
-      noise_sigma: 0.02 # [m]
+      position_z_noise_sigma: 0.02 # [m]
 
       # --- ROS Topics and Frames ---
       input_topic: "DepthSensor"
@@ -40,7 +40,7 @@
       # --- Node Settings ---
       # https://waterlinked.com/dvl-a50
       beam_velocity_noise_sigma: 0.011 # [m/s]
-      range_noise_sigma: 0.1 # [m]
+      beam_range_noise_sigma: 0.1 # [m]
 
       # IMPORTANT! This must match HoloOcean's MaxRange for the DVLSensor.
       max_range: 500.0 # [m] Beams at or beyond this are reported lost.
@@ -55,7 +55,7 @@
     ros__parameters:
       # --- Node Settings ---
       # https://waterlinked.com/dvl-a50
-      noise_sigma_scale: 0.0101 # [m/m]
+      position_noise_sigma_scale: 0.0101 # [m/m]
       # https://docs.waterlinked.com/dvl/dead-reckoning/
       yaw_drift_sigma: 0.3 # [deg/min]
 
@@ -79,7 +79,7 @@
       origin_altitude: 1412.0
 
       # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/hardware-documentation/aiding-sensors
-      noise_sigmas: [0.015, 0.015, 0.025] # [east, north, up] [m]
+      position_noise_sigmas: [0.015, 0.015, 0.025] # [east, north, up] [m]
 
       # --- ROS Topics and Frames ---
       input_topic: "GPSSensor"
@@ -104,7 +104,7 @@
       accel_noise_sigmas: [7.9e-3, 7.9e-3, 7.9e-3] # [x, y, z] [m/s^2]
       gyro_noise_sigmas: [7.4e-4, 7.4e-4, 7.4e-4] # [x, y, z] [rad/s]
       # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/performance-specifications
-      ahrs_noise_sigmas: [0.00698, 0.00698, 0.01745] # [roll, pitch, yaw] [rad]
+      orientation_noise_sigmas: [0.00698, 0.00698, 0.01745] # [roll, pitch, yaw] [rad]
       # Gauss-Markov fit K ≈ 2.3 * B / √tau_c at tau_c = 500 s.
       # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/performance-specifications
       accel_bias_rw_sigmas: [1.4e-5, 1.4e-5, 1.4e-5] # [x, y, z] [m/s^2/√s]
@@ -123,9 +123,9 @@
       au_to_tesla: 5.0446e-05
 
       # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/hardware-documentation/aiding-sensors
-      noise_sigmas: [3.0e-07, 3.0e-07, 3.0e-07] # [x, y, z] [T]
+      magnetic_field_noise_sigmas: [3.0e-07, 3.0e-07, 3.0e-07] # [x, y, z] [T]
       # No published SBG hard-iron spec; assumes ~20% of the local field magnitude.
-      bias_sigmas: [1.0e-05, 1.0e-05, 1.0e-05] # [x, y, z] [T]
+      hard_iron_bias_sigmas: [1.0e-05, 1.0e-05, 1.0e-05] # [x, y, z] [T]
 
       # --- ROS Topics and Frames ---
       input_topic: "MagnetometerSensor"
@@ -157,7 +157,7 @@
     ros__parameters:
       # --- Node Settings ---
       # https://www.blueprintsubsea.com/downloads/seatrac/UM-140-D00221-13.pdf
-      noise_sigma: 0.1 # [m]
+      position_z_noise_sigma: 0.1 # [m]
 
       # --- ROS Topics and Frames ---
       input_topic: "ModemDepthSensor"
@@ -174,7 +174,7 @@
       accel_noise_sigmas: [1.8e-3, 1.8e-3, 1.8e-3] # [x, y, z] [m/s^2]
       gyro_noise_sigmas: [1.7e-4, 1.7e-4, 1.7e-4] # [x, y, z] [rad/s]
       # https://www.blueprintsubsea.com/seatrac/seatrac-standard
-      ahrs_noise_sigmas: [0.00349, 0.00349, 0.01745] # [roll, pitch, yaw] [rad]
+      orientation_noise_sigmas: [0.00349, 0.00349, 0.01745] # [roll, pitch, yaw] [rad]
       # Gauss-Markov fit K ≈ 2.3 * B / √tau_c at tau_c = 500 s.
       # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/performance-specifications
       accel_bias_rw_sigmas: [1.4e-5, 1.4e-5, 1.4e-5] # [x, y, z] [m/s^2/√s]
@@ -204,7 +204,7 @@
       atmospheric_pressure: 101325.0 # [Pa]
 
       # https://www.te.com/commerce/DocumentDelivery/DDEController?Action=srchrtrv&DocNm=MS5837-02BA01&DocType=DS&DocLang=English
-      noise_sigma: 195.61 # [Pa]
+      fluid_pressure_noise_sigma: 195.61 # [Pa]
 
       # --- ROS Topics and Frames ---
       input_topic: "DepthSensor"
