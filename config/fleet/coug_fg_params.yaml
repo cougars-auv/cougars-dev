@@ -298,8 +298,10 @@
       beam_field_of_view_radians: 0.0768 # [rad] Half-power beam width.
       beam_min_range: 0.05 # [m] Minimum reportable beam distance.
       beam_max_range: 500.0 # [m] Maximum reportable beam distance.
+
+      # https://docs.waterlinked.com/dvl/dvl-a50/
       beam_velocity_noise_sigma: 0.011 # [m/s]
-      beam_distance_noise_sigma: 0.1 # [m]
+      beam_range_noise_sigma: 0.1 # [m]
 
       # --- ROS Topics and Frames ---
       input_topic: "dvl/data"
@@ -391,7 +393,7 @@
       mag_declination_radians: 0.0 # [rad]
 
       # https://www.blueprintsubsea.com/downloads/seatrac/UM-140-D00221-13.pdf
-      depth_noise_sigma: 0.1 # [m]
+      position_z_noise_sigma: 0.1 # [m]
 
       # --- ROS Topics and Frames ---
       input_topic: "modem_status"
@@ -451,6 +453,25 @@
       publish_tf: true
       print_diagnostics: true
 
+      gravitational_acceleration: 9.8 # [m/s^2]
+      initial_estimate_covariance: [
+          1.0e-6,
+          1.0e-6,
+          1.0e-6, # X, Y, Z
+          1.0e-6,
+          1.0e-6,
+          1.0e-6, # Roll, Pitch, Yaw
+          1.0e-6,
+          1.0e-6,
+          1.0e-6, # Vx, Vy, Vz
+          1.0e-9,
+          1.0e-9,
+          1.0e-9, # Vroll, Vpitch, Vyaw
+          1.0e-9,
+          1.0e-9,
+          1.0e-9, # Ax, Ay, Az
+        ]
+
       imu0: "imu/data"
       # IMPORTANT! robot_localization in ROS 2 Jazzy has a known bug with mishandling gravity removal for non-trivial IMU to base rotations.
       # Disable acceleration fusion in the agent-specific config file if the rotation is non-trivial.
@@ -505,6 +526,25 @@
       publish_tf: false # Published by FG instead.
       print_diagnostics: true
 
+      gravitational_acceleration: 9.8 # [m/s^2]
+      initial_estimate_covariance: [
+          1.0e-6,
+          1.0e-6,
+          1.0e-6, # X, Y, Z
+          1.0e-6,
+          1.0e-6,
+          1.0e-6, # Roll, Pitch, Yaw
+          1.0e-6,
+          1.0e-6,
+          1.0e-6, # Vx, Vy, Vz
+          1.0e-9,
+          1.0e-9,
+          1.0e-9, # Vroll, Vpitch, Vyaw
+          1.0e-9,
+          1.0e-9,
+          1.0e-9, # Ax, Ay, Az
+        ]
+
       imu0: "imu/data"
       # IMPORTANT! robot_localization in ROS 2 Jazzy has a known bug with mishandling gravity removal for non-trivial IMU to base rotations.
       # Disable acceleration fusion in the agent-specific config file if the rotation is non-trivial.
@@ -573,6 +613,7 @@
       odom0_queue_size: 5
       odom0_differential: false
       odom0_relative: false # Absolute depth in the map frame.
+      odom0_pose_use_child_frame: true # Handle non-trivial base frame offset.
 
       odom1: "gps/odometry"
       odom1_config: [
@@ -595,6 +636,7 @@
       odom1_queue_size: 5
       odom1_differential: false
       odom1_relative: false # Absolute GPS position in the map frame.
+      odom1_pose_use_child_frame: true # Handle non-trivial base frame offset.
 
       twist0: "dvl/twist"
       twist0_config: [
@@ -623,6 +665,25 @@
       publish_tf: false # Published by FG instead.
       print_diagnostics: true
 
+      gravitational_acceleration: 9.8 # [m/s^2]
+      initial_estimate_covariance: [
+          1.0e-6,
+          1.0e-6,
+          1.0e-6, # X, Y, Z
+          1.0e-6,
+          1.0e-6,
+          1.0e-6, # Roll, Pitch, Yaw
+          1.0e-6,
+          1.0e-6,
+          1.0e-6, # Vx, Vy, Vz
+          1.0e-9,
+          1.0e-9,
+          1.0e-9, # Vroll, Vpitch, Vyaw
+          1.0e-9,
+          1.0e-9,
+          1.0e-9, # Ax, Ay, Az
+        ]
+
       imu0: "imu/data"
       # IMPORTANT! robot_localization in ROS 2 Jazzy has a known bug with mishandling gravity removal for non-trivial IMU to base rotations.
       # Disable acceleration fusion in the agent-specific config file if the rotation is non-trivial.
@@ -691,6 +752,7 @@
       odom0_queue_size: 5
       odom0_differential: false
       odom0_relative: false # Absolute depth in the map frame.
+      odom0_pose_use_child_frame: true # Handle non-trivial base frame offset.
 
       odom1: "gps/odometry"
       odom1_config: [
@@ -713,6 +775,7 @@
       odom1_queue_size: 5
       odom1_differential: false
       odom1_relative: false # Absolute GPS position in the map frame.
+      odom1_pose_use_child_frame: true # Handle non-trivial base frame offset.
 
       twist0: "dvl/twist"
       twist0_config: [
@@ -738,3 +801,4 @@
   navsat_odom_node:
     ros__parameters:
       use_parameter_origin: false
+      use_ahrs: false

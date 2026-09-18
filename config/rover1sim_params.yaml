@@ -11,6 +11,10 @@
     ros__parameters:
       urdf_file: "rover.gazebo.xacro"
 
+  navsat_odom_node:
+    ros__parameters:
+      ahrs_topic: "camera/imu/data"
+
   ekf_filter_node_odom:
     ros__parameters:
       publish_tf: true
@@ -57,6 +61,7 @@
       odom0_queue_size: 10
       odom0_differential: false
       odom0_relative: false
+      odom0_pose_use_child_frame: true # Handle non-trivial base frame offset.
 
   ekf_filter_node_map:
     ros__parameters:
@@ -106,6 +111,7 @@
       odom2_queue_size: 10
       odom2_differential: true
       odom2_relative: false
+      odom2_pose_use_child_frame: true # Handle non-trivial base frame offset.
 
   # --- Navigation2, launched through coug_belief_mppi like the wamv ---
 

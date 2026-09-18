@@ -49,6 +49,25 @@
 
   ekf_filter_node_odom:
     ros__parameters:
+      gravitational_acceleration: 9.81007 # [m/s^2] br2config.yaml (g: 9.81007)
+      initial_estimate_covariance: [
+          1.0e-6,
+          1.0e-6,
+          1.0e-6, # X, Y, Z
+          1.0e-6,
+          1.0e-6,
+          1.0e-6, # Roll, Pitch, Yaw
+          1.0e-2,
+          1.0e-2,
+          1.0e-2, # Vx, Vy, Vz
+          1.0e-9,
+          1.0e-9,
+          1.0e-9, # Vroll, Vpitch, Vyaw
+          1.0e-9,
+          1.0e-9,
+          1.0e-9, # Ax, Ay, Az
+        ]
+
       # IMPORTANT! Handle non-trivial IMU rotation for robot_localization gravity mishandling bug.
       imu0_config: [
           false,
@@ -70,6 +89,25 @@
 
   ekf_filter_node_map:
     ros__parameters:
+      gravitational_acceleration: 9.81007 # [m/s^2] br2config.yaml (g: 9.81007)
+      initial_estimate_covariance: [
+          1.0e-6,
+          1.0e-6,
+          1.0e-6, # X, Y, Z
+          1.0e-6,
+          1.0e-6,
+          1.0e-6, # Roll, Pitch, Yaw
+          1.0e-2,
+          1.0e-2,
+          1.0e-2, # Vx, Vy, Vz
+          1.0e-9,
+          1.0e-9,
+          1.0e-9, # Vroll, Vpitch, Vyaw
+          1.0e-9,
+          1.0e-9,
+          1.0e-9, # Ax, Ay, Az
+        ]
+
       # IMPORTANT! Handle non-trivial IMU rotation for robot_localization gravity mishandling bug.
       imu0_config: [
           false,
@@ -91,6 +129,25 @@
 
   ukf_filter_node_map:
     ros__parameters:
+      gravitational_acceleration: 9.81007 # [m/s^2] br2config.yaml (g: 9.81007)
+      initial_estimate_covariance: [
+          1.0e-6,
+          1.0e-6,
+          1.0e-6, # X, Y, Z
+          1.0e-6,
+          1.0e-6,
+          1.0e-6, # Roll, Pitch, Yaw
+          1.0e-2,
+          1.0e-2,
+          1.0e-2, # Vx, Vy, Vz
+          1.0e-9,
+          1.0e-9,
+          1.0e-9, # Vroll, Vpitch, Vyaw
+          1.0e-9,
+          1.0e-9,
+          1.0e-9, # Ax, Ay, Az
+        ]
+
       # IMPORTANT! Handle non-trivial IMU rotation for robot_localization gravity mishandling bug.
       imu0_config: [
           false,
