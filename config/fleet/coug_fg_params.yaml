@@ -424,7 +424,13 @@
 
   odom_to_tf_node:
     ros__parameters:
+      # --- Node Settings ---
+      invert: false # Publish the child -> parent transform instead.
+
+      # --- ROS Topics and Frames ---
       input_topic: "dvl/odometry"
+
+      use_parameter_frame: false
 
   rtk_gps_truth_relay:
     ros__parameters:
