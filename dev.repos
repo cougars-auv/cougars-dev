@@ -19,6 +19,14 @@ repositories:
     type: zip
     url: https://github.com/tu-darmstadt-ros-pkg/eigen_checks/archive/refs/heads/ros2.zip
     version: eigen_checks-ros2
+  ground_segmentation:
+    type: zip
+    url: https://github.com/dfki-ric/ground_segmentation/archive/refs/heads/master.zip
+    version: ground_segmentation-master
+  ground_segmentation_ros2:
+    type: zip
+    url: https://github.com/dfki-ric/ground_segmentation_ros2/archive/refs/heads/master.zip
+    version: ground_segmentation_ros2-master
   holoocean_interfaces:
     type: zip
     url: https://github.com/cougars-auv/holoocean-ros/archive/refs/heads/main.zip
@@ -27,6 +35,10 @@ repositories:
     type: zip
     url: https://github.com/swri-robotics/mapviz/archive/refs/tags/2.6.4.zip
     version: mapviz-2.6.4
+  nav2_ground_consistency_costmap_plugin:
+    type: zip
+    url: https://github.com/dfki-ric/nav2_ground_consistency_costmap_plugin/archive/refs/heads/main.zip
+    version: nav2_ground_consistency_costmap_plugin-main
   voxblox_ros2:
     type: zip
     url: https://github.com/tu-darmstadt-ros-pkg/voxblox_ros2/archive/refs/heads/ros2.zip

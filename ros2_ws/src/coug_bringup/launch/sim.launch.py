@@ -223,6 +223,41 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
             )
         )
 
+        if agent_ns in ("rover1sim", "rover2sim"):
+            actions.append(
+                Node(
+                    package="ground_segmentation_ros2",
+                    executable="ground_segmentation_ros2_node",
+                    name="ground_segmentation_node",
+                    namespace=agent_ns,
+                    parameters=[
+                        fleet_param_file,
+                        agent_param_file,
+                        scenario_param_file,
+                        {
+                            "use_sim_time": use_sim_time,
+                            "robot_frame": f"{agent_ns}/base_link",
+                        },
+                    ],
+                    remappings=[
+                        (
+                            "/ground_segmentation/input_pointcloud",
+                            "camera/point_cloud/cloud_registered",
+                        ),
+                        ("/ground_segmentation/input_imu", "camera/imu/data"),
+                        (
+                            "/ground_segmentation/ground_points",
+                            "ground_segmentation/ground_points",
+                        ),
+                        (
+                            "/ground_segmentation/obstacle_points",
+                            "ground_segmentation/obstacle_points",
+                        ),
+                        ("/ground_segmentation/raw_points", "ground_segmentation/raw_points"),
+                    ],
+                )
+            )
+
     if not use_gazebo:
         actions.append(
             Node(
