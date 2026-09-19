@@ -5,16 +5,34 @@
 
   coug_gazebo_world_launch:
     ros__parameters:
-      world_file: "rover_sonoma_raceway.sdf.xacro"
+      world_file: "sonoma_raceway.sdf.xacro"
+
+  imu_covariance_node:
+    ros__parameters:
+      # --- Node Settings ---
+      enable_orientation: false
+      orientation_noise_sigmas: [0.05, 0.05, 0.05] # [roll, pitch, yaw] [rad]
+
+      # --- ROS Topics ---
+      input_topic: "camera/imu/data_gz"
+      output_topic: "camera/imu/data_raw"
+
+  mag_covariance_node:
+    ros__parameters:
+      # --- Node Settings ---
+      magnetic_field_noise_sigmas: [3.0e-7, 3.0e-7, 3.0e-7] # [x, y, z] [T]
+
+      # --- ROS Topics ---
+      input_topic: "camera/imu/mag_gz"
+      output_topic: "camera/imu/mag"
 
   navsat_covariance_node:
     ros__parameters:
       # --- Node Settings ---
-      horizontal_stddev: 0.015 # [m]
-      vertical_stddev: 0.025 # [m]
+      position_noise_sigmas: [0.015, 0.015, 0.025] # [east, north, up] [m]
 
       # --- ROS Topics ---
-      input_topic: "gps/fix_raw"
+      input_topic: "gps/fix_gz"
       output_topic: "gps/fix"
 
   rgb_camera_info_relay:
