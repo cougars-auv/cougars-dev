@@ -6,6 +6,7 @@
   sim_launch:
     ros__parameters:
       agents: ["rover1sim"]
+      dem_file: "byu_usgs3dep_1m_ut_wasatch_l3_2013.tif"
 
   imu_filter_madgwick:
     ros__parameters:
