@@ -133,27 +133,27 @@
 
   controller_server:
     ros__parameters:
-      controller_frequency: 20.0
+      controller_frequency: 20.0 # [Hz]
 
       general_goal_checker:
-        xy_goal_tolerance: 0.5
+        xy_goal_tolerance: 0.5 # [m]
       FollowPath:
         plugin: "nav2_mppi_controller::MPPIController"
-        transform_tolerance: 0.3
-        time_steps: 56
-        model_dt: 0.05
+        transform_tolerance: 0.3 # [s]
+        time_steps: 56 # [steps]
+        model_dt: 0.05 # [s]
         batch_size: 1000
 
         motion_model: "DiffDrive"
-        vx_max: 2.0
-        vx_min: -0.35
-        vy_max: 0.5
-        wz_max: 1.9
+        vx_max: 2.0 # [m/s]
+        vx_min: -0.35 # [m/s]
+        vy_max: 0.5 # [m/s]
+        wz_max: 1.9 # [rad/s]
 
-        vx_std: 0.8
-        wz_std: 0.4
+        vx_std: 0.8 # [m/s]
+        wz_std: 0.4 # [rad/s]
 
-        prune_distance: 6.0
+        prune_distance: 6.0 # [m]
         visualize: true
 
         critics:
@@ -174,12 +174,12 @@
 
         GoalCritic:
           cost_weight: 5.0
-          threshold_to_consider: 3.0
+          threshold_to_consider: 3.0 # [m]
 
         PathFollowCritic:
           cost_weight: 5.0
-          offset_from_furthest: 6
-          threshold_to_consider: 3.0
+          offset_from_furthest: 6 # [poses]
+          threshold_to_consider: 3.0 # [m]
 
   global_costmap:
     global_costmap:
@@ -187,10 +187,10 @@
         global_frame: "map"
         robot_base_frame: "rover1gz/base_link"
 
-        publish_frequency: 0.5
+        publish_frequency: 0.5 # [Hz]
         always_send_full_costmap: true
-        transform_tolerance: 0.3
-        resolution: 1.0
+        transform_tolerance: 0.3 # [s]
+        resolution: 1.0 # [m/cell]
 
         footprint: "[[0.95, 0.55], [0.95, -0.55], [-0.7, -0.55], [-0.7, 0.55]]"
         plugins:
@@ -201,18 +201,18 @@
           map_topic: "/rover1gz/terrain/occupancy"
           subscribe_to_updates: false
           map_subscribe_transient_local: true
-          transform_tolerance: 0.5
+          transform_tolerance: 0.5 # [s]
 
         ground_consistency_layer:
           plugin: "nav2_ground_consistency_costmap_plugin::GroundConsistencyLayer"
           ground_points_topic: "/rover1gz/ground_segmentation/ground_points"
           nonground_points_topic: "/rover1gz/ground_segmentation/obstacle_points"
-          tf_timeout: 0.1
+          tf_timeout: 0.1 # [s]
 
           # base_link sits 0.3 m above ground; the camera is 0.575 m above that.
-          robot_height: 1.0
-          min_clearance: 0.1 # Below this is terrain variation, not an obstacle.
-          maximum_height_filter: 5.0
+          robot_height: 1.0 # [m]
+          min_clearance: 0.1 # [m] Below this is terrain variation, not an obstacle.
+          maximum_height_filter: 5.0 # [m]
 
           # Obstacle evidence weighted above ground for a safety bias.
           ground_inc: 1.0
@@ -226,16 +226,16 @@
           nonground_prob_thresh: 0.750
           max_score: 5000.0
 
-          max_data_range: 0.0 # 0 disables range culling -> cells persist.
+          max_data_range: 0.0 # [m] 0 disables range culling -> cells persist.
           discretize_costs: false
           footprint_clearing_enabled: true
-          ground_neighbor_search_cells: 0
+          ground_neighbor_search_cells: 0 # [cells]
           enable_kpi_logging: false
 
         inflation_layer:
           plugin: "nav2_costmap_2d::InflationLayer"
-          inflation_radius: 2.0
-          cost_scaling_factor: 3.0
+          inflation_radius: 2.0 # [m]
+          cost_scaling_factor: 3.0 # [1/m]
 
   local_costmap:
     local_costmap:
@@ -243,10 +243,10 @@
         global_frame: "rover1gz/odom"
         robot_base_frame: "rover1gz/base_link"
 
-        update_frequency: 5.0
-        publish_frequency: 5.0
+        update_frequency: 5.0 # [Hz]
+        publish_frequency: 5.0 # [Hz]
         always_send_full_costmap: true
-        transform_tolerance: 0.3
+        transform_tolerance: 0.3 # [s]
 
         footprint: "[[0.95, 0.55], [0.95, -0.55], [-0.7, -0.55], [-0.7, 0.55]]"
         plugins: ["ground_consistency_layer", "inflation_layer"]
@@ -255,12 +255,12 @@
           plugin: "nav2_ground_consistency_costmap_plugin::GroundConsistencyLayer"
           ground_points_topic: "/rover1gz/ground_segmentation/ground_points"
           nonground_points_topic: "/rover1gz/ground_segmentation/obstacle_points"
-          tf_timeout: 0.1
+          tf_timeout: 0.1 # [s]
 
           # base_link sits 0.3 m above ground; the camera is 0.575 m above that.
-          robot_height: 1.0
-          min_clearance: 0.1 # Below this is terrain variation, not an obstacle.
-          maximum_height_filter: 5.0
+          robot_height: 1.0 # [m]
+          min_clearance: 0.1 # [m] Below this is terrain variation, not an obstacle.
+          maximum_height_filter: 5.0 # [m]
 
           # Obstacle evidence weighted above ground for a safety bias.
           ground_inc: 1.0
@@ -274,19 +274,19 @@
           nonground_prob_thresh: 0.750
           max_score: 5000.0
 
-          max_data_range: 15.0 # Depth camera far clip.
+          max_data_range: 15.0 # [m] Depth camera far clip.
           discretize_costs: false
           footprint_clearing_enabled: true
-          ground_neighbor_search_cells: 0
+          ground_neighbor_search_cells: 0 # [cells]
           enable_kpi_logging: false
 
         inflation_layer:
           plugin: "nav2_costmap_2d::InflationLayer"
-          inflation_radius: 1.2
-          cost_scaling_factor: 3.0
+          inflation_radius: 1.2 # [m]
+          cost_scaling_factor: 3.0 # [1/m]
 
   planner_server:
     ros__parameters:
       GridBased:
         plugin: "nav2_navfn_planner::NavfnPlanner"
-        tolerance: 0.5
+        tolerance: 0.5 # [m]
