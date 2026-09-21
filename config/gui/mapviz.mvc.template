@@ -42,7 +42,7 @@ displays:
       topic: /<agent_ns>/ground_segmentation/ground_points
       size: 1
       buffer_size: 1
-      alpha: 0.5
+      alpha: 1
       color_transformer: Flat Color
       min_color: "#00ff00"
       max_color: "#000000"
@@ -81,7 +81,7 @@ displays:
     config:
       visible: false
       collapsed: true
-      alpha: 0.5
+      alpha: 1
       topic: /<agent_ns>/global_costmap/costmap
       update: false
       scheme: costmap
