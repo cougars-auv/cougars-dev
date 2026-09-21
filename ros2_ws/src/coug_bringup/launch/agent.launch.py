@@ -133,6 +133,8 @@ def generate_launch_description() -> LaunchDescription:
             "use_sim_time": use_sim_time,
             "agent_ns": agent_ns,
             "scenario_param_file": scenario_param_file,
+            "initial_position": initial_position,
+            "initial_orientation": initial_orientation,
         }.items(),
         condition=IfCondition(is_agent(agent_ns, "rover1gz", "rover2gz")),
     )
@@ -145,6 +147,8 @@ def generate_launch_description() -> LaunchDescription:
             "use_sim_time": use_sim_time,
             "agent_ns": agent_ns,
             "scenario_param_file": scenario_param_file,
+            "initial_position": initial_position,
+            "initial_orientation": initial_orientation,
         }.items(),
         condition=IfCondition(EqualsSubstitution(agent_ns, "coug2")),
     )

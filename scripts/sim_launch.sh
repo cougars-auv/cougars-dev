@@ -26,6 +26,7 @@ scenario_param_file="${CONFIG_DIR}/${scenario_param_file}"
 if [[ ${scenario_param_file} == */gazebo/* ]]; then
   option_list=(
     "Record rosbag"
+    "Unknown initial poses"
     "Enable voxblox mapping"
     "HITL mode"
   )
