@@ -207,6 +207,7 @@ def generate_launch_description() -> LaunchDescription:
         package="ground_segmentation_ros2",
         executable="ground_segmentation_ros2_node",
         name="ground_segmentation_node",
+        additional_env={"PCL_VERBOSITY_LEVEL": "ALWAYS"},
         parameters=[
             fleet_param_file,
             agent_param_file,

@@ -1,4 +1,8 @@
 repositories:
+  coug_gazebo:
+    type: git
+    url: git@github.com:cougars-auv/coug_gazebo.git
+    version: main
   coug_holoocean:
     type: git
     url: git@github.com:cougars-auv/coug_holoocean.git
