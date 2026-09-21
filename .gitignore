@@ -14,5 +14,6 @@ ros2_ws/src/*
 !ros2_ws/src/coug_gazebo/
 
 .env
-.venv
-__pycache__
+.husarnet/
+.venv/
+__pycache__/

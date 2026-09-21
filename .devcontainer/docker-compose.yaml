@@ -30,6 +30,23 @@ services:
       - ../.mapproxy/cache_data/gm_cache_EPSG900913:/app/output
     restart: unless-stopped
 
+  husarnet:
+    image: husarnet/husarnet:latest
+    container_name: cougars-husarnet-ct
+    profiles: ["husarnet"]
+    network_mode: host
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun
+    environment:
+      - HUSARNET_HOSTNAME=${HUSARNET_HOSTNAME:-basestation}
+      - HUSARNET_JOIN_CODE=${HUSARNET_JOIN_CODE:-}
+    volumes:
+      - ./.husarnet:/var/lib/husarnet
+      - /etc/hosts:/etc/hosts
+    restart: unless-stopped
+
   router:
     image: frostlab/cougars:runtime-${VERSION:-latest}
     container_name: cougars-router-ct
