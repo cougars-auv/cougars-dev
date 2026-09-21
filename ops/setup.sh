@@ -34,7 +34,8 @@ fi
 
 cat >ops/.env <<EOF
 AGENT_NS=${agent_ns}
-ZENOH_ROUTER_IP=${ip}
+BASE_STATION_IP=${ip}
+ZENOH_CONFIG_OVERRIDE=connect/endpoints=["tcp/${ip}:7447"]
 USE_SIM_TIME=${use_sim_time}
 EOF
 

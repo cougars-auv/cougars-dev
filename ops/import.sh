@@ -24,9 +24,9 @@ fi
 
 source ops/.env
 
-ip="${ZENOH_ROUTER_IP:-}"
+ip="${BASE_STATION_IP:-}"
 if [[ -z ${ip} ]]; then
-  echo "Error: ZENOH_ROUTER_IP not set in ops/.env" >&2
+  echo "Error: BASE_STATION_IP not set in ops/.env" >&2
   exit 1
 fi
 

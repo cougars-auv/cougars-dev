@@ -45,7 +45,7 @@ services:
     ipc: host
     pid: host
     environment:
-      - ZENOH_CONFIG_OVERRIDE=connect/endpoints=["${ZENOH_ROUTER_ENDPOINT:-tcp/${ZENOH_ROUTER_IP}:7447}"]
+      - ZENOH_CONFIG_OVERRIDE
     # restart: unless-stopped
     command: ros2 run rmw_zenoh_cpp rmw_zenohd
 
