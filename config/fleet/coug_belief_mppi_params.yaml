@@ -109,13 +109,15 @@
       ros__parameters:
         update_frequency: 1.0
         publish_frequency: 0.0
-        robot_radius: 0.3
         transform_tolerance: 2.0
         rolling_window: true
         width: 500
         height: 500
         resolution: 0.5
+
+        robot_radius: 0.3
         plugins: ["obstacle_layer"]
+
         obstacle_layer:
           plugin: "nav2_costmap_2d::ObstacleLayer"
           enabled: true
@@ -126,13 +128,15 @@
       ros__parameters:
         update_frequency: 10.0
         publish_frequency: 0.0
-        robot_radius: 0.3
         transform_tolerance: 2.0
         rolling_window: true
-        width: 10
-        height: 10
+        width: 20
+        height: 20
         resolution: 0.1
+
+        robot_radius: 0.3
         plugins: ["obstacle_layer"]
+
         obstacle_layer:
           plugin: "nav2_costmap_2d::ObstacleLayer"
           enabled: true
