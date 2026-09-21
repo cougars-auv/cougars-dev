@@ -34,8 +34,76 @@ displays:
     config:
       visible: true
       collapsed: false
+  - type: mapviz_plugins/pointcloud2
+    name: Ground
+    config:
+      visible: false
+      collapsed: true
+      topic: /<agent_ns>/ground_segmentation/ground_points
+      size: 1
+      buffer_size: 1
+      alpha: 0.5
+      color_transformer: Flat Color
+      min_color: "#00ff00"
+      max_color: "#000000"
+      value_min: 0
+      value_max: 100
+      use_rainbow: false
+      use_automaxmin: false
+      unpack_rgb: false
+      qos_depth: 10
+      qos_history: 1
+      qos_reliability: 1
+      qos_durability: 2
+  - type: mapviz_plugins/pointcloud2
+    name: Obstacles
+    config:
+      visible: false
+      collapsed: true
+      topic: /<agent_ns>/ground_segmentation/obstacle_points
+      size: 1
+      buffer_size: 1
+      alpha: 1
+      color_transformer: Flat Color
+      min_color: "#ff00ff"
+      max_color: "#000000"
+      value_min: 0
+      value_max: 100
+      use_rainbow: false
+      use_automaxmin: false
+      unpack_rgb: false
+      qos_depth: 10
+      qos_history: 1
+      qos_reliability: 1
+      qos_durability: 2
+  - type: mapviz_plugins/occupancy_grid
+    name: Global Costmap
+    config:
+      visible: false
+      collapsed: true
+      alpha: 0.5
+      topic: /<agent_ns>/global_costmap/costmap
+      update: false
+      scheme: costmap
+      qos_depth: 10
+      qos_history: 1
+      qos_reliability: 1
+      qos_durability: 2
+  - type: mapviz_plugins/occupancy_grid
+    name: Local Costmap
+    config:
+      visible: false
+      collapsed: true
+      alpha: 1
+      topic: /<agent_ns>/local_costmap/costmap
+      update: false
+      scheme: costmap
+      qos_depth: 10
+      qos_history: 1
+      qos_reliability: 1
+      qos_durability: 2
   - type: mapviz_plugins/tf_frame
-    name: new display
+    name: Robot
     config:
       visible: true
       collapsed: true
@@ -47,7 +115,7 @@ displays:
       static_arrow_sizes: true
       arrow_size: 53
   - type: mapviz_plugins/navsat
-    name: new display
+    name: GPS Fix
     config:
       visible: true
       collapsed: true
@@ -61,7 +129,7 @@ displays:
       qos_reliability: 1
       qos_durability: 2
   - type: mapviz_plugins/path
-    name: new display
+    name: Smoothed Path
     config:
       visible: true
       collapsed: true

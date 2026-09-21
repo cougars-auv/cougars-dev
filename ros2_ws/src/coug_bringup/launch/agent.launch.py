@@ -35,6 +35,10 @@ from launch.substitutions import (
 from launch_ros.actions import Node, PushRosNamespace
 
 
+def agent_frame(agent_ns: LaunchConfiguration, frame: str) -> PythonExpression:
+    return PythonExpression(["'", agent_ns, f"/{frame}' if '", agent_ns, f"' != '' else '{frame}'"])
+
+
 def is_agent(agent_ns: LaunchConfiguration, *names: str) -> PythonExpression:
     return PythonExpression(["'", agent_ns, "' in ", str(names)])
 
@@ -199,6 +203,29 @@ def generate_launch_description() -> LaunchDescription:
         ],
     )
 
+    ground_segmentation_node = Node(
+        package="ground_segmentation_ros2",
+        executable="ground_segmentation_ros2_node",
+        name="ground_segmentation_node",
+        parameters=[
+            fleet_param_file,
+            agent_param_file,
+            resolved_scenario_param_file,
+            {
+                "use_sim_time": use_sim_time,
+                "robot_frame": agent_frame(agent_ns, "base_link"),
+            },
+        ],
+        remappings=[
+            ("/ground_segmentation/input_pointcloud", "camera/point_cloud/cloud_registered"),
+            ("/ground_segmentation/input_imu", "camera/imu/data"),
+            ("/ground_segmentation/ground_points", "ground_segmentation/ground_points"),
+            ("/ground_segmentation/obstacle_points", "ground_segmentation/obstacle_points"),
+            ("/ground_segmentation/raw_points", "ground_segmentation/raw_points"),
+        ],
+        condition=IfCondition(is_agent(agent_ns, "rover1sim", "rover2sim")),
+    )
+
     return LaunchDescription(
         [
             SetEnvironmentVariable("ROS_LOG_DIR", launch_config.log_dir),
@@ -243,6 +270,7 @@ def generate_launch_description() -> LaunchDescription:
                     coug_fg_launch,
                     coug_helm_launch,
                     coug_visual_dvl_launch,
+                    ground_segmentation_node,
                 ]
             ),
         ]

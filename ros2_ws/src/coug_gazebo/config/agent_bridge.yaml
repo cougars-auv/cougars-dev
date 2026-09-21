@@ -22,19 +22,19 @@
   gz_type_name: "gz.msgs.OdometryWithCovariance"
   direction: GZ_TO_ROS
 
-- ros_topic_name: "gps/fix_raw"
+- ros_topic_name: "gps/fix_gz"
   gz_topic_name: "gps/fix"
   ros_type_name: "sensor_msgs/msg/NavSatFix"
   gz_type_name: "gz.msgs.NavSat"
   direction: GZ_TO_ROS
 
-- ros_topic_name: "camera/imu/data_raw"
+- ros_topic_name: "camera/imu/data_gz"
   gz_topic_name: "camera/imu/data_raw"
   ros_type_name: "sensor_msgs/msg/Imu"
   gz_type_name: "gz.msgs.IMU"
   direction: GZ_TO_ROS
 
-- ros_topic_name: "camera/imu/mag"
+- ros_topic_name: "camera/imu/mag_gz"
   gz_topic_name: "camera/imu/mag"
   ros_type_name: "sensor_msgs/msg/MagneticField"
   gz_type_name: "gz.msgs.Magnetometer"

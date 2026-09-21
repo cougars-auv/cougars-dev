@@ -79,8 +79,13 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
     agent_launch_params = load_launch_params(
         os.path.join(config_dir, f"{agent_ns_str}_params.yaml"), f"/{agent_ns_str}"
     )
+    scenario_launch_params = load_launch_params(scenario_param_file, "/**")
     urdf_filename = agent_launch_params.get("urdf_file", fleet_launch_params.get("urdf_file"))
+    dem_filename = scenario_launch_params.get(
+        "dem_file", agent_launch_params.get("dem_file", fleet_launch_params.get("dem_file"))
+    )
     urdf_file = os.path.join(coug_description_dir, "urdf", urdf_filename)
+    dem_file = os.path.join(config_dir, "dem", dem_filename) if dem_filename else ""
 
     return [
         Node(
@@ -132,7 +137,11 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
             extra_bridge_params={
                 "use_sim_time": use_sim_time,
                 "expand_gz_topic_names": True,
-                "override_frame_id": f"{agent_ns_str}/depth_camera_optical_link",
+                "override_frame_id": (
+                    f"{agent_ns_str}/depth_camera_optical_link"
+                    if agent_ns_str
+                    else "depth_camera_optical_link"
+                ),
             },
         ),
         Node(
@@ -144,6 +153,22 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                 agent_param_file,
                 scenario_param_file,
                 {"use_sim_time": use_sim_time},
+            ],
+        ),
+        Node(
+            package="coug_gazebo",
+            executable="dem_global_costmap",
+            name="dem_global_costmap_node",
+            namespace=f"/{agent_ns_str}",
+            parameters=[
+                fleet_param_file,
+                agent_param_file,
+                scenario_param_file,
+                {
+                    "use_sim_time": use_sim_time,
+                    "dem_file": dem_file,
+                    "map_frame": "map",
+                },
             ],
         ),
         Node(

@@ -256,7 +256,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
             name="sonar_link_to_sonar_frame_transform",
             arguments=[
                 "--frame-id",
-                f"{agent_ns}/sonar_link",
+                f"{agent_ns}/sonar_link" if agent_ns else "sonar_link",
                 "--child-frame-id",
                 "sonar_frame",
             ],
