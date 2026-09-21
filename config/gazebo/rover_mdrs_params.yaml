@@ -1,11 +1,11 @@
 /**:
-  coug_gazebo_agent_launch:
-    ros__parameters:
-      dem_file: "mdrs_usgs3dep_1m_ut_southern_ql1_2018.tif"
-
   coug_gazebo_world_launch:
     ros__parameters:
       world_file: "mdrs.sdf.xacro"
+
+  coug_terrain_launch:
+    ros__parameters:
+      dem_file: "mdrs_usgs3dep_1m_ut_southern_ql1_2018.tif"
 
   sim_launch:
     ros__parameters:

@@ -35,10 +35,6 @@ from launch.substitutions import (
 from launch_ros.actions import Node, PushRosNamespace
 
 
-def agent_frame(agent_ns: LaunchConfiguration, frame: str) -> PythonExpression:
-    return PythonExpression(["'", agent_ns, f"/{frame}' if '", agent_ns, f"' != '' else '{frame}'"])
-
-
 def is_agent(agent_ns: LaunchConfiguration, *names: str) -> PythonExpression:
     return PythonExpression(["'", agent_ns, "' in ", str(names)])
 
@@ -74,6 +70,8 @@ def generate_launch_description() -> LaunchDescription:
     coug_fg_launch_dir = os.path.join(coug_fg_dir, "launch")
     coug_helm_dir = get_package_share_directory("coug_helm")
     coug_helm_launch_dir = os.path.join(coug_helm_dir, "launch")
+    coug_terrain_dir = get_package_share_directory("coug_terrain")
+    coug_terrain_launch_dir = os.path.join(coug_terrain_dir, "launch")
     coug_visual_dvl_dir = get_package_share_directory("coug_visual_dvl")
     coug_visual_dvl_launch_dir = os.path.join(coug_visual_dvl_dir, "launch")
 
@@ -179,6 +177,18 @@ def generate_launch_description() -> LaunchDescription:
         ),
     )
 
+    coug_terrain_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(coug_terrain_launch_dir, "coug_terrain.launch.py")
+        ),
+        launch_arguments={
+            "use_sim_time": use_sim_time,
+            "agent_ns": agent_ns,
+            "scenario_param_file": scenario_param_file,
+        }.items(),
+        condition=IfCondition(is_agent(agent_ns, "rover1gz", "rover2gz")),
+    )
+
     coug_visual_dvl_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(coug_visual_dvl_launch_dir, "coug_visual_dvl.launch.py")
@@ -205,30 +215,6 @@ def generate_launch_description() -> LaunchDescription:
                 "log_dir": launch_config.log_dir,
             },
         ],
-    )
-
-    ground_segmentation_node = Node(
-        package="ground_segmentation_ros2",
-        executable="ground_segmentation_ros2_node",
-        name="ground_segmentation_node",
-        additional_env={"PCL_VERBOSITY_LEVEL": "ALWAYS"},
-        parameters=[
-            fleet_param_file,
-            agent_param_file,
-            resolved_scenario_param_file,
-            {
-                "use_sim_time": use_sim_time,
-                "robot_frame": agent_frame(agent_ns, "base_link"),
-            },
-        ],
-        remappings=[
-            ("/ground_segmentation/input_pointcloud", "camera/point_cloud/cloud_registered"),
-            ("/ground_segmentation/input_imu", "camera/imu/data"),
-            ("/ground_segmentation/ground_points", "ground_segmentation/ground_points"),
-            ("/ground_segmentation/obstacle_points", "ground_segmentation/obstacle_points"),
-            ("/ground_segmentation/raw_points", "ground_segmentation/raw_points"),
-        ],
-        condition=IfCondition(is_agent(agent_ns, "rover1gz", "rover2gz")),
     )
 
     return LaunchDescription(
@@ -274,8 +260,8 @@ def generate_launch_description() -> LaunchDescription:
                     coug_fg_dvl_ekf_launch,
                     coug_fg_launch,
                     coug_helm_launch,
+                    coug_terrain_launch,
                     coug_visual_dvl_launch,
-                    ground_segmentation_node,
                 ]
             ),
         ]

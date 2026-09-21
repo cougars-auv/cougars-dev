@@ -2,22 +2,10 @@
   coug_gazebo_agent_launch:
     ros__parameters:
       urdf_file: "rover.gazebo.xacro"
-      dem_file: ""
 
   coug_gazebo_world_launch:
     ros__parameters:
       world_file: "sonoma_raceway.sdf.xacro"
-
-  dem_global_costmap_node:
-    ros__parameters:
-      # --- Node Settings ---
-      max_slope_degrees: 25.0
-      resolution: 1.0 # [m]
-      outside_is_lethal: false
-
-      # --- ROS Topics and Frames ---
-      origin_topic: "/origin"
-      output_topic: "terrain/occupancy"
 
   imu_covariance_node:
     ros__parameters:
