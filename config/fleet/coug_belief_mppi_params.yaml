@@ -28,7 +28,7 @@
       costmap_update_timeout: 3.0
       enable_stamped_cmd_vel: true
       odom_topic: "odometry/local"
-      progress_checker_plugin: "progress_checker"
+      progress_checker_plugins: ["progress_checker"]
       goal_checker_plugins: ["general_goal_checker"]
       controller_plugins: ["FollowPath"]
 
@@ -162,7 +162,6 @@
   bt_navigator:
     ros__parameters:
       odom_topic: "odometry/local"
-      default_bt_xml_filename: "navigate_to_pose_w_replanning_and_recovery.xml"
       transform_tolerance: 2.0
 
   waypoint_follower:
