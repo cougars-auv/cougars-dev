@@ -86,7 +86,7 @@ def generate_launch_description() -> LaunchDescription:
             "agent_ns": agent_ns,
             "scenario_param_file": scenario_param_file,
         }.items(),
-        condition=IfCondition(is_agent(agent_ns, "blue1sim", "wamv1sim", "rover1sim", "rover2sim")),
+        condition=IfCondition(is_agent(agent_ns, "blue1holo", "wamv1holo", "rover1gz", "rover2gz")),
     )
 
     coug_comms_agent_launch = IncludeLaunchDescription(
@@ -110,7 +110,7 @@ def generate_launch_description() -> LaunchDescription:
             "scenario_param_file": scenario_param_file,
         }.items(),
         condition=UnlessCondition(
-            is_agent(agent_ns, "blue1sim", "wamv1sim", "rover1sim", "rover2sim")
+            is_agent(agent_ns, "blue1holo", "wamv1holo", "rover1gz", "rover2gz")
         ),
     )
 
@@ -134,7 +134,7 @@ def generate_launch_description() -> LaunchDescription:
             "agent_ns": agent_ns,
             "scenario_param_file": scenario_param_file,
         }.items(),
-        condition=IfCondition(is_agent(agent_ns, "rover1sim", "rover2sim")),
+        condition=IfCondition(is_agent(agent_ns, "rover1gz", "rover2gz")),
     )
 
     coug_fg_dvl_ekf_launch = IncludeLaunchDescription(
@@ -160,7 +160,7 @@ def generate_launch_description() -> LaunchDescription:
             "initial_position": initial_position,
             "initial_orientation": initial_orientation,
         }.items(),
-        condition=UnlessCondition(is_agent(agent_ns, "coug2", "rover1sim", "rover2sim")),
+        condition=UnlessCondition(is_agent(agent_ns, "coug2", "rover1gz", "rover2gz")),
     )
 
     coug_helm_launch = IncludeLaunchDescription(
@@ -171,7 +171,7 @@ def generate_launch_description() -> LaunchDescription:
             "scenario_param_file": scenario_param_file,
         }.items(),
         condition=UnlessCondition(
-            is_agent(agent_ns, "blue1sim", "wamv1sim", "rover1sim", "rover2sim")
+            is_agent(agent_ns, "blue1holo", "wamv1holo", "rover1gz", "rover2gz")
         ),
     )
 
@@ -184,7 +184,7 @@ def generate_launch_description() -> LaunchDescription:
             "agent_ns": agent_ns,
             "scenario_param_file": scenario_param_file,
         }.items(),
-        condition=IfCondition(EqualsSubstitution(agent_ns, "blue1sim")),
+        condition=IfCondition(EqualsSubstitution(agent_ns, "blue1holo")),
     )
 
     bag_recorder_node = Node(
@@ -224,7 +224,7 @@ def generate_launch_description() -> LaunchDescription:
             ("/ground_segmentation/obstacle_points", "ground_segmentation/obstacle_points"),
             ("/ground_segmentation/raw_points", "ground_segmentation/raw_points"),
         ],
-        condition=IfCondition(is_agent(agent_ns, "rover1sim", "rover2sim")),
+        condition=IfCondition(is_agent(agent_ns, "rover1gz", "rover2gz")),
     )
 
     return LaunchDescription(

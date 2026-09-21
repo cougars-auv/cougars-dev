@@ -2,7 +2,7 @@
   "name": "bluerov2_openwater",
   "package_name": "Ocean",
   "world": "OpenWater",
-  "main_agent": "blue1sim",
+  "main_agent": "blue1holo",
   "ticks_per_sec": 200,
   "frames_per_sec": false,
   "agents": [
@@ -39,7 +39,7 @@
       "rotation": [0, 0, 0]
     },
     {
-      "agent_name": "blue1sim",
+      "agent_name": "blue1holo",
       "agent_type": "BlueROV2",
       "sensors": [
         {

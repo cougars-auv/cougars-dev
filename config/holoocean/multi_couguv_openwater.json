@@ -2,7 +2,7 @@
   "name": "multi_couguv_openwater",
   "package_name": "Ocean",
   "world": "OpenWater",
-  "main_agent": "coug1sim",
+  "main_agent": "coug1holo",
   "ticks_per_sec": 200,
   "frames_per_sec": false,
   "agents": [
@@ -39,7 +39,7 @@
       "rotation": [0, 0, 0]
     },
     {
-      "agent_name": "coug1sim",
+      "agent_name": "coug1holo",
       "agent_type": "CougUV",
       "sensors": [
         {
@@ -146,7 +146,7 @@
       }
     },
     {
-      "agent_name": "coug2sim",
+      "agent_name": "coug2holo",
       "agent_type": "CougUV",
       "sensors": [
         {
@@ -253,7 +253,7 @@
       }
     },
     {
-      "agent_name": "coug3sim",
+      "agent_name": "coug3holo",
       "agent_type": "CougUV",
       "sensors": [
         {

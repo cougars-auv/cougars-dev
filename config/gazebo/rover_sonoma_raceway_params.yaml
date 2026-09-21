@@ -5,7 +5,7 @@
 
   sim_launch:
     ros__parameters:
-      agents: ["rover1sim"]
+      agents: ["rover1gz"]
 
   imu_filter_madgwick:
     ros__parameters:
@@ -19,7 +19,7 @@
       origin_longitude: -122.454630 # [deg]
       origin_altitude: 6.39 # [m]
 
-/rover1sim:
+/rover1gz:
   sim_launch:
     ros__parameters:
       location: [2.0, -2.5, 1.0] # [x, y, z] [m]

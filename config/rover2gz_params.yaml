@@ -1,4 +1,4 @@
-/rover2sim:
+/rover2gz:
   coug_comms_base_launch:
     ros__parameters:
       beacon_id: 2
@@ -159,13 +159,24 @@
     global_costmap:
       ros__parameters:
         global_frame: "map"
-        robot_base_frame: "rover2sim/base_link"
-        publish_frequency: 1.0
+        robot_base_frame: "rover2gz/base_link"
+        # The fleet default is a 500 m rolling window, which suits an AUV with no
+        # prior map but limits the planner to ~250 m ahead. With a surveyed DEM
+        # the whole site is known, so plan over all of it. StaticLayer resizes
+        # the costmap to the incoming map, so width/height/resolution follow the
+        # DEM rather than being set here.
+        rolling_window: false
+        # mapviz subscribes VOLATILE, so it only ever sees messages published
+        # after it connects. A static costmap otherwise publishes once at
+        # startup and late subscribers get nothing. Republishing keeps it
+        # visible; 0.5 Hz because the content never changes.
+        always_send_full_costmap: true
+        publish_frequency: 0.5
         footprint: "[[0.95, 0.55], [0.95, -0.55], [-0.7, -0.55], [-0.7, 0.55]]"
         plugins: ["terrain_layer", "inflation_layer"]
         terrain_layer:
           plugin: "nav2_costmap_2d::StaticLayer"
-          map_topic: "/rover2sim/terrain/occupancy"
+          map_topic: "/rover2gz/terrain/occupancy"
           subscribe_to_updates: false
           map_subscribe_transient_local: true
           transform_tolerance: 0.5
@@ -177,8 +188,8 @@
   local_costmap:
     local_costmap:
       ros__parameters:
-        global_frame: "rover2sim/odom"
-        robot_base_frame: "rover2sim/base_link"
+        global_frame: "rover2gz/odom"
+        robot_base_frame: "rover2gz/base_link"
         publish_frequency: 5.0
         always_send_full_costmap: true
         footprint: "[[0.95, 0.55], [0.95, -0.55], [-0.7, -0.55], [-0.7, 0.55]]"
@@ -187,8 +198,8 @@
         plugins: ["ground_consistency_layer", "inflation_layer"]
         ground_consistency_layer:
           plugin: "nav2_ground_consistency_costmap_plugin::GroundConsistencyLayer"
-          ground_points_topic: "/rover2sim/ground_segmentation/ground_points"
-          nonground_points_topic: "/rover2sim/ground_segmentation/obstacle_points"
+          ground_points_topic: "/rover2gz/ground_segmentation/ground_points"
+          nonground_points_topic: "/rover2gz/ground_segmentation/obstacle_points"
           tf_timeout: 0.1
 
           # base_link sits 0.3 m above ground; the camera is 0.575 m above that.

@@ -2,7 +2,7 @@
   "name": "wamv_openwater",
   "package_name": "Ocean",
   "world": "OpenWater",
-  "main_agent": "wamv1sim",
+  "main_agent": "wamv1holo",
   "ticks_per_sec": 200,
   "frames_per_sec": false,
   "agents": [
@@ -39,7 +39,7 @@
       "rotation": [0, 0, 0]
     },
     {
-      "agent_name": "wamv1sim",
+      "agent_name": "wamv1holo",
       "agent_type": "SurfaceVessel",
       "sensors": [
         {

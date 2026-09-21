@@ -1,5 +1,5 @@
 {
-  "coug1sim": [
+  "coug1holo": [
     {
       "capture_radius": 25,
       "capture_radius_z": 2,
@@ -133,7 +133,7 @@
       "z": -20
     }
   ],
-  "coug2sim": [
+  "coug2holo": [
     {
       "capture_radius": 25,
       "capture_radius_z": 2,
@@ -267,7 +267,7 @@
       "z": -20
     }
   ],
-  "coug3sim": [
+  "coug3holo": [
     {
       "capture_radius": 25,
       "capture_radius_z": 2,

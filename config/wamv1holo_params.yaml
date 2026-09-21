@@ -1,4 +1,4 @@
-/wamv1sim:
+/wamv1holo:
   coug_comms_base_launch:
     ros__parameters:
       beacon_id: 5
@@ -42,14 +42,14 @@
     global_costmap:
       ros__parameters:
         global_frame: "map"
-        robot_base_frame: "wamv1sim/base_link"
+        robot_base_frame: "wamv1holo/base_link"
         footprint: "[[2.5, 1.2], [2.5, -1.2], [-2.5, -1.2], [-2.5, 1.2]]"
 
   local_costmap:
     local_costmap:
       ros__parameters:
-        global_frame: "wamv1sim/odom"
-        robot_base_frame: "wamv1sim/base_link"
+        global_frame: "wamv1holo/odom"
+        robot_base_frame: "wamv1holo/base_link"
         footprint: "[[2.5, 1.2], [2.5, -1.2], [-2.5, -1.2], [-2.5, 1.2]]"
         width: 30
         height: 30

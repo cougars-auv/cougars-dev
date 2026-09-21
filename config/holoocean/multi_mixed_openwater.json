@@ -2,7 +2,7 @@
   "name": "multi_mixed_openwater",
   "package_name": "Ocean",
   "world": "OpenWater",
-  "main_agent": "wamv1sim",
+  "main_agent": "wamv1holo",
   "ticks_per_sec": 200,
   "frames_per_sec": false,
   "agents": [
@@ -39,7 +39,7 @@
       "rotation": [0, 0, 0]
     },
     {
-      "agent_name": "wamv1sim",
+      "agent_name": "wamv1holo",
       "agent_type": "SurfaceVessel",
       "sensors": [
         {
@@ -141,7 +141,7 @@
       "rotation": [0, 0, 0]
     },
     {
-      "agent_name": "blue1sim",
+      "agent_name": "blue1holo",
       "agent_type": "BlueROV2",
       "sensors": [
         {
@@ -245,7 +245,7 @@
       "rotation": [0, 0, 0]
     },
     {
-      "agent_name": "coug1sim",
+      "agent_name": "coug1holo",
       "agent_type": "CougUV",
       "sensors": [
         {

@@ -1,4 +1,4 @@
-/blue1sim:
+/blue1holo:
   coug_comms_base_launch:
     ros__parameters:
       beacon_id: 4
@@ -30,13 +30,13 @@
     global_costmap:
       ros__parameters:
         global_frame: "map"
-        robot_base_frame: "blue1sim/base_link"
+        robot_base_frame: "blue1holo/base_link"
 
   local_costmap:
     local_costmap:
       ros__parameters:
-        global_frame: "blue1sim/odom"
-        robot_base_frame: "blue1sim/base_link"
+        global_frame: "blue1holo/odom"
+        robot_base_frame: "blue1holo/base_link"
 
   modem_converter_node:
     ros__parameters:

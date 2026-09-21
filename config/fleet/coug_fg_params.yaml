@@ -51,7 +51,7 @@
     graph_metrics_topic: "~/metrics"
     reset_service: "~/reset"
 
-    multiagent_namespaces: ["coug2sim", "coug3sim"]
+    multiagent_namespaces: ["coug2holo", "coug3holo"]
     multiagent_status_topic: "base/agent/status" # Prefixed with neighbor namespace.
     multiagent_global_odom_topic: "base/odometry/global_nbr" # Prefixed with neighbor namespace.
 
