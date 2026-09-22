@@ -61,45 +61,43 @@ def save_artifacts(record_bag_path: str, config_snapshot: str) -> None:
             print(f"{label} saved: {destination}")
 
 
-def create_gui_config(template_name: str, agent_ns: str, suffix: str) -> str:
+def create_plotjuggler_config(agent_list: list[str]) -> str:
     config_dir = os.environ["CONFIG_DIR"]
-    template_path = os.path.join(config_dir, "gui", template_name)
-    with open(template_path) as template:
-        content = template.read().replace("<agent_ns>", agent_ns)
+    with open(os.path.join(config_dir, "gui", "plotjuggler.xml.template")) as template:
+        content = template.read().replace("<agent_ns>", agent_list[0])
 
-    with tempfile.NamedTemporaryFile(mode="w", delete=False, suffix=suffix) as rendered_config:
+    with tempfile.NamedTemporaryFile(mode="w", delete=False, suffix=".xml") as rendered_config:
         rendered_config.write(content)
         return rendered_config.name
 
 
 def create_rviz_config(agent_list: list[str]) -> str:
-    if len(agent_list) == 1:
-        return create_gui_config("rviz.rviz.template", agent_list[0], ".rviz")
-
     config_dir = os.environ["CONFIG_DIR"]
-    gui_dir = os.path.join(config_dir, "gui")
-    with open(os.path.join(gui_dir, "rviz.rviz.template")) as template:
-        config = yaml.safe_load(template.read().replace("<agent_ns>", agent_list[0]))
+    with open(os.path.join(config_dir, "gui", "rviz.rviz.template")) as template:
+        config = yaml.safe_load(template)
 
     displays = config["Visualization Manager"]["Displays"]
-    displays[:] = [
-        display
-        for display in displays
-        if display.get("Class")
-        in {
-            "rviz_default_plugins/Grid",
-            "rviz_default_plugins/TF",
-        }
-    ]
-    with open(os.path.join(gui_dir, "multi_rviz.rviz.template")) as template:
-        agent_template = template.read()
-    displays.extend(
-        display
-        for agent_ns in agent_list
-        for display in yaml.safe_load(agent_template.replace("<agent_ns>", agent_ns))["displays"]
-    )
+    templates = [yaml.safe_dump(display, sort_keys=False) for display in displays]
+    shared = [text for text in templates if "<agent_ns>" not in text]
+    per_agent = [text for text in templates if "<agent_ns>" in text]
+
+    displays[:] = [yaml.safe_load(text) for text in shared]
+    for agent_ns in agent_list:
+        group = [yaml.safe_load(text.replace("<agent_ns>", agent_ns)) for text in per_agent]
+        if len(agent_list) > 1:
+            group = [
+                {
+                    "Class": "rviz_common/Group",
+                    "Name": agent_ns,
+                    "Enabled": True,
+                    "Displays": group,
+                }
+            ]
+        displays.extend(group)
+
     with tempfile.NamedTemporaryFile(mode="w", delete=False, suffix=".rviz") as rendered_config:
-        yaml.safe_dump(config, rendered_config, sort_keys=False)
+        content = yaml.safe_dump(config, sort_keys=False)
+        rendered_config.write(content.replace("<agent_ns>", agent_list[0]))
         return rendered_config.name
 
 
@@ -118,7 +116,6 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
     record_bag_path_str = record_bag_path.perform(context)
 
     agent_list = yaml.safe_load(agent_list_str)
-    agent_ns = agent_list[0]
 
     coug_comms_dir = get_package_share_directory("coug_comms")
     coug_comms_launch_dir = os.path.join(coug_comms_dir, "launch")
@@ -179,7 +176,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
         name="plotjuggler",
         arguments=[
             "-l",
-            create_gui_config("plotjuggler.xml.template", agent_ns, ".xml"),
+            create_plotjuggler_config(agent_list),
         ],
         parameters=[{"use_sim_time": use_sim_time}],
     )
