@@ -7,6 +7,9 @@ mapviz:
     default_slip_radius: 50.0 # [m] (typically 2x default_capture_radius)
     default_slip_radius_z: 4.0 # [m]
 
+    default_search_radii: [9.0, 15.588] # [m] One ring of search points per radius.
+    default_search_points: 6 # Search points per ring.
+
     # --- ROS Topics and Services ---
     waypoint_topic: "waypoints"
     waypoint_nav2_topic: "waypoints_nav2"
