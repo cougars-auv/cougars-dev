@@ -147,12 +147,12 @@
 
         motion_model: "DiffDrive"
         vx_max: 2.0 # [m/s]
-        vx_min: -1.0 # [m/s]
-        vy_max: 0.5 # [m/s]
-        wz_max: 1.9 # [rad/s]
+        vx_min: -1.4 # [m/s]
+        vy_max: 0.0 # [m/s]
+        wz_max: 3.8 # [rad/s]
 
         vx_std: 0.8 # [m/s]
-        wz_std: 0.4 # [rad/s]
+        wz_std: 1.6 # [rad/s]
 
         prune_distance: 6.0 # [m]
 
@@ -182,7 +182,7 @@
           threshold_to_consider: 3.0 # [m]
 
         PreferForwardCritic:
-          cost_weight: 20.0
+          cost_weight: 10.0
 
   global_costmap:
     global_costmap:
