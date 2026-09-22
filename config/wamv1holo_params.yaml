@@ -21,6 +21,10 @@
     ros__parameters:
       beacon_id: 5
 
+  ground_segmentation_node:
+    ros__parameters:
+      lidar_to_ground: -1.3 # [m]
+
   controller_server:
     ros__parameters:
       controller_frequency: 20.0 # [Hz]

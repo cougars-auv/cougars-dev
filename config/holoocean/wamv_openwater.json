@@ -142,6 +142,23 @@
           "ros_publish": true
         },
         {
+          "sensor_type": "IMUSensor",
+          "sensor_name": "DepthCameraIMUSensor",
+          "socket": "Platform",
+          "rotation": [0, 0, 0],
+          "Hz": 200,
+          "configuration": {},
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "RotationSensor",
+          "sensor_name": "DepthCameraRotationSensor",
+          "socket": "Platform",
+          "rotation": [0, 0, 0],
+          "Hz": 200,
+          "ros_publish": true
+        },
+        {
           "sensor_type": "DynamicsSensor",
           "configuration": {
             "UseCOM": true,
