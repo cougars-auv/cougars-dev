@@ -221,26 +221,6 @@ displays:
       qos_reliability: 1
       qos_durability: 2
   - type: mapviz_plugins/odometry
-    name: IEKF
-    config:
-      visible: false
-      collapsed: true
-      topic: /<agent_ns>/odometry/global_iekf
-      color: "#aa00ff"
-      draw_style: lines
-      position_tolerance: 0
-      buffer_size: 0
-      show_laps: false
-      show_covariance: true
-      show_all_covariances: false
-      static_arrow_sizes: false
-      arrow_size: 25
-      show_timestamps: 0
-      qos_depth: 10
-      qos_history: 1
-      qos_reliability: 1
-      qos_durability: 2
-  - type: mapviz_plugins/odometry
     name: FL-TPI
     config:
       visible: false
@@ -286,7 +266,7 @@ displays:
       visible: false
       collapsed: true
       topic: /<agent_ns>/odometry/global_isam2
-      color: "#ffaa00"
+      color: "#aa00ff"
       draw_style: lines
       position_tolerance: 0
       buffer_size: 0
@@ -323,7 +303,7 @@ displays:
   - type: mapviz_plugins/odometry
     name: FL-NBR
     config:
-      visible: false
+      visible: true
       collapsed: true
       topic: /<agent_ns>/base/odometry/global_nbr
       color: "#ffaa00"

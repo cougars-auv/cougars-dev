@@ -11,11 +11,11 @@
               <curve color="#000000" name="/<agent_ns>/odometry/truth/pose/pose/position/x" />
               <curve color="#ff55ff" name="/<agent_ns>/odometry/global_ekf/pose/pose/position/x" />
               <curve color="#ffff00" name="/<agent_ns>/odometry/global_ukf/pose/pose/position/x" />
-              <curve color="#aa00ff" name="/<agent_ns>/odometry/global_iekf/pose/pose/position/x" />
               <curve color="#ff0000" name="/<agent_ns>/odometry/global_tpi/pose/pose/position/x" />
               <curve color="#55aaff" name="/<agent_ns>/odometry/global_lpi/pose/pose/position/x" />
-              <curve color="#ffaa00" name="/<agent_ns>/odometry/global_isam2/pose/pose/position/x" />
+              <curve color="#aa00ff" name="/<agent_ns>/odometry/global_isam2/pose/pose/position/x" />
               <curve color="#00ff00" name="/<agent_ns>/odometry/global/pose/pose/position/x" />
+              <curve color="#ffaa00" name="/<agent_ns>/base/odometry/global_nbr/pose/pose/position/x" />
             </plot>
           </DockArea>
           <DockArea name="...">
@@ -25,11 +25,11 @@
               <curve color="#000000" name="/<agent_ns>/odometry/truth/pose/pose/position/y" />
               <curve color="#ff55ff" name="/<agent_ns>/odometry/global_ekf/pose/pose/position/y" />
               <curve color="#ffff00" name="/<agent_ns>/odometry/global_ukf/pose/pose/position/y" />
-              <curve color="#aa00ff" name="/<agent_ns>/odometry/global_iekf/pose/pose/position/y" />
               <curve color="#ff0000" name="/<agent_ns>/odometry/global_tpi/pose/pose/position/y" />
               <curve color="#55aaff" name="/<agent_ns>/odometry/global_lpi/pose/pose/position/y" />
-              <curve color="#ffaa00" name="/<agent_ns>/odometry/global_isam2/pose/pose/position/y" />
+              <curve color="#aa00ff" name="/<agent_ns>/odometry/global_isam2/pose/pose/position/y" />
               <curve color="#00ff00" name="/<agent_ns>/odometry/global/pose/pose/position/y" />
+              <curve color="#ffaa00" name="/<agent_ns>/base/odometry/global_nbr/pose/pose/position/y" />
             </plot>
           </DockArea>
           <DockArea name="...">
@@ -39,11 +39,11 @@
               <curve color="#000000" name="/<agent_ns>/odometry/truth/pose/pose/position/z" />
               <curve color="#ff55ff" name="/<agent_ns>/odometry/global_ekf/pose/pose/position/z" />
               <curve color="#ffff00" name="/<agent_ns>/odometry/global_ukf/pose/pose/position/z" />
-              <curve color="#aa00ff" name="/<agent_ns>/odometry/global_iekf/pose/pose/position/z" />
               <curve color="#ff0000" name="/<agent_ns>/odometry/global_tpi/pose/pose/position/z" />
               <curve color="#55aaff" name="/<agent_ns>/odometry/global_lpi/pose/pose/position/z" />
-              <curve color="#ffaa00" name="/<agent_ns>/odometry/global_isam2/pose/pose/position/z" />
+              <curve color="#aa00ff" name="/<agent_ns>/odometry/global_isam2/pose/pose/position/z" />
               <curve color="#00ff00" name="/<agent_ns>/odometry/global/pose/pose/position/z" />
+              <curve color="#ffaa00" name="/<agent_ns>/base/odometry/global_nbr/pose/pose/position/z" />
             </plot>
           </DockArea>
         </DockSplitter>
@@ -59,11 +59,11 @@
               <curve color="#000000" name="/<agent_ns>/odometry/truth/pose/pose/orientation/roll" />
               <curve color="#ff55ff" name="/<agent_ns>/odometry/global_ekf/pose/pose/orientation/roll" />
               <curve color="#ffff00" name="/<agent_ns>/odometry/global_ukf/pose/pose/orientation/roll" />
-              <curve color="#aa00ff" name="/<agent_ns>/odometry/global_iekf/pose/pose/orientation/roll" />
               <curve color="#ff0000" name="/<agent_ns>/odometry/global_tpi/pose/pose/orientation/roll" />
               <curve color="#55aaff" name="/<agent_ns>/odometry/global_lpi/pose/pose/orientation/roll" />
-              <curve color="#ffaa00" name="/<agent_ns>/odometry/global_isam2/pose/pose/orientation/roll" />
+              <curve color="#aa00ff" name="/<agent_ns>/odometry/global_isam2/pose/pose/orientation/roll" />
               <curve color="#00ff00" name="/<agent_ns>/odometry/global/pose/pose/orientation/roll" />
+              <curve color="#ffaa00" name="/<agent_ns>/base/odometry/global_nbr/pose/pose/orientation/roll" />
             </plot>
           </DockArea>
           <DockArea name="...">
@@ -73,12 +73,12 @@
               <curve color="#000000" name="/<agent_ns>/odometry/truth/pose/pose/orientation/pitch" />
               <curve color="#ff55ff" name="/<agent_ns>/odometry/global_ekf/pose/pose/orientation/pitch" />
               <curve color="#ffff00" name="/<agent_ns>/odometry/global_ukf/pose/pose/orientation/pitch" />
-              <curve color="#aa00ff" name="/<agent_ns>/odometry/global_iekf/pose/pose/orientation/pitch" />
               <curve color="#ff0000" name="/<agent_ns>/odometry/global_tpi/pose/pose/orientation/pitch" />
               <curve color="#55aaff" name="/<agent_ns>/odometry/global_lpi/pose/pose/orientation/pitch" />
-              <curve color="#ffaa00"
+              <curve color="#aa00ff"
                 name="/<agent_ns>/odometry/global_isam2/pose/pose/orientation/pitch" />
               <curve color="#00ff00" name="/<agent_ns>/odometry/global/pose/pose/orientation/pitch" />
+              <curve color="#ffaa00" name="/<agent_ns>/base/odometry/global_nbr/pose/pose/orientation/pitch" />
             </plot>
           </DockArea>
           <DockArea name="...">
@@ -88,11 +88,11 @@
               <curve color="#000000" name="/<agent_ns>/odometry/truth/pose/pose/orientation/yaw" />
               <curve color="#ff55ff" name="/<agent_ns>/odometry/global_ekf/pose/pose/orientation/yaw" />
               <curve color="#ffff00" name="/<agent_ns>/odometry/global_ukf/pose/pose/orientation/yaw" />
-              <curve color="#aa00ff" name="/<agent_ns>/odometry/global_iekf/pose/pose/orientation/yaw" />
               <curve color="#ff0000" name="/<agent_ns>/odometry/global_tpi/pose/pose/orientation/yaw" />
               <curve color="#55aaff" name="/<agent_ns>/odometry/global_lpi/pose/pose/orientation/yaw" />
-              <curve color="#ffaa00" name="/<agent_ns>/odometry/global_isam2/pose/pose/orientation/yaw" />
+              <curve color="#aa00ff" name="/<agent_ns>/odometry/global_isam2/pose/pose/orientation/yaw" />
               <curve color="#00ff00" name="/<agent_ns>/odometry/global/pose/pose/orientation/yaw" />
+              <curve color="#ffaa00" name="/<agent_ns>/base/odometry/global_nbr/pose/pose/orientation/yaw" />
             </plot>
           </DockArea>
         </DockSplitter>
@@ -106,12 +106,11 @@
               <range bottom="-0.082545" left="25.940986" top="0.077060" right="30.956643" />
               <limitY />
               <curve color="#000000" name="/<agent_ns>/VelocitySensor/twist/twist/linear/x" />
-              <curve color="#aa00ff" name="/<agent_ns>/iekf_node/velocity/twist/twist/linear/x" />
               <curve color="#ff0000"
                 name="/<agent_ns>/factor_graph_node_tpi/velocity/twist/twist/linear/x" />
               <curve color="#55aaff"
                 name="/<agent_ns>/factor_graph_node_lpi/velocity/twist/twist/linear/x" />
-              <curve color="#ffaa00"
+              <curve color="#aa00ff"
                 name="/<agent_ns>/factor_graph_node_isam2/velocity/twist/twist/linear/x" />
               <curve color="#00ff00" name="/<agent_ns>/factor_graph_node/velocity/twist/twist/linear/x" />
             </plot>
@@ -121,12 +120,11 @@
               <range bottom="-0.108010" left="25.940986" top="0.093046" right="30.956643" />
               <limitY />
               <curve color="#000000" name="/<agent_ns>/VelocitySensor/twist/twist/linear/y" />
-              <curve color="#aa00ff" name="/<agent_ns>/iekf_node/velocity/twist/twist/linear/y" />
               <curve color="#ff0000"
                 name="/<agent_ns>/factor_graph_node_tpi/velocity/twist/twist/linear/y" />
               <curve color="#55aaff"
                 name="/<agent_ns>/factor_graph_node_lpi/velocity/twist/twist/linear/y" />
-              <curve color="#ffaa00"
+              <curve color="#aa00ff"
                 name="/<agent_ns>/factor_graph_node_isam2/velocity/twist/twist/linear/y" />
               <curve color="#00ff00" name="/<agent_ns>/factor_graph_node/velocity/twist/twist/linear/y" />
             </plot>
@@ -136,12 +134,11 @@
               <range bottom="-0.019873" left="25.940986" top="0.026462" right="30.956643" />
               <limitY />
               <curve color="#000000" name="/<agent_ns>/VelocitySensor/twist/twist/linear/z" />
-              <curve color="#aa00ff" name="/<agent_ns>/iekf_node/velocity/twist/twist/linear/z" />
               <curve color="#ff0000"
                 name="/<agent_ns>/factor_graph_node_tpi/velocity/twist/twist/linear/z" />
               <curve color="#55aaff"
                 name="/<agent_ns>/factor_graph_node_lpi/velocity/twist/twist/linear/z" />
-              <curve color="#ffaa00"
+              <curve color="#aa00ff"
                 name="/<agent_ns>/factor_graph_node_isam2/velocity/twist/twist/linear/z" />
               <curve color="#00ff00" name="/<agent_ns>/factor_graph_node/velocity/twist/twist/linear/z" />
             </plot>
@@ -157,12 +154,11 @@
               <range bottom="-0.003079" left="25.941049" top="0.000075" right="30.956488" />
               <limitY />
               <curve color="#000000" name="/<agent_ns>/imu/bias/twist/twist/linear/x" />
-              <curve color="#aa00ff" name="/<agent_ns>/iekf_node/imu/bias/twist/twist/linear/x" />
               <curve color="#ff0000"
                 name="/<agent_ns>/factor_graph_node_tpi/imu/bias/twist/twist/linear/x" />
               <curve color="#55aaff"
                 name="/<agent_ns>/factor_graph_node_lpi/imu/bias/twist/twist/linear/x" />
-              <curve color="#ffaa00"
+              <curve color="#aa00ff"
                 name="/<agent_ns>/factor_graph_node_isam2/imu/bias/twist/twist/linear/x" />
               <curve color="#00ff00" name="/<agent_ns>/factor_graph_node/imu/bias/twist/twist/linear/x" />
             </plot>
@@ -172,12 +168,11 @@
               <range bottom="-0.004368" left="25.941049" top="0.000106" right="30.956488" />
               <limitY />
               <curve color="#000000" name="/<agent_ns>/imu/bias/twist/twist/linear/y" />
-              <curve color="#aa00ff" name="/<agent_ns>/iekf_node/imu/bias/twist/twist/linear/y" />
               <curve color="#ff0000"
                 name="/<agent_ns>/factor_graph_node_tpi/imu/bias/twist/twist/linear/y" />
               <curve color="#55aaff"
                 name="/<agent_ns>/factor_graph_node_lpi/imu/bias/twist/twist/linear/y" />
-              <curve color="#ffaa00"
+              <curve color="#aa00ff"
                 name="/<agent_ns>/factor_graph_node_isam2/imu/bias/twist/twist/linear/y" />
               <curve color="#00ff00" name="/<agent_ns>/factor_graph_node/imu/bias/twist/twist/linear/y" />
             </plot>
@@ -187,12 +182,11 @@
               <range bottom="-0.000036" left="25.941049" top="0.000584" right="30.956488" />
               <limitY />
               <curve color="#000000" name="/<agent_ns>/imu/bias/twist/twist/linear/z" />
-              <curve color="#aa00ff" name="/<agent_ns>/iekf_node/imu/bias/twist/twist/linear/z" />
               <curve color="#ff0000"
                 name="/<agent_ns>/factor_graph_node_tpi/imu/bias/twist/twist/linear/z" />
               <curve color="#55aaff"
                 name="/<agent_ns>/factor_graph_node_lpi/imu/bias/twist/twist/linear/z" />
-              <curve color="#ffaa00"
+              <curve color="#aa00ff"
                 name="/<agent_ns>/factor_graph_node_isam2/imu/bias/twist/twist/linear/z" />
               <curve color="#00ff00" name="/<agent_ns>/factor_graph_node/imu/bias/twist/twist/linear/z" />
             </plot>
@@ -208,12 +202,11 @@
               <range bottom="-0.001693" left="25.941049" top="0.000041" right="30.956488" />
               <limitY />
               <curve color="#000000" name="/<agent_ns>/imu/bias/twist/twist/angular/x" />
-              <curve color="#aa00ff" name="/<agent_ns>/iekf_node/imu/bias/twist/twist/angular/x" />
               <curve color="#ff0000"
                 name="/<agent_ns>/factor_graph_node_tpi/imu/bias/twist/twist/angular/x" />
               <curve color="#55aaff"
                 name="/<agent_ns>/factor_graph_node_lpi/imu/bias/twist/twist/angular/x" />
-              <curve color="#ffaa00"
+              <curve color="#aa00ff"
                 name="/<agent_ns>/factor_graph_node_isam2/imu/bias/twist/twist/angular/x" />
               <curve color="#00ff00" name="/<agent_ns>/factor_graph_node/imu/bias/twist/twist/angular/x" />
             </plot>
@@ -223,12 +216,11 @@
               <range bottom="-0.000354" left="25.941049" top="0.000014" right="30.956488" />
               <limitY />
               <curve color="#000000" name="/<agent_ns>/imu/bias/twist/twist/angular/y" />
-              <curve color="#aa00ff" name="/<agent_ns>/iekf_node/imu/bias/twist/twist/angular/y" />
               <curve color="#ff0000"
                 name="/<agent_ns>/factor_graph_node_tpi/imu/bias/twist/twist/angular/y" />
               <curve color="#55aaff"
                 name="/<agent_ns>/factor_graph_node_lpi/imu/bias/twist/twist/angular/y" />
-              <curve color="#ffaa00"
+              <curve color="#aa00ff"
                 name="/<agent_ns>/factor_graph_node_isam2/imu/bias/twist/twist/angular/y" />
               <curve color="#00ff00" name="/<agent_ns>/factor_graph_node/imu/bias/twist/twist/angular/y" />
             </plot>
@@ -238,12 +230,11 @@
               <range bottom="-0.001157" left="25.941049" top="0.000028" right="30.956488" />
               <limitY />
               <curve color="#000000" name="/<agent_ns>/imu/bias/twist/twist/angular/z" />
-              <curve color="#aa00ff" name="/<agent_ns>/iekf_node/imu/bias/twist/twist/angular/z" />
               <curve color="#ff0000"
                 name="/<agent_ns>/factor_graph_node_tpi/imu/bias/twist/twist/angular/z" />
               <curve color="#55aaff"
                 name="/<agent_ns>/factor_graph_node_lpi/imu/bias/twist/twist/angular/z" />
-              <curve color="#ffaa00"
+              <curve color="#aa00ff"
                 name="/<agent_ns>/factor_graph_node_isam2/imu/bias/twist/twist/angular/z" />
               <curve color="#00ff00" name="/<agent_ns>/factor_graph_node/imu/bias/twist/twist/angular/z" />
             </plot>
@@ -263,7 +254,7 @@
                 name="/<agent_ns>/factor_graph_node_tpi/imu/mag/bias/magnetic_field/x" />
               <curve color="#55aaff"
                 name="/<agent_ns>/factor_graph_node_lpi/imu/mag/bias/magnetic_field/x" />
-              <curve color="#ffaa00"
+              <curve color="#aa00ff"
                 name="/<agent_ns>/factor_graph_node_isam2/imu/mag/bias/magnetic_field/x" />
               <curve color="#00ff00"
                 name="/<agent_ns>/factor_graph_node/imu/mag/bias/magnetic_field/x" />
@@ -278,7 +269,7 @@
                 name="/<agent_ns>/factor_graph_node_tpi/imu/mag/bias/magnetic_field/y" />
               <curve color="#55aaff"
                 name="/<agent_ns>/factor_graph_node_lpi/imu/mag/bias/magnetic_field/y" />
-              <curve color="#ffaa00"
+              <curve color="#aa00ff"
                 name="/<agent_ns>/factor_graph_node_isam2/imu/mag/bias/magnetic_field/y" />
               <curve color="#00ff00"
                 name="/<agent_ns>/factor_graph_node/imu/mag/bias/magnetic_field/y" />
@@ -293,7 +284,7 @@
                 name="/<agent_ns>/factor_graph_node_tpi/imu/mag/bias/magnetic_field/z" />
               <curve color="#55aaff"
                 name="/<agent_ns>/factor_graph_node_lpi/imu/mag/bias/magnetic_field/z" />
-              <curve color="#ffaa00"
+              <curve color="#aa00ff"
                 name="/<agent_ns>/factor_graph_node_isam2/imu/mag/bias/magnetic_field/z" />
               <curve color="#00ff00"
                 name="/<agent_ns>/factor_graph_node/imu/mag/bias/magnetic_field/z" />
@@ -326,7 +317,7 @@
       <boolean_strings_to_number value="true" />
       <remove_suffix_from_strings value="true" />
       <selected_topics
-        value="/<agent_ns>/imu/bias;/<agent_ns>/imu/mag/bias;/<agent_ns>/VelocitySensor;/<agent_ns>/odometry/global;/<agent_ns>/odometry/global_isam2;/<agent_ns>/odometry/global_lpi;/<agent_ns>/odometry/global_tpi;/<agent_ns>/odometry/global_iekf;/<agent_ns>/odometry/global_ukf;/<agent_ns>/odometry/global_ekf;/<agent_ns>/odometry/truth;/<agent_ns>/factor_graph_node/velocity;/<agent_ns>/factor_graph_node/imu/bias;/<agent_ns>/factor_graph_node/imu/mag/bias;/<agent_ns>/factor_graph_node_isam2/imu/bias;/<agent_ns>/factor_graph_node_isam2/imu/mag/bias;/<agent_ns>/factor_graph_node_isam2/velocity;/<agent_ns>/factor_graph_node_lpi/velocity;/<agent_ns>/factor_graph_node_lpi/imu/bias;/<agent_ns>/factor_graph_node_lpi/imu/mag/bias;/<agent_ns>/factor_graph_node_tpi/velocity;/<agent_ns>/factor_graph_node_tpi/imu/bias;/<agent_ns>/factor_graph_node_tpi/imu/mag/bias;/<agent_ns>/iekf_node/velocity;/<agent_ns>/iekf_node/imu/bias" />
+        value="/<agent_ns>/odometry/truth;/<agent_ns>/odometry/global_ekf;/<agent_ns>/odometry/global_ukf;/<agent_ns>/odometry/global_tpi;/<agent_ns>/odometry/global_lpi;/<agent_ns>/odometry/global_isam2;/<agent_ns>/odometry/global;/<agent_ns>/base/odometry/global_nbr;/<agent_ns>/VelocitySensor;/<agent_ns>/factor_graph_node_tpi/velocity;/<agent_ns>/factor_graph_node_lpi/velocity;/<agent_ns>/factor_graph_node_isam2/velocity;/<agent_ns>/factor_graph_node/velocity;/<agent_ns>/imu/bias;/<agent_ns>/factor_graph_node_tpi/imu/bias;/<agent_ns>/factor_graph_node_lpi/imu/bias;/<agent_ns>/factor_graph_node_isam2/imu/bias;/<agent_ns>/factor_graph_node/imu/bias;/<agent_ns>/imu/mag/bias;/<agent_ns>/factor_graph_node_tpi/imu/mag/bias;/<agent_ns>/factor_graph_node_lpi/imu/mag/bias;/<agent_ns>/factor_graph_node_isam2/imu/mag/bias;/<agent_ns>/factor_graph_node/imu/mag/bias" />
     </plugin>
     <plugin ID="UDP Server" />
     <plugin ID="WebSocket Server" />
