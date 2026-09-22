@@ -23,7 +23,6 @@
           "sensor_name": "ModemDepthSensor",
           "socket": "COM",
           "Hz": 10,
-          "configuration": {},
           "ros_publish": true
         },
         {
@@ -55,7 +54,6 @@
           "sensor_name": "ModemDepthSensor",
           "socket": "COM",
           "Hz": 10,
-          "configuration": {},
           "ros_publish": true
         },
         {
@@ -63,7 +61,6 @@
           "sensor_name": "ModemIMUSensor",
           "socket": "COM",
           "Hz": 10,
-          "configuration": {},
           "ros_publish": true
         },
         {
@@ -78,7 +75,6 @@
           "socket": "IMUSocket",
           "rotation": [180, 0, 0],
           "Hz": 200,
-          "configuration": {},
           "ros_publish": true
         },
         {
@@ -94,7 +90,6 @@
           "sensor_type": "DepthSensor",
           "socket": "DepthSocket",
           "Hz": 20,
-          "configuration": {},
           "ros_publish": true
         },
         {

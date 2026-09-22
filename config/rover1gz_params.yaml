@@ -147,7 +147,7 @@
 
         motion_model: "DiffDrive"
         vx_max: 2.0 # [m/s]
-        vx_min: -0.35 # [m/s]
+        vx_min: -1.0 # [m/s]
         vy_max: 0.5 # [m/s]
         wz_max: 1.9 # [rad/s]
 

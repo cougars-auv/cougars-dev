@@ -23,7 +23,6 @@
           "sensor_name": "ModemDepthSensor",
           "socket": "COM",
           "Hz": 10,
-          "configuration": {},
           "ros_publish": true
         },
         {
@@ -55,7 +54,6 @@
           "sensor_name": "ModemDepthSensor",
           "socket": "Payload",
           "Hz": 10,
-          "configuration": {},
           "ros_publish": true
         },
         {
@@ -63,7 +61,6 @@
           "sensor_name": "ModemIMUSensor",
           "socket": "Payload",
           "Hz": 10,
-          "configuration": {},
           "ros_publish": true
         },
         {
@@ -77,7 +74,6 @@
           "sensor_type": "IMUSensor",
           "socket": "Platform",
           "Hz": 200,
-          "configuration": {},
           "ros_publish": true
         },
         {
@@ -93,7 +89,6 @@
           "sensor_type": "DepthSensor",
           "socket": "Payload",
           "Hz": 20,
-          "configuration": {},
           "ros_publish": true
         },
         {
@@ -126,7 +121,8 @@
           "sensor_type": "DepthCamera",
           "sensor_name": "DepthCamera",
           "socket": "Platform",
-          "rotation": [0, 0, 0],
+          "location": [1.45, 0, 0.7],
+          "rotation": [0, 15, 0],
           "Hz": 5,
           "configuration": {
             "TicksPerCapture": 40
@@ -137,7 +133,8 @@
           "sensor_type": "RGBCamera",
           "sensor_name": "RGBCameraDepth",
           "socket": "Platform",
-          "rotation": [0, 0, 0],
+          "location": [1.45, 0, 0.7],
+          "rotation": [0, 15, 0],
           "Hz": 5,
           "ros_publish": true
         },
@@ -145,16 +142,17 @@
           "sensor_type": "IMUSensor",
           "sensor_name": "DepthCameraIMUSensor",
           "socket": "Platform",
-          "rotation": [0, 0, 0],
+          "location": [1.45, 0, 0.7],
+          "rotation": [0, 15, 0],
           "Hz": 200,
-          "configuration": {},
           "ros_publish": true
         },
         {
           "sensor_type": "RotationSensor",
           "sensor_name": "DepthCameraRotationSensor",
           "socket": "Platform",
-          "rotation": [0, 0, 0],
+          "location": [1.45, 0, 0.7],
+          "rotation": [0, 15, 0],
           "Hz": 200,
           "ros_publish": true
         },
