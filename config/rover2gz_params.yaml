@@ -137,6 +137,7 @@
 
       general_goal_checker:
         xy_goal_tolerance: 0.5 # [m]
+
       FollowPath:
         plugin: "nav2_mppi_controller::MPPIController"
         transform_tolerance: 0.3 # [s]
