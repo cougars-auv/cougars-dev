@@ -9,6 +9,7 @@
       max_slope_degrees: 25.0 # [deg]
       resolution: 1.0 # [m]
       outside_is_lethal: false
+      fallback_size: 500.0 # [m] Flat prior extent when no DEM is loaded.
 
       # --- ROS Topics and Frames ---
       origin_topic: "/origin"
