@@ -2,8 +2,9 @@
   visual_dvl_node:
     ros__parameters:
       # --- Node Settings ---
-      velocity_noise_sigmas: [0.5, 0.5, 2.0] # [x, y, z] [m/s]
       sync_slop_sec: 0.05 # [s]
+
+      velocity_noise_sigmas: [0.5, 0.5, 2.0] # [x, y, z] [m/s]
 
       # --- ROS Topics and Frames ---
       front_stereo_topic: "stereo/front/image_raw"

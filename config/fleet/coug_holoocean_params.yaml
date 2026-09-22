@@ -62,12 +62,12 @@
   dvl_converter_node:
     ros__parameters:
       # --- Node Settings ---
+      # IMPORTANT! This must match HoloOcean's MaxRange for the DVLSensor.
+      max_range: 500.0 # [m] Beams at or beyond this are reported lost.
+
       # https://waterlinked.com/dvl-a50
       beam_velocity_noise_sigma: 0.011 # [m/s]
       beam_range_noise_sigma: 0.1 # [m]
-
-      # IMPORTANT! This must match HoloOcean's MaxRange for the DVLSensor.
-      max_range: 500.0 # [m] Beams at or beyond this are reported lost.
 
       # --- ROS Topics and Frames ---
       velocity_input_topic: "DVLSensorVelocity"
@@ -78,12 +78,12 @@
   dvl_odom_converter_node:
     ros__parameters:
       # --- Node Settings ---
+      tf_timeout_sec: 0.1 # [s] How long to wait for the map transform.
+
       # https://waterlinked.com/dvl-a50
       position_noise_sigma_scale: 0.0101 # [m/m]
       # https://docs.waterlinked.com/dvl/dead-reckoning/
       yaw_drift_sigma: 0.3 # [deg/min]
-
-      tf_timeout_sec: 0.1 # [s] How long to wait for the map transform.
 
       # --- ROS Topics and Frames ---
       input_topic: "DynamicsSensorOdom"
