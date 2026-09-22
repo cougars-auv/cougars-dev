@@ -93,8 +93,8 @@
           fg_vel_topic: "factor_graph_node/velocity"
           fg_bias_topic: "factor_graph_node/imu/bias"
 
-          accel_noise_sigmas: [5.6e-4, 5.6e-4, 5.6e-4] # [x, y, z] [m/s^2/√Hz]
-          gyro_noise_sigmas: [5.24e-5, 5.24e-5, 5.24e-5] # [x, y, z] [rad/s/√Hz]
+          accel_noise_density_sigmas: [5.6e-4, 5.6e-4, 5.6e-4] # [x, y, z] [m/s^2/√Hz]
+          gyro_noise_density_sigmas: [5.24e-5, 5.24e-5, 5.24e-5] # [x, y, z] [rad/s/√Hz]
           accel_bias_rw_sigmas: [1.4e-5, 1.4e-5, 1.4e-5] # [x, y, z] [m/s^2/√s]
           gyro_bias_rw_sigmas: [3.5e-6, 3.5e-6, 3.5e-6] # [x, y, z] [rad/s/√s]
           integration_covariance: 1.0e-8
