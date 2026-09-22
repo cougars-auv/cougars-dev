@@ -6,7 +6,7 @@
   dem_global_costmap_node:
     ros__parameters:
       # --- Node Settings ---
-      max_slope_degrees: 25.0
+      max_slope_degrees: 25.0 # [deg]
       resolution: 1.0 # [m]
       outside_is_lethal: false
 
@@ -31,7 +31,7 @@
       cellSizeY: 1.0 # [m]
       cellSizeZ: 10.0 # [m] Phase 1 vertical binning.
       cellSizeZPhase2: 1.0 # [m] Phase 2 vertical binning.
-      slopeThresholdDegrees: 20.0 # [deg]
+      slopeThresholdDegrees: 25.0 # [deg]
       groundInlierThreshold: 0.2 # [m] Must stay below cellSizeZPhase2.
       centroidSearchRadius: 5.0 # [m]
       maxGroundHeightDeviation: 0.1 # [m]
