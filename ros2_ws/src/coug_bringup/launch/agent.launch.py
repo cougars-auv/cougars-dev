@@ -13,13 +13,16 @@
 # limitations under the License.
 
 import os
+from typing import Any
 
 from ament_index_python.packages import get_package_share_directory
-from launch import LaunchDescription
+from launch import LaunchContext, LaunchDescription
+from launch.action import Action
 from launch.actions import (
     DeclareLaunchArgument,
     GroupAction,
     IncludeLaunchDescription,
+    OpaqueFunction,
     SetEnvironmentVariable,
 )
 from launch.conditions import IfCondition, UnlessCondition
@@ -38,7 +41,7 @@ def is_agent(agent_ns: LaunchConfiguration, *names: str) -> PythonExpression:
     return PythonExpression(["'", agent_ns, "' in ", str(names)])
 
 
-def generate_launch_description() -> LaunchDescription:
+def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Action]:
     use_sim_time = LaunchConfiguration("use_sim_time")
     agent_ns = LaunchConfiguration("agent_ns")
     loc_comparison = LaunchConfiguration("loc_comparison")
@@ -53,9 +56,7 @@ def generate_launch_description() -> LaunchDescription:
     agent_param_file = PathJoinSubstitution(
         [EnvironmentVariable("CONFIG_DIR"), [agent_ns, "_params.yaml"]]
     )
-    resolved_scenario_param_file = PythonExpression(
-        ["'", scenario_param_file, "' or '", agent_param_file, "'"]
-    )
+    resolved_scenario_param_file = scenario_param_file.perform(context) or agent_param_file
 
     coug_belief_mppi_dir = get_package_share_directory("coug_belief_mppi")
     coug_belief_mppi_launch_dir = os.path.join(coug_belief_mppi_dir, "launch")
@@ -212,6 +213,27 @@ def generate_launch_description() -> LaunchDescription:
         ],
     )
 
+    return [
+        GroupAction(
+            actions=[
+                PushRosNamespace(agent_ns),
+                bag_recorder_node,
+                coug_belief_mppi_launch,
+                coug_comms_agent_launch,
+                coug_control_launch,
+                coug_description_launch,
+                coug_fg_dual_ekf_launch,
+                coug_fg_dvl_ekf_launch,
+                coug_fg_launch,
+                coug_helm_launch,
+                coug_terrain_launch,
+                coug_visual_dvl_launch,
+            ]
+        ),
+    ]
+
+
+def generate_launch_description() -> LaunchDescription:
     return LaunchDescription(
         [
             SetEnvironmentVariable("ROS_LOG_DIR", launch_config.log_dir),
@@ -243,21 +265,6 @@ def generate_launch_description() -> LaunchDescription:
                 "initial_orientation",
                 default_value="",
             ),
-            GroupAction(
-                actions=[
-                    PushRosNamespace(agent_ns),
-                    bag_recorder_node,
-                    coug_belief_mppi_launch,
-                    coug_comms_agent_launch,
-                    coug_control_launch,
-                    coug_description_launch,
-                    coug_fg_dual_ekf_launch,
-                    coug_fg_dvl_ekf_launch,
-                    coug_fg_launch,
-                    coug_helm_launch,
-                    coug_terrain_launch,
-                    coug_visual_dvl_launch,
-                ]
-            ),
+            OpaqueFunction(function=launch_setup),
         ]
     )
