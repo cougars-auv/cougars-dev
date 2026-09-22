@@ -26,5 +26,5 @@
 /rover1gz:
   sim_launch:
     ros__parameters:
-      location: [215.0, -600.0, -15.1] # [x, y, z] [m]
+      location: [79.0, -571.0, -4.6] # [x, y, z] [m]
       rotation: [0.0, 0.0, 180.0] # [roll, pitch, yaw] [deg]
