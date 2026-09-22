@@ -6,18 +6,18 @@
   "**":
     ros__parameters:
       imu:
-        use_parameter_covariance: true
+        use_parameter_sigmas: true
 
       gps:
         enable_gps: false
         enable_gps_init_priors: false
 
       depth:
-        use_parameter_covariance: true
+        use_parameter_sigmas: true
 
       mag:
         # enable_mag: false
-        use_parameter_covariance: true
+        use_parameter_sigmas: true
 
       # ahrs:
       #   enable_ahrs: true
@@ -27,7 +27,7 @@
 
       priors:
         use_parameter_priors: false
-        use_parameter_priors_covariance: false
+        use_parameter_priors_sigmas: false
 
   factor_graph_node:
     ros__parameters:

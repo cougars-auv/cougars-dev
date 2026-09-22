@@ -72,11 +72,11 @@
       covariance_scalar: 1.0
       # https://github.com/SBG-Systems/sbg_ros2_driver/blob/3.4.0/config/sbg_device_uart_default.yaml
       sensor_rate_hz: 200.0 # [Hz]
-      use_parameter_covariance: false
-      parameter_covariance:
+      use_parameter_sigmas: false
+      parameter_sigmas:
         # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/performance-specifications
-        accel_noise_sigmas: [5.6e-4, 5.6e-4, 5.6e-4] # [x, y, z] [m/s^2/√Hz]
-        gyro_noise_sigmas: [5.24e-5, 5.24e-5, 5.24e-5] # [x, y, z] [rad/s/√Hz]
+        accel_noise_density_sigmas: [5.6e-4, 5.6e-4, 5.6e-4] # [x, y, z] [m/s^2/√Hz]
+        gyro_noise_density_sigmas: [5.24e-5, 5.24e-5, 5.24e-5] # [x, y, z] [rad/s/√Hz]
       # Gauss-Markov fit K ≈ 2.3 * B / √tau_c at tau_c = 500 s.
       # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/performance-specifications
       accel_bias_rw_sigmas: [1.4e-5, 1.4e-5, 1.4e-5] # [x, y, z] [m/s^2/√s]
@@ -94,8 +94,8 @@
         position: [0.0, 0.0, 0.0] # [x, y, z] [m]
         orientation: [0.0, 0.0, 0.0, 1.0] # [qx, qy, qz, qw]
       covariance_scalar: 1.0
-      use_parameter_covariance: false
-      parameter_covariance:
+      use_parameter_sigmas: false
+      parameter_sigmas:
         # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/hardware-documentation/aiding-sensors
         position_noise_sigmas: [0.015, 0.015] # [east, north] [m]
       diagnostic_timeout_sec: 2.0 # [s]
@@ -111,8 +111,8 @@
         position: [0.0, 0.0, 0.0] # [x, y, z] [m]
         orientation: [0.0, 0.0, 0.0, 1.0] # [qx, qy, qz, qw]
       covariance_scalar: 1.0
-      use_parameter_covariance: false
-      parameter_covariance:
+      use_parameter_sigmas: false
+      parameter_sigmas:
         # https://www.te.com/commerce/DocumentDelivery/DDEController?Action=srchrtrv&DocNm=MS5837-02BA01&DocType=DS&DocLang=English
         position_z_noise_sigma: 0.02 # [m]
       diagnostic_timeout_sec: 1.0 # [s]
@@ -128,8 +128,8 @@
         position: [0.0, 0.0, 0.0] # [x, y, z] [m]
         orientation: [0.0, 0.0, 0.0, 1.0] # [qx, qy, qz, qw]
       covariance_scalar: 1.0
-      use_parameter_covariance: false
-      parameter_covariance:
+      use_parameter_sigmas: false
+      parameter_sigmas:
         # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/hardware-documentation/aiding-sensors
         magnetic_field_noise_sigmas: [3.0e-07, 3.0e-07, 3.0e-07] # [x, y, z] [T]
       # https://www.ngdc.noaa.gov/geomag/calculators/magcalc.shtml#igrfwmm
@@ -148,8 +148,8 @@
         position: [0.0, 0.0, 0.0] # [x, y, z] [m]
         orientation: [0.0, 0.0, 0.0, 1.0] # [qx, qy, qz, qw]
       covariance_scalar: 1.0
-      use_parameter_covariance: false
-      parameter_covariance:
+      use_parameter_sigmas: false
+      parameter_sigmas:
         # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/performance-specifications
         orientation_noise_sigmas: [0.00698, 0.00698, 0.01745] # [roll, pitch, yaw] [rad]
       # East-positive declination (NOAA convention).
@@ -168,8 +168,8 @@
         position: [0.0, 0.0, 0.0] # [x, y, z] [m]
         orientation: [0.0, 0.0, 0.0, 1.0] # [qx, qy, qz, qw]
       covariance_scalar: 1.0
-      use_parameter_covariance: false
-      parameter_covariance:
+      use_parameter_sigmas: false
+      parameter_sigmas:
         # https://waterlinked.com/dvl-a50
         velocity_noise_sigmas: [0.02, 0.02, 0.02] # [x, y, z] [m/s]
       diagnostic_timeout_sec: 0.25 # [s]
@@ -245,7 +245,7 @@
     # --- Initial State Priors ---
     priors:
       # If true, forces the initial state to be set by the values below.
-      # Also overrides use_parameter_priors_covariance to set it to true.
+      # Also overrides use_parameter_priors_sigmas to set it to true.
       use_parameter_priors: true
       parameter_priors:
         initial_position: [0.0, 0.0, 0.0] # [x, y, z] [m] (of the base frame in the map frame)
@@ -260,8 +260,8 @@
       origin_delta_orientation: [0.0, 0.0, 0.0] # [roll, pitch, yaw] [rad] (of the neighbor's map origin in the map frame)
 
       # If true, forces the initial state covariance to be set by the values below.
-      use_parameter_priors_covariance: true
-      parameter_priors_covariance:
+      use_parameter_priors_sigmas: true
+      parameter_priors_sigmas:
         initial_position_sigmas: [0.001, 0.001, 0.001] # [x, y, z] [m] (in the map frame)
         initial_orientation_sigmas: [0.001, 0.001, 0.001] # [roll, pitch, yaw] [rad] (in the map frame)
         initial_velocity_sigmas: [0.001, 0.001, 0.001] # [x, y, z] [m/s] (in the base frame)
