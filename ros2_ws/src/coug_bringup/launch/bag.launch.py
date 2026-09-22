@@ -40,7 +40,7 @@ from launch.events import matches_action
 from launch.events.process import SignalProcess
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.logging import launch_config
-from launch.some_substitutions_type import SomeSubstitutionsType
+from launch.substitution import Substitution
 from launch.substitutions import (
     EnvironmentVariable,
     LaunchConfiguration,
@@ -50,7 +50,7 @@ from launch.substitutions import (
 from launch_ros.actions import Node, PushRosNamespace
 
 
-def agent_frame(agent_ns: SomeSubstitutionsType, frame: str) -> PythonExpression:
+def agent_frame(agent_ns: str | Substitution, frame: str) -> PythonExpression:
     return PythonExpression(["'", agent_ns, f"/{frame}' if '", agent_ns, f"' != '' else '{frame}'"])
 
 
