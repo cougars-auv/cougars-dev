@@ -134,7 +134,7 @@ displays:
       position_tolerance: 0
       buffer_size: 1
       static_arrow_sizes: true
-      arrow_size: 53
+      arrow_size: 50
   - type: mapviz_plugins/navsat
     name: GPS Fix
     config:
