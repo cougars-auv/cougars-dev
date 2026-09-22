@@ -1,7 +1,7 @@
 /**:
   coug_helm_launch:
     ros__parameters:
-      tree_file: "bt_helm_tree.xml"
+      tree_file: "follow_waypoints_w_recovery.xml"
 
   bt_helm_node:
     ros__parameters:
