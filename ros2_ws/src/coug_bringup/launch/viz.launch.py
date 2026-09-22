@@ -22,6 +22,7 @@ from launch.action import Action
 from launch.actions import (
     DeclareLaunchArgument,
     ExecuteProcess,
+    GroupAction,
     IncludeLaunchDescription,
     OpaqueFunction,
     SetEnvironmentVariable,
@@ -30,6 +31,7 @@ from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.logging import launch_config
 from launch.substitutions import LaunchConfiguration
+from launch_ros.actions import PushRosNamespace
 
 
 def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Action]:
@@ -90,14 +92,19 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
 
     for agent_ns in agent_list:
         actions.append(
-            IncludeLaunchDescription(
-                PythonLaunchDescriptionSource(
-                    os.path.join(coug_description_launch_dir, "coug_description.launch.py")
-                ),
-                launch_arguments={
-                    "use_sim_time": use_sim_time,
-                    "agent_ns": agent_ns,
-                }.items(),
+            GroupAction(
+                actions=[
+                    PushRosNamespace(agent_ns),
+                    IncludeLaunchDescription(
+                        PythonLaunchDescriptionSource(
+                            os.path.join(coug_description_launch_dir, "coug_description.launch.py")
+                        ),
+                        launch_arguments={
+                            "use_sim_time": use_sim_time,
+                            "agent_ns": agent_ns,
+                        }.items(),
+                    ),
+                ]
             )
         )
 
