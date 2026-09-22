@@ -181,6 +181,9 @@
           offset_from_furthest: 6 # [poses]
           threshold_to_consider: 3.0 # [m]
 
+        PreferForwardCritic:
+          cost_weight: 20.0
+
   global_costmap:
     global_costmap:
       ros__parameters:
