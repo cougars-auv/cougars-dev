@@ -27,6 +27,7 @@ from launch.actions import (
     DeclareLaunchArgument,
     EmitEvent,
     ExecuteProcess,
+    GroupAction,
     IncludeLaunchDescription,
     LogInfo,
     OpaqueFunction,
@@ -39,13 +40,18 @@ from launch.events import matches_action
 from launch.events.process import SignalProcess
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.logging import launch_config
+from launch.some_substitutions_type import SomeSubstitutionsType
 from launch.substitutions import (
     EnvironmentVariable,
-    EqualsSubstitution,
     LaunchConfiguration,
     PathJoinSubstitution,
+    PythonExpression,
 )
-from launch_ros.actions import Node
+from launch_ros.actions import Node, PushRosNamespace
+
+
+def agent_frame(agent_ns: SomeSubstitutionsType, frame: str) -> PythonExpression:
+    return PythonExpression(["'", agent_ns, f"/{frame}' if '", agent_ns, f"' != '' else '{frame}'"])
 
 
 def snapshot_config() -> str:
@@ -167,31 +173,31 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                 "/diagnostics:=/diagnostics_discard",
                 "/diagnostics_agg:=/diagnostics_agg_discard",
                 "/origin:=/origin_discard",
-                f"{agent_ns}/odometry/local:=/{agent_ns}/odometry/local_discard",
-                f"{agent_ns}/odometry/global:=/{agent_ns}/odometry/global_discard",
-                f"{agent_ns}/smoothed_path:=/{agent_ns}/smoothed_path_discard",
+                f"/{agent_ns}/odometry/local:=/{agent_ns}/odometry/local_discard",
+                f"/{agent_ns}/odometry/global:=/{agent_ns}/odometry/global_discard",
+                f"/{agent_ns}/smoothed_path:=/{agent_ns}/smoothed_path_discard",
                 (
-                    f"{agent_ns}/factor_graph_node/velocity:="
+                    f"/{agent_ns}/factor_graph_node/velocity:="
                     f"/{agent_ns}/factor_graph_node/velocity_discard"
                 ),
                 (
-                    f"{agent_ns}/factor_graph_node/metrics:="
+                    f"/{agent_ns}/factor_graph_node/metrics:="
                     f"/{agent_ns}/factor_graph_node/metrics_discard"
                 ),
                 (
-                    f"{agent_ns}/factor_graph_node/imu/bias:="
+                    f"/{agent_ns}/factor_graph_node/imu/bias:="
                     f"/{agent_ns}/factor_graph_node/imu/bias_discard"
                 ),
                 (
-                    f"{agent_ns}/factor_graph_node/imu/mag/bias:="
+                    f"/{agent_ns}/factor_graph_node/imu/mag/bias:="
                     f"/{agent_ns}/factor_graph_node/imu/mag/bias_discard"
                 ),
-                f"{agent_ns}/gps/odometry:=/{agent_ns}/gps/odometry_discard",
-                f"{agent_ns}/dvl/twist:=/{agent_ns}/dvl/twist_discard",
-                f"{agent_ns}/dvl/odometry:=/{agent_ns}/dvl/odometry_discard",
-                f"{agent_ns}/imu/nav_sat_fix:=/{agent_ns}/gps/fix",
-                f"{agent_ns}/imu/mag:=/{agent_ns}/imu/mag_au",
-                f"{agent_ns}/shallow/pressure/data:=/{agent_ns}/pressure/data",
+                f"/{agent_ns}/gps/odometry:=/{agent_ns}/gps/odometry_discard",
+                f"/{agent_ns}/dvl/twist:=/{agent_ns}/dvl/twist_discard",
+                f"/{agent_ns}/dvl/odometry:=/{agent_ns}/dvl/odometry_discard",
+                f"/{agent_ns}/imu/nav_sat_fix:=/{agent_ns}/gps/fix",
+                f"/{agent_ns}/imu/mag:=/{agent_ns}/imu/mag_au",
+                f"/{agent_ns}/shallow/pressure/data:=/{agent_ns}/pressure/data",
                 # FROST Lab CougUV bags
                 f"/pressure/data:=/{agent_ns}/pressure/data",
                 f"/fix:=/{agent_ns}/gps/fix",
@@ -249,42 +255,46 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
         )
     )
 
-    actions.append(
-        Node(
-            package="tf2_ros",
-            executable="static_transform_publisher",
-            name="sonar_link_to_sonar_frame_transform",
-            arguments=[
-                "--frame-id",
-                f"{agent_ns}/sonar_link" if agent_ns else "sonar_link",
-                "--child-frame-id",
-                "sonar_frame",
-            ],
-            parameters=[{"use_sim_time": use_sim_time}],
-            condition=IfCondition(EqualsSubstitution(agent_ns, "bluerov2")),
+    if agent_ns == "bluerov2":
+        actions.append(
+            Node(
+                package="tf2_ros",
+                executable="static_transform_publisher",
+                name="sonar_link_to_sonar_frame_transform",
+                arguments=[
+                    "--frame-id",
+                    agent_frame(agent_ns, "sonar_link"),
+                    "--child-frame-id",
+                    "sonar_frame",
+                ],
+                parameters=[{"use_sim_time": use_sim_time}],
+            )
         )
-    )
 
-    actions.append(
-        Node(
-            package="voxblox_ros",
-            executable="tsdf_server",
-            name="voxblox_node",
-            namespace=agent_ns,
-            remappings=[
-                ("pointcloud_1", "/zedm/zed_node/point_cloud/cloud_registered"),
-            ],
-            parameters=[
-                fleet_param_file,
-                agent_param_file,
-                {
-                    "use_sim_time": use_sim_time,
-                    "world_frame": "map",
-                },
-            ],
-            condition=IfCondition(EqualsSubstitution(agent_ns, "turtlmap")),
+    if agent_ns == "turtlmap":
+        actions.append(
+            GroupAction(
+                actions=[
+                    PushRosNamespace(agent_ns),
+                    Node(
+                        package="voxblox_ros",
+                        executable="tsdf_server",
+                        name="voxblox_node",
+                        parameters=[
+                            fleet_param_file,
+                            agent_param_file,
+                            {
+                                "use_sim_time": use_sim_time,
+                                "world_frame": "map",
+                            },
+                        ],
+                        remappings=[
+                            ("pointcloud_1", "/zedm/zed_node/point_cloud/cloud_registered"),
+                        ],
+                    ),
+                ]
+            )
         )
-    )
 
     return actions
 

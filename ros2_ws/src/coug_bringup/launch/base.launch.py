@@ -198,7 +198,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
         ],
     )
 
-    actions = [
+    actions: list[Action] = [
         base_station_group,
         coug_mapviz_launch,
         coug_rqt_launch,

@@ -27,7 +27,6 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.logging import launch_config
 from launch.substitutions import (
     EnvironmentVariable,
-    EqualsSubstitution,
     LaunchConfiguration,
     PathJoinSubstitution,
     PythonExpression,
@@ -147,7 +146,7 @@ def generate_launch_description() -> LaunchDescription:
             "initial_position": initial_position,
             "initial_orientation": initial_orientation,
         }.items(),
-        condition=IfCondition(EqualsSubstitution(agent_ns, "coug2")),
+        condition=IfCondition(is_agent(agent_ns, "coug2")),
     )
 
     coug_fg_launch = IncludeLaunchDescription(
@@ -194,7 +193,7 @@ def generate_launch_description() -> LaunchDescription:
             "agent_ns": agent_ns,
             "scenario_param_file": scenario_param_file,
         }.items(),
-        condition=IfCondition(EqualsSubstitution(agent_ns, "blue1holo")),
+        condition=IfCondition(is_agent(agent_ns, "blue1holo")),
     )
 
     bag_recorder_node = Node(

@@ -66,11 +66,12 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
     lead_agent = LaunchConfiguration("lead_agent")
     enable_direct_comms = LaunchConfiguration("enable_direct_comms")
     enable_acoustic_comms = LaunchConfiguration("enable_acoustic_comms")
-    known_initial_poses = LaunchConfiguration("known_initial_poses").perform(context) == "true"
+    known_initial_poses = LaunchConfiguration("known_initial_poses")
     enable_mapping = LaunchConfiguration("enable_mapping")
     hitl_mode = LaunchConfiguration("hitl_mode")
 
     scenario_param_file_str = scenario_param_file.perform(context)
+    known_initial_poses_bool = IfCondition(known_initial_poses).evaluate(context)
 
     config_dir = os.environ["CONFIG_DIR"]
     fleet_launch_params = load_launch_params(
@@ -164,9 +165,9 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                     "scenario_param_file": scenario_param_file,
                     "loc_comparison": loc_comparison,
                     "lead_agent": lead_agent,
-                    "initial_position": position if known_initial_poses else "[0.0, 0.0, 0.0]",
+                    "initial_position": position if known_initial_poses_bool else "[0.0, 0.0, 0.0]",
                     "initial_orientation": (
-                        orientation if known_initial_poses else "[0.0, 0.0, 0.0]"
+                        orientation if known_initial_poses_bool else "[0.0, 0.0, 0.0]"
                     ),
                 }.items(),
                 condition=UnlessCondition(hitl_mode),
@@ -215,35 +216,33 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
             ],
         )
 
+        voxblox_node = Node(
+            package="voxblox_ros",
+            executable="tsdf_server",
+            name="voxblox_node",
+            condition=IfCondition(enable_mapping),
+            parameters=[
+                fleet_param_file,
+                agent_param_file,
+                scenario_param_file,
+                {
+                    "use_sim_time": use_sim_time,
+                    "world_frame": "map",
+                },
+            ],
+            remappings=[
+                ("pointcloud_1", "camera/point_cloud/cloud_registered"),
+            ],
+        )
+
         actions.append(
             GroupAction(
                 actions=[
                     PushRosNamespace(agent_ns),
                     sim_bridge_launch,
                     rgb_ffmpeg_republish_node,
+                    voxblox_node,
                 ]
-            )
-        )
-
-        actions.append(
-            Node(
-                package="voxblox_ros",
-                executable="tsdf_server",
-                name="voxblox_node",
-                namespace=agent_ns,
-                remappings=[
-                    ("pointcloud_1", "camera/point_cloud/cloud_registered"),
-                ],
-                parameters=[
-                    fleet_param_file,
-                    agent_param_file,
-                    scenario_param_file,
-                    {
-                        "use_sim_time": use_sim_time,
-                        "world_frame": "map",
-                    },
-                ],
-                condition=IfCondition(enable_mapping),
             )
         )
 
