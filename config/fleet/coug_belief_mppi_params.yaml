@@ -62,6 +62,8 @@
         vy_std: 0.2 # [m/s]
         wz_std: 0.1 # [rad/s]
 
+        visualize: true
+
         critics:
           [
             "ConstraintCritic",

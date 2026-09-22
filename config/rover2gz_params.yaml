@@ -154,7 +154,6 @@
         wz_std: 0.4 # [rad/s]
 
         prune_distance: 6.0 # [m]
-        visualize: true
 
         critics:
           [
