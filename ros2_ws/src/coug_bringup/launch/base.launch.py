@@ -32,7 +32,7 @@ from launch.actions import (
 )
 from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.logging import launch_config
+from launch.logging import get_logger, launch_config
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node, PushRosNamespace
 
@@ -58,7 +58,7 @@ def save_artifacts(record_bag_path: str, config_snapshot: str) -> None:
         if os.path.isdir(source):
             destination = os.path.join(record_bag_path, directory)
             shutil.copytree(source, destination, dirs_exist_ok=True)
-            print(f"{label} saved: {destination}")
+            get_logger("launch.user").info(f"{label} saved: {destination}")
 
 
 def create_plotjuggler_config(agent_list: list[str]) -> str:

@@ -39,7 +39,7 @@ from launch.event_handlers import OnProcessExit
 from launch.events import matches_action
 from launch.events.process import SignalProcess
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.logging import launch_config
+from launch.logging import get_logger, launch_config
 from launch.substitution import Substitution
 from launch.substitutions import (
     EnvironmentVariable,
@@ -75,7 +75,7 @@ def save_artifacts(record_bag_path: str, config_snapshot: str) -> None:
         if os.path.isdir(source):
             destination = os.path.join(record_bag_path, directory)
             shutil.copytree(source, destination, dirs_exist_ok=True)
-            print(f"{label} saved: {destination}")
+            get_logger("launch.user").info(f"{label} saved: {destination}")
 
 
 def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Action]:
