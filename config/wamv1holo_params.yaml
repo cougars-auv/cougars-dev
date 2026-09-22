@@ -30,7 +30,7 @@
       controller_frequency: 20.0 # [Hz]
 
       general_goal_checker:
-        xy_goal_tolerance: 1.5 # [m]
+        xy_goal_tolerance: 2.5 # [m]
 
       FollowPath:
         plugin: "nav2_mppi_controller::MPPIController"
