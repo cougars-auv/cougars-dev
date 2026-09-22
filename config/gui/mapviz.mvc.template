@@ -102,6 +102,27 @@ displays:
       qos_history: 1
       qos_reliability: 1
       qos_durability: 2
+  - type: mapviz_plugins/path
+    name: Navfn
+    config:
+      visible: false
+      collapsed: true
+      topic: /<agent_ns>/plan
+      color: "#00ff00"
+      qos_depth: 10
+      qos_history: 1
+      qos_reliability: 1
+      qos_durability: 2
+  - type: mapviz_plugins/marker
+    name: MPPI
+    config:
+      visible: false
+      collapsed: true
+      topic: /<agent_ns>/trajectories
+      qos_depth: 10
+      qos_history: 1
+      qos_reliability: 1
+      qos_durability: 2
   - type: mapviz_plugins/tf_frame
     name: Robot
     config:
