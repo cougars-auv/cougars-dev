@@ -109,9 +109,6 @@ def generate_launch_description() -> LaunchDescription:
             "agent_ns": agent_ns,
             "scenario_param_file": scenario_param_file,
         }.items(),
-        condition=UnlessCondition(
-            is_agent(agent_ns, "blue1holo", "wamv1holo", "rover1gz", "rover2gz", "rover3gz")
-        ),
     )
 
     coug_description_launch = IncludeLaunchDescription(
@@ -174,9 +171,6 @@ def generate_launch_description() -> LaunchDescription:
             "agent_ns": agent_ns,
             "scenario_param_file": scenario_param_file,
         }.items(),
-        condition=UnlessCondition(
-            is_agent(agent_ns, "blue1holo", "wamv1holo", "rover1gz", "rover2gz", "rover3gz")
-        ),
     )
 
     coug_terrain_launch = IncludeLaunchDescription(

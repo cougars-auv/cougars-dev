@@ -7,6 +7,10 @@
     ros__parameters:
       urdf_file: "wamv_holoocean.urdf.xacro"
 
+  coug_helm_launch:
+    ros__parameters:
+      tree_file: "follow_waypoints_nav2.xml"
+
   "**":
     ros__parameters:
       priors:

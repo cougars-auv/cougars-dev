@@ -11,6 +11,10 @@
     ros__parameters:
       urdf_file: "rover.gazebo.xacro"
 
+  coug_helm_launch:
+    ros__parameters:
+      tree_file: "follow_waypoints_nav2.xml"
+
   navsat_odom_node:
     ros__parameters:
       ahrs_topic: "camera/imu/data"

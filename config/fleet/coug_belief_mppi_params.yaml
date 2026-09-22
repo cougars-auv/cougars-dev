@@ -1,7 +1,7 @@
 /**:
   waypoint_nav2_node:
     ros__parameters:
-      waypoint_topic: "waypoints_nav2"
+      waypoint_topic: "waypoints_nav2_null"
 
   belief_state_monitor_node:
     ros__parameters:
