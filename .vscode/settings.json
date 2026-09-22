@@ -30,6 +30,7 @@
   "python.analysis.typeCheckingMode": "off",
   "python.analysis.extraPaths": [
     "${workspaceFolder}/ros2_ws/install",
+    "${workspaceFolder}/ros2_ws/src/coug_fg/scripts",
     "/opt/ros/jazzy/lib/python3.12/site-packages"
   ],
   "[c]": {
