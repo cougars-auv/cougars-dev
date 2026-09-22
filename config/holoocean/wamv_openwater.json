@@ -123,6 +123,25 @@
           "ros_publish": true
         },
         {
+          "sensor_type": "DepthCamera",
+          "sensor_name": "DepthCamera",
+          "socket": "Platform",
+          "rotation": [0, 0, 0],
+          "Hz": 5,
+          "configuration": {
+            "TicksPerCapture": 40
+          },
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "RGBCamera",
+          "sensor_name": "RGBCameraDepth",
+          "socket": "Platform",
+          "rotation": [0, 0, 0],
+          "Hz": 5,
+          "ros_publish": true
+        },
+        {
           "sensor_type": "DynamicsSensor",
           "configuration": {
             "UseCOM": true,
