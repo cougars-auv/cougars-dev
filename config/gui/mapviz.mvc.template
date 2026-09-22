@@ -9,9 +9,9 @@ show_status_bar: true
 show_capture_tools: true
 window_width: 1600
 window_height: 900
-view_scale: 0.75131458
-offset_x: -11.2101583
-offset_y: -22.5667992
+view_scale: 0.75
+offset_x: -11
+offset_y: -22.5
 use_latest_transforms: true
 background: "#a0a0a4"
 image_transport: raw
