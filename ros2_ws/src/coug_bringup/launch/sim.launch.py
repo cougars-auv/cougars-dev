@@ -146,7 +146,9 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
     for agent_ns in agent_list:
         agent_pose = agent_poses[agent_ns]
         if "location" not in agent_pose or "rotation" not in agent_pose:
-            raise RuntimeError(f"No 'location' and 'rotation' set for {agent_ns} in {pose_source}")
+            raise RuntimeError(
+                f"No 'location' and 'rotation' set for '{agent_ns}' in '{pose_source}'."
+            )
         position = str(as_meters(agent_pose["location"]))
         orientation = str(as_radians(agent_pose["rotation"]))
 
@@ -301,7 +303,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
 
         if "location" not in base_station or "rotation" not in base_station:
             raise RuntimeError(
-                f"No 'location' and 'rotation' set for base_station in {pose_source}"
+                f"No 'location' and 'rotation' set for 'base_station' in '{pose_source}'."
             )
         base_station_position = as_meters(base_station["location"])
         base_station_orientation = as_radians(base_station["rotation"])

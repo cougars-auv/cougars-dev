@@ -72,9 +72,7 @@ class BagRecorderNode(Node):
         if request.start:
             if self._bag_process is not None:
                 response.success = False
-                response.message = (
-                    f"Bag recording already in progress: {os.path.basename(self._bag_path or '')}"
-                )
+                response.message = f"Bag recording already in progress: '{os.path.basename(self._bag_path or '')}'."
                 self.get_logger().warning(response.message)
                 return response
 
@@ -103,8 +101,8 @@ class BagRecorderNode(Node):
                 ]
             )
             response.success = True
-            response.message = f"Bag recording started: {os.path.basename(path)}"
-            self.get_logger().info(f"Bag recording started: {path}")
+            response.message = f"Bag recording started: '{os.path.basename(path)}'."
+            self.get_logger().info(f"Bag recording started: '{path}'.")
         else:
             if self._bag_process is None:
                 response.success = False
@@ -118,8 +116,8 @@ class BagRecorderNode(Node):
             self._save_logs()
             self._bag_path = None
             response.success = True
-            response.message = f"Bag recording stopped: {os.path.basename(path)}"
-            self.get_logger().info(f"Bag recording stopped: {path}")
+            response.message = f"Bag recording stopped: '{os.path.basename(path)}'."
+            self.get_logger().info(f"Bag recording stopped: '{path}'.")
 
         return response
 
@@ -171,7 +169,7 @@ class BagRecorderNode(Node):
 
         dest = os.path.join(self._bag_path, "config")
         shutil.copytree(self._config_snapshot, dest, dirs_exist_ok=True)
-        self.get_logger().info(f"Config saved: {dest}")
+        self.get_logger().info(f"Config saved: '{dest}'.")
 
     def _save_logs(self) -> None:
         if self._bag_path is None or not os.path.isdir(self._bag_path):
@@ -181,7 +179,7 @@ class BagRecorderNode(Node):
         if log_dir and os.path.isdir(log_dir):
             dest = os.path.join(self._bag_path, "log")
             shutil.copytree(log_dir, dest, dirs_exist_ok=True)
-            self.get_logger().info(f"Logs saved: {dest}")
+            self.get_logger().info(f"Logs saved: '{dest}'.")
 
     def destroy_node(self) -> None:
         if self._bag_process is not None:
