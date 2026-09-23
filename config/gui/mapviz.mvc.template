@@ -83,12 +83,12 @@ displays:
       collapsed: true
       alpha: 1
       topic: /<agent_ns>/global_costmap/costmap
-      update: false
+      update: true
       scheme: costmap
       qos_depth: 10
       qos_history: 1
       qos_reliability: 1
-      qos_durability: 2
+      qos_durability: 1
   - type: mapviz_plugins/occupancy_grid
     name: Local
     config:
@@ -96,12 +96,12 @@ displays:
       collapsed: true
       alpha: 1
       topic: /<agent_ns>/local_costmap/costmap
-      update: false
+      update: true
       scheme: costmap
       qos_depth: 10
       qos_history: 1
       qos_reliability: 1
-      qos_durability: 2
+      qos_durability: 1
   - type: mapviz_plugins/attitude_indicator
     name: AHRS
     config:

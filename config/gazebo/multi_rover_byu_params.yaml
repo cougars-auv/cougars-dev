@@ -36,14 +36,50 @@ mapviz:
       location: [79.0, -571.0, -4.6] # [x, y, z] [m]
       rotation: [0.0, 0.0, 180.0] # [roll, pitch, yaw] [deg]
 
+  global_costmap:
+    global_costmap:
+      ros__parameters:
+        publish_frequency: 0.5 # [Hz]
+        always_send_full_costmap: true
+
+  local_costmap:
+    local_costmap:
+      ros__parameters:
+        publish_frequency: 5.0 # [Hz]
+        always_send_full_costmap: true
+
 /rover2gz:
   sim_launch:
     ros__parameters:
       location: [79.0, -568.0, -4.4] # [x, y, z] [m]
       rotation: [0.0, 0.0, 180.0] # [roll, pitch, yaw] [deg]
 
+  global_costmap:
+    global_costmap:
+      ros__parameters:
+        publish_frequency: 0.5 # [Hz]
+        always_send_full_costmap: true
+
+  local_costmap:
+    local_costmap:
+      ros__parameters:
+        publish_frequency: 5.0 # [Hz]
+        always_send_full_costmap: true
+
 /rover3gz:
   sim_launch:
     ros__parameters:
       location: [79.0, -565.0, -4.3] # [x, y, z] [m]
       rotation: [0.0, 0.0, 180.0] # [roll, pitch, yaw] [deg]
+
+  global_costmap:
+    global_costmap:
+      ros__parameters:
+        publish_frequency: 0.5 # [Hz]
+        always_send_full_costmap: true
+
+  local_costmap:
+    local_costmap:
+      ros__parameters:
+        publish_frequency: 5.0 # [Hz]
+        always_send_full_costmap: true

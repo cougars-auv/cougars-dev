@@ -35,3 +35,15 @@ mapviz:
     ros__parameters:
       location: [-12.0, -14.0, -0.4] # [x, y, z] [m]
       rotation: [0.0, 0.0, 0.0] # [roll, pitch, yaw] [deg]
+
+  global_costmap:
+    global_costmap:
+      ros__parameters:
+        publish_frequency: 0.5 # [Hz]
+        always_send_full_costmap: true
+
+  local_costmap:
+    local_costmap:
+      ros__parameters:
+        publish_frequency: 5.0 # [Hz]
+        always_send_full_costmap: true

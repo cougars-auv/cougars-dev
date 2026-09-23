@@ -124,7 +124,7 @@
   local_costmap:
     local_costmap:
       ros__parameters:
-        update_frequency: 10.0 # [Hz]
+        update_frequency: 5.0 # [Hz]
         publish_frequency: 0.0 # [Hz]
         transform_tolerance: 2.0 # [s]
         rolling_window: true

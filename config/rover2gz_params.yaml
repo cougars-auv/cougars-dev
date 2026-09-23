@@ -196,9 +196,8 @@
         global_frame: "map"
         robot_base_frame: "rover2gz/base_link"
 
-        publish_frequency: 0.5 # [Hz]
-        always_send_full_costmap: true
-        transform_tolerance: 0.3 # [s]
+        update_frequency: 1.0 # [Hz]
+        publish_frequency: 0.0 # [Hz]
 
         footprint: "[[0.95, 0.55], [0.95, -0.55], [-0.7, -0.55], [-0.7, 0.55]]"
         plugins:
@@ -246,9 +245,7 @@
         robot_base_frame: "rover2gz/base_link"
 
         update_frequency: 5.0 # [Hz]
-        publish_frequency: 5.0 # [Hz]
-        always_send_full_costmap: true
-        transform_tolerance: 0.3 # [s]
+        publish_frequency: 1.0 # [Hz]
 
         footprint: "[[0.95, 0.55], [0.95, -0.55], [-0.7, -0.55], [-0.7, 0.55]]"
         plugins: ["ground_consistency_layer", "inflation_layer"]
