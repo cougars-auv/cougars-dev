@@ -140,7 +140,7 @@
       controller_frequency: 20.0 # [Hz]
 
       general_goal_checker:
-        xy_goal_tolerance: 0.5 # [m]
+        xy_goal_tolerance: 0.2 # [m]
 
       FollowPath:
         plugin: "nav2_mppi_controller::MPPIController"
@@ -150,13 +150,13 @@
         batch_size: 1000
 
         motion_model: "DiffDrive"
-        vx_max: 2.0 # [m/s]
-        vx_min: -1.4 # [m/s]
+        vx_max: 1.0 # [m/s]
+        vx_min: -0.7 # [m/s]
         vy_max: 0.0 # [m/s]
         wz_max: 3.8 # [rad/s]
 
-        vx_std: 0.8 # [m/s]
-        wz_std: 1.6 # [rad/s]
+        vx_std: 0.4 # [m/s]
+        wz_std: 0.8 # [rad/s]
 
         prune_distance: 6.0 # [m]
 
@@ -176,6 +176,9 @@
         ConstraintCritic:
           cost_weight: 4.0
 
+        CostCritic:
+          consider_footprint: true
+
         GoalCritic:
           cost_weight: 5.0
           threshold_to_consider: 3.0 # [m]
@@ -186,7 +189,7 @@
           threshold_to_consider: 3.0 # [m]
 
         PreferForwardCritic:
-          cost_weight: 10.0
+          cost_weight: 7.5
 
   global_costmap:
     global_costmap:
@@ -197,7 +200,7 @@
         publish_frequency: 0.5 # [Hz]
         always_send_full_costmap: true
         transform_tolerance: 0.3 # [s]
-        resolution: 1.0 # [m/cell]
+        resolution: 0.5 # [m/cell]
 
         footprint: "[[0.95, 0.55], [0.95, -0.55], [-0.7, -0.55], [-0.7, 0.55]]"
         plugins:
@@ -279,7 +282,7 @@
         inflation_layer:
           plugin: "nav2_costmap_2d::InflationLayer"
           inflation_radius: 1.2 # [m]
-          cost_scaling_factor: 3.0 # [1/m]
+          cost_scaling_factor: 6.0 # [1/m]
 
   planner_server:
     ros__parameters:
