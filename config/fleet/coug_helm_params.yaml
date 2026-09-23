@@ -43,7 +43,6 @@
       # --- ArUco Tags ---
       tag_min_detections: 5 # Detections required before a tag counts as found.
       tag_max_range: 8.0 # [m] Max camera-to-tag range for a valid detection.
-      tag_standoff_distance: 1.35 # [m] Stop distance from the tag.
       goal_shift_threshold: 0.5 # [m] Min tag shift that resends the approach goal.
       tag_arrival_duration_sec: 5.0 # [s] Hold time at the tag after arriving.
 
