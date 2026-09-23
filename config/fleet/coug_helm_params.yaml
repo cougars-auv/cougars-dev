@@ -33,12 +33,19 @@
       odom_timeout_sec: 2.0 # [s] Max odometry dropout before the emergency-surface recovery.
       odom_recovery_timeout_sec: 30.0 # [s] Time to wait for odometry to recover before aborting.
 
-      progress_timeout_sec: 15.0 # [s] Max no-progress time before a recovery is triggered.
+      progress_timeout_sec: 15.0 # [s] Max no-progress time before a recovery is triggered. 0.0 disables.
       progress_threshold: 0.5 # [m] Min moved distance required for progress check.
       number_of_retries: 6 # Max recovery attempts before a behavior fails.
       wait_duration_sec: 5.0 # [s] Idle time for the Wait recovery action.
       backup_speed_rpm: -900.0 # [RPM] Reverse thrust for the BackUp recovery action.
       backup_duration_sec: 5.0 # [s] Duration of the BackUp recovery maneuver.
+
+      # --- ArUco Tags ---
+      tag_min_detections: 5 # Detections required before a tag counts as found.
+      tag_max_range: 8.0 # [m] Max camera-to-tag range for a valid detection.
+      tag_standoff_distance: 1.35 # [m] Stop distance from the tag.
+      goal_shift_threshold: 0.5 # [m] Min tag shift that resends the approach goal.
+      tag_arrival_wait_sec: 5.0 # [s] Hold time at the tag after arriving.
 
       # --- Groot2 Connection ---
       publish_groot2: false
@@ -60,3 +67,12 @@
 
       arm_thruster_service: "thruster/arm"
       reset_localization_service: "factor_graph_node/reset"
+      flash_leds_service: "status_led/flash"
+
+  aruco_tracker:
+    ros__parameters:
+      cam_base_topic: "camera/rgb/image_rect_color"
+      image_is_rectified: true
+      marker_dict: "4X4_50"
+      marker_size: 0.15 # [m]
+      publish_tf: true
