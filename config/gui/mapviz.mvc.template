@@ -102,6 +102,20 @@ displays:
       qos_history: 1
       qos_reliability: 1
       qos_durability: 2
+  - type: mapviz_plugins/attitude_indicator
+    name: AHRS
+    config:
+      visible: false
+      collapsed: true
+      topic: /<agent_ns>/camera/imu/data
+      x: 0
+      y: 0
+      width: 100
+      height: 100
+      qos_depth: 10
+      qos_history: 1
+      qos_reliability: 1
+      qos_durability: 2
   - type: mapviz_plugins/path
     name: Navfn
     config:
