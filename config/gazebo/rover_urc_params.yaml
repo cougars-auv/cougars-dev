@@ -1,11 +1,11 @@
 /**:
   coug_gazebo_world_launch:
     ros__parameters:
-      world_file: "mdrs.sdf.xacro"
+      world_file: "urc.sdf.xacro"
 
   coug_terrain_launch:
     ros__parameters:
-      dem_file: "mdrs_usgs3dep_1m.vrt"
+      dem_file: "urc_usgs3dep_1m.vrt"
 
   sim_launch:
     ros__parameters:
@@ -13,7 +13,7 @@
 
   imu_filter_madgwick:
     ros__parameters:
-      declination: 0.176188 # [rad] WMMHR-2025 (38.4060 N, 110.7920 W, 2026-09-18)
+      declination: 0.176188 # [rad] WMMHR-2025 at MDRS (38.4060 N, 110.7920 W, 2026-09-18), 1.8 km away
 
 mapviz:
   ros__parameters:
@@ -26,12 +26,12 @@ mapviz:
   navsat_odom_node:
     ros__parameters:
       use_parameter_origin: true
-      origin_latitude: 38.406 # [deg]
-      origin_longitude: -110.792 # [deg]
-      origin_altitude: 1373.153 # [m]
+      origin_latitude: 38.418 # [deg]
+      origin_longitude: -110.777 # [deg]
+      origin_altitude: 1394.024 # [m]
 
 /rover1gz:
   sim_launch:
     ros__parameters:
-      location: [-12.0, -14.0, -0.4] # [x, y, z] [m]
+      location: [50.0, -100.0, 1.45] # [x, y, z] [m]
       rotation: [0.0, 0.0, 0.0] # [roll, pitch, yaw] [deg]

@@ -5,7 +5,7 @@
 
   coug_terrain_launch:
     ros__parameters:
-      dem_file: "byu_usgs3dep_1m_ut_wasatch_l3_2013.tif"
+      dem_file: "byu_usgs3dep_1m.vrt"
 
   sim_launch:
     ros__parameters:
@@ -28,7 +28,7 @@ mapviz:
       use_parameter_origin: true
       origin_latitude: 40.2515095 # [deg]
       origin_longitude: -111.6496175 # [deg]
-      origin_altitude: 1424.159 # [m]
+      origin_altitude: 1424.162 # [m]
 
 /rover1gz:
   sim_launch:
