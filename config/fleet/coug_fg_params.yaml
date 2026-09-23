@@ -32,7 +32,7 @@
     keyframe_source: "DVL"
     backup_keyframe_source: "Depth"
     keyframe_timeout_sec: 0.5 # [s]
-    keyframe_timer_hz: 10.0 # [Hz]
+    keyframe_timer_rate_hz: 10.0 # [Hz]
     min_keyframe_interval_sec: 0.02 # [s]
 
     # --- ROS Topics and Frames ---
@@ -291,7 +291,7 @@
       fom_covariance_scale: 4.0 # TURTLMap-based FOM covariance calculation.
 
       simulate_dropout: false
-      dropout_frequency_hz: 0.033 # [Hz] 0.0 disables.
+      dropout_rate_hz: 0.033 # [Hz] 0.0 disables.
       dropout_duration_sec: 5.0 # [s]
 
       # https://docs.waterlinked.com/dvl/dvl-a50/
