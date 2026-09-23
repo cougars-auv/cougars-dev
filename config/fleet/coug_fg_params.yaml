@@ -21,8 +21,8 @@
     # --- GTSAM Smoother Settings ---
     # "IncrementalFixedLagSmoother" (default), "ISAM2", "LevenbergMarquardt"
     solver_type: "IncrementalFixedLagSmoother"
-    max_update_rate_hz: -1.0 # [Hz] Maximum keyframe rate. -1.0 for no limit.
-    max_opt_rate_hz: -1.0 # [Hz] Maximum optimization rate. -1.0 for no limit.
+    max_update_rate_hz: 0.0 # [Hz] Max graph update (keyframe) rate. 0.0 for no limit.
+    max_opt_rate_hz: 0.0 # [Hz] Max graph optimization rate. 0.0 for no limit.
     smoother_lag_sec: 20.0 # [s]
     relinearize_threshold: 0.1
     relinearize_skip: 1
@@ -291,7 +291,7 @@
       fom_covariance_scale: 4.0 # TURTLMap-based FOM covariance calculation.
 
       simulate_dropout: false
-      dropout_frequency_hz: 0.033 # [Hz]
+      dropout_frequency_hz: 0.033 # [Hz] 0.0 disables.
       dropout_duration_sec: 5.0 # [s]
 
       # https://docs.waterlinked.com/dvl/dvl-a50/
