@@ -12,7 +12,7 @@ mapviz:
 
     # --- ROS Topics and Services ---
     waypoint_topic: "waypoints"
-    waypoint_nav2_topic: "waypoints_nav2"
+    waypoint_viz_topic: "waypoints_viz"
 
     start_service: "base/start"
     stop_service: "base/stop"
