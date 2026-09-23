@@ -211,10 +211,10 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
         )
         actions.append(play_process)
 
-        exit_event: list[Action] = [LogInfo(msg="Bag playback finished, no recording to kill.")]
+        exit_event: list[Action] = [LogInfo(msg="Bag playback finished; no recording to stop.")]
         if record_process is not None:
             exit_event = [
-                LogInfo(msg="Bag playback finished, killing recording."),
+                LogInfo(msg="Bag playback finished; stopping recording."),
                 EmitEvent(
                     event=SignalProcess(
                         signal_number=signal.SIGINT,

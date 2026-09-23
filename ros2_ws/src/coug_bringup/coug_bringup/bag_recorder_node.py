@@ -47,7 +47,7 @@ class BagRecorderNode(Node):
         self._bag_process: subprocess.Popen[bytes] | None = None
 
         if not self._bag_dir:
-            self.get_logger().error("BAGS_DIR is not set.")
+            self.get_logger().error("BAGS_DIR is not set; bag recording is unavailable.")
 
         self._config_snapshot = self._snapshot_config()
 
@@ -72,12 +72,16 @@ class BagRecorderNode(Node):
         if request.start:
             if self._bag_process is not None:
                 response.success = False
-                response.message = "Already recording."
+                response.message = (
+                    f"Bag recording already in progress: {os.path.basename(self._bag_path or '')}"
+                )
+                self.get_logger().warning(response.message)
                 return response
 
             if not self._bag_dir:
                 response.success = False
-                response.message = "BAGS_DIR is not set."
+                response.message = "BAGS_DIR is not set; bag recording is unavailable."
+                self.get_logger().error(response.message)
                 return response
 
             base = request.prefix if request.prefix else "rosbag"
@@ -99,21 +103,23 @@ class BagRecorderNode(Node):
                 ]
             )
             response.success = True
-            response.message = f"Recording started: {os.path.basename(path)}"
+            response.message = f"Bag recording started: {os.path.basename(path)}"
             self.get_logger().info(f"Bag recording started: {path}")
         else:
             if self._bag_process is None:
                 response.success = False
-                response.message = "Not recording."
+                response.message = "No bag recording in progress."
+                self.get_logger().warning(response.message)
                 return response
 
+            path = self._bag_path or ""
             self._stop_bag_process()
             self._save_config()
             self._save_logs()
             self._bag_path = None
             response.success = True
-            response.message = "Recording stopped."
-            self.get_logger().info("Bag recording stopped.")
+            response.message = f"Bag recording stopped: {os.path.basename(path)}"
+            self.get_logger().info(f"Bag recording stopped: {path}")
 
         return response
 
@@ -136,7 +142,9 @@ class BagRecorderNode(Node):
         try:
             process.wait(timeout=PROCESS_WAIT_TIMEOUT_SEC)
         except subprocess.TimeoutExpired:
-            self.get_logger().error("Bag recorder did not stop cleanly. Killing it.")
+            self.get_logger().error(
+                f"Bag recorder did not stop within {PROCESS_WAIT_TIMEOUT_SEC} s; killing it."
+            )
             process.kill()
             process.wait()
         self._bag_process = None
@@ -144,11 +152,13 @@ class BagRecorderNode(Node):
     def _snapshot_config(self) -> str:
         config_dir = os.environ.get("CONFIG_DIR", "")
         if not config_dir:
-            self.get_logger().warning("CONFIG_DIR is not set, config will not be saved.")
+            self.get_logger().warning("CONFIG_DIR is not set; config will not be saved.")
             return ""
 
         if not os.path.isdir(config_dir):
-            self.get_logger().warning(f"CONFIG_DIR is not a directory: {config_dir}")
+            self.get_logger().warning(
+                f"CONFIG_DIR '{config_dir}' is not a directory; config will not be saved."
+            )
             return ""
 
         snapshot = tempfile.mkdtemp(prefix="config_")
