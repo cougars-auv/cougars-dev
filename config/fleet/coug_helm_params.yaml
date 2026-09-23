@@ -13,7 +13,8 @@
         - "nav2_round_robin_node_bt_node"
         - "nav2_navigate_to_pose_action_bt_node"
 
-      server_timeout_ms: 1000 # [ms] Budget for a Nav2 action goal, result or cancel.
+      server_timeout_sec: 1.0 # [s] Max wait for a service or Nav2 goal/cancel response.
+      startup_timeout_sec: 30.0 # [s] Max wait for Nav2 action servers at startup.
 
       # Waypoint reached if normalized ellipse distance < 1.0 (direct hit).
       surface_capture_radius: 1000.0 # [m]
@@ -47,6 +48,7 @@
       waypoint_topic: "waypoints"
       odom_topic: "odometry/global"
       beams_topic: "dvl/beams"
+      aruco_topic: "aruco_detections"
       hsd_topic: "cmd_hsd_helm"
 
       start_service: "start"
