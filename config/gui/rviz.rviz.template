@@ -631,7 +631,9 @@ Visualization Manager:
         Value: /<agent_ns>/camera/rgb/image_rect_color
       Value: false
       Visibility:
+        Global: false
         Ground: true
+        Local: false
         Obstacles: true
         RobotModel: false
         TF: false
