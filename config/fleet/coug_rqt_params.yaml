@@ -2,6 +2,7 @@
   ros__parameters:
     config_command_topic: "dvl/config/command"
     battery_status_topic: "battery/status"
+    status_led_color_topic: "led/color"
 
     bag_record_service: "bag_record"
     arm_thruster_service: "thruster/arm"
