@@ -1,8 +1,4 @@
 /**:
-  waypoint_nav2_node:
-    ros__parameters:
-      waypoint_topic: "waypoints_nav2_null"
-
   belief_state_monitor_node:
     ros__parameters:
       fg_odom_topic: "odometry/global"
@@ -169,11 +165,3 @@
     ros__parameters:
       odom_topic: "odometry/local"
       transform_tolerance: 2.0 # [s]
-
-  waypoint_follower:
-    ros__parameters:
-      stop_on_failure: true
-      waypoint_task_executor_plugin: "wait_at_waypoint"
-      wait_at_waypoint:
-        plugin: "nav2_waypoint_follower::WaitAtWaypoint"
-        waypoint_pause_duration: 0 # [ms]
