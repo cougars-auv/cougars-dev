@@ -140,7 +140,7 @@
       controller_frequency: 20.0 # [Hz]
 
       general_goal_checker:
-        xy_goal_tolerance: 1.5 # [m]
+        xy_goal_tolerance: 1.45 # [m] 0.9 + 0.55 (base_link to nearest footprint edge)
 
       FollowPath:
         plugin: "nav2_mppi_controller::MPPIController"
@@ -152,7 +152,6 @@
         motion_model: "DiffDrive"
         vx_max: 1.0 # [m/s]
         vx_min: -0.7 # [m/s]
-        vy_max: 0.0 # [m/s]
         wz_max: 3.8 # [rad/s]
 
         vx_std: 0.4 # [m/s]
@@ -184,7 +183,7 @@
 
         PathFollowCritic:
           cost_weight: 5.0
-          offset_from_furthest: 6 # [poses]
+          offset_from_furthest: 5 # [poses]
           threshold_to_consider: 3.0 # [m]
 
         PreferForwardCritic:
@@ -205,7 +204,6 @@
           map_topic: "/rover1gz/terrain/occupancy"
           subscribe_to_updates: false
           map_subscribe_transient_local: true
-          transform_tolerance: 0.5 # [s]
 
         ground_consistency_layer:
           plugin: "nav2_ground_consistency_costmap_plugin::GroundConsistencyLayer"
