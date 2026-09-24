@@ -133,7 +133,7 @@
         # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/hardware-documentation/aiding-sensors
         magnetic_field_noise_sigmas: [3.0e-07, 3.0e-07, 3.0e-07] # [x, y, z] [T]
       # https://www.ngdc.noaa.gov/geomag/calculators/magcalc.shtml#igrfwmm
-      reference_field: [3.9634e-06, 2.08423e-05, -4.57678e-05] # [x, y, z] [T] WMMHR-2025 (40.2406 N, 111.741 W, 2026-01-23)
+      reference_field: [3.9166e-06, 2.08288e-05, -4.5602e-05] # [x, y, z] [T] WMMHR-2025 (40.2406 N, 111.741 W, 2027-06-02)
       diagnostic_timeout_sec: 1.0 # [s]
       robust_kernel: "None"
       robust_k: 1.345
@@ -381,7 +381,7 @@
     ros__parameters:
       # --- Node Settings ---
       # IMPORTANT! This must match the magnitude of factor_graph_node's mag reference_field.
-      au_to_tesla: 5.0446e-05
+      au_to_tesla: 5.0286e-05
 
       # --- ROS Topics and Frames ---
       input_topic: "imu/mag_au"
@@ -453,7 +453,7 @@
 
       # East-positive declination (NOAA convention).
       # https://www.ngdc.noaa.gov/geomag/calculators/magcalc.shtml#declination
-      declination: 0.187918 # [rad] WMMHR-2025 (40.2406 N, 111.741 W, 2026-01-23)
+      declination: 0.185867 # [rad] WMMHR-2025 (40.2406 N, 111.741 W, 2027-06-02)
       yaw_offset: 0.0 # [rad]
 
       orientation_stddev: 0.05 # [rad]

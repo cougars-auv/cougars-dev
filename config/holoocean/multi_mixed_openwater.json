@@ -96,7 +96,7 @@
           "socket": "Platform",
           "Hz": 50,
           "configuration": {
-            "MagneticVector": [3.9634e-6, 2.08423e-5, -4.57678e-5]
+            "MagneticVector": [3.9166e-6, 2.08288e-5, -4.5602e-5]
           },
           "ros_publish": true
         },
@@ -196,7 +196,7 @@
           "rotation": [180, 0, 0],
           "Hz": 50,
           "configuration": {
-            "MagneticVector": [3.9634e-6, 2.08423e-5, -4.57678e-5]
+            "MagneticVector": [3.9166e-6, 2.08288e-5, -4.5602e-5]
           },
           "ros_publish": true
         },
@@ -294,7 +294,7 @@
           "socket": "IMUSocket",
           "Hz": 50,
           "configuration": {
-            "MagneticVector": [3.9634e-6, 2.08423e-5, -4.57678e-5]
+            "MagneticVector": [3.9166e-6, 2.08288e-5, -4.5602e-5]
           },
           "ros_publish": true
         },

@@ -139,7 +139,7 @@
     ros__parameters:
       # --- Node Settings ---
       # IMPORTANT! This must match sbg_imu_mag_node's au_to_tesla.
-      au_to_tesla: 5.0446e-05
+      au_to_tesla: 5.0286e-05
 
       # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/hardware-documentation/aiding-sensors
       magnetic_field_noise_sigmas: [3.0e-07, 3.0e-07, 3.0e-07] # [x, y, z] [T]
