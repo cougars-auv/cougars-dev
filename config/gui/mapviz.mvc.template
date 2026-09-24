@@ -156,7 +156,7 @@ displays:
       collapsed: false
       alpha: 1
       source_type: 0
-      topic: /<agent_ns>/mapviz/robot_description
+      topic: /<agent_ns>/robot_description
       file_path: ""
   - type: mapviz_plugins/navsat
     name: GPS Fix

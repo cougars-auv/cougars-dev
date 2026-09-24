@@ -15,14 +15,12 @@
 import os
 from typing import Any
 
-import yaml
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchContext, LaunchDescription
 from launch.action import Action
 from launch.actions import (
     DeclareLaunchArgument,
     ExecuteProcess,
-    GroupAction,
     IncludeLaunchDescription,
     OpaqueFunction,
     SetEnvironmentVariable,
@@ -31,7 +29,6 @@ from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.logging import launch_config
 from launch.substitutions import LaunchConfiguration
-from launch_ros.actions import PushRosNamespace
 
 
 def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Action]:
@@ -43,15 +40,10 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
     playback_rate = LaunchConfiguration("playback_rate")
     start_paused = LaunchConfiguration("start_paused")
 
-    agent_list_str = agent_list_config.perform(context)
     play_bag_path_str = play_bag_path.perform(context)
-
-    agent_list = yaml.safe_load(agent_list_str)
 
     coug_bringup_dir = get_package_share_directory("coug_bringup")
     coug_bringup_launch_dir = os.path.join(coug_bringup_dir, "launch")
-    coug_description_dir = get_package_share_directory("coug_description")
-    coug_description_launch_dir = os.path.join(coug_description_dir, "launch")
 
     actions: list[Action] = []
 
@@ -89,24 +81,6 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
             }.items(),
         )
     )
-
-    for agent_ns in agent_list:
-        actions.append(
-            GroupAction(
-                actions=[
-                    PushRosNamespace(agent_ns),
-                    IncludeLaunchDescription(
-                        PythonLaunchDescriptionSource(
-                            os.path.join(coug_description_launch_dir, "coug_description.launch.py")
-                        ),
-                        launch_arguments={
-                            "use_sim_time": use_sim_time,
-                            "agent_ns": agent_ns,
-                        }.items(),
-                    ),
-                ]
-            )
-        )
 
     return actions
 

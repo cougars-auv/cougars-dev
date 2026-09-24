@@ -69,7 +69,7 @@ Visualization Manager:
         Inertia: false
         Mass: false
       Name: RobotModel
-      TF Prefix: <agent_ns>
+      TF Prefix: ""
       Update Interval: 0
       Value: true
       Visual Enabled: true

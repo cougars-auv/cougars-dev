@@ -173,6 +173,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                 "/diagnostics:=/diagnostics_discard",
                 "/diagnostics_agg:=/diagnostics_agg_discard",
                 "/origin:=/origin_discard",
+                f"/{agent_ns}/robot_description:=/{agent_ns}/robot_description_discard",
                 f"/{agent_ns}/odometry/local:=/{agent_ns}/odometry/local_discard",
                 f"/{agent_ns}/odometry/global:=/{agent_ns}/odometry/global_discard",
                 f"/{agent_ns}/smoothed_path:=/{agent_ns}/smoothed_path_discard",
