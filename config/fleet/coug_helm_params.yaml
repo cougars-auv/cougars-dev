@@ -43,11 +43,10 @@
       tag_min_detections: 3 # Detections required before a tag counts as found.
       tag_max_range: 8.0 # [m] Max camera-to-tag range for a valid detection.
       goal_shift_threshold: 0.5 # [m] Min tag shift that resends the approach goal.
-      tag_arrival_duration_sec: 5.0 # [s] Hold time at the tag after arriving.
 
       # --- Status LED ---
       teleop_timeout_sec: 2.0 # [s] Time the LED stays blue after the last teleop command.
-      led_flash_duration_sec: 5.0 # [s] Duration of the green arrival flash.
+      led_flash_duration_sec: 5.0 # [s] Duration of the green arrival flash and hold.
       led_flash_rate_hz: 2.0 # [Hz]
 
       # --- Groot2 Connection ---
