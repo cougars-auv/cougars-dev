@@ -189,7 +189,7 @@
         update_frequency: 1.0 # [Hz]
         publish_frequency: 0.0 # [Hz]
 
-        footprint: "[[0.95, 0.55], [0.95, -0.55], [-0.7, -0.55], [-0.7, 0.55]]"
+        footprint: "[[0.985, 0.55], [0.985, -0.55], [-0.715, -0.55], [-0.715, 0.55]]"
         plugins:
           ["terrain_layer", "ground_consistency_layer", "inflation_layer"]
 
@@ -218,7 +218,7 @@
         update_frequency: 5.0 # [Hz]
         publish_frequency: 1.0 # [Hz]
 
-        footprint: "[[0.95, 0.55], [0.95, -0.55], [-0.7, -0.55], [-0.7, 0.55]]"
+        footprint: "[[0.985, 0.55], [0.985, -0.55], [-0.715, -0.55], [-0.715, 0.55]]"
         plugins: ["ground_consistency_layer", "inflation_layer"]
 
         ground_consistency_layer:

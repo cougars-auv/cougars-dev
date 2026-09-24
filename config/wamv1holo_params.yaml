@@ -27,7 +27,7 @@
 
   ground_segmentation_node:
     ros__parameters:
-      lidar_to_ground: -2.17 # [m]
+      lidar_to_ground: -2.0 # [m]
 
   controller_server:
     ros__parameters:
@@ -85,7 +85,7 @@
         update_frequency: 1.0 # [Hz]
         publish_frequency: 0.0 # [Hz]
 
-        footprint: "[[2.5, 1.2], [2.5, -1.2], [-2.5, -1.2], [-2.5, 1.2]]"
+        footprint: "[[2.555, 1.267], [2.555, -1.267], [-2.822, -1.267], [-2.822, 1.267]]"
         plugins:
           ["terrain_layer", "ground_consistency_layer", "inflation_layer"]
 
@@ -100,7 +100,7 @@
           ground_points_topic: "/wamv1holo/ground_segmentation/ground_points"
           nonground_points_topic: "/wamv1holo/ground_segmentation/obstacle_points"
 
-          robot_height: 1.425 # [m]
+          robot_height: 2.0 # [m]
           max_data_range: 0.0 # [m]
 
         inflation_layer:
@@ -114,7 +114,7 @@
         update_frequency: 5.0 # [Hz]
         publish_frequency: 1.0 # [Hz]
 
-        footprint: "[[2.5, 1.2], [2.5, -1.2], [-2.5, -1.2], [-2.5, 1.2]]"
+        footprint: "[[2.555, 1.267], [2.555, -1.267], [-2.822, -1.267], [-2.822, 1.267]]"
         plugins: ["ground_consistency_layer", "inflation_layer"]
 
         ground_consistency_layer:
@@ -122,7 +122,7 @@
           ground_points_topic: "/wamv1holo/ground_segmentation/ground_points"
           nonground_points_topic: "/wamv1holo/ground_segmentation/obstacle_points"
 
-          robot_height: 1.425 # [m]
+          robot_height: 2.0 # [m]
           # https://github.com/stereolabs/zed-ros2-wrapper/blob/v5.4.1/zed_wrapper/config/zed2i.yaml
           max_data_range: 15.0 # [m]
 
