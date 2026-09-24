@@ -35,3 +35,7 @@ repositories:
     type: zip
     url: https://github.com/tu-darmstadt-ros-pkg/voxblox_ros2/archive/refs/heads/ros2.zip
     version: voxblox_ros2-ros2
+  vrx:
+    type: zip
+    url: https://github.com/osrf/vrx/archive/refs/tags/v3.1.2.zip
+    version: vrx-3.1.2
