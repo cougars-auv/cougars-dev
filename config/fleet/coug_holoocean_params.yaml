@@ -90,11 +90,6 @@
       output_topic: "dvl/position"
       config_command_topic: "dvl/config/command"
 
-  fin_state_publisher_node:
-    ros__parameters:
-      input_topic: "ControlCommand"
-      output_topic: "joint_states"
-
   gps_converter_node:
     ros__parameters:
       # --- Node Settings ---
