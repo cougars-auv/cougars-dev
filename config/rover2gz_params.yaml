@@ -21,6 +21,8 @@
 
   ekf_filter_node_odom:
     ros__parameters:
+      frequency: 50.0 # [Hz]
+
       imu0: "camera/imu/data_raw"
       # IMPORTANT! Handle non-trivial IMU rotation for robot_localization gravity mishandling bug.
       imu0_config: [
