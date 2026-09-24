@@ -149,6 +149,15 @@ displays:
       buffer_size: 1
       static_arrow_sizes: true
       arrow_size: 50
+  - type: mapviz_plugins/robot_model
+    name: Robot
+    config:
+      visible: true
+      collapsed: false
+      alpha: 1
+      source_type: 0
+      topic: /<agent_ns>/mapviz/robot_description
+      file_path: ""
   - type: mapviz_plugins/navsat
     name: GPS Fix
     config:

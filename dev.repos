@@ -27,10 +27,6 @@ repositories:
     type: zip
     url: https://github.com/cougars-auv/holoocean-ros/archive/refs/heads/main.zip
     version: holoocean-ros-main/holoocean_interfaces
-  mapviz:
-    type: zip
-    url: https://github.com/swri-robotics/mapviz/archive/refs/tags/2.6.4.zip
-    version: mapviz-2.6.4
   voxblox_ros2:
     type: zip
     url: https://github.com/tu-darmstadt-ros-pkg/voxblox_ros2/archive/refs/heads/ros2.zip
