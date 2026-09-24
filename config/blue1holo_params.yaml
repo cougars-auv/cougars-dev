@@ -30,18 +30,6 @@
       #   parameter_priors:
       #     initial_position: [0.0, 0.0, -275.0] # [x, y, z] [m]
 
-  global_costmap:
-    global_costmap:
-      ros__parameters:
-        global_frame: "map"
-        robot_base_frame: "blue1holo/base_link"
-
-  local_costmap:
-    local_costmap:
-      ros__parameters:
-        global_frame: "blue1holo/odom"
-        robot_base_frame: "blue1holo/base_link"
-
   modem_converter_node:
     ros__parameters:
       beacon_id: 4

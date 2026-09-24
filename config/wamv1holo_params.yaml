@@ -87,9 +87,6 @@
   global_costmap:
     global_costmap:
       ros__parameters:
-        global_frame: "map"
-        robot_base_frame: "wamv1holo/base_link"
-
         update_frequency: 1.0 # [Hz]
         publish_frequency: 0.0 # [Hz]
 
@@ -135,9 +132,6 @@
   local_costmap:
     local_costmap:
       ros__parameters:
-        global_frame: "wamv1holo/odom"
-        robot_base_frame: "wamv1holo/base_link"
-
         update_frequency: 5.0 # [Hz]
         publish_frequency: 1.0 # [Hz]
 
