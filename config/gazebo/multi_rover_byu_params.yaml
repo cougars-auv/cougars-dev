@@ -13,7 +13,7 @@
 
   imu_filter_madgwick:
     ros__parameters:
-      declination: 0.186504 # [rad] WMMHR-2025 (40.2515 N, 111.6496 W, 2026-09-18)
+      declination: 0.185435 # [rad] WMMHR-2025 (40.2515 N, 111.6496 W, 2027-06-02)
 
 mapviz:
   ros__parameters:
