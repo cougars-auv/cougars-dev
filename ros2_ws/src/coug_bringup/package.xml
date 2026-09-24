@@ -20,7 +20,6 @@
   <exec_depend>diagnostic_msgs</exec_depend>
   <exec_depend>diagnostic_updater</exec_depend>
   <exec_depend>ffmpeg_image_transport</exec_depend>
-  <exec_depend>gps_tools</exec_depend>
   <exec_depend>gpsd_client</exec_depend>
   <exec_depend>image_transport</exec_depend>
   <exec_depend>launch</exec_depend>
@@ -31,8 +30,8 @@
   <exec_depend>plotjuggler_ros</exec_depend>
   <exec_depend>python3-yaml</exec_depend>
   <exec_depend>rclpy</exec_depend>
+  <exec_depend>ros2bag</exec_depend>
   <exec_depend>rosbag2_storage_mcap</exec_depend>
-  <exec_depend>rosbag2_transport</exec_depend>
   <exec_depend>rviz2</exec_depend>
   <exec_depend>sbg_driver</exec_depend>
   <exec_depend>tf2_ros</exec_depend>
