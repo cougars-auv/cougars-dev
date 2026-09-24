@@ -224,7 +224,7 @@
     ros__parameters:
       # --- Node Settings ---
       water_density: 997.0 # [kg/m^3]
-      gravity: 9.81 # [m/s^2]
+      gravity: 9.8 # [m/s^2]
       atmospheric_pressure: 101325.0 # [Pa]
 
       # https://www.te.com/commerce/DocumentDelivery/DDEController?Action=srchrtrv&DocNm=MS5837-02BA01&DocType=DS&DocLang=English
