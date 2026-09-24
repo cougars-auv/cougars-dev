@@ -529,8 +529,6 @@
         ]
       twist0_queue_size: 5
 
-      use_control: false
-
   ekf_filter_node_map:
     ros__parameters:
       frequency: 30.0
