@@ -449,7 +449,7 @@
       use_mag: true
       world_frame: "enu"
       publish_tf: false
-      gain: 0.1
+      stateless: true
 
       # East-positive declination (NOAA convention).
       # https://www.ngdc.noaa.gov/geomag/calculators/magcalc.shtml#declination

@@ -10,7 +10,6 @@
   imu_covariance_node:
     ros__parameters:
       # --- Node Settings ---
-      enable_orientation: false
       orientation_noise_sigmas: [0.05, 0.05, 0.05] # [roll, pitch, yaw] [rad]
 
       # --- ROS Topics ---
