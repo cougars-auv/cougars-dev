@@ -125,6 +125,8 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
     coug_mapviz_launch_dir = os.path.join(coug_mapviz_dir, "launch")
     coug_rqt_dir = get_package_share_directory("coug_rqt")
     coug_rqt_launch_dir = os.path.join(coug_rqt_dir, "launch")
+    coug_terrain_dir = get_package_share_directory("coug_terrain")
+    coug_terrain_launch_dir = os.path.join(coug_terrain_dir, "launch")
 
     coug_comms_base_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
@@ -142,6 +144,17 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
 
     coug_fg_base_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(coug_fg_launch_dir, "coug_fg_base.launch.py")),
+        launch_arguments={
+            "use_sim_time": use_sim_time,
+            "agent_list": agent_list_config,
+            "scenario_param_file": scenario_param_file,
+        }.items(),
+    )
+
+    coug_terrain_base_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(coug_terrain_launch_dir, "coug_terrain_base.launch.py")
+        ),
         launch_arguments={
             "use_sim_time": use_sim_time,
             "agent_list": agent_list_config,
@@ -195,6 +208,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
             PushRosNamespace("base_station"),
             coug_comms_base_launch,
             coug_fg_base_launch,
+            coug_terrain_base_launch,
         ],
     )
 
