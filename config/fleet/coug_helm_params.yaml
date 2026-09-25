@@ -11,6 +11,7 @@
       plugin_lib_names:
         - "nav2_recovery_node_bt_node"
         - "nav2_round_robin_node_bt_node"
+        - "nav2_clear_costmap_service_bt_node"
 
       server_timeout_sec: 1.0 # [s] Max wait for a service or Nav2 goal/cancel response.
       startup_timeout_sec: 30.0 # [s] Max wait for Nav2 action servers at startup.

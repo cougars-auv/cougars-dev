@@ -25,10 +25,6 @@
     ros__parameters:
       beacon_id: 5
 
-  ground_segmentation_node:
-    ros__parameters:
-      lidar_to_ground: -2.0 # [m]
-
   controller_server:
     ros__parameters:
       controller_frequency: 20.0 # [Hz]
@@ -86,22 +82,29 @@
         publish_frequency: 0.0 # [Hz]
 
         footprint: "[[2.555, 1.267], [2.555, -1.267], [-2.822, -1.267], [-2.822, 1.267]]"
-        plugins:
-          ["terrain_layer", "ground_consistency_layer", "inflation_layer"]
+        plugins: ["obstacle_layer", "inflation_layer"]
 
-        terrain_layer:
-          plugin: "nav2_costmap_2d::StaticLayer"
-          map_topic: "/wamv1holo/terrain/occupancy"
-          subscribe_to_updates: false
-          map_subscribe_transient_local: true
+        obstacle_layer:
+          plugin: "nav2_costmap_2d::ObstacleLayer"
+          observation_sources: "marking_cloud clearing_cloud"
 
-        ground_consistency_layer:
-          plugin: "nav2_ground_consistency_costmap_plugin::GroundConsistencyLayer"
-          ground_points_topic: "/wamv1holo/ground_segmentation/ground_points"
-          nonground_points_topic: "/wamv1holo/ground_segmentation/obstacle_points"
+          marking_cloud:
+            topic: "/wamv1holo/camera/point_cloud/cloud_registered"
+            data_type: "PointCloud2"
+            marking: true
+            clearing: false
+            min_obstacle_height: 0.5 # [m]
+            max_obstacle_height: 2.0 # [m]
+            obstacle_max_range: 10.0 # [m]
 
-          robot_height: 2.0 # [m]
-          max_data_range: 0.0 # [m]
+          clearing_cloud:
+            topic: "/wamv1holo/camera/point_cloud/cloud_registered"
+            data_type: "PointCloud2"
+            marking: false
+            clearing: true
+            min_obstacle_height: -10.0 # [m]
+            max_obstacle_height: 2.0 # [m]
+            raytrace_max_range: 15.0 # [m]
 
         inflation_layer:
           plugin: "nav2_costmap_2d::InflationLayer"
@@ -115,16 +118,30 @@
         publish_frequency: 1.0 # [Hz]
 
         footprint: "[[2.555, 1.267], [2.555, -1.267], [-2.822, -1.267], [-2.822, 1.267]]"
-        plugins: ["ground_consistency_layer", "inflation_layer"]
+        plugins: ["obstacle_layer", "inflation_layer"]
 
-        ground_consistency_layer:
-          plugin: "nav2_ground_consistency_costmap_plugin::GroundConsistencyLayer"
-          ground_points_topic: "/wamv1holo/ground_segmentation/ground_points"
-          nonground_points_topic: "/wamv1holo/ground_segmentation/obstacle_points"
+        obstacle_layer:
+          plugin: "nav2_costmap_2d::ObstacleLayer"
+          observation_sources: "marking_cloud clearing_cloud"
 
-          robot_height: 2.0 # [m]
-          # https://github.com/stereolabs/zed-ros2-wrapper/blob/v5.4.1/zed_wrapper/config/zed2i.yaml
-          max_data_range: 15.0 # [m]
+          marking_cloud:
+            topic: "/wamv1holo/camera/point_cloud/cloud_registered"
+            data_type: "PointCloud2"
+            marking: true
+            clearing: false
+            min_obstacle_height: 0.5 # [m]
+            max_obstacle_height: 2.0 # [m]
+            # https://github.com/stereolabs/zed-ros2-wrapper/blob/v5.4.1/zed_wrapper/config/zed2i.yaml
+            obstacle_max_range: 15.0 # [m]
+
+          clearing_cloud:
+            topic: "/wamv1holo/camera/point_cloud/cloud_registered"
+            data_type: "PointCloud2"
+            marking: false
+            clearing: true
+            min_obstacle_height: -10.0 # [m]
+            max_obstacle_height: 2.0 # [m]
+            raytrace_max_range: 15.0 # [m]
 
         inflation_layer:
           plugin: "nav2_costmap_2d::InflationLayer"

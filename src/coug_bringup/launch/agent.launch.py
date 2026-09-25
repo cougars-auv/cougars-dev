@@ -186,9 +186,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
             "agent_ns": agent_ns,
             "scenario_param_file": scenario_param_file,
         }.items(),
-        condition=IfCondition(
-            is_agent(agent_ns, "rover1gz", "rover2gz", "rover3gz", "wamv1holo", "wamv1gz")
-        ),
+        condition=IfCondition(is_agent(agent_ns, "rover1gz", "rover2gz", "rover3gz")),
     )
 
     coug_visual_dvl_launch = IncludeLaunchDescription(
