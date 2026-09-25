@@ -22,6 +22,11 @@ We **strongly encourage** new lab members to take a week or two and simply work 
 1. [HoloOcean docs](https://byu-holoocean.github.io/holoocean-docs)
 2. [HoloOcean-ROS](https://github.com/byu-holoocean/holoocean-ros)
 
+## Gazebo
+
+1. [Gazebo tutorials](https://gazebosim.org/docs/harmonic/tutorials/)
+2. [Virtual RobotX tutorials](https://github.com/osrf/vrx/wiki/tutorials)
+
 ## LLM Agents
 
 > Using these skills will improve the results you get out of Claude Code or Codex, but they are ultimately just guidelines. Our specific system/research constraints introduce unique challenges that require simplifying or violating many of these suggestions.
