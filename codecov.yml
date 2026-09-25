@@ -1,5 +1,5 @@
 fixes:
-  - "**/target_ws/src/::ros2_ws/src/"
+  - "**/target_ws/src/::"
 
 ignore:
   - "**/test/**"

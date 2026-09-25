@@ -7,10 +7,12 @@
 bags/*
 !bags/.gitkeep
 
-ros2_ws/*
-!ros2_ws/src/
-ros2_ws/src/*
-!ros2_ws/src/coug_bringup/
+/src/*
+!/src/coug_bringup/
+
+/build/
+/install/
+/log/
 
 .env
 .venv/

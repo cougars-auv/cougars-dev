@@ -18,7 +18,10 @@ services:
     container_name: cougars-builder-ct
     profiles: ["build"]
     volumes:
-      - ../ros2_ws:/ros2_ws
+      - ../src:/ros2_ws/src
+      - ../build:/ros2_ws/build
+      - ../install:/ros2_ws/install
+      - ../log:/ros2_ws/log
     command: colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release
 
   router:
@@ -50,7 +53,10 @@ services:
       - RMW_IMPLEMENTATION=rmw_zenoh_cpp
       - ROS_DOMAIN_ID=24
     volumes:
-      - ../ros2_ws:/ros2_ws
+      - ../src:/ros2_ws/src
+      - ../build:/ros2_ws/build
+      - ../install:/ros2_ws/install
+      - ../log:/ros2_ws/log
       - ../config:/config
       - ../bags:/bags
       - /etc/localtime:/etc/localtime:ro

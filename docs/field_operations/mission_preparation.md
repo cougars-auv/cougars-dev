@@ -26,10 +26,10 @@
 
 - Use the Command Palette (`Ctrl + Shift + P`) to select "Dev Containers: Rebuild Container."
 
-- Open a new terminal window using `` Ctrl + Alt + Shift + ` ``, build the `ros2_ws` workspace, and test the base station software with `./base_launch.sh`.
+- Open a new terminal window using `` Ctrl + Alt + Shift + ` ``, build the workspace, and test the base station software with `./base_launch.sh`.
 
   ```bash
-  cd ~/cougars-dev/ros2_ws && colcon build
+  cd ~/cougars-dev && colcon build
   cd ~/cougars-dev/scripts && ./base_launch.sh
   ```
 
@@ -41,7 +41,7 @@
     cd ~/cougars-dev/ops && ./connect.sh <agent-ns>
     ```
 
-  - Use the configured aliases to pull the latest code from both remotes, import the vcs-pinned packages, update the Docker image, rebuild the `ros2_ws` workspace, and restart the ROS 2 software.
+  - Use the configured aliases to pull the latest code from both remotes, import the vcs-pinned packages, update the Docker image, rebuild the workspace, and restart the ROS 2 software.
 
     ```bash
     pull

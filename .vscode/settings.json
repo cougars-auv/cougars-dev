@@ -2,7 +2,7 @@
   "C_Cpp.codeAnalysis.clangTidy.enabled": true,
   "C_Cpp.codeAnalysis.clangTidy.path": "/usr/bin/clang-tidy",
   "C_Cpp.codeAnalysis.clangTidy.useBuildPath": true,
-  "C_Cpp.default.compileCommands": "${workspaceFolder}/ros2_ws/build/compile_commands.json",
+  "C_Cpp.default.compileCommands": "${workspaceFolder}/build/compile_commands.json",
   "editor.formatOnSave": true,
   "files.associations": {
     "*.config": "xml",
@@ -29,8 +29,8 @@
   "git.repositoryScanMaxDepth": 3,
   "python.analysis.typeCheckingMode": "off",
   "python.analysis.extraPaths": [
-    "${workspaceFolder}/ros2_ws/install",
-    "${workspaceFolder}/ros2_ws/src/coug_fg/scripts",
+    "${workspaceFolder}/install",
+    "${workspaceFolder}/src/coug_fg/scripts",
     "/opt/ros/jazzy/lib/python3.12/site-packages"
   ],
   "[c]": {

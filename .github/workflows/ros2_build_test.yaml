@@ -45,7 +45,7 @@ jobs:
           filters: |
             ros2:
               - ".github/workflows/ros2_build_test.yaml"
-              - "ros2_ws/**"
+              - "src/**"
               - "*.repos"
               - ".clang-tidy"
 
@@ -78,7 +78,7 @@ jobs:
           DOCKER_IMAGE: ${{ env.DOCKER_REPO }}:${{ matrix.target }}-latest
           DOCKER_PULL: true
           UPSTREAM_WORKSPACE: ${{ matrix.repos }}
-          TARGET_WORKSPACE: ros2_ws
+          TARGET_WORKSPACE: src
           CCACHE_DIR: ${{ github.workspace }}/.ccache
           BASEDIR: ${{ github.workspace }}/.work
           CLANG_TIDY: true

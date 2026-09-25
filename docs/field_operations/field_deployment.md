@@ -22,10 +22,10 @@
 
   > Do not edit code directly on the CougUVs. Make changes on the base station, then roll them out to the fleet with Git.
 
-- Rebuild the `ros2_ws` workspace and relaunch the base station software with `./base_launch.sh`.
+- Rebuild the workspace and relaunch the base station software with `./base_launch.sh`.
 
   ```bash
-  cd ~/cougars-dev/ros2_ws && colcon build
+  cd ~/cougars-dev && colcon build
   cd ~/cougars-dev/scripts && ./base_launch.sh
   ```
 
@@ -44,7 +44,7 @@
     git switch -c field/utah-lake-jan-1 base/field/utah-lake-jan-1
     ```
 
-  - Use the configured aliases to pull the latest code from the base station remote, rebuild the `ros2_ws` workspace, and restart the ROS 2 software.
+  - Use the configured aliases to pull the latest code from the base station remote, rebuild the workspace, and restart the ROS 2 software.
 
     ```bash
     pull-base

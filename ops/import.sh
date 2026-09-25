@@ -31,11 +31,11 @@ if [[ -z ${ip} ]]; then
 fi
 
 # TODO: Add SSH key forwarding instructions to support private repos
-sed 's|git@github.com:|https://github.com/|g' runtime.repos | vcs import ros2_ws/src
+sed 's|git@github.com:|https://github.com/|g' runtime.repos | vcs import src
 vcs custom -n --git --args submodule update --init --recursive
 
 while IFS= read -r git_dir; do
   repo="$(dirname "${git_dir}")"
   git -C "${repo}" remote add base "git://${ip}/cougars-dev/${repo}" 2>/dev/null ||
     git -C "${repo}" remote set-url base "git://${ip}/cougars-dev/${repo}"
-done < <(find ros2_ws/src -name .git -prune)
+done < <(find src -name .git -prune)

@@ -38,10 +38,10 @@ CoUGARs is a low-cost, configurable AUV platform designed for multi-agent autono
     cd ~/cougars-dev/scripts && ./holoocean_launch.sh
     ```
 
-  - Open a new terminal, build the `ros2_ws` workspace, and select the matching launch configuration with `./sim_launch.sh`.
+  - Open a new terminal, build the workspace, and select the matching launch configuration with `./sim_launch.sh`.
 
     ```bash
-    cd ~/cougars-dev/ros2_ws && colcon build
+    cd ~/cougars-dev && colcon build
     cd ~/cougars-dev/scripts && ./sim_launch.sh
     ```
 
@@ -49,10 +49,10 @@ CoUGARs is a low-cost, configurable AUV platform designed for multi-agent autono
 
   - Open the `cougars-dev` repository in VSCode and use the Command Palette (`Ctrl + Shift + P`) to select "Dev Containers: Reopen in Container." When prompted, click "CoUGARs Dev" or "CoUGARs Dev (NVIDIA)."
 
-  - Once the containers load, open a new terminal window using `` Ctrl + Alt + Shift + ` ``, build the `ros2_ws` workspace, and launch a Gazebo scenario using `./sim_launch.sh`.
+  - Once the containers load, open a new terminal window using `` Ctrl + Alt + Shift + ` ``, build the workspace, and launch a Gazebo scenario using `./sim_launch.sh`.
 
     ```bash
-    cd ~/cougars-dev/ros2_ws && colcon build
+    cd ~/cougars-dev && colcon build
     cd ~/cougars-dev/scripts && ./sim_launch.sh
     ```
 
@@ -62,10 +62,10 @@ CoUGARs is a low-cost, configurable AUV platform designed for multi-agent autono
 
   - Once the containers load, copy your `rosbag2` bag into the repository's `bags` folder.
 
-  - Open a new terminal window using `` Ctrl + Alt + Shift + ` ``, build the `ros2_ws` workspace, and select a bag with `./bag_launch.sh`.
+  - Open a new terminal window using `` Ctrl + Alt + Shift + ` ``, build the workspace, and select a bag with `./bag_launch.sh`.
 
     ```bash
-    cd ~/cougars-dev/ros2_ws && colcon build
+    cd ~/cougars-dev && colcon build
     cd ~/cougars-dev/scripts && ./bag_launch.sh
     ```
 

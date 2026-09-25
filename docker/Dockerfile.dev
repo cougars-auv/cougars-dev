@@ -18,7 +18,7 @@ ARG VERSION=latest
 FROM ubuntu:24.04 AS cacher
 
 WORKDIR /tmp/packages
-COPY ros2_ws/src .
+COPY src .
 RUN find . -type f \! -name "package.xml" -delete
 
 # --- Main Stage ---
@@ -30,7 +30,7 @@ ARG DEBIAN_FRONTEND=noninteractive \
 SHELL [ "/bin/bash", "-c" ]
 
 ENV DOCKER_USER=${DOCKER_USER}
-ENV OVERLAY_WS=/home/${DOCKER_USER}/cougars-dev/ros2_ws \
+ENV OVERLAY_WS=/home/${DOCKER_USER}/cougars-dev \
   CONFIG_DIR=/home/${DOCKER_USER}/cougars-dev/config \
   BAGS_DIR=/home/${DOCKER_USER}/cougars-dev/bags
 
