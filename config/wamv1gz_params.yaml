@@ -15,6 +15,10 @@
     ros__parameters:
       tree_file: "behaviors_nav2.xml"
 
+  imu_filter_madgwick:
+    ros__parameters:
+      gain: 0.5 # Recovers quickly from the bad init caused by the spawn drop.
+
   navsat_odom_node:
     ros__parameters:
       ahrs_topic: "camera/imu/data"
