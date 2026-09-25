@@ -201,7 +201,7 @@
             data_type: "PointCloud2"
             marking: true
             clearing: false
-            min_obstacle_height: 0.5 # [m]
+            min_obstacle_height: 0.25 # [m]
             max_obstacle_height: 2.0 # [m]
             obstacle_max_range: 10.0 # [m]
 
