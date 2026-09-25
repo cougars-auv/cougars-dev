@@ -26,7 +26,7 @@
     ".env.example": "properties",
     "LICENSE": "plaintext"
   },
-  "git.repositoryScanMaxDepth": 3,
+  "git.repositoryScanMaxDepth": 2,
   "python.analysis.typeCheckingMode": "off",
   "python.analysis.extraPaths": [
     "${workspaceFolder}/install",
