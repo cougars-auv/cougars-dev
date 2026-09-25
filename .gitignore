@@ -13,6 +13,5 @@ ros2_ws/src/*
 !ros2_ws/src/coug_bringup/
 
 .env
-.husarnet/
 .venv/
 __pycache__/

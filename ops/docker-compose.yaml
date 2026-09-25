@@ -21,23 +21,6 @@ services:
       - ../ros2_ws:/ros2_ws
     command: colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release
 
-  husarnet:
-    image: husarnet/husarnet:latest
-    container_name: cougars-husarnet-ct
-    profiles: ["husarnet"]
-    network_mode: host
-    cap_add:
-      - NET_ADMIN
-    devices:
-      - /dev/net/tun
-    environment:
-      - HUSARNET_HOSTNAME=${AGENT_NS}
-      - HUSARNET_JOIN_CODE=${HUSARNET_JOIN_CODE:-}
-    volumes:
-      - ./.husarnet:/var/lib/husarnet
-      - /etc/hosts:/etc/hosts
-    restart: unless-stopped
-
   router:
     image: frostlab/cougars:runtime-${VERSION:-latest}
     container_name: cougars-router-ct
