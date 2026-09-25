@@ -85,7 +85,7 @@ Visualization Manager:
       Show Names: false
       Update Interval: 0
       Value: true
-    - Angle Tolerance: 0.10000000149011612
+    - Angle Tolerance: 0.001
       Class: rviz_default_plugins/Odometry
       Covariance:
         Orientation:
@@ -105,7 +105,7 @@ Visualization Manager:
       Enabled: true
       Keep: 1
       Name: GT
-      Position Tolerance: 0.10000000149011612
+      Position Tolerance: 0.001
       Shape:
         Alpha: 1
         Axes Length: 1
@@ -126,7 +126,7 @@ Visualization Manager:
       Value: true
     - Class: rviz_common/Group
       Displays:
-        - Angle Tolerance: 0.10000000149011612
+        - Angle Tolerance: 0.001
           Class: rviz_default_plugins/Odometry
           Covariance:
             Orientation:
@@ -146,7 +146,7 @@ Visualization Manager:
           Enabled: false
           Keep: 1
           Name: EKF
-          Position Tolerance: 0.10000000149011612
+          Position Tolerance: 0.001
           Shape:
             Alpha: 1
             Axes Length: 1
@@ -165,7 +165,7 @@ Visualization Manager:
             Reliability Policy: Reliable
             Value: /<agent_ns>/odometry/global_ekf
           Value: false
-        - Angle Tolerance: 0.10000000149011612
+        - Angle Tolerance: 0.001
           Class: rviz_default_plugins/Odometry
           Covariance:
             Orientation:
@@ -185,7 +185,7 @@ Visualization Manager:
           Enabled: false
           Keep: 1
           Name: UKF
-          Position Tolerance: 0.10000000149011612
+          Position Tolerance: 0.001
           Shape:
             Alpha: 1
             Axes Length: 1
@@ -204,7 +204,7 @@ Visualization Manager:
             Reliability Policy: Reliable
             Value: /<agent_ns>/odometry/global_ukf
           Value: false
-        - Angle Tolerance: 0.10000000149011612
+        - Angle Tolerance: 0.001
           Class: rviz_default_plugins/Odometry
           Covariance:
             Orientation:
@@ -224,7 +224,7 @@ Visualization Manager:
           Enabled: false
           Keep: 1
           Name: FL-TPI
-          Position Tolerance: 0.10000000149011612
+          Position Tolerance: 0.001
           Shape:
             Alpha: 1
             Axes Length: 1
@@ -243,7 +243,7 @@ Visualization Manager:
             Reliability Policy: Reliable
             Value: /<agent_ns>/odometry/global_tpi
           Value: false
-        - Angle Tolerance: 0.10000000149011612
+        - Angle Tolerance: 0.001
           Class: rviz_default_plugins/Odometry
           Covariance:
             Orientation:
@@ -263,7 +263,7 @@ Visualization Manager:
           Enabled: false
           Keep: 1
           Name: FL-LPI
-          Position Tolerance: 0.10000000149011612
+          Position Tolerance: 0.001
           Shape:
             Alpha: 1
             Axes Length: 1
@@ -282,7 +282,7 @@ Visualization Manager:
             Reliability Policy: Reliable
             Value: /<agent_ns>/odometry/global_lpi
           Value: false
-        - Angle Tolerance: 0.10000000149011612
+        - Angle Tolerance: 0.001
           Class: rviz_default_plugins/Odometry
           Covariance:
             Orientation:
@@ -302,7 +302,7 @@ Visualization Manager:
           Enabled: false
           Keep: 1
           Name: iS2-B
-          Position Tolerance: 0.10000000149011612
+          Position Tolerance: 0.001
           Shape:
             Alpha: 1
             Axes Length: 1
@@ -321,7 +321,7 @@ Visualization Manager:
             Reliability Policy: Reliable
             Value: /<agent_ns>/odometry/global_isam2
           Value: false
-        - Angle Tolerance: 0.10000000149011612
+        - Angle Tolerance: 0.001
           Class: rviz_default_plugins/Odometry
           Covariance:
             Orientation:
@@ -341,7 +341,7 @@ Visualization Manager:
           Enabled: true
           Keep: 1
           Name: FL-B
-          Position Tolerance: 0.10000000149011612
+          Position Tolerance: 0.001
           Shape:
             Alpha: 1
             Axes Length: 1
@@ -360,7 +360,7 @@ Visualization Manager:
             Reliability Policy: Reliable
             Value: /<agent_ns>/odometry/global
           Value: true
-        - Angle Tolerance: 0.10000000149011612
+        - Angle Tolerance: 0.001
           Class: rviz_default_plugins/Odometry
           Covariance:
             Orientation:
@@ -380,7 +380,7 @@ Visualization Manager:
           Enabled: true
           Keep: 1
           Name: FL-NBR
-          Position Tolerance: 0.10000000149011612
+          Position Tolerance: 0.001
           Shape:
             Alpha: 1
             Axes Length: 1
@@ -399,7 +399,7 @@ Visualization Manager:
             Reliability Policy: Reliable
             Value: /<agent_ns>/base/odometry/global_nbr
           Value: true
-        - Angle Tolerance: 0.10000000149011612
+        - Angle Tolerance: 0.001
           Class: rviz_default_plugins/Odometry
           Covariance:
             Orientation:
@@ -419,7 +419,7 @@ Visualization Manager:
           Enabled: false
           Keep: 1
           Name: DVL
-          Position Tolerance: 0.10000000149011612
+          Position Tolerance: 0.001
           Shape:
             Alpha: 1
             Axes Length: 1
