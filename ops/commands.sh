@@ -22,10 +22,14 @@ pull_all() {
   done < <(find ~/cougars-dev -name .git -prune)
 }
 
-alias pull="pull_all origin"
-alias pull-base="pull_all base"
-alias vcs-import="~/cougars-dev/ops/import.sh"
-alias docker-pull="docker compose -f ~/cougars-dev/ops/docker-compose.yaml pull"
-alias build="docker compose -f ~/cougars-dev/ops/docker-compose.yaml run --rm builder"
-alias restart="sudo systemctl restart cougars.service && sudo journalctl -u cougars.service -f"
-alias logs="docker logs -f cougars-runtime-ct"
+compose() {
+  docker compose -f ~/cougars-dev/ops/docker-compose.yaml "$@"
+}
+
+pull() { pull_all origin; }
+pull-base() { pull_all base; }
+vcs-import() { ~/cougars-dev/ops/import.sh; }
+docker-pull() { compose pull; }
+build() { compose run --rm builder; }
+restart() { compose up -d --force-recreate; }
+logs() { docker logs -f cougars-runtime-ct; }

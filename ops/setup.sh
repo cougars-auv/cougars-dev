@@ -48,5 +48,5 @@ sudo cp ops/cougars.service /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl enable cougars.service
 
-grep -qxF "source ~/cougars-dev/ops/aliases.sh" ~/.bashrc 2>/dev/null ||
-  echo "source ~/cougars-dev/ops/aliases.sh" >>~/.bashrc
+grep -qxF "source ~/cougars-dev/ops/commands.sh" ~/.bashrc 2>/dev/null ||
+  echo "source ~/cougars-dev/ops/commands.sh" >>~/.bashrc
