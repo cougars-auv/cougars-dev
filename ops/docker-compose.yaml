@@ -36,7 +36,7 @@ services:
     image: frostlab/cougars:runtime-${VERSION:-latest}
     # build:
     #   context: ..
-    #   dockerfile: .docker/Dockerfile.runtime
+    #   dockerfile: docker/Dockerfile.runtime
     #   args:
     #     - VERSION=${VERSION:-latest}
     container_name: cougars-runtime-ct

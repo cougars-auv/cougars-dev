@@ -1,5 +1,5 @@
 *
 
-!.docker/entrypoint.sh
-!.docker/holoocean/entrypoint.sh
+!docker/entrypoint.sh
+!docker/holoocean/entrypoint.sh
 !ros2_ws/src/**/package.xml

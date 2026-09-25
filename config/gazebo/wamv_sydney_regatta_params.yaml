@@ -1,0 +1,49 @@
+/**:
+  coug_gazebo_world_launch:
+    ros__parameters:
+      world_file: "sydney_regatta.sdf.xacro"
+
+  sim_launch:
+    ros__parameters:
+      agents: ["wamv1gz"]
+
+  dem_global_costmap_node:
+    ros__parameters:
+      fallback_size: 1500.0 # [m] Covers the spawn point far from the world origin.
+
+  imu_filter_madgwick:
+    ros__parameters:
+      declination: 0.1979 # [rad] Measured from the gz-sim magnetometer model (-33.7242 S, 150.6797 E)
+
+mapviz:
+  ros__parameters:
+    default_capture_radius: 0.1 # [m]
+    default_capture_radius_z: 0.1 # [m]
+    default_slip_radius: 0.1 # [m]
+    default_slip_radius_z: 0.1 # [m]
+
+/base_station:
+  navsat_odom_node:
+    ros__parameters:
+      use_parameter_origin: true
+      origin_latitude: -33.724223 # [deg]
+      origin_longitude: 150.679736 # [deg]
+      origin_altitude: 0.0 # [m]
+
+/wamv1gz:
+  sim_launch:
+    ros__parameters:
+      location: [-532.0, 162.0, 0.0] # [x, y, z] [m]
+      rotation: [0.0, 0.0, 57.3] # [roll, pitch, yaw] [deg]
+
+  global_costmap:
+    global_costmap:
+      ros__parameters:
+        publish_frequency: 0.5 # [Hz]
+        always_send_full_costmap: true
+
+  local_costmap:
+    local_costmap:
+      ros__parameters:
+        publish_frequency: 5.0 # [Hz]
+        always_send_full_costmap: true

@@ -45,7 +45,7 @@ services:
     image: frostlab/cougars:dev-${VERSION:-latest}
     # build:
     #   context: ..
-    #   dockerfile: .docker/Dockerfile.dev
+    #   dockerfile: docker/Dockerfile.dev
     #   args:
     #     - VERSION=${VERSION:-latest}
     container_name: cougars-dev-ct

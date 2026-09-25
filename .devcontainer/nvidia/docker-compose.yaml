@@ -23,7 +23,7 @@ services:
     image: frostlab/holoocean:2.0-runtime-ubuntu24.04-cuda12.9-ros-uid
     build:
       context: ..
-      dockerfile: .docker/holoocean/Dockerfile.holoocean
+      dockerfile: docker/holoocean/Dockerfile.holoocean
     container_name: cougars-holoocean-ct
     network_mode: host
     ipc: host
