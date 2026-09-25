@@ -1,7 +1,7 @@
 /**:
   coug_helm_launch:
     ros__parameters:
-      tree_file: "follow_waypoints_w_recovery.xml"
+      tree_file: "behaviors_hsd_w_recovery.xml"
 
   bt_helm_node:
     ros__parameters:
@@ -68,6 +68,12 @@
       emergency_stop_service: "emergency_stop"
       emergency_surface_service: "emergency_surface"
       assist_service: "assist"
+
+      follow_service: "assist/follow"
+      stay_service: "assist/stay"
+      fetch_service: "assist/fetch"
+      come_service: "assist/come"
+      give_service: "assist/give"
 
       arm_thruster_service: "thruster/arm"
       reset_localization_service: "factor_graph_node/reset"

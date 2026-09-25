@@ -13,7 +13,7 @@
 
   coug_helm_launch:
     ros__parameters:
-      tree_file: "follow_waypoints_nav2_w_aruco.xml"
+      tree_file: "behaviors_nav2.xml"
 
   ground_segmentation_node:
     ros__parameters:
