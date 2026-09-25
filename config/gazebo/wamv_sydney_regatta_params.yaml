@@ -7,13 +7,9 @@
     ros__parameters:
       agents: ["wamv1gz"]
 
-  dem_global_costmap_node:
-    ros__parameters:
-      fallback_size: 1500.0 # [m] Covers the spawn point far from the world origin.
-
   imu_filter_madgwick:
     ros__parameters:
-      declination: 0.1979 # [rad] Measured from the gz-sim magnetometer model (-33.7242 S, 150.6797 E)
+      declination: 0.217098 # [rad] WMMHR-2025 (33.7242 S, 150.6797 E, 2027-06-02)
 
 mapviz:
   ros__parameters:
