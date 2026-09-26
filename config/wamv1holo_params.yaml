@@ -108,8 +108,8 @@
 
         inflation_layer:
           plugin: "nav2_costmap_2d::InflationLayer"
-          inflation_radius: 4.0 # [m]
-          cost_scaling_factor: 1.5 # [1/m]
+          inflation_radius: 3.6 # [m]
+          cost_scaling_factor: 2.4 # [1/m]
 
   local_costmap:
     local_costmap:
@@ -145,8 +145,8 @@
 
         inflation_layer:
           plugin: "nav2_costmap_2d::InflationLayer"
-          inflation_radius: 4.0 # [m]
-          cost_scaling_factor: 1.5 # [1/m]
+          inflation_radius: 3.4 # [m]
+          cost_scaling_factor: 2.6 # [1/m]
 
   planner_server:
     ros__parameters:
