@@ -30,7 +30,7 @@ mapviz:
   sim_launch:
     ros__parameters:
       location: [-532.0, 162.0, 0.0] # [x, y, z] [m]
-      rotation: [0.0, 0.0, 57.3] # [roll, pitch, yaw] [deg]
+      rotation: [0.0, 0.0, 57.29578] # [roll, pitch, yaw] [deg]
 
   global_costmap:
     global_costmap:

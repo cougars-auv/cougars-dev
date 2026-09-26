@@ -29,6 +29,19 @@ displays:
       bing_api_key: ""
       stadia_api_key: ""
       source: mapproxy-ct
+  - type: mapviz_plugins/occupancy_grid
+    name: Terrain
+    config:
+      visible: true
+      collapsed: true
+      alpha: 1
+      topic: /base_station/terrain/occupancy
+      update: false
+      scheme: costmap
+      qos_depth: 10
+      qos_history: 1
+      qos_reliability: 1
+      qos_durability: 1
   - type: coug_mapviz/coug_waypoints
     name: new display
     config:
