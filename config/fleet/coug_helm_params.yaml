@@ -39,11 +39,6 @@
       backup_speed_rpm: -900.0 # [RPM] Reverse thrust for the BackUp recovery action.
       backup_duration_sec: 5.0 # [s] Duration of the BackUp recovery maneuver.
 
-      # --- ArUco Tags ---
-      tag_min_detections: 3 # Detections required before a tag counts as found.
-      tag_max_range: 8.0 # [m] Max camera-to-tag range for a valid detection.
-
-      # --- Status LED ---
       teleop_timeout_sec: 2.0 # [s] Time the LED stays blue after the last teleop command.
       led_flash_duration_sec: 5.0 # [s] Duration of the green arrival flash and hold.
       led_flash_rate_hz: 2.0 # [Hz]
