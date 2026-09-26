@@ -33,7 +33,7 @@ mapviz:
 /rover1gz:
   sim_launch:
     ros__parameters:
-      location: [-12.0, -14.0, -0.4] # [x, y, z] [m]
+      location: [-12.0, -14.0, -0.82] # [x, y, z] [m]
       rotation: [0.0, 0.0, 0.0] # [roll, pitch, yaw] [deg]
 
   global_costmap:
