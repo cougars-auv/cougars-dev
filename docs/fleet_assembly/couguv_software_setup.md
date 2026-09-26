@@ -60,7 +60,7 @@
   cd ~/cougars-dev/ops && ./connect.sh <agent-ns>
   ```
 
-- Use the configured aliases to pull the latest code from both remotes, import the vcs-pinned packages, update the Docker images, rebuild the workspace, and restart the ROS 2 software.
+- Use the configured commands to pull the latest code from both remotes, import the vcs-pinned packages, update the Docker images, rebuild the workspace, and restart the ROS 2 software.
 
   ```bash
   pull

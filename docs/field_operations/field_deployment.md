@@ -44,7 +44,7 @@
     git switch -c field/utah-lake-jan-1 base/field/utah-lake-jan-1
     ```
 
-  - Use the configured aliases to pull the latest code from the base station remote, rebuild the workspace, and restart the ROS 2 software.
+  - Use the configured commands to pull the latest code from the base station remote, rebuild the workspace, and restart the ROS 2 software.
 
     ```bash
     pull-base
