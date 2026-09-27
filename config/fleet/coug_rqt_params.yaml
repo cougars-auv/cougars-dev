@@ -2,13 +2,13 @@
   ros__parameters:
     config_command_topic: "dvl/config/command"
     battery_status_topic: "battery/status"
-    status_led_color_topic: "led/color"
+    led_color_topic: "led/color"
 
     bag_record_service: "bag_record"
     arm_thruster_service: "thruster/arm"
-    fg_reset_service: "factor_graph_node/reset"
-    depth_calibrate_service: "depth/calibrate"
-    fins_calibrate_service: "fins/calibrate"
+    reset_localization_service: "factor_graph_node/reset"
+    calibrate_depth_service: "depth/calibrate"
+    calibrate_fins_service: "fins/calibrate"
 
     assist_service: "assist"
     follow_service: "assist/follow"

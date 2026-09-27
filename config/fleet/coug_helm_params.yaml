@@ -48,7 +48,7 @@
       groot2_port: 1667 # [port] (override per-robot to avoid conflicts)
 
       # --- ROS Topics ---
-      waypoint_topic: "waypoints"
+      waypoints_topic: "waypoints"
       odom_topic: "odometry/global"
       beams_topic: "dvl/beams"
       aruco_topic: "aruco_detections"
