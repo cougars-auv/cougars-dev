@@ -84,11 +84,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
             "agent_ns": agent_ns,
             "scenario_param_file": scenario_param_file,
         }.items(),
-        condition=IfCondition(
-            is_agent(
-                agent_ns, "blue1holo", "wamv1holo", "rover1gz", "rover2gz", "rover3gz", "wamv1gz"
-            )
-        ),
+        condition=IfCondition(is_agent(agent_ns, "blue1holo", "wamv1holo", "rover1gz", "wamv1gz")),
     )
 
     coug_comms_agent_launch = IncludeLaunchDescription(
@@ -135,7 +131,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
             "initial_position": initial_position,
             "initial_orientation": initial_orientation,
         }.items(),
-        condition=IfCondition(is_agent(agent_ns, "rover1gz", "rover2gz", "rover3gz", "wamv1gz")),
+        condition=IfCondition(is_agent(agent_ns, "rover1gz", "wamv1gz")),
     )
 
     coug_fg_dvl_ekf_launch = IncludeLaunchDescription(
@@ -163,9 +159,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
             "initial_position": initial_position,
             "initial_orientation": initial_orientation,
         }.items(),
-        condition=UnlessCondition(
-            is_agent(agent_ns, "coug2", "rover1gz", "rover2gz", "rover3gz", "wamv1gz")
-        ),
+        condition=UnlessCondition(is_agent(agent_ns, "coug2", "rover1gz", "wamv1gz")),
     )
 
     coug_helm_launch = IncludeLaunchDescription(
@@ -186,7 +180,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
             "agent_ns": agent_ns,
             "scenario_param_file": scenario_param_file,
         }.items(),
-        condition=IfCondition(is_agent(agent_ns, "rover1gz", "rover2gz", "rover3gz")),
+        condition=IfCondition(is_agent(agent_ns, "rover1gz")),
     )
 
     coug_visual_dvl_launch = IncludeLaunchDescription(

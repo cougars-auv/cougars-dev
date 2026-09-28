@@ -17,7 +17,7 @@
       max_range: 20.0 # [m] Depth readings above this are marked invalid (NaN).
 
       # --- ROS Topics and Frames ---
-      color_input_topic: "RGBCameraDepth"
+      color_input_topic: "DepthCameraRGBCamera"
       depth_input_topic: "DepthCameraDepth"
       info_input_topic: "DepthCameraInfo"
       color_output_topic: "camera/rgb/image_rect_color"
@@ -235,8 +235,8 @@
       sync_slop_sec: 0.05 # [s]
 
       # --- ROS Topics and Frames ---
-      front_input_topic: "RGBCameraFront"
-      back_input_topic: "RGBCameraBack"
+      front_input_topic: "FrontStereoRGBCamera"
+      back_input_topic: "BackStereoRGBCamera"
       front_output_topic: "stereo/front/image_raw"
       back_output_topic: "stereo/back/image_raw"
       front_stereo_info_topic: "stereo/front/camera_info"

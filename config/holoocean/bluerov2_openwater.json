@@ -120,7 +120,7 @@
           "ros_publish": true
         },
         {
-          "sensor_name": "RGBCameraFront",
+          "sensor_name": "FrontStereoRGBCamera",
           "sensor_type": "RGBCamera",
           "socket": "DVLSocket",
           "location": [0.1, 0, 0],
@@ -129,7 +129,7 @@
           "ros_publish": true
         },
         {
-          "sensor_name": "RGBCameraBack",
+          "sensor_name": "BackStereoRGBCamera",
           "sensor_type": "RGBCamera",
           "socket": "DVLSocket",
           "location": [-0.1, 0, 0],
@@ -149,7 +149,7 @@
           "ros_publish": true
         },
         {
-          "sensor_name": "RGBCameraDepth",
+          "sensor_name": "DepthCameraRGBCamera",
           "sensor_type": "RGBCamera",
           "socket": "DVLSocket",
           "rotation": [0, 90, 0],

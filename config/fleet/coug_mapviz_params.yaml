@@ -9,7 +9,7 @@ mapviz:
 
     default_search_points: 6 # Search points per ring.
     default_search_rings: 2 # Rings of search points.
-    default_search_view_width: 10.0 # [m] Width the camera can see; sets the ring spacing.
+    default_search_view_width: 4.0 # [m] Width the camera can see; sets the ring spacing.
 
     # --- ROS Topics and Services ---
     waypoints_topic: "waypoints"

@@ -128,7 +128,7 @@
           "ros_publish": true
         },
         {
-          "sensor_name": "RGBCameraDepth",
+          "sensor_name": "DepthCameraRGBCamera",
           "sensor_type": "RGBCamera",
           "socket": "DVLSocket",
           "rotation": [0, 90, 0],
