@@ -5,7 +5,7 @@
 
   coug_gazebo_world_launch:
     ros__parameters:
-      world_file: "sonoma_raceway.sdf.xacro"
+      world_file: "mdrs.sdf.xacro"
 
   imu_covariance_node:
     ros__parameters:
