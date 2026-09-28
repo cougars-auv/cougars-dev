@@ -46,7 +46,7 @@
         vx_std: 0.4 # [m/s]
         wz_std: 0.8 # [rad/s]
 
-        prune_distance: 6.0 # [m]
+        prune_distance: 4.0 # [m]
 
         critics:
           [
@@ -67,9 +67,15 @@
         GoalCritic:
           threshold_to_consider: 3.0 # [m]
 
+        PathAlignCritic:
+          offset_from_furthest: 2 # [poses]
+
+        PathAngleCritic:
+          offset_from_furthest: 2 # [poses]
+
         PathFollowCritic:
           cost_weight: 5.0
-          offset_from_furthest: 5 # [poses]
+          offset_from_furthest: 2 # [poses]
           threshold_to_consider: 3.0 # [m]
 
         PreferForwardCritic:
