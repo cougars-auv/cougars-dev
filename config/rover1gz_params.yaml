@@ -280,8 +280,8 @@
 
         inflation_layer:
           plugin: "nav2_costmap_2d::InflationLayer"
-          inflation_radius: 1.4 # [m]
-          cost_scaling_factor: 6.5 # [1/m]
+          inflation_radius: 2.1 # [m]
+          cost_scaling_factor: 3.57 # [1/m]
 
   planner_server:
     ros__parameters:
