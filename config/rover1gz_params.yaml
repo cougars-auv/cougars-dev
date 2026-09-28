@@ -227,7 +227,7 @@
 
   ground_segmentation_node:
     ros__parameters:
-      groundInlierThreshold: 0.1 # [m]
+      groundInlierThreshold: 0.1 # [m] Detect smaller rocks.
 
   global_costmap:
     global_costmap:
@@ -252,7 +252,7 @@
 
           robot_height: 1.425 # [m]
           max_data_range: 0.0 # [m]
-          nonground_prob_thresh: 0.5
+          nonground_prob_thresh: 0.5 # Allow smaller rocks to trigger large costmap cells.
 
         inflation_layer:
           plugin: "nav2_costmap_2d::InflationLayer"
