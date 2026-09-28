@@ -225,10 +225,6 @@
         TwirlingCritic:
           cost_weight: 5.0
 
-  ground_segmentation_node:
-    ros__parameters:
-      groundInlierThreshold: 0.1 # [m] Detect smaller rocks.
-
   global_costmap:
     global_costmap:
       ros__parameters:
@@ -236,8 +232,9 @@
         publish_frequency: 0.0 # [Hz]
 
         footprint: "[[0.985, 0.55], [0.985, -0.55], [-0.715, -0.55], [-0.715, 0.55]]"
+        use_maximum: true # IMPORTANT! Don't let ground_consistency clear lethal terrain cells.
         plugins:
-          ["terrain_layer", "ground_consistency_layer", "inflation_layer"]
+          ["ground_consistency_layer", "terrain_layer", "inflation_layer"]
 
         terrain_layer:
           plugin: "nav2_costmap_2d::StaticLayer"
@@ -252,7 +249,8 @@
 
           robot_height: 1.425 # [m]
           max_data_range: 0.0 # [m]
-          nonground_prob_thresh: 0.5 # Allow smaller rocks to trigger large costmap cells.
+          nonground_prob_thresh: 0.5 # Allow smaller rocks to trigger the larger global costmap cells.
+          nonground_decay: 0.98
 
         inflation_layer:
           plugin: "nav2_costmap_2d::InflationLayer"
@@ -276,7 +274,6 @@
           robot_height: 1.425 # [m]
           # https://github.com/stereolabs/zed-ros2-wrapper/blob/v5.5.0/zed_wrapper/config/zed2i.yaml
           max_data_range: 15.0 # [m]
-          nonground_prob_thresh: 0.75
 
         inflation_layer:
           plugin: "nav2_costmap_2d::InflationLayer"

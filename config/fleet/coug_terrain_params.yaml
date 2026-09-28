@@ -33,7 +33,7 @@
       cellSizeZ: 10.0 # [m] Phase 1 vertical binning.
       cellSizeZPhase2: 1.0 # [m] Phase 2 vertical binning.
       slopeThresholdDegrees: 25.0 # [deg]
-      groundInlierThreshold: 0.2 # [m] Must stay below cellSizeZPhase2.
+      groundInlierThreshold: 0.1 # [m] Must stay below cellSizeZPhase2.
       centroidSearchRadius: 5.0 # [m]
       maxGroundHeightDeviation: 0.1 # [m]
       use_imu_orientation: true
