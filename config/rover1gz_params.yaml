@@ -177,7 +177,7 @@
       controller_frequency: 20.0 # [Hz]
 
       general_goal_checker:
-        xy_goal_tolerance: 1.45 # [m] 0.9 + 0.55 (base_link to nearest footprint edge)
+        xy_goal_tolerance: 1.3 # [m] 0.75 + 0.55 (base_link to nearest footprint edge)
 
       FollowPath:
         transform_tolerance: 0.3 # [s]
@@ -193,7 +193,7 @@
         vx_std: 0.4 # [m/s]
         wz_std: 0.4 # [rad/s]
 
-        prune_distance: 6.0 # [m]
+        prune_distance: 4.0 # [m]
 
         critics:
           [
@@ -214,9 +214,15 @@
         GoalCritic:
           threshold_to_consider: 3.0 # [m]
 
+        PathAlignCritic:
+          offset_from_furthest: 2 # [poses]
+
+        PathAngleCritic:
+          offset_from_furthest: 2 # [poses]
+
         PathFollowCritic:
           cost_weight: 5.0
-          offset_from_furthest: 5 # [poses]
+          offset_from_furthest: 2 # [poses]
           threshold_to_consider: 3.0 # [m]
 
         PreferForwardCritic:
@@ -250,7 +256,7 @@
           robot_height: 1.425 # [m]
           max_data_range: 0.0 # [m]
           nonground_prob_thresh: 0.5 # Allow smaller rocks to trigger the larger global costmap cells.
-          nonground_decay: 0.98
+          nonground_decay: 0.95
 
         inflation_layer:
           plugin: "nav2_costmap_2d::InflationLayer"
