@@ -2,7 +2,7 @@
   belief_state_monitor_node:
     ros__parameters:
       fg_odom_topic: "odometry/global"
-      fg_vel_topic: "factor_graph_node/velocity"
+      fg_velocity_topic: "factor_graph_node/velocity"
       fg_bias_topic: "factor_graph_node/imu/bias"
       norm_trace_topic: "~/norm_trace"
 
@@ -71,7 +71,7 @@
           cost_weight: 50000.0
 
           fg_odom_topic: "odometry/global"
-          fg_vel_topic: "factor_graph_node/velocity"
+          fg_velocity_topic: "factor_graph_node/velocity"
           fg_bias_topic: "factor_graph_node/imu/bias"
 
           accel_noise_density_sigmas: [5.6e-4, 5.6e-4, 5.6e-4] # [x, y, z] [m/s^2/√Hz]

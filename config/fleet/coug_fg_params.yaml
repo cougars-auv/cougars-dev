@@ -323,10 +323,10 @@
       twist_fom_output_topic: "dvl/twist_fom"
       beams_output_topic: "dvl/beams"
 
-      beam0_range_topic: "dvl/beam0/range"
-      beam1_range_topic: "dvl/beam1/range"
-      beam2_range_topic: "dvl/beam2/range"
-      beam3_range_topic: "dvl/beam3/range"
+      beam0_range_output_topic: "dvl/beam0/range"
+      beam1_range_output_topic: "dvl/beam1/range"
+      beam2_range_output_topic: "dvl/beam2/range"
+      beam3_range_output_topic: "dvl/beam3/range"
 
       use_parameter_frame: false
 

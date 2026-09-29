@@ -106,10 +106,10 @@
 
   hsd_converter_node:
     ros__parameters:
-      hsd_topic: "cmd_hsd"
-      output_heading_topic: "/heading"
-      output_speed_topic: "/speed"
-      output_depth_topic: "/depth"
+      input_topic: "cmd_hsd"
+      heading_output_topic: "/heading"
+      speed_output_topic: "/speed"
+      depth_output_topic: "/depth"
 
   imu_converter_node:
     ros__parameters:
@@ -239,8 +239,8 @@
       back_input_topic: "BackStereoRGBCamera"
       front_output_topic: "stereo/front/image_raw"
       back_output_topic: "stereo/back/image_raw"
-      front_stereo_info_topic: "stereo/front/camera_info"
-      back_stereo_info_topic: "stereo/back/camera_info"
+      front_info_output_topic: "stereo/front/camera_info"
+      back_info_output_topic: "stereo/back/camera_info"
 
   truth_converter_node:
     ros__parameters:
