@@ -39,6 +39,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
   --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
   apt-get update && apt-get install -y --no-install-recommends \
   openssh-client \
+  python3-pip \
   tmux \
   vim \
   && mkdir -p /etc/ssh/ssh_config.d \
@@ -64,6 +65,11 @@ RUN --mount=type=bind,from=cacher,source=/tmp/packages,target=/tmp/packages \
   apt-get update \
   && rosdep update \
   && rosdep install --from-paths /tmp/packages --ignore-src -y
+
+# Install Python dependencies without rosdep keys
+RUN --mount=type=cache,target=/root/.cache/pip \
+  pip3 install --break-system-packages \
+  norfair==2.3.0
 
 # Install GeographicLib datasets required by MAVROS
 RUN "/opt/ros/${ROS_DISTRO}/lib/mavros/install_geographiclib_datasets.sh"
