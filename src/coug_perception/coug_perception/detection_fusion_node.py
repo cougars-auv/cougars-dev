@@ -149,6 +149,7 @@ class DetectionFusionNode(Node):
             rect_min = np.clip(pixels.min(axis=0), 0.0, image_size)
             rect_max = np.clip(pixels.max(axis=0), 0.0, image_size)
 
+            # Label with the camera box of highest intersection over union
             overlap_sizes = np.minimum(rect_max, box_rects[:, 2:]) - np.maximum(
                 rect_min, box_rects[:, :2]
             )

@@ -20,18 +20,12 @@ from ament_index_python.packages import get_package_share_directory
 from launch import LaunchContext, LaunchDescription
 from launch.action import Action
 from launch.actions import DeclareLaunchArgument, OpaqueFunction
-from launch.substitution import Substitution
 from launch.substitutions import (
     EnvironmentVariable,
     LaunchConfiguration,
     PathJoinSubstitution,
-    PythonExpression,
 )
 from launch_ros.actions import Node
-
-
-def agent_frame(agent_ns: str | Substitution, frame: str) -> PythonExpression:
-    return PythonExpression(["'", agent_ns, f"/{frame}' if '", agent_ns, f"' != '' else '{frame}'"])
 
 
 def load_launch_params(path: str, top_key: str) -> dict[str, Any]:
@@ -122,10 +116,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                 fleet_param_file,
                 agent_param_file,
                 scenario_param_file,
-                {
-                    "use_sim_time": use_sim_time,
-                    "base_frame": agent_frame(agent_ns, "base_link"),
-                },
+                {"use_sim_time": use_sim_time},
             ],
         ),
         Node(

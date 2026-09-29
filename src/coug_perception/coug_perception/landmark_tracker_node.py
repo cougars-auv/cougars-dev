@@ -36,16 +36,7 @@ from vision_msgs.msg import (
 )
 from visualization_msgs.msg import Marker, MarkerArray
 
-_CLASS_COLORS = {
-    "red": (1.0, 0.0, 0.0),
-    "green": (0.0, 0.8, 0.0),
-    "black": (0.1, 0.1, 0.1),
-    "yellow": (1.0, 0.9, 0.0),
-    "white": (1.0, 1.0, 1.0),
-    "orange": (1.0, 0.5, 0.0),
-    "blue": (0.0, 0.3, 1.0),
-}
-_DEFAULT_COLOR = (0.6, 0.6, 0.6)
+from coug_perception.utils.class_colors import class_color
 
 
 class LandmarkTrackerNode(Node):
@@ -109,6 +100,7 @@ class LandmarkTrackerNode(Node):
             bbox = BoundingBox3D(center=pose, size=detection.bbox.size)
             detections.append(Detection(points=points, data=(class_id, bbox)))
 
+        # Keep all initialized landmarks
         for obj in self._tracker.tracked_objects:
             if not obj.is_initializing:
                 obj.hit_counter += 1
@@ -123,6 +115,7 @@ class LandmarkTrackerNode(Node):
         if detection_class != track_class:
             return float(np.linalg.norm(detection.points - tracked_object.estimate))
 
+        # Match on footprint for same-class merges
         gaps = []
         for point_bbox, box_bbox in ((detection_bbox, track_bbox), (track_bbox, detection_bbox)):
             q = box_bbox.center.orientation
@@ -168,9 +161,7 @@ class LandmarkTrackerNode(Node):
             box_marker.type = Marker.CUBE
             box_marker.pose = bbox.center
             box_marker.scale = bbox.size
-            box_marker.color.r, box_marker.color.g, box_marker.color.b = _CLASS_COLORS.get(
-                class_id.rsplit("_", 1)[-1], _DEFAULT_COLOR
-            )
+            box_marker.color.r, box_marker.color.g, box_marker.color.b = class_color(class_id)
             box_marker.color.a = 0.8
             markers_msg.markers.append(box_marker)
 
