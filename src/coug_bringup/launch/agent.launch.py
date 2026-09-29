@@ -70,6 +70,8 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
     coug_fg_launch_dir = os.path.join(coug_fg_dir, "launch")
     coug_helm_dir = get_package_share_directory("coug_helm")
     coug_helm_launch_dir = os.path.join(coug_helm_dir, "launch")
+    coug_perception_dir = get_package_share_directory("coug_perception")
+    coug_perception_launch_dir = os.path.join(coug_perception_dir, "launch")
     coug_terrain_dir = get_package_share_directory("coug_terrain")
     coug_terrain_launch_dir = os.path.join(coug_terrain_dir, "launch")
     coug_visual_dvl_dir = get_package_share_directory("coug_visual_dvl")
@@ -171,6 +173,18 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
         }.items(),
     )
 
+    coug_perception_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(coug_perception_launch_dir, "coug_perception.launch.py")
+        ),
+        launch_arguments={
+            "use_sim_time": use_sim_time,
+            "agent_ns": agent_ns,
+            "scenario_param_file": scenario_param_file,
+        }.items(),
+        condition=IfCondition(is_agent(agent_ns, "wamv1gz")),
+    )
+
     coug_terrain_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(coug_terrain_launch_dir, "coug_terrain.launch.py")
@@ -224,6 +238,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                 coug_fg_dvl_ekf_launch,
                 coug_fg_launch,
                 coug_helm_launch,
+                coug_perception_launch,
                 coug_terrain_launch,
                 coug_visual_dvl_launch,
             ]

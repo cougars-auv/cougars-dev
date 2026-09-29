@@ -17,14 +17,6 @@
         parameter_priors_sigmas:
           initial_position_sigmas: [0.001, 0.001, 1.0] # [x, y, z] [m]
 
-  cmd_vel_converter_node:
-    ros__parameters:
-      agent_type: "surface_vessel"
-
-  modem_converter_node:
-    ros__parameters:
-      beacon_id: 5
-
   controller_server:
     ros__parameters:
       controller_frequency: 20.0 # [Hz]
@@ -84,11 +76,6 @@
         TwirlingCritic:
           cost_weight: 5.0
 
-  ground_segmentation_node:
-    ros__parameters:
-      lidar_to_ground: -2.17 # [m]
-      groundInlierThreshold: 0.25 # [m]
-
   global_costmap:
     global_costmap:
       ros__parameters:
@@ -139,3 +126,16 @@
     ros__parameters:
       GridBased:
         plugin: "nav2_navfn_planner::NavfnPlanner"
+
+  cmd_vel_converter_node:
+    ros__parameters:
+      agent_type: "surface_vessel"
+
+  modem_converter_node:
+    ros__parameters:
+      beacon_id: 5
+
+  ground_segmentation_node:
+    ros__parameters:
+      lidar_to_ground: -2.17 # [m]
+      groundInlierThreshold: 0.25 # [m]

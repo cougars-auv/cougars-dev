@@ -62,28 +62,10 @@ def generate_launch_description() -> LaunchDescription:
                 default_value="auv0",
             ),
             Node(
-                package="seatrac",
-                executable="modem",
-                name="modem",
-                parameters=[seatrac_param_file, agent_param_file],
-            ),
-            Node(
-                package="sbg_driver",
-                executable="sbg_device",
-                name="sbg_device",
-                parameters=[sbg_driver_param_file, agent_param_file],
-            ),
-            Node(
                 package="dvl_a50",
                 executable="dvl_a50_sensor",
                 name="dvl_a50_sensor",
                 parameters=[dvl_a50_param_file, agent_param_file],
-            ),
-            Node(
-                package="pressure_sensor",
-                executable="pressure_pub",
-                name="pressure_pub",
-                parameters=[pressure_sensor_param_file, agent_param_file],
             ),
             Node(
                 package="gpsd_client",
@@ -92,22 +74,40 @@ def generate_launch_description() -> LaunchDescription:
                 parameters=[gpsd_client_param_file, agent_param_file],
             ),
             Node(
+                package="seatrac",
+                executable="modem",
+                name="modem",
+                parameters=[seatrac_param_file, agent_param_file],
+            ),
+            Node(
                 package="nmea_gpsd",
                 executable="nmea_gpsd_udp",
                 name="nmea_gpsd_udp",
                 parameters=[nmea_gpsd_param_file, agent_param_file],
             ),
             Node(
-                package="topic_monitor",
-                executable="topic_monitor_node",
-                name="topic_monitor_node",
-                parameters=[topic_monitor_param_file, agent_param_file],
-            ),
-            Node(
                 package="ntrip_client",
                 executable="ntrip_ros.py",
                 name="ntrip_client",
                 parameters=[ntrip_client_param_file, agent_param_file],
+            ),
+            Node(
+                package="pressure_sensor",
+                executable="pressure_pub",
+                name="pressure_pub",
+                parameters=[pressure_sensor_param_file, agent_param_file],
+            ),
+            Node(
+                package="sbg_driver",
+                executable="sbg_device",
+                name="sbg_device",
+                parameters=[sbg_driver_param_file, agent_param_file],
+            ),
+            Node(
+                package="topic_monitor",
+                executable="topic_monitor_node",
+                name="topic_monitor_node",
+                parameters=[topic_monitor_param_file, agent_param_file],
             ),
         ]
     )

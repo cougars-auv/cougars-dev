@@ -282,6 +282,20 @@
       # Thoms et al., IEEE JOE 2023 style tightly-coupled DVL preintegration implementation
       enable_tight_dvl_preintegration: false
 
+  dvl_a50_odom_node:
+    ros__parameters:
+      # --- Node Settings ---
+      override_timestamp: false # Stamp with receive time (if the A50 clock isn't synced).
+
+      # https://docs.waterlinked.com/dvl/dead-reckoning/
+      orientation_noise_sigmas: [0.01745, 0.01745, 0.03491] # [roll, pitch, yaw] [rad]
+
+      # --- ROS Topics and Frames ---
+      input_topic: "dvl/position"
+      output_topic: "dvl/odometry_ned"
+
+      use_parameter_frame: false
+
   dvl_a50_twist_beams_node:
     ros__parameters:
       # --- Node Settings ---
@@ -316,20 +330,6 @@
 
       use_parameter_frame: false
 
-  dvl_a50_odom_node:
-    ros__parameters:
-      # --- Node Settings ---
-      override_timestamp: false # Stamp with receive time (if the A50 clock isn't synced).
-
-      # https://docs.waterlinked.com/dvl/dead-reckoning/
-      orientation_noise_sigmas: [0.01745, 0.01745, 0.03491] # [roll, pitch, yaw] [rad]
-
-      # --- ROS Topics and Frames ---
-      input_topic: "dvl/position"
-      output_topic: "dvl/odometry_ned"
-
-      use_parameter_frame: false
-
   fluid_pressure_odom_node:
     ros__parameters:
       # --- Node Settings ---
@@ -351,6 +351,11 @@
       calibrate_service: "depth/calibrate"
 
       use_parameter_child_frame: false
+
+  imu_ned_to_enu_node:
+    ros__parameters:
+      input_topic: "imu/data_ned"
+      output_topic: "imu/data"
 
   navsat_odom_node:
     ros__parameters:
@@ -377,6 +382,21 @@
 
       use_parameter_child_frame: false
 
+  odom_ned_to_enu_node:
+    ros__parameters:
+      input_topic: "dvl/odometry_ned"
+      output_topic: "dvl/odometry"
+
+  odom_to_tf_node:
+    ros__parameters:
+      # --- Node Settings ---
+      invert: false # Publish the child -> parent transform instead.
+
+      # --- ROS Topics and Frames ---
+      input_topic: "dvl/odometry"
+
+      use_parameter_frame: false
+
   sbg_imu_mag_node:
     ros__parameters:
       # --- Node Settings ---
@@ -388,6 +408,16 @@
       output_topic: "imu/mag"
 
       use_parameter_frame: false
+
+  seatrac_imu_ned_to_enu_node:
+    ros__parameters:
+      input_topic: "seatrac/imu/data_ned"
+      output_topic: "seatrac/imu/data"
+
+  seatrac_odom_ned_to_enu_node:
+    ros__parameters:
+      input_topic: "seatrac/depth/odometry_ned"
+      output_topic: "seatrac/depth/odometry"
 
   seatrac_x150_imu_depth_node:
     ros__parameters:
@@ -407,127 +437,6 @@
       depth_output_topic: "seatrac/depth/odometry_ned"
 
       use_parameter_frame: false
-
-  seatrac_imu_ned_to_enu_node:
-    ros__parameters:
-      input_topic: "seatrac/imu/data_ned"
-      output_topic: "seatrac/imu/data"
-
-  seatrac_odom_ned_to_enu_node:
-    ros__parameters:
-      input_topic: "seatrac/depth/odometry_ned"
-      output_topic: "seatrac/depth/odometry"
-
-  imu_ned_to_enu_node:
-    ros__parameters:
-      input_topic: "imu/data_ned"
-      output_topic: "imu/data"
-
-  odom_ned_to_enu_node:
-    ros__parameters:
-      input_topic: "dvl/odometry_ned"
-      output_topic: "dvl/odometry"
-
-  odom_to_tf_node:
-    ros__parameters:
-      # --- Node Settings ---
-      invert: false # Publish the child -> parent transform instead.
-
-      # --- ROS Topics and Frames ---
-      input_topic: "dvl/odometry"
-
-      use_parameter_frame: false
-
-  rtk_gps_truth_relay_node:
-    ros__parameters:
-      input_topic: "gps/odometry"
-      output_topic: "odometry/truth"
-
-  # --- Robot Localization Pipeline ---
-  imu_filter_madgwick:
-    ros__parameters:
-      use_mag: true
-      world_frame: "enu"
-      publish_tf: false
-      gain: 0.1
-
-      # East-positive declination (NOAA convention).
-      # https://www.ngdc.noaa.gov/geomag/calculators/magcalc.shtml#declination
-      declination: 0.185867 # [rad] WMMHR-2025 (40.2406 N, 111.741 W, 2027-06-02)
-      yaw_offset: 0.0 # [rad]
-
-      orientation_stddev: 0.05 # [rad]
-
-  ekf_filter_node_odom:
-    ros__parameters:
-      frequency: 30.0
-      two_d_mode: false
-      publish_tf: true
-      print_diagnostics: true
-
-      gravitational_acceleration: 9.8 # [m/s^2]
-      initial_estimate_covariance: [
-          1.0e-6,
-          1.0e-6,
-          1.0e-6, # X, Y, Z
-          1.0e-6,
-          1.0e-6,
-          1.0e-6, # Roll, Pitch, Yaw
-          1.0e-6,
-          1.0e-6,
-          1.0e-6, # Vx, Vy, Vz
-          1.0e-9,
-          1.0e-9,
-          1.0e-9, # Vroll, Vpitch, Vyaw
-          1.0e-9,
-          1.0e-9,
-          1.0e-9, # Ax, Ay, Az
-        ]
-
-      imu0: "imu/data"
-      # IMPORTANT! robot_localization in ROS 2 Jazzy has a known bug with mishandling gravity removal for non-trivial IMU to base rotations.
-      # Disable acceleration fusion in the agent-specific config file if the rotation is non-trivial.
-      imu0_config: [
-          false,
-          false,
-          false, # X, Y, Z
-          false,
-          false,
-          false, # Roll, Pitch, Yaw
-          false,
-          false,
-          false, # Vx, Vy, Vz
-          true,
-          true,
-          true, # Vroll, Vpitch, Vyaw
-          true,
-          true,
-          true, # Ax, Ay, Az
-        ]
-      imu0_queue_size: 15
-      imu0_differential: false
-      imu0_relative: false
-      imu0_remove_gravitational_acceleration: true
-
-      twist0: "dvl/twist"
-      twist0_config: [
-          false,
-          false,
-          false, # X, Y, Z
-          false,
-          false,
-          false, # Roll, Pitch, Yaw
-          true,
-          true,
-          true, # Vx, Vy, Vz
-          false,
-          false,
-          false, # Vroll, Vpitch, Vyaw
-          false,
-          false,
-          false, # Ax, Ay, Az
-        ]
-      twist0_queue_size: 5
 
   ekf_filter_node_map:
     ros__parameters:
@@ -667,6 +576,96 @@
           false, # Ax, Ay, Az
         ]
       twist0_queue_size: 5
+
+  ekf_filter_node_odom:
+    ros__parameters:
+      frequency: 30.0
+      two_d_mode: false
+      publish_tf: true
+      print_diagnostics: true
+
+      gravitational_acceleration: 9.8 # [m/s^2]
+      initial_estimate_covariance: [
+          1.0e-6,
+          1.0e-6,
+          1.0e-6, # X, Y, Z
+          1.0e-6,
+          1.0e-6,
+          1.0e-6, # Roll, Pitch, Yaw
+          1.0e-6,
+          1.0e-6,
+          1.0e-6, # Vx, Vy, Vz
+          1.0e-9,
+          1.0e-9,
+          1.0e-9, # Vroll, Vpitch, Vyaw
+          1.0e-9,
+          1.0e-9,
+          1.0e-9, # Ax, Ay, Az
+        ]
+
+      imu0: "imu/data"
+      # IMPORTANT! robot_localization in ROS 2 Jazzy has a known bug with mishandling gravity removal for non-trivial IMU to base rotations.
+      # Disable acceleration fusion in the agent-specific config file if the rotation is non-trivial.
+      imu0_config: [
+          false,
+          false,
+          false, # X, Y, Z
+          false,
+          false,
+          false, # Roll, Pitch, Yaw
+          false,
+          false,
+          false, # Vx, Vy, Vz
+          true,
+          true,
+          true, # Vroll, Vpitch, Vyaw
+          true,
+          true,
+          true, # Ax, Ay, Az
+        ]
+      imu0_queue_size: 15
+      imu0_differential: false
+      imu0_relative: false
+      imu0_remove_gravitational_acceleration: true
+
+      twist0: "dvl/twist"
+      twist0_config: [
+          false,
+          false,
+          false, # X, Y, Z
+          false,
+          false,
+          false, # Roll, Pitch, Yaw
+          true,
+          true,
+          true, # Vx, Vy, Vz
+          false,
+          false,
+          false, # Vroll, Vpitch, Vyaw
+          false,
+          false,
+          false, # Ax, Ay, Az
+        ]
+      twist0_queue_size: 5
+
+  imu_filter_madgwick:
+    ros__parameters:
+      use_mag: true
+      world_frame: "enu"
+      publish_tf: false
+      gain: 0.1
+
+      # East-positive declination (NOAA convention).
+      # https://www.ngdc.noaa.gov/geomag/calculators/magcalc.shtml#declination
+      declination: 0.185867 # [rad] WMMHR-2025 (40.2406 N, 111.741 W, 2027-06-02)
+      yaw_offset: 0.0 # [rad]
+
+      orientation_stddev: 0.05 # [rad]
+
+  rtk_gps_truth_relay_node:
+    ros__parameters:
+      input_topic: "gps/odometry"
+      output_topic: "odometry/truth"
 
   ukf_filter_node_map:
     ros__parameters:

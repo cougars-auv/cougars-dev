@@ -47,7 +47,19 @@
         # https://docs.clearpathrobotics.com/assets/files/clearpath_robotics_014603-TDS1-8efeae7b74bd54c43ea676651f063dbf.pdf
         initial_gyro_bias_sigmas: [3.9e-5, 3.9e-5, 3.9e-5] # [x, y, z] [rad/s]
 
-  ekf_filter_node_odom:
+  dvl_a50_twist_beams_node:
+    ros__parameters:
+      use_parameter_frame: true
+      override_timestamp: true # DVL A50 clock is not synced in these bags
+
+  fluid_pressure_odom_node:
+    ros__parameters:
+      pressure_scale: 100.0 # IMPORTANT! Pressure is in hPa, not Pa
+      atmospheric_pressure: 99339.996 # [Pa] br2config.yaml (atm_press: 993.39996 hPa)
+
+      use_parameter_child_frame: true
+
+  ekf_filter_node_map:
     ros__parameters:
       gravitational_acceleration: 9.81007 # [m/s^2] br2config.yaml (g: 9.81007)
       initial_estimate_covariance: [
@@ -87,7 +99,7 @@
           false, # Ax, Ay, Az
         ]
 
-  ekf_filter_node_map:
+  ekf_filter_node_odom:
     ros__parameters:
       gravitational_acceleration: 9.81007 # [m/s^2] br2config.yaml (g: 9.81007)
       initial_estimate_covariance: [
@@ -166,15 +178,3 @@
           false,
           false, # Ax, Ay, Az
         ]
-
-  fluid_pressure_odom_node:
-    ros__parameters:
-      pressure_scale: 100.0 # IMPORTANT! Pressure is in hPa, not Pa
-      atmospheric_pressure: 99339.996 # [Pa] br2config.yaml (atm_press: 993.39996 hPa)
-
-      use_parameter_child_frame: true
-
-  dvl_a50_twist_beams_node:
-    ros__parameters:
-      use_parameter_frame: true
-      override_timestamp: true # DVL A50 clock is not synced in these bags

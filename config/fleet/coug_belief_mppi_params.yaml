@@ -6,17 +6,22 @@
       fg_bias_topic: "factor_graph_node/imu/bias"
       norm_trace_topic: "~/norm_trace"
 
-  twist_mux:
+  behavior_server:
     ros__parameters:
-      topics:
-        nav2:
-          topic: "cmd_vel"
-          timeout: 0.5 # [s]
-          priority: 10
-        joy:
-          topic: "cmd_vel_joy"
-          timeout: 0.5 # [s]
-          priority: 20
+      enable_stamped_cmd_vel: true
+      transform_tolerance: 0.3 # [s]
+      behavior_plugins: ["spin", "backup", "wait"]
+      spin:
+        plugin: "nav2_behaviors::Spin"
+      backup:
+        plugin: "nav2_behaviors::BackUp"
+      wait:
+        plugin: "nav2_behaviors::Wait"
+
+  bt_navigator:
+    ros__parameters:
+      odom_topic: "odometry/local"
+      transform_tolerance: 0.3 # [s]
 
   controller_server:
     ros__parameters:
@@ -120,19 +125,14 @@
         plugin: "nav2_smac_planner::SmacPlanner2D"
         tolerance: 0.5 # [m]
 
-  behavior_server:
+  twist_mux:
     ros__parameters:
-      enable_stamped_cmd_vel: true
-      transform_tolerance: 0.3 # [s]
-      behavior_plugins: ["spin", "backup", "wait"]
-      spin:
-        plugin: "nav2_behaviors::Spin"
-      backup:
-        plugin: "nav2_behaviors::BackUp"
-      wait:
-        plugin: "nav2_behaviors::Wait"
-
-  bt_navigator:
-    ros__parameters:
-      odom_topic: "odometry/local"
-      transform_tolerance: 0.3 # [s]
+      topics:
+        nav2:
+          topic: "cmd_vel"
+          timeout: 0.5 # [s]
+          priority: 10
+        joy:
+          topic: "cmd_vel_joy"
+          timeout: 0.5 # [s]
+          priority: 20

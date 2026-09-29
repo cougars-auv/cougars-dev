@@ -270,6 +270,20 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                     PushRosNamespace("base_station"),
                     Node(
                         package="coug_holoocean",
+                        executable="modem_converter",
+                        name="modem_converter_node",
+                        parameters=[
+                            holoocean_fleet_param_file,
+                            scenario_param_file,
+                            {
+                                "use_sim_time": use_sim_time,
+                                "add_noise": add_noise,
+                                "modem_frame": "base_station",
+                            },
+                        ],
+                    ),
+                    Node(
+                        package="coug_holoocean",
                         executable="depth_converter",
                         name="modem_depth_converter_node",
                         parameters=[
@@ -280,20 +294,6 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                                 "add_noise": add_noise,
                                 "depth_frame": "base_station",
                                 "map_frame": "map",
-                            },
-                        ],
-                    ),
-                    Node(
-                        package="coug_holoocean",
-                        executable="modem_converter",
-                        name="modem_converter_node",
-                        parameters=[
-                            holoocean_fleet_param_file,
-                            scenario_param_file,
-                            {
-                                "use_sim_time": use_sim_time,
-                                "add_noise": add_noise,
-                                "modem_frame": "base_station",
                             },
                         ],
                     ),

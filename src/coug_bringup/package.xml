@@ -15,6 +15,7 @@
   <exec_depend>coug_fg</exec_depend>
   <exec_depend>coug_helm</exec_depend>
   <exec_depend>coug_interfaces</exec_depend>
+  <exec_depend>coug_perception</exec_depend>
   <exec_depend>coug_terrain</exec_depend>
   <exec_depend>coug_visual_dvl</exec_depend>
   <exec_depend>diagnostic_msgs</exec_depend>

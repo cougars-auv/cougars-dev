@@ -1,16 +1,16 @@
 /**:
-  controller_server:
+  sim_launch:
     ros__parameters:
-      FollowPath:
-        visualize: true
+      agents: ["wamv1gz"]
 
   coug_gazebo_world_launch:
     ros__parameters:
       world_file: "roboboat.sdf.xacro"
 
-  sim_launch:
+  controller_server:
     ros__parameters:
-      agents: ["wamv1gz"]
+      FollowPath:
+        visualize: true
 
   imu_filter_madgwick:
     ros__parameters:
