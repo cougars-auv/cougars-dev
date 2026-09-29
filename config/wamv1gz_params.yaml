@@ -286,3 +286,5 @@
   ground_segmentation_node:
     ros__parameters:
       lidar_to_ground: -1.86 # [m]
+      groundInlierThreshold: 0.05 # [m]
+      maxGroundHeightDeviation: 0.05 # [m]
