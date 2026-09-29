@@ -26,7 +26,7 @@ from coug_interfaces.srv import BagRecord
 from diagnostic_msgs.msg import DiagnosticStatus
 from rclpy.node import Node
 
-PROCESS_WAIT_TIMEOUT_SEC = 10
+_PROCESS_WAIT_TIMEOUT_SEC = 10
 
 
 class BagRecorderNode(Node):
@@ -138,10 +138,10 @@ class BagRecorderNode(Node):
 
         process.send_signal(signal.SIGINT)
         try:
-            process.wait(timeout=PROCESS_WAIT_TIMEOUT_SEC)
+            process.wait(timeout=_PROCESS_WAIT_TIMEOUT_SEC)
         except subprocess.TimeoutExpired:
             self.get_logger().error(
-                f"Bag recorder did not stop within {PROCESS_WAIT_TIMEOUT_SEC} s; killing it."
+                f"Bag recorder did not stop within {_PROCESS_WAIT_TIMEOUT_SEC} s; killing it."
             )
             process.kill()
             process.wait()
