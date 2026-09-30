@@ -42,7 +42,7 @@ class DetectionFusionNode(Node):
         super().__init__("detection_fusion_node")
 
         self.declare_parameter("labels_file", "")
-        self.declare_parameter("max_boxes_age_sec", 0.3)
+        self.declare_parameter("boxes_timeout_sec", 0.3)
         self.declare_parameter("min_iou", 0.1)
         self.declare_parameter("input_topic", "detections_3d")
         self.declare_parameter("boxes_topic", "camera/boxes")
@@ -51,7 +51,7 @@ class DetectionFusionNode(Node):
 
         with open(self.get_parameter("labels_file").value) as f:
             self._labels = {str(label): name for label, name in yaml.safe_load(f).items()}
-        self._max_boxes_age = Duration(seconds=self.get_parameter("max_boxes_age_sec").value)
+        self._boxes_timeout = Duration(seconds=self.get_parameter("boxes_timeout_sec").value)
         self._min_iou = self.get_parameter("min_iou").value
         input_topic = self.get_parameter("input_topic").value
         boxes_topic = self.get_parameter("boxes_topic").value
@@ -93,7 +93,7 @@ class DetectionFusionNode(Node):
             self._camera_model is None
             or self._boxes_msg is None
             or self.get_clock().now() - rclpy.time.Time.from_msg(self._boxes_msg.header.stamp)
-            > self._max_boxes_age
+            > self._boxes_timeout
         ):
             return
 
