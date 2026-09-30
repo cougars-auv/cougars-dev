@@ -4,6 +4,7 @@
     publish_global_tf: true # Publish the map -> odom transform.
     publish_neighbor_global_tf: true # Publish the map -> neighbor base transforms.
     transform_time_offset: 0.0 # [s]
+    transform_timeout_sec: 0.1 # [s]
     publish_smoothed_path: true
     publish_velocity: true
     publish_imu_bias: true
