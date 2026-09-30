@@ -83,11 +83,22 @@
         footprint: "[[0.985, 0.55], [0.985, -0.55], [-0.715, -0.55], [-0.715, 0.55]]"
         use_maximum: true # IMPORTANT! Don't let ground_consistency clear lethal terrain cells.
         plugins:
-          ["ground_consistency_layer", "terrain_layer", "inflation_layer"]
+          [
+            "ground_consistency_layer",
+            "dem_layer",
+            "dsm_layer",
+            "inflation_layer",
+          ]
 
-        terrain_layer:
+        dem_layer:
           plugin: "nav2_costmap_2d::StaticLayer"
           map_topic: "/rover1gz/terrain/dem/occupancy"
+          subscribe_to_updates: false
+          map_subscribe_transient_local: true
+
+        dsm_layer:
+          plugin: "nav2_costmap_2d::StaticLayer"
+          map_topic: "/rover1gz/terrain/dsm/occupancy"
           subscribe_to_updates: false
           map_subscribe_transient_local: true
 
