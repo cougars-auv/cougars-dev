@@ -19,7 +19,7 @@ import numpy as np
 import rclpy
 from builtin_interfaces.msg import Time
 from norfair import Detection, Tracker
-from norfair.filter import NoFilterFactory
+from norfair.filter import OptimizedKalmanFilterFactory
 from norfair.tracker import TrackedObject
 from rclpy.node import Node
 from rclpy.qos import qos_profile_system_default
@@ -44,14 +44,16 @@ class LandmarkTrackerNode(Node):
     def __init__(self) -> None:
         super().__init__("landmark_tracker_node")
 
-        self.declare_parameter("distance_threshold", 0.4)
+        self.declare_parameter("distance_threshold", 1.0)
+        self.declare_parameter("relabel_distance_threshold", 0.4)
         self.declare_parameter("initialization_delay", 10)
         self.declare_parameter("input_topic", "detections_3d_labeled")
         self.declare_parameter("output_topic", "landmarks")
         self.declare_parameter("marker_topic", "landmarks/markers")
         self.declare_parameter("map_frame", "map")
 
-        distance_threshold = self.get_parameter("distance_threshold").value
+        self._distance_threshold = self.get_parameter("distance_threshold").value
+        self._relabel_distance_threshold = self.get_parameter("relabel_distance_threshold").value
         initialization_delay = self.get_parameter("initialization_delay").value
         input_topic = self.get_parameter("input_topic").value
         output_topic = self.get_parameter("output_topic").value
@@ -60,10 +62,12 @@ class LandmarkTrackerNode(Node):
 
         self._tracker = Tracker(
             distance_function=self._distance,
-            distance_threshold=distance_threshold,
+            distance_threshold=self._distance_threshold,
             hit_counter_max=initialization_delay + 1,
             initialization_delay=initialization_delay,
-            filter_factory=NoFilterFactory(),
+            filter_factory=OptimizedKalmanFilterFactory(
+                R=1.0, Q=0.0, pos_variance=1.0, pos_vel_covariance=0.0, vel_variance=0.0
+            ),
         )
 
         self._tf_buffer = Buffer()
@@ -78,6 +82,8 @@ class LandmarkTrackerNode(Node):
         self._marker_pub = self.create_publisher(
             MarkerArray, marker_topic, qos_profile_system_default
         )
+
+        self._published_ids: set[int] = set()
 
         self.get_logger().info("Initialization complete.")
 
@@ -111,13 +117,42 @@ class LandmarkTrackerNode(Node):
                 obj.point_hit_counter += 1
 
         self._tracker.update(detections=detections)
+
+        # Merge new landmarks into existing ones they match
+        landmarks = self._tracker.get_active_objects()
+        kept = [obj for obj in landmarks if obj.id in self._published_ids]
+        for obj in landmarks:
+            if obj.id in self._published_ids:
+                continue
+            matches = [
+                other
+                for other in kept
+                if self._distance(obj.last_detection, other) <= self._distance_threshold
+            ]
+            if not matches:
+                kept.append(obj)
+                self._published_ids.add(obj.id)
+                continue
+            other = matches[0]
+            gain = other.filter.pos_variance / (other.filter.pos_variance + obj.filter.pos_variance)
+            other.filter.x[:3] += gain * (obj.filter.x[:3] - other.filter.x[:3])
+            other.filter.pos_variance *= 1.0 - gain
+        self._tracker.tracked_objects = [
+            obj for obj in self._tracker.tracked_objects if obj.is_initializing or obj in kept
+        ]
+
+        for obj in kept:
+            position = obj.last_detection.data[1].center.position
+            position.x, position.y, position.z = (float(v) for v in obj.estimate[0])
+
         self._publish_landmarks(msg.header.stamp)
 
     def _distance(self, detection: Detection, tracked_object: TrackedObject) -> float:
         detection_class, detection_bbox = detection.data
         track_class, track_bbox = tracked_object.last_detection.data
         if detection_class != track_class:
-            return float(np.linalg.norm(detection.points - tracked_object.estimate))
+            distance = float(np.linalg.norm(detection.points - tracked_object.estimate))
+            return distance if distance <= self._relabel_distance_threshold else math.inf
 
         # Match on footprint for same-class merges
         gaps = []
