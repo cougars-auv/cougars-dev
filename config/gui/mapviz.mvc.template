@@ -35,7 +35,7 @@ displays:
       visible: true
       collapsed: true
       alpha: 1
-      topic: /base_station/terrain/occupancy
+      topic: /base_station/terrain/dem/occupancy
       update: false
       scheme: costmap
       qos_depth: 10

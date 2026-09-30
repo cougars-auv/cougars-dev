@@ -2,8 +2,10 @@
   coug_terrain_launch:
     ros__parameters:
       dem_file: ""
+      dsm_file: ""
+      dsm_dem_file: ""
 
-  dem_global_costmap_node:
+  dem_costmap_node:
     ros__parameters:
       # --- Node Settings ---
       max_slope_degrees: 25.0 # [deg]
@@ -13,7 +15,19 @@
 
       # --- ROS Topics and Frames ---
       origin_topic: "/origin"
-      output_topic: "terrain/occupancy"
+      output_topic: "terrain/dem/occupancy"
+
+  dsm_costmap_node:
+    ros__parameters:
+      # --- Node Settings ---
+      max_obstacle_height: 0.15 # [m]
+      min_obstacle_area: 0.5 # [m^2]
+      resolution: 0.5 # [m]
+      fallback_size: 500.0 # [m] Flat prior extent when no DSM is loaded.
+
+      # --- ROS Topics and Frames ---
+      origin_topic: "/origin"
+      output_topic: "terrain/dsm/occupancy"
 
   ground_segmentation_node:
     ros__parameters:

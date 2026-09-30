@@ -61,13 +61,13 @@ Visualization Manager:
         Filter size: 10
         History Policy: Keep Last
         Reliability Policy: Reliable
-        Value: /base_station/terrain/occupancy
+        Value: /base_station/terrain/dem/occupancy
       Update Topic:
         Depth: 10
         Durability Policy: Volatile
         History Policy: Keep Last
         Reliability Policy: Reliable
-        Value: /base_station/terrain/occupancy_updates
+        Value: /base_station/terrain/dem/occupancy_updates
       Use Timestamp: false
       Value: true
     - Class: rviz_default_plugins/TF

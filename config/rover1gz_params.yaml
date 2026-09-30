@@ -87,7 +87,7 @@
 
         terrain_layer:
           plugin: "nav2_costmap_2d::StaticLayer"
-          map_topic: "/rover1gz/terrain/occupancy"
+          map_topic: "/rover1gz/terrain/dem/occupancy"
           subscribe_to_updates: false
           map_subscribe_transient_local: true
 
