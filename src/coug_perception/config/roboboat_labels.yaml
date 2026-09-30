@@ -13,6 +13,9 @@
 42: color_indicator_buoy_red
 43: color_indicator_buoy_green
 50: dock # dock_n, dock_s
+51: banner_1
+52: banner_2
+53: banner_3
 60: vessel_black
 61: vessel_yellow
 70: racquetball_red

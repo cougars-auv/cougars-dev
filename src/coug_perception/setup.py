@@ -24,7 +24,6 @@ setup(
     entry_points={
         "console_scripts": [
             "box_overlay = coug_perception.box_overlay_node:main",
-            "cluster_detections = coug_perception.cluster_detections_node:main",
             "detection_fusion = coug_perception.detection_fusion_node:main",
             "landmark_tracker = coug_perception.landmark_tracker_node:main",
         ],

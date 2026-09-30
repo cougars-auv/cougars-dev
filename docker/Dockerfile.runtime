@@ -66,11 +66,6 @@ RUN --mount=type=bind,from=cacher,source=/tmp/packages,target=/tmp/packages \
   && rosdep update \
   && rosdep install --from-paths /tmp/packages --ignore-src -y
 
-# Install Python dependencies without rosdep keys
-RUN --mount=type=cache,target=/root/.cache/pip \
-  pip3 install --break-system-packages \
-  norfair==2.3.0
-
 # Install GeographicLib datasets required by MAVROS
 RUN "/opt/ros/${ROS_DISTRO}/lib/mavros/install_geographiclib_datasets.sh"
 

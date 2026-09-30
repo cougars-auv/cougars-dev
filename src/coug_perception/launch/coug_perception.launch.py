@@ -67,6 +67,8 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
     }
     labels_filename = launch_params["labels_file"]
     labels_file = os.path.join(coug_perception_dir, "config", labels_filename)
+    sizes_filename = launch_params["sizes_file"]
+    sizes_file = os.path.join(coug_perception_dir, "config", sizes_filename)
 
     return [
         Node(
@@ -85,17 +87,6 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
         ),
         Node(
             package="coug_perception",
-            executable="cluster_detections",
-            name="cluster_detections_node",
-            parameters=[
-                fleet_param_file,
-                agent_param_file,
-                scenario_param_file,
-                {"use_sim_time": use_sim_time},
-            ],
-        ),
-        Node(
-            package="coug_perception",
             executable="detection_fusion",
             name="detection_fusion_node",
             parameters=[
@@ -105,6 +96,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                 {
                     "use_sim_time": use_sim_time,
                     "labels_file": labels_file,
+                    "sizes_file": sizes_file,
                 },
             ],
         ),
