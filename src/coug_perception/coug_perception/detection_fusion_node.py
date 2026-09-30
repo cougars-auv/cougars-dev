@@ -67,12 +67,12 @@ class DetectionFusionNode(Node):
         self._boxes_sub = message_filters.Subscriber(
             self, Detection2DArray, boxes_topic, qos_profile=qos_profile_system_default
         )
-        self._camera_info_sub = self.create_subscription(
-            CameraInfo, camera_info_topic, self._camera_info_callback, qos_profile_sensor_data
+        self._camera_info_sub = message_filters.Subscriber(
+            self, CameraInfo, camera_info_topic, qos_profile=qos_profile_sensor_data
         )
 
         self._time_sync = message_filters.ApproximateTimeSynchronizer(
-            [self._input_sub, self._boxes_sub],
+            [self._input_sub, self._boxes_sub, self._camera_info_sub],
             queue_size=20,
             slop=sync_slop_sec,
         )
@@ -86,17 +86,16 @@ class DetectionFusionNode(Node):
 
         self.get_logger().info("Initialization complete.")
 
-    def _camera_info_callback(self, msg: CameraInfo) -> None:
-        if self._camera_model is None:
-            camera_model = PinholeCameraModel()
-            camera_model.from_camera_info(msg)
-            self._camera_model = camera_model
-
     def _sync_callback(
-        self, detections_msg: Detection3DArray, boxes_msg: Detection2DArray, /
+        self,
+        detections_msg: Detection3DArray,
+        boxes_msg: Detection2DArray,
+        info_msg: CameraInfo,
+        /,
     ) -> None:
         if self._camera_model is None:
-            return
+            self._camera_model = PinholeCameraModel()
+            self._camera_model.from_camera_info(info_msg)
 
         names, rects = [], []
         for box in boxes_msg.detections:
