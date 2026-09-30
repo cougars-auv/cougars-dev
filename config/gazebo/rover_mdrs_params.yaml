@@ -9,7 +9,7 @@
 
   coug_terrain_launch:
     ros__parameters:
-      dem_file: "mdrs_usgs3dep_1m.vrt"
+      dem_file: "mdrs_usgs3dep_opr_50cm.vrt"
       dsm_file: "mdrs_ugrc_dsm_50cm.vrt"
       dsm_dem_file: "mdrs_usgs3dep_opr_50cm.vrt"
 
@@ -35,12 +35,12 @@ mapviz:
       use_parameter_origin: true
       origin_latitude: 38.406 # [deg]
       origin_longitude: -110.792 # [deg]
-      origin_altitude: 1373.153 # [m]
+      origin_altitude: 1352.274 # [m]
 
 /rover1gz:
   sim_launch:
     ros__parameters:
-      location: [-12.0, -14.0, -0.81] # [x, y, z] [m]
+      location: [5.0, 30.0, -0.19] # [x, y, z] [m]
       rotation: [0.0, 0.0, 0.0] # [roll, pitch, yaw] [deg]
 
   global_costmap:
