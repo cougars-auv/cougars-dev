@@ -47,6 +47,7 @@ class LandmarkTrackerNode(Node):
         self.declare_parameter("distance_threshold", 1.0)
         self.declare_parameter("relabel_distance_threshold", 0.4)
         self.declare_parameter("initialization_delay", 10)
+        self.declare_parameter("tf_timeout_sec", 0.1)
         self.declare_parameter("input_topic", "detections_3d_labeled")
         self.declare_parameter("output_topic", "landmarks")
         self.declare_parameter("marker_topic", "landmarks/markers")
@@ -55,6 +56,7 @@ class LandmarkTrackerNode(Node):
         self._distance_threshold = self.get_parameter("distance_threshold").value
         self._relabel_distance_threshold = self.get_parameter("relabel_distance_threshold").value
         initialization_delay = self.get_parameter("initialization_delay").value
+        self._tf_timeout_sec = self.get_parameter("tf_timeout_sec").value
         input_topic = self.get_parameter("input_topic").value
         output_topic = self.get_parameter("output_topic").value
         marker_topic = self.get_parameter("marker_topic").value
@@ -71,7 +73,7 @@ class LandmarkTrackerNode(Node):
         )
 
         self._tf_buffer = Buffer()
-        self._tf_listener = TransformListener(self._tf_buffer, self)
+        self._tf_listener = TransformListener(self._tf_buffer, self, spin_thread=True)
 
         self._input_sub = self.create_subscription(
             Detection3DArray, input_topic, self._detections_callback, qos_profile_system_default
@@ -88,12 +90,12 @@ class LandmarkTrackerNode(Node):
         self.get_logger().info("Initialization complete.")
 
     def _detections_callback(self, msg: Detection3DArray) -> None:
-        stamp = rclpy.time.Time.from_msg(msg.header.stamp)
-        if not self._tf_buffer.can_transform(self._map_frame, msg.header.frame_id, stamp):
-            stamp = rclpy.time.Time()
         try:
             map_T_sensor_tf = self._tf_buffer.lookup_transform(
-                self._map_frame, msg.header.frame_id, stamp
+                self._map_frame,
+                msg.header.frame_id,
+                rclpy.time.Time.from_msg(msg.header.stamp),
+                timeout=rclpy.duration.Duration(seconds=self._tf_timeout_sec),
             )
         except TransformException as e:
             self.get_logger().warning(
