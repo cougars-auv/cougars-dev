@@ -5,7 +5,7 @@
 
   bag_recorder_node:
     ros__parameters:
-      publish_diagnostics: true
+      publish_diagnostics: false
       bag_record_service: "bag_record"
 
   rgb_ffmpeg_republish_node:
