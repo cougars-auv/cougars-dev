@@ -33,7 +33,7 @@ class BoxOverlayNode(Node):
         self.declare_parameter("sync_slop_sec", 0.05)
         self.declare_parameter("image_topic", "camera/rgb/image_rect_color")
         self.declare_parameter("boxes_topic", "camera/boxes")
-        self.declare_parameter("output_topic", "camera/boxes_overlay")
+        self.declare_parameter("output_topic", "camera/boxes/image")
 
         with open(self.get_parameter("labels_file").value) as f:
             self._labels = {str(label): name for label, name in yaml.safe_load(f).items()}

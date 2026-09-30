@@ -14,11 +14,11 @@
 
 import itertools
 
+import message_filters
 import numpy as np
 import rclpy
 import yaml
 from image_geometry import PinholeCameraModel
-from rclpy.duration import Duration
 from rclpy.node import Node
 from rclpy.qos import qos_profile_sensor_data, qos_profile_system_default
 from scipy.spatial.transform import Rotation
@@ -42,7 +42,7 @@ class DetectionFusionNode(Node):
         super().__init__("detection_fusion_node")
 
         self.declare_parameter("labels_file", "")
-        self.declare_parameter("boxes_timeout_sec", 0.3)
+        self.declare_parameter("sync_slop_sec", 0.05)
         self.declare_parameter("min_iou", 0.1)
         self.declare_parameter("input_topic", "detections_3d")
         self.declare_parameter("boxes_topic", "camera/boxes")
@@ -51,7 +51,7 @@ class DetectionFusionNode(Node):
 
         with open(self.get_parameter("labels_file").value) as f:
             self._labels = {str(label): name for label, name in yaml.safe_load(f).items()}
-        self._boxes_timeout = Duration(seconds=self.get_parameter("boxes_timeout_sec").value)
+        sync_slop_sec = self.get_parameter("sync_slop_sec").value
         self._min_iou = self.get_parameter("min_iou").value
         input_topic = self.get_parameter("input_topic").value
         boxes_topic = self.get_parameter("boxes_topic").value
@@ -61,21 +61,28 @@ class DetectionFusionNode(Node):
         self._tf_buffer = Buffer()
         self._tf_listener = TransformListener(self._tf_buffer, self)
 
-        self._input_sub = self.create_subscription(
-            Detection3DArray, input_topic, self._detections_callback, qos_profile_system_default
+        self._input_sub = message_filters.Subscriber(
+            self, Detection3DArray, input_topic, qos_profile=qos_profile_system_default
         )
-        self._boxes_sub = self.create_subscription(
-            Detection2DArray, boxes_topic, self._boxes_callback, qos_profile_system_default
+        self._boxes_sub = message_filters.Subscriber(
+            self, Detection2DArray, boxes_topic, qos_profile=qos_profile_system_default
         )
         self._camera_info_sub = self.create_subscription(
             CameraInfo, camera_info_topic, self._camera_info_callback, qos_profile_sensor_data
         )
+
+        self._time_sync = message_filters.ApproximateTimeSynchronizer(
+            [self._input_sub, self._boxes_sub],
+            queue_size=20,
+            slop=sync_slop_sec,
+        )
+        self._time_sync.registerCallback(self._sync_callback)
+
         self._output_pub = self.create_publisher(
             Detection3DArray, output_topic, qos_profile_system_default
         )
 
         self._camera_model: PinholeCameraModel | None = None
-        self._boxes_msg: Detection2DArray | None = None
 
         self.get_logger().info("Initialization complete.")
 
@@ -85,20 +92,14 @@ class DetectionFusionNode(Node):
             camera_model.from_camera_info(msg)
             self._camera_model = camera_model
 
-    def _boxes_callback(self, msg: Detection2DArray) -> None:
-        self._boxes_msg = msg
-
-    def _detections_callback(self, msg: Detection3DArray) -> None:
-        if (
-            self._camera_model is None
-            or self._boxes_msg is None
-            or self.get_clock().now() - rclpy.time.Time.from_msg(self._boxes_msg.header.stamp)
-            > self._boxes_timeout
-        ):
+    def _sync_callback(
+        self, detections_msg: Detection3DArray, boxes_msg: Detection2DArray, /
+    ) -> None:
+        if self._camera_model is None:
             return
 
         names, rects = [], []
-        for box in self._boxes_msg.detections:
+        for box in boxes_msg.detections:
             if box.results and box.results[0].hypothesis.class_id in self._labels:
                 names.append(self._labels[box.results[0].hypothesis.class_id])
                 center = box.bbox.center.position
@@ -114,11 +115,11 @@ class DetectionFusionNode(Node):
         camera_frame = self._camera_model.get_tf_frame()
         try:
             camera_T_sensor_tf = self._tf_buffer.lookup_transform(
-                camera_frame, msg.header.frame_id, rclpy.time.Time()
+                camera_frame, detections_msg.header.frame_id, rclpy.time.Time()
             )
         except TransformException as e:
             self.get_logger().warning(
-                f"Failed to look up transform from '{msg.header.frame_id}' to '{camera_frame}': {e}",
+                f"Failed to look up transform from '{detections_msg.header.frame_id}' to '{camera_frame}': {e}",
                 throttle_duration_sec=1.0,
             )
             return
@@ -133,8 +134,8 @@ class DetectionFusionNode(Node):
         image_size = (self._camera_model.width, self._camera_model.height)
 
         labeled_msg = Detection3DArray()
-        labeled_msg.header = msg.header
-        for detection in msg.detections:
+        labeled_msg.header = detections_msg.header
+        for detection in detections_msg.detections:
             q = detection.bbox.center.orientation
             sensor_R_box = Rotation.from_quat([q.x, q.y, q.z, q.w])
             center = detection.bbox.center.position
