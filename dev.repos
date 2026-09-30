@@ -33,5 +33,5 @@ repositories:
     version: voxblox_ros2-ros2
   vrx:
     type: zip
-    url: https://github.com/osrf/vrx/archive/refs/tags/v3.1.2.zip
-    version: vrx-3.1.2
+    url: https://github.com/cougars-auv/vrx/archive/refs/heads/jazzy.zip
+    version: vrx-jazzy

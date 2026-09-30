@@ -49,7 +49,7 @@ repositories:
     version: ground_segmentation_ros2-master
   lidar_cluster_ros2:
     type: zip
-    url: https://github.com/jkk-research/lidar_cluster_ros2/archive/refs/heads/ros2.zip
+    url: https://github.com/cougars-auv/lidar_cluster_ros2/archive/refs/heads/ros2.zip
     version: lidar_cluster_ros2-ros2
   nav2_ground_consistency_costmap_plugin:
     type: zip

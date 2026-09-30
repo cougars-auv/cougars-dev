@@ -83,7 +83,7 @@ class LandmarkTrackerNode(Node):
     def _detections_callback(self, msg: Detection3DArray) -> None:
         try:
             map_T_sensor_tf = self._tf_buffer.lookup_transform(
-                self._map_frame, msg.header.frame_id, rclpy.time.Time()
+                self._map_frame, msg.header.frame_id, rclpy.time.Time.from_msg(msg.header.stamp)
             )
         except TransformException as e:
             self.get_logger().warning(
