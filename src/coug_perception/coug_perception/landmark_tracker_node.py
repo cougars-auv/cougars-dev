@@ -17,6 +17,7 @@ import math
 import cv2
 import numpy as np
 import rclpy
+from builtin_interfaces.msg import Time
 from norfair import Detection, Tracker
 from norfair.filter import NoFilterFactory
 from norfair.tracker import TrackedObject
@@ -110,7 +111,7 @@ class LandmarkTrackerNode(Node):
                 obj.point_hit_counter += 1
 
         self._tracker.update(detections=detections)
-        self._publish_landmarks()
+        self._publish_landmarks(msg.header.stamp)
 
     def _distance(self, detection: Detection, tracked_object: TrackedObject) -> float:
         detection_class, detection_bbox = detection.data
@@ -133,9 +134,9 @@ class LandmarkTrackerNode(Node):
             gaps.append(-cv2.pointPolygonTest(corners, center, True))
         return float(max(min(gaps), 0.0))
 
-    def _publish_landmarks(self) -> None:
+    def _publish_landmarks(self, stamp: Time) -> None:
         landmarks_msg = Detection3DArray()
-        landmarks_msg.header.stamp = self.get_clock().now().to_msg()
+        landmarks_msg.header.stamp = stamp
         landmarks_msg.header.frame_id = self._map_frame
 
         markers_msg = MarkerArray()

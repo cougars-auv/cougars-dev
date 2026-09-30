@@ -8,6 +8,7 @@
   <license>Apache-2.0</license>
 
   <exec_depend>ament_index_python</exec_depend>
+  <exec_depend>builtin_interfaces</exec_depend>
   <exec_depend>cv_bridge</exec_depend>
   <exec_depend>image_geometry</exec_depend>
   <exec_depend>launch</exec_depend>
