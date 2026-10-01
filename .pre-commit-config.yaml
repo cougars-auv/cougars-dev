@@ -16,7 +16,7 @@ repos:
         exclude: |
           (?x)^(.*/)?(
             (config|params)/.*\.ya?ml
-            |(cleanup|metadata)\.yaml
+            |(cleanup|colcon_defaults|metadata)\.yaml
             |(__init__|setup)\.py
             |package\.xml
             |codecov\.yml

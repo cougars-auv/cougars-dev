@@ -59,6 +59,7 @@ services:
       - DISPLAY=${DISPLAY}
       - RMW_IMPLEMENTATION=rmw_zenoh_cpp
       - ROS_DOMAIN_ID=24
+      - COLCON_DEFAULTS_FILE=/home/frostlab-docker/cougars-dev/colcon_defaults.yaml
     volumes:
       - ..:/home/frostlab-docker/cougars-dev
       - /tmp/.X11-unix:/tmp/.X11-unix
