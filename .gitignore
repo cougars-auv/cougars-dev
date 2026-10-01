@@ -9,7 +9,6 @@ bags/*
 
 /src/*
 !/src/coug_bringup/
-!/src/coug_perception/
 
 /build/
 /install/
