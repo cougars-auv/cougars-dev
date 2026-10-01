@@ -38,7 +38,7 @@
       maxZ: 100.0 # [m]
       minZ: -100.0 # [m]
       downsample: true
-      downsample_resolution: 0.1 # [m]
+      downsample_resolution: 0.05 # [m]
       lidar_to_ground: -0.875 # [m] Camera to ground along base frame Z.
       transform_tolerance: 0.1 # [s]
 

@@ -21,7 +21,7 @@ _CLASS_COLORS = {
     "orange": (1.0, 0.5, 0.0),
     "blue": (0.0, 0.3, 1.0),
 }
-_DEFAULT_COLOR = (0.6, 0.6, 0.6)
+_DEFAULT_COLOR = (1.0, 1.0, 1.0)
 
 
 def class_color(class_name: str) -> tuple[float, float, float]:

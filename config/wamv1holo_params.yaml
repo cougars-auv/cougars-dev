@@ -63,6 +63,7 @@
           offset_from_furthest: 2 # [poses]
 
         PathAngleCritic:
+          cost_weight: 4.0
           offset_from_furthest: 2 # [poses]
 
         PathFollowCritic:
