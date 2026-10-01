@@ -1,0 +1,68 @@
+/**:
+  coug_perception_launch:
+    ros__parameters:
+      labels_file: "roboboat_labels.yaml"
+      sizes_file: "roboboat_sizes.yaml"
+
+  box_overlay_node:
+    ros__parameters:
+      # --- Node Settings ---
+      sync_slop_sec: 0.05 # [s]
+
+      # --- ROS Topics ---
+      image_topic: "camera/rgb/image_rect_color"
+      boxes_topic: "camera/boxes"
+      output_topic: "camera/boxes/image"
+
+  detection_fusion_node:
+    ros__parameters:
+      # --- Node Settings ---
+      sync_slop_sec: 0.05 # [s]
+      min_iou: 0.1
+      min_heading_ratio: 1.5
+      transform_timeout_sec: 0.1 # [s]
+
+      # --- ROS Topics and Frames ---
+      input_topic: "clusters/points"
+      boxes_topic: "camera/boxes"
+      camera_info_topic: "camera/rgb/camera_info"
+      output_topic: "detections_3d_labeled"
+      map_frame: "map"
+
+  landmark_tracker_node:
+    ros__parameters:
+      # --- Node Settings ---
+      distance_threshold: 0.4 # [m] Gap from a detection to a landmark footprint for a match.
+      pose_gain: 0.4
+      class_gain: 0.2
+      min_hits: 10 # Hits before a landmark is published.
+      max_misses: 10 # Misses before an unpublished landmark is dropped.
+      max_unseen: 30 # Misses in view before a published landmark is dropped.
+      max_range: 10.0 # [m]
+      transform_timeout_sec: 0.1 # [s]
+
+      # --- ROS Topics and Frames ---
+      input_topic: "detections_3d_labeled"
+      camera_info_topic: "camera/rgb/camera_info"
+      output_topic: "landmarks"
+      marker_topic: "landmarks/markers"
+      map_frame: "map"
+
+  euclidean_cluster_node:
+    ros__parameters:
+      minX: -13.5 # [m]
+      maxX: 13.5 # [m]
+      minY: -13.5 # [m]
+      maxY: 13.5 # [m]
+      minZ: 0.15 # [m]
+      maxZ: 3.0 # [m]
+      tolerance: 0.5 # [m]
+      min_cluster_size: 3
+      max_cluster_size: 20000
+      use_height: false
+      verbose1: false
+      verbose2: false
+
+      points_in_topic: "ground_segmentation/obstacle_points"
+      points_out_topic: "clusters/points"
+      marker_out_topic: "clusters/markers"

@@ -62,8 +62,8 @@ class LandmarkTrackerNode(Node):
         self.declare_parameter("min_hits", 10)
         self.declare_parameter("max_misses", 10)
         self.declare_parameter("max_unseen", 30)
-        self.declare_parameter("view_range", 10.0)
-        self.declare_parameter("tf_timeout_sec", 0.1)
+        self.declare_parameter("max_range", 10.0)
+        self.declare_parameter("transform_timeout_sec", 0.1)
         self.declare_parameter("input_topic", "detections_3d_labeled")
         self.declare_parameter("camera_info_topic", "camera/rgb/camera_info")
         self.declare_parameter("output_topic", "landmarks")
@@ -76,8 +76,8 @@ class LandmarkTrackerNode(Node):
         self._min_hits = self.get_parameter("min_hits").value
         self._max_misses = self.get_parameter("max_misses").value
         self._max_unseen = self.get_parameter("max_unseen").value
-        self._view_range = self.get_parameter("view_range").value
-        self._tf_timeout_sec = self.get_parameter("tf_timeout_sec").value
+        self._max_range = self.get_parameter("max_range").value
+        self._transform_timeout_sec = self.get_parameter("transform_timeout_sec").value
         input_topic = self.get_parameter("input_topic").value
         camera_info_topic = self.get_parameter("camera_info_topic").value
         output_topic = self.get_parameter("output_topic").value
@@ -114,7 +114,7 @@ class LandmarkTrackerNode(Node):
 
     def _detections_callback(self, msg: Detection3DArray) -> None:
         stamp = rclpy.time.Time.from_msg(msg.header.stamp)
-        timeout = rclpy.duration.Duration(seconds=self._tf_timeout_sec)
+        timeout = rclpy.duration.Duration(seconds=self._transform_timeout_sec)
         try:
             map_T_sensor_tf = self._tf_buffer.lookup_transform(
                 self._map_frame, msg.header.frame_id, stamp, timeout=timeout
@@ -172,7 +172,7 @@ class LandmarkTrackerNode(Node):
                 for landmark in self._landmarks:
                     p = landmark.bbox.center.position
                     camera_p_landmark = camera_R_map.apply([p.x, p.y, p.z]) + camera_p_map
-                    if not 0.0 < camera_p_landmark[2] <= self._view_range:
+                    if not 0.0 < camera_p_landmark[2] <= self._max_range:
                         continue
                     u, v = self._camera_model.project_3d_to_pixel(camera_p_landmark)
                     if 0.0 <= u < width and 0.0 <= v < height:

@@ -48,7 +48,7 @@ class DetectionFusionNode(Node):
         self.declare_parameter("sync_slop_sec", 0.05)
         self.declare_parameter("min_iou", 0.1)
         self.declare_parameter("min_heading_ratio", 1.5)
-        self.declare_parameter("tf_timeout_sec", 0.1)
+        self.declare_parameter("transform_timeout_sec", 0.1)
         self.declare_parameter("input_topic", "clusters/points")
         self.declare_parameter("boxes_topic", "camera/boxes")
         self.declare_parameter("camera_info_topic", "camera/rgb/camera_info")
@@ -65,7 +65,7 @@ class DetectionFusionNode(Node):
         sync_slop_sec = self.get_parameter("sync_slop_sec").value
         self._min_iou = self.get_parameter("min_iou").value
         self._min_heading_ratio = self.get_parameter("min_heading_ratio").value
-        self._tf_timeout_sec = self.get_parameter("tf_timeout_sec").value
+        self._transform_timeout_sec = self.get_parameter("transform_timeout_sec").value
         input_topic = self.get_parameter("input_topic").value
         boxes_topic = self.get_parameter("boxes_topic").value
         camera_info_topic = self.get_parameter("camera_info_topic").value
@@ -133,7 +133,7 @@ class DetectionFusionNode(Node):
                 clusters_msg.header.frame_id,
                 rclpy.time.Time.from_msg(clusters_msg.header.stamp),
                 self._map_frame,
-                timeout=rclpy.duration.Duration(seconds=self._tf_timeout_sec),
+                timeout=rclpy.duration.Duration(seconds=self._transform_timeout_sec),
             )
         except TransformException as e:
             self.get_logger().warning(
