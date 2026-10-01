@@ -78,7 +78,7 @@
   dvl_odom_converter_node:
     ros__parameters:
       # --- Node Settings ---
-      tf_timeout_sec: 0.1 # [s] How long to wait for the map transform.
+      transform_timeout_sec: 0.1 # [s]
 
       # https://waterlinked.com/dvl-a50
       position_noise_sigma_scale: 0.0101 # [m/m]
@@ -246,7 +246,7 @@
     ros__parameters:
       # --- Node Settings ---
       publish_tf: false # Whether to publish the map -> base transform
-      tf_timeout_sec: 0.1 # [s] How long to wait for the map transform.
+      transform_timeout_sec: 0.1 # [s]
 
       # --- ROS Topics and Frames ---
       input_topic: "DynamicsSensorOdom"
