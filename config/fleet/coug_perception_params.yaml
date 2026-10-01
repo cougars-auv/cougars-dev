@@ -46,6 +46,7 @@
       camera_info_topic: "camera/rgb/camera_info"
       output_topic: "landmarks"
       marker_topic: "landmarks/markers"
+      label_topic: "landmarks/labels"
       map_frame: "map"
 
   euclidean_cluster_node:

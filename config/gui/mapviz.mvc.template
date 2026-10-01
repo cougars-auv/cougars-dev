@@ -163,6 +163,43 @@ displays:
       qos_history: 1
       qos_reliability: 1
       qos_durability: 2
+  - type: mapviz_plugins/pointcloud2
+    name: Clusters
+    config:
+      visible: false
+      collapsed: true
+      topic: /<agent_ns>/clusters/points
+      size: 1
+      buffer_size: 1
+      alpha: 1
+      color_transformer: intensity
+      use_rainbow: true
+      use_automaxmin: true
+      unpack_rgb: false
+      qos_depth: 10
+      qos_history: 1
+      qos_reliability: 1
+      qos_durability: 2
+  - type: mapviz_plugins/marker
+    name: Landmarks
+    config:
+      visible: false
+      collapsed: true
+      topic: /<agent_ns>/landmarks/markers
+      qos_depth: 10
+      qos_history: 1
+      qos_reliability: 1
+      qos_durability: 2
+  - type: mapviz_plugins/marker
+    name: Landmark Labels
+    config:
+      visible: false
+      collapsed: true
+      topic: /<agent_ns>/landmarks/labels
+      qos_depth: 10
+      qos_history: 1
+      qos_reliability: 1
+      qos_durability: 2
   - type: mapviz_plugins/tf_frame
     name: Robot
     config:

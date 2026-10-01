@@ -68,6 +68,7 @@ class LandmarkTrackerNode(Node):
         self.declare_parameter("camera_info_topic", "camera/rgb/camera_info")
         self.declare_parameter("output_topic", "landmarks")
         self.declare_parameter("marker_topic", "landmarks/markers")
+        self.declare_parameter("label_topic", "landmarks/labels")
         self.declare_parameter("map_frame", "map")
 
         self._distance_threshold = self.get_parameter("distance_threshold").value
@@ -82,6 +83,7 @@ class LandmarkTrackerNode(Node):
         camera_info_topic = self.get_parameter("camera_info_topic").value
         output_topic = self.get_parameter("output_topic").value
         marker_topic = self.get_parameter("marker_topic").value
+        label_topic = self.get_parameter("label_topic").value
         self._map_frame = self.get_parameter("map_frame").value
 
         self._tf_buffer = Buffer()
@@ -98,6 +100,9 @@ class LandmarkTrackerNode(Node):
         )
         self._marker_pub = self.create_publisher(
             MarkerArray, marker_topic, qos_profile_system_default
+        )
+        self._label_pub = self.create_publisher(
+            MarkerArray, label_topic, qos_profile_system_default
         )
 
         self._landmarks: list[Landmark] = []
@@ -228,10 +233,10 @@ class LandmarkTrackerNode(Node):
         landmarks_msg.header.stamp = msg.header.stamp
         landmarks_msg.header.frame_id = self._map_frame
 
-        markers_msg = MarkerArray()
         clear_marker = Marker()
         clear_marker.action = Marker.DELETEALL
-        markers_msg.markers.append(clear_marker)
+        markers_msg = MarkerArray(markers=[clear_marker])
+        labels_msg = MarkerArray(markers=[clear_marker])
 
         for landmark in self._landmarks:
             if landmark.hits < self._min_hits:
@@ -291,10 +296,11 @@ class LandmarkTrackerNode(Node):
                 label_marker.text += f" {class_share:.0%}"
             if landmark.misses > 0:
                 label_marker.text += f" missed {landmark.misses}"
-            markers_msg.markers.append(label_marker)
+            labels_msg.markers.append(label_marker)
 
         self._output_pub.publish(landmarks_msg)
         self._marker_pub.publish(markers_msg)
+        self._label_pub.publish(labels_msg)
 
     def _smooth_pose(self, landmark: Landmark, bbox: BoundingBox3D) -> None:
         previous, current = landmark.bbox.center, bbox.center

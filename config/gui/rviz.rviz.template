@@ -856,6 +856,16 @@ Visualization Manager:
         Reliability Policy: Reliable
         Value: /<agent_ns>/landmarks/markers
       Value: false
+    - Class: rviz_default_plugins/MarkerArray
+      Enabled: false
+      Name: Landmark Labels
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /<agent_ns>/landmarks/labels
+      Value: false
     - Class: voxblox_rviz_plugin/VoxbloxMesh
       Enabled: true
       Name: VoxbloxMesh
