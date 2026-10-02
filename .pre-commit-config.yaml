@@ -63,7 +63,7 @@ repos:
     rev: v2.4.3
     hooks:
       - id: codespell
-        args: ["--ignore-words-list=fom,ned,te", "--write-changes"]
+        args: ["--ignore-words-list=fom,ned,sitl,te", "--write-changes"]
 
   - repo: https://github.com/BlankSpruce/gersemi-pre-commit
     rev: 0.28.1

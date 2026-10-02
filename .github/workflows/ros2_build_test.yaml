@@ -78,6 +78,7 @@ jobs:
           DOCKER_IMAGE: ${{ env.DOCKER_REPO }}:${{ matrix.target }}-latest
           DOCKER_PULL: true
           UPSTREAM_WORKSPACE: ${{ matrix.repos }}
+          ROSDEP_SKIP_KEYS: "gz-cmake3 gz-sim8"
           TARGET_WORKSPACE: src
           CCACHE_DIR: ${{ github.workspace }}/.ccache
           BASEDIR: ${{ github.workspace }}/.work

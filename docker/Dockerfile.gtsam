@@ -20,8 +20,6 @@ FROM ubuntu:24.04 AS builder
 ARG DEBIAN_FRONTEND=noninteractive \
   GTSAM_VERSION=4.3a1
 
-SHELL [ "/bin/bash", "-c" ]
-
 # Install build tools
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
   --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \

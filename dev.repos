@@ -1,4 +1,8 @@
 repositories:
+  ardupilot_gazebo:
+    type: zip
+    url: https://github.com/ArduPilot/ardupilot_gazebo/archive/refs/heads/main.zip
+    version: ardupilot_gazebo-main
   coug_gazebo:
     type: git
     url: git@github.com:cougars-auv/coug_gazebo.git
