@@ -88,6 +88,8 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
     playback_rate = LaunchConfiguration("playback_rate")
     start_paused = LaunchConfiguration("start_paused")
     loc_comparison = LaunchConfiguration("loc_comparison")
+    lead_agent = LaunchConfiguration("lead_agent")
+    enable_mapping = LaunchConfiguration("enable_mapping")
     hitl_mode = LaunchConfiguration("hitl_mode")
 
     agent_list_str = agent_list_config.perform(context)
@@ -95,16 +97,12 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
     record_bag_path_str = record_bag_path.perform(context)
 
     agent_list = yaml.safe_load(agent_list_str)
-    agent_ns = agent_list[0]
 
     coug_bringup_dir = get_package_share_directory("coug_bringup")
     coug_bringup_launch_dir = os.path.join(coug_bringup_dir, "launch")
 
     fleet_param_file = PathJoinSubstitution(
         [EnvironmentVariable("CONFIG_DIR"), "fleet", "coug_bringup_params.yaml"]
-    )
-    agent_param_file = PathJoinSubstitution(
-        [EnvironmentVariable("CONFIG_DIR"), f"{agent_ns}_params.yaml"]
     )
 
     actions: list[Action] = []
@@ -149,30 +147,26 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
         atexit.register(save_artifacts, record_bag_path_str, config_snapshot)
 
     if play_bag_path_str:
-        start_paused_args = (
-            ["--start-paused"] if IfCondition(start_paused).evaluate(context) else []
-        )
-        play_process = ExecuteProcess(
-            cmd=[
-                "ros2",
-                "bag",
-                "play",
-                play_bag_path_str,
-                "--clock",
-                "--start-offset",
-                start_offset,
-                "--playback-duration",
-                playback_duration,
-                "--rate",
-                playback_rate,
-                *start_paused_args,
-                "--remap",
-                # FROST Lab BlueROV2 bags
-                "/tf:=/tf_discard",
-                "/tf_static:=/tf_static_discard",
-                "/diagnostics:=/diagnostics_discard",
-                "/diagnostics_agg:=/diagnostics_agg_discard",
-                "/origin:=/origin_discard",
+        remaps = [
+            "/tf:=/tf_discard",
+            "/tf_static:=/tf_static_discard",
+            "/diagnostics:=/diagnostics_discard",
+            "/diagnostics_agg:=/diagnostics_agg_discard",
+            "/origin:=/origin_discard",
+            f"/pressure/data:=/{agent_list[0]}/pressure/data",
+            f"/fix:=/{agent_list[0]}/gps/fix",
+            f"/dvl/position:=/{agent_list[0]}/dvl/position",
+            f"/dvl/data:=/{agent_list[0]}/dvl/data",
+            f"/modem_status:=/{agent_list[0]}/modem_status",
+            f"/nav/filtered_imu/data:=/{agent_list[0]}/imu/data_ned",
+            f"/BlueROV/pressure2_fluid:=/{agent_list[0]}/pressure/data",
+            (
+                "/zedm/zed_node/point_cloud/cloud_registered:="
+                f"/{agent_list[0]}/camera/point_cloud/cloud_registered"
+            ),
+        ]
+        for agent_ns in agent_list:
+            remaps += [
                 f"/{agent_ns}/robot_description:=/{agent_ns}/robot_description_discard",
                 f"/{agent_ns}/odometry/local:=/{agent_ns}/odometry/local_discard",
                 f"/{agent_ns}/odometry/global:=/{agent_ns}/odometry/global_discard",
@@ -199,15 +193,27 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                 f"/{agent_ns}/imu/nav_sat_fix:=/{agent_ns}/gps/fix",
                 f"/{agent_ns}/imu/mag:=/{agent_ns}/imu/mag_au",
                 f"/{agent_ns}/shallow/pressure/data:=/{agent_ns}/pressure/data",
-                # FROST Lab CougUV bags
-                f"/pressure/data:=/{agent_ns}/pressure/data",
-                f"/fix:=/{agent_ns}/gps/fix",
-                f"/dvl/position:=/{agent_ns}/dvl/position",
-                f"/dvl/data:=/{agent_ns}/dvl/data",
-                f"/modem_status:=/{agent_ns}/modem_status",
-                # TURTLMap bags
-                f"/nav/filtered_imu/data:=/{agent_ns}/imu/data_ned",
-                f"/BlueROV/pressure2_fluid:=/{agent_ns}/pressure/data",
+            ]
+
+        start_paused_args = (
+            ["--start-paused"] if IfCondition(start_paused).evaluate(context) else []
+        )
+        play_process = ExecuteProcess(
+            cmd=[
+                "ros2",
+                "bag",
+                "play",
+                play_bag_path_str,
+                "--clock",
+                "--start-offset",
+                start_offset,
+                "--playback-duration",
+                playback_duration,
+                "--rate",
+                playback_rate,
+                *start_paused_args,
+                "--remap",
+                *remaps,
             ],
         )
         actions.append(play_process)
@@ -239,40 +245,47 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
             launch_arguments={
                 "use_sim_time": use_sim_time,
                 "agent_list": agent_list_config,
+                "lead_agent": lead_agent,
                 "record_bag_path": "",
             }.items(),
         )
     )
 
-    actions.append(
-        IncludeLaunchDescription(
-            PythonLaunchDescriptionSource(os.path.join(coug_bringup_launch_dir, "agent.launch.py")),
-            launch_arguments={
-                "use_sim_time": use_sim_time,
-                "agent_ns": agent_ns,
-                "loc_comparison": loc_comparison,
-            }.items(),
-            condition=UnlessCondition(hitl_mode),
-        )
-    )
-
-    if agent_ns == "bluerov2":
+    for agent_ns in agent_list:
         actions.append(
-            Node(
-                package="tf2_ros",
-                executable="static_transform_publisher",
-                name="sonar_link_to_sonar_frame_transform",
-                arguments=[
-                    "--frame-id",
-                    agent_frame(agent_ns, "sonar_link"),
-                    "--child-frame-id",
-                    "sonar_frame",
-                ],
-                parameters=[{"use_sim_time": use_sim_time}],
+            IncludeLaunchDescription(
+                PythonLaunchDescriptionSource(
+                    os.path.join(coug_bringup_launch_dir, "agent.launch.py")
+                ),
+                launch_arguments={
+                    "use_sim_time": use_sim_time,
+                    "agent_ns": agent_ns,
+                    "loc_comparison": loc_comparison,
+                    "lead_agent": lead_agent,
+                }.items(),
+                condition=UnlessCondition(hitl_mode),
             )
         )
 
-    if agent_ns == "turtlmap":
+        if agent_ns == "bluerov2":
+            actions.append(
+                Node(
+                    package="tf2_ros",
+                    executable="static_transform_publisher",
+                    name="sonar_link_to_sonar_frame_transform",
+                    arguments=[
+                        "--frame-id",
+                        agent_frame(agent_ns, "sonar_link"),
+                        "--child-frame-id",
+                        "sonar_frame",
+                    ],
+                    parameters=[{"use_sim_time": use_sim_time}],
+                )
+            )
+
+        agent_param_file = PathJoinSubstitution(
+            [EnvironmentVariable("CONFIG_DIR"), f"{agent_ns}_params.yaml"]
+        )
         actions.append(
             GroupAction(
                 actions=[
@@ -281,6 +294,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                         package="voxblox_ros",
                         executable="tsdf_server",
                         name="voxblox_node",
+                        condition=IfCondition(enable_mapping),
                         parameters=[
                             fleet_param_file,
                             agent_param_file,
@@ -290,7 +304,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                             },
                         ],
                         remappings=[
-                            ("pointcloud_1", "/zedm/zed_node/point_cloud/cloud_registered"),
+                            ("pointcloud_1", "camera/point_cloud/cloud_registered"),
                         ],
                     ),
                 ]
@@ -338,6 +352,14 @@ def generate_launch_description() -> LaunchDescription:
             ),
             DeclareLaunchArgument(
                 "loc_comparison",
+                default_value="false",
+            ),
+            DeclareLaunchArgument(
+                "lead_agent",
+                default_value="",
+            ),
+            DeclareLaunchArgument(
+                "enable_mapping",
                 default_value="false",
             ),
             DeclareLaunchArgument(

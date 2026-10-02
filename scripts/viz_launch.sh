@@ -24,10 +24,15 @@ bag_name=$(cd "${BAGS_DIR}" && find . -name metadata.yaml -printf '%h\n' |
 [[ -z ${bag_name} ]] && exit 0
 play_bag_path="${BAGS_DIR}/${bag_name}"
 
-agent_ns=$(basename -s _params.yaml -a "${CONFIG_DIR}"/*_params.yaml |
-  gum filter --placeholder "Select an agent to visualize...") || exit 0
-[[ -z ${agent_ns} ]] && exit 0
-agent_list="[${agent_ns}]"
+while true; do
+  selected_agents=$(basename -s _params.yaml -a "${CONFIG_DIR}"/*_params.yaml |
+    gum choose --no-limit --header "Select agents to visualize:") || exit 0
+  [[ -n ${selected_agents} ]] && break
+done
+
+mapfile -t selected_agents <<<"${selected_agents}"
+agent_list=$(printf '%s,' "${selected_agents[@]}")
+agent_list="[${agent_list%,}]"
 
 # --- Options ---
 options=$(gum choose --no-limit --header "Select options:" \

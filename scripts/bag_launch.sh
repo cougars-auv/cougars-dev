@@ -24,10 +24,15 @@ bag_name=$(cd "${BAGS_DIR}" && find . -name metadata.yaml -printf '%h\n' |
 [[ -z ${bag_name} ]] && exit 0
 play_bag_path="${BAGS_DIR}/${bag_name}"
 
-agent_ns=$(basename -s _params.yaml -a "${CONFIG_DIR}"/*_params.yaml |
-  gum filter --placeholder "Select an agent to launch...") || exit 0
-[[ -z ${agent_ns} ]] && exit 0
-agent_list="[${agent_ns}]"
+while true; do
+  selected_agents=$(basename -s _params.yaml -a "${CONFIG_DIR}"/*_params.yaml |
+    gum choose --no-limit --header "Select agents to launch:") || exit 0
+  [[ -n ${selected_agents} ]] && break
+done
+
+mapfile -t selected_agents <<<"${selected_agents}"
+agent_list=$(printf '%s,' "${selected_agents[@]}")
+agent_list="[${agent_list%,}]"
 
 # --- Options ---
 options=$(gum choose --no-limit --header "Select options:" \
@@ -37,6 +42,8 @@ options=$(gum choose --no-limit --header "Select options:" \
   "Set playback rate" \
   "Start paused" \
   "Localization comparison" \
+  "Specify lead agent" \
+  "Enable voxblox mapping" \
   "HITL mode") || exit 0
 
 launch_args=(
@@ -76,6 +83,15 @@ fi
 
 if [[ "${options}" == *"Localization comparison"* ]]; then
   launch_args+=("loc_comparison:=true")
+fi
+
+if [[ "${options}" == *"Specify lead agent"* ]]; then
+  lead_agent=$(gum choose --header "Select lead agent:" "${selected_agents[@]}") || exit 0
+  launch_args+=("lead_agent:=${lead_agent}")
+fi
+
+if [[ "${options}" == *"Enable voxblox mapping"* ]]; then
+  launch_args+=("enable_mapping:=true")
 fi
 
 if [[ "${options}" == *"HITL mode"* ]]; then
