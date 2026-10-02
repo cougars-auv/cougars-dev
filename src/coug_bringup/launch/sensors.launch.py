@@ -12,8 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument
+from typing import Any
+
+from launch import LaunchContext, LaunchDescription
+from launch.action import Action
+from launch.actions import DeclareLaunchArgument, OpaqueFunction
 from launch.substitutions import (
     EnvironmentVariable,
     LaunchConfiguration,
@@ -24,7 +27,7 @@ from launch_ros.actions import Node
 # TODO: Hook this launch file in
 
 
-def generate_launch_description() -> LaunchDescription:
+def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Action]:
     agent_ns = LaunchConfiguration("agent_ns")
 
     seatrac_param_file = PathJoinSubstitution(
@@ -55,59 +58,65 @@ def generate_launch_description() -> LaunchDescription:
         [EnvironmentVariable("CONFIG_DIR"), [agent_ns, "_params.yaml"]]
     )
 
+    return [
+        Node(
+            package="dvl_a50",
+            executable="dvl_a50_sensor",
+            name="dvl_a50_sensor",
+            parameters=[dvl_a50_param_file, agent_param_file],
+        ),
+        Node(
+            package="gpsd_client",
+            executable="gpsd_client",
+            name="gpsd_client",
+            parameters=[gpsd_client_param_file, agent_param_file],
+        ),
+        Node(
+            package="seatrac",
+            executable="modem",
+            name="modem",
+            parameters=[seatrac_param_file, agent_param_file],
+        ),
+        Node(
+            package="nmea_gpsd",
+            executable="nmea_gpsd_udp",
+            name="nmea_gpsd_udp",
+            parameters=[nmea_gpsd_param_file, agent_param_file],
+        ),
+        Node(
+            package="ntrip_client",
+            executable="ntrip_ros.py",
+            name="ntrip_client",
+            parameters=[ntrip_client_param_file, agent_param_file],
+        ),
+        Node(
+            package="pressure_sensor",
+            executable="pressure_pub",
+            name="pressure_pub",
+            parameters=[pressure_sensor_param_file, agent_param_file],
+        ),
+        Node(
+            package="sbg_driver",
+            executable="sbg_device",
+            name="sbg_device",
+            parameters=[sbg_driver_param_file, agent_param_file],
+        ),
+        Node(
+            package="topic_monitor",
+            executable="topic_monitor_node",
+            name="topic_monitor_node",
+            parameters=[topic_monitor_param_file, agent_param_file],
+        ),
+    ]
+
+
+def generate_launch_description() -> LaunchDescription:
     return LaunchDescription(
         [
             DeclareLaunchArgument(
                 "agent_ns",
                 default_value="auv0",
             ),
-            Node(
-                package="dvl_a50",
-                executable="dvl_a50_sensor",
-                name="dvl_a50_sensor",
-                parameters=[dvl_a50_param_file, agent_param_file],
-            ),
-            Node(
-                package="gpsd_client",
-                executable="gpsd_client",
-                name="gpsd_client",
-                parameters=[gpsd_client_param_file, agent_param_file],
-            ),
-            Node(
-                package="seatrac",
-                executable="modem",
-                name="modem",
-                parameters=[seatrac_param_file, agent_param_file],
-            ),
-            Node(
-                package="nmea_gpsd",
-                executable="nmea_gpsd_udp",
-                name="nmea_gpsd_udp",
-                parameters=[nmea_gpsd_param_file, agent_param_file],
-            ),
-            Node(
-                package="ntrip_client",
-                executable="ntrip_ros.py",
-                name="ntrip_client",
-                parameters=[ntrip_client_param_file, agent_param_file],
-            ),
-            Node(
-                package="pressure_sensor",
-                executable="pressure_pub",
-                name="pressure_pub",
-                parameters=[pressure_sensor_param_file, agent_param_file],
-            ),
-            Node(
-                package="sbg_driver",
-                executable="sbg_device",
-                name="sbg_device",
-                parameters=[sbg_driver_param_file, agent_param_file],
-            ),
-            Node(
-                package="topic_monitor",
-                executable="topic_monitor_node",
-                name="topic_monitor_node",
-                parameters=[topic_monitor_param_file, agent_param_file],
-            ),
+            OpaqueFunction(function=launch_setup),
         ]
     )

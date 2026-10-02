@@ -51,23 +51,24 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
         start_paused_args = (
             ["--start-paused"] if IfCondition(start_paused).evaluate(context) else []
         )
-        play_process = ExecuteProcess(
-            cmd=[
-                "ros2",
-                "bag",
-                "play",
-                play_bag_path_str,
-                "--clock",
-                "--start-offset",
-                start_offset,
-                "--playback-duration",
-                playback_duration,
-                "--rate",
-                playback_rate,
-                *start_paused_args,
-            ],
+        actions.append(
+            ExecuteProcess(
+                cmd=[
+                    "ros2",
+                    "bag",
+                    "play",
+                    play_bag_path_str,
+                    "--clock",
+                    "--start-offset",
+                    start_offset,
+                    "--playback-duration",
+                    playback_duration,
+                    "--rate",
+                    playback_rate,
+                    *start_paused_args,
+                ],
+            )
         )
-        actions.append(play_process)
 
     actions.append(
         IncludeLaunchDescription(

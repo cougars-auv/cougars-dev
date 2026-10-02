@@ -202,48 +202,44 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                 }.items(),
             )
 
-        rgb_ffmpeg_republish_node = Node(
-            package="image_transport",
-            executable="republish",
-            name="rgb_ffmpeg_republish_node",
-            parameters=[
-                fleet_param_file,
-                agent_param_file,
-                scenario_param_file,
-                {"use_sim_time": use_sim_time},
-            ],
-            remappings=[
-                ("in", "camera/rgb/image_rect_color"),
-                ("out/ffmpeg", "camera/rgb/image_rect_color/ffmpeg"),
-            ],
-        )
-
-        voxblox_node = Node(
-            package="voxblox_ros",
-            executable="tsdf_server",
-            name="voxblox_node",
-            condition=IfCondition(enable_mapping),
-            parameters=[
-                fleet_param_file,
-                agent_param_file,
-                scenario_param_file,
-                {
-                    "use_sim_time": use_sim_time,
-                    "world_frame": "map",
-                },
-            ],
-            remappings=[
-                ("pointcloud_1", "camera/point_cloud/cloud_registered"),
-            ],
-        )
-
         actions.append(
             GroupAction(
                 actions=[
                     PushRosNamespace(agent_ns),
                     sim_bridge_launch,
-                    rgb_ffmpeg_republish_node,
-                    voxblox_node,
+                    Node(
+                        package="image_transport",
+                        executable="republish",
+                        name="rgb_ffmpeg_republish_node",
+                        parameters=[
+                            fleet_param_file,
+                            agent_param_file,
+                            scenario_param_file,
+                            {"use_sim_time": use_sim_time},
+                        ],
+                        remappings=[
+                            ("in", "camera/rgb/image_rect_color"),
+                            ("out/ffmpeg", "camera/rgb/image_rect_color/ffmpeg"),
+                        ],
+                    ),
+                    Node(
+                        package="voxblox_ros",
+                        executable="tsdf_server",
+                        name="voxblox_node",
+                        condition=IfCondition(enable_mapping),
+                        parameters=[
+                            fleet_param_file,
+                            agent_param_file,
+                            scenario_param_file,
+                            {
+                                "use_sim_time": use_sim_time,
+                                "world_frame": "map",
+                            },
+                        ],
+                        remappings=[
+                            ("pointcloud_1", "camera/point_cloud/cloud_registered"),
+                        ],
+                    ),
                 ]
             )
         )

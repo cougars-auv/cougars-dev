@@ -128,96 +128,82 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
     coug_terrain_dir = get_package_share_directory("coug_terrain")
     coug_terrain_launch_dir = os.path.join(coug_terrain_dir, "launch")
 
-    coug_comms_base_launch = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(coug_comms_launch_dir, "coug_comms_base.launch.py")
-        ),
-        launch_arguments={
-            "use_sim_time": use_sim_time,
-            "agent_list": agent_list_config,
-            "scenario_param_file": scenario_param_file,
-            "lead_agent": lead_agent,
-            "enable_direct_comms": enable_direct_comms,
-            "enable_acoustic_comms": enable_acoustic_comms,
-        }.items(),
-    )
-
-    coug_fg_base_launch = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(os.path.join(coug_fg_launch_dir, "coug_fg_base.launch.py")),
-        launch_arguments={
-            "use_sim_time": use_sim_time,
-            "agent_list": agent_list_config,
-            "scenario_param_file": scenario_param_file,
-        }.items(),
-    )
-
-    coug_terrain_base_launch = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(coug_terrain_launch_dir, "coug_terrain_base.launch.py")
-        ),
-        launch_arguments={
-            "use_sim_time": use_sim_time,
-            "agent_list": agent_list_config,
-            "scenario_param_file": scenario_param_file,
-        }.items(),
-    )
-
-    coug_mapviz_launch = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(coug_mapviz_launch_dir, "coug_mapviz.launch.py")
-        ),
-        launch_arguments={
-            "use_sim_time": use_sim_time,
-            "agent_list": agent_list_config,
-            "scenario_param_file": scenario_param_file,
-            "initialize_origin": initialize_origin,
-        }.items(),
-    )
-
-    coug_rqt_launch = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(os.path.join(coug_rqt_launch_dir, "coug_rqt.launch.py")),
-        launch_arguments={
-            "use_sim_time": use_sim_time,
-            "agent_list": agent_list_config,
-            "scenario_param_file": scenario_param_file,
-        }.items(),
-    )
-
-    plotjuggler_node = Node(
-        package="plotjuggler",
-        executable="plotjuggler",
-        name="plotjuggler",
-        arguments=[
-            "-l",
-            create_plotjuggler_config(agent_list),
-        ],
-        parameters=[{"use_sim_time": use_sim_time}],
-    )
-
-    rviz_node = Node(
-        package="rviz2",
-        executable="rviz2",
-        name="rviz2",
-        arguments=["-d", create_rviz_config(agent_list)],
-        parameters=[{"use_sim_time": use_sim_time}],
-    )
-
-    base_station_group = GroupAction(
-        condition=IfCondition(enable_base_processing),
-        actions=[
-            PushRosNamespace("base_station"),
-            coug_comms_base_launch,
-            coug_fg_base_launch,
-            coug_terrain_base_launch,
-        ],
-    )
-
     actions: list[Action] = [
-        base_station_group,
-        coug_mapviz_launch,
-        coug_rqt_launch,
-        plotjuggler_node,
-        rviz_node,
+        GroupAction(
+            condition=IfCondition(enable_base_processing),
+            actions=[
+                PushRosNamespace("base_station"),
+                IncludeLaunchDescription(
+                    PythonLaunchDescriptionSource(
+                        os.path.join(coug_comms_launch_dir, "coug_comms_base.launch.py")
+                    ),
+                    launch_arguments={
+                        "use_sim_time": use_sim_time,
+                        "agent_list": agent_list_config,
+                        "scenario_param_file": scenario_param_file,
+                        "lead_agent": lead_agent,
+                        "enable_direct_comms": enable_direct_comms,
+                        "enable_acoustic_comms": enable_acoustic_comms,
+                    }.items(),
+                ),
+                IncludeLaunchDescription(
+                    PythonLaunchDescriptionSource(
+                        os.path.join(coug_fg_launch_dir, "coug_fg_base.launch.py")
+                    ),
+                    launch_arguments={
+                        "use_sim_time": use_sim_time,
+                        "agent_list": agent_list_config,
+                        "scenario_param_file": scenario_param_file,
+                    }.items(),
+                ),
+                IncludeLaunchDescription(
+                    PythonLaunchDescriptionSource(
+                        os.path.join(coug_terrain_launch_dir, "coug_terrain_base.launch.py")
+                    ),
+                    launch_arguments={
+                        "use_sim_time": use_sim_time,
+                        "agent_list": agent_list_config,
+                        "scenario_param_file": scenario_param_file,
+                    }.items(),
+                ),
+            ],
+        ),
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource(
+                os.path.join(coug_mapviz_launch_dir, "coug_mapviz.launch.py")
+            ),
+            launch_arguments={
+                "use_sim_time": use_sim_time,
+                "agent_list": agent_list_config,
+                "scenario_param_file": scenario_param_file,
+                "initialize_origin": initialize_origin,
+            }.items(),
+        ),
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource(os.path.join(coug_rqt_launch_dir, "coug_rqt.launch.py")),
+            launch_arguments={
+                "use_sim_time": use_sim_time,
+                "agent_list": agent_list_config,
+                "scenario_param_file": scenario_param_file,
+            }.items(),
+        ),
+        Node(
+            package="plotjuggler",
+            executable="plotjuggler",
+            name="plotjuggler",
+            arguments=[
+                "-l",
+                create_plotjuggler_config(agent_list),
+            ],
+            parameters=[{"use_sim_time": use_sim_time}],
+        ),
+        Node(
+            package="rviz2",
+            executable="rviz2",
+            name="rviz2",
+            arguments=["-d", create_rviz_config(agent_list)],
+            parameters=[{"use_sim_time": use_sim_time}],
+        ),
     ]
 
     if record_bag_path_str:
