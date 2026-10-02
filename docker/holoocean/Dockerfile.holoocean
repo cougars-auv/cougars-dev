@@ -17,8 +17,6 @@ FROM frostlab/holoocean:2.0-runtime-ubuntu24.04-cuda12.9-ros
 ARG DEBIAN_FRONTEND=noninteractive \
   ROS_DISTRO=jazzy
 
-SHELL [ "/bin/bash", "-c" ]
-
 ENV DOCKER_USER=ue4 \
   OVERLAY_WS=/home/ue4/ros2_ws \
   CONFIG_DIR=/home/ue4/config \
