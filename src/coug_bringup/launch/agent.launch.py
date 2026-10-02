@@ -44,19 +44,11 @@ def is_agent(agent_ns: LaunchConfiguration, *names: str) -> PythonExpression:
 def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Action]:
     use_sim_time = LaunchConfiguration("use_sim_time")
     agent_ns = LaunchConfiguration("agent_ns")
+    scenario_param_file = LaunchConfiguration("scenario_param_file")
     loc_comparison = LaunchConfiguration("loc_comparison")
     lead_agent = LaunchConfiguration("lead_agent")
     initial_position = LaunchConfiguration("initial_position")
     initial_orientation = LaunchConfiguration("initial_orientation")
-    scenario_param_file = LaunchConfiguration("scenario_param_file")
-
-    fleet_param_file = PathJoinSubstitution(
-        [EnvironmentVariable("CONFIG_DIR"), "fleet", "coug_bringup_params.yaml"]
-    )
-    agent_param_file = PathJoinSubstitution(
-        [EnvironmentVariable("CONFIG_DIR"), [agent_ns, "_params.yaml"]]
-    )
-    resolved_scenario_param_file = scenario_param_file.perform(context) or agent_param_file
 
     coug_belief_mppi_dir = get_package_share_directory("coug_belief_mppi")
     coug_belief_mppi_launch_dir = os.path.join(coug_belief_mppi_dir, "launch")
@@ -76,6 +68,14 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
     coug_terrain_launch_dir = os.path.join(coug_terrain_dir, "launch")
     coug_visual_dvl_dir = get_package_share_directory("coug_visual_dvl")
     coug_visual_dvl_launch_dir = os.path.join(coug_visual_dvl_dir, "launch")
+
+    fleet_param_file = PathJoinSubstitution(
+        [EnvironmentVariable("CONFIG_DIR"), "fleet", "coug_bringup_params.yaml"]
+    )
+    agent_param_file = PathJoinSubstitution(
+        [EnvironmentVariable("CONFIG_DIR"), [agent_ns, "_params.yaml"]]
+    )
+    resolved_scenario_param_file = scenario_param_file.perform(context) or agent_param_file
 
     return [
         GroupAction(

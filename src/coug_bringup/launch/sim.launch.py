@@ -70,21 +70,35 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
     enable_mapping = LaunchConfiguration("enable_mapping")
     hitl_mode = LaunchConfiguration("hitl_mode")
 
-    scenario_param_file_str = scenario_param_file.perform(context)
+    scenario_param_path = scenario_param_file.perform(context)
     known_initial_poses_bool = IfCondition(known_initial_poses).evaluate(context)
 
     config_dir = os.environ["CONFIG_DIR"]
+    coug_bringup_dir = get_package_share_directory("coug_bringup")
+    coug_bringup_launch_dir = os.path.join(coug_bringup_dir, "launch")
+    coug_gazebo_dir = get_package_share_directory("coug_gazebo")
+    coug_gazebo_launch_dir = os.path.join(coug_gazebo_dir, "launch")
+    coug_holoocean_dir = get_package_share_directory("coug_holoocean")
+    coug_holoocean_launch_dir = os.path.join(coug_holoocean_dir, "launch")
+
+    fleet_param_file = PathJoinSubstitution(
+        [EnvironmentVariable("CONFIG_DIR"), "fleet", "coug_bringup_params.yaml"]
+    )
+    holoocean_fleet_param_file = PathJoinSubstitution(
+        [EnvironmentVariable("CONFIG_DIR"), "fleet", "coug_holoocean_params.yaml"]
+    )
+
     fleet_launch_params = load_launch_params(
         os.path.join(config_dir, "fleet", "coug_bringup_params.yaml"), "/**"
     )
-    scenario_launch_params = load_launch_params(scenario_param_file_str, "/**")
-    use_gazebo = os.path.basename(os.path.dirname(scenario_param_file_str)) == "gazebo"
+    scenario_launch_params = load_launch_params(scenario_param_path, "/**")
+    use_gazebo = os.path.basename(os.path.dirname(scenario_param_path)) == "gazebo"
 
     base_station: dict[str, Any] = {}
     if use_gazebo:
-        pose_source = scenario_param_file_str
+        pose_source = scenario_param_path
         agent_poses = {
-            agent_ns: load_launch_params(scenario_param_file_str, f"/{agent_ns}")
+            agent_ns: load_launch_params(scenario_param_path, f"/{agent_ns}")
             for agent_ns in scenario_launch_params.get("agents", [])
         }
     else:
@@ -100,19 +114,6 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
 
     agent_list = list(agent_poses)
     agent_list_str = f"[{', '.join(agent_list)}]"
-
-    coug_bringup_dir = get_package_share_directory("coug_bringup")
-    coug_bringup_launch_dir = os.path.join(coug_bringup_dir, "launch")
-    coug_gazebo_dir = get_package_share_directory("coug_gazebo")
-    coug_gazebo_launch_dir = os.path.join(coug_gazebo_dir, "launch")
-    coug_holoocean_dir = get_package_share_directory("coug_holoocean")
-    coug_holoocean_launch_dir = os.path.join(coug_holoocean_dir, "launch")
-    fleet_param_file = PathJoinSubstitution(
-        [EnvironmentVariable("CONFIG_DIR"), "fleet", "coug_bringup_params.yaml"]
-    )
-    holoocean_fleet_param_file = PathJoinSubstitution(
-        [EnvironmentVariable("CONFIG_DIR"), "fleet", "coug_holoocean_params.yaml"]
-    )
 
     actions: list[Action] = []
 
