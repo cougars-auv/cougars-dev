@@ -26,6 +26,20 @@
           "ros_publish": true
         },
         {
+          "sensor_type": "IMUSensor",
+          "sensor_name": "ModemIMUSensor",
+          "socket": "COM",
+          "Hz": 10,
+          "ros_publish": true
+        },
+        {
+          "sensor_type": "RotationSensor",
+          "sensor_name": "ModemRotationSensor",
+          "socket": "COM",
+          "Hz": 10,
+          "ros_publish": true
+        },
+        {
           "sensor_type": "DynamicsSensor",
           "configuration": {
             "UseCOM": true,
