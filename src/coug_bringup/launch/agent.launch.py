@@ -44,11 +44,12 @@ def is_agent(agent_ns: LaunchConfiguration, *names: str) -> PythonExpression:
 def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Action]:
     use_sim_time = LaunchConfiguration("use_sim_time")
     agent_ns = LaunchConfiguration("agent_ns")
-    scenario_param_file = LaunchConfiguration("scenario_param_file")
     loc_comparison = LaunchConfiguration("loc_comparison")
     lead_agent = LaunchConfiguration("lead_agent")
     initial_position = LaunchConfiguration("initial_position")
     initial_orientation = LaunchConfiguration("initial_orientation")
+
+    scenario_param_path = LaunchConfiguration("scenario_param_file").perform(context)
 
     coug_belief_mppi_dir = get_package_share_directory("coug_belief_mppi")
     coug_belief_mppi_launch_dir = os.path.join(coug_belief_mppi_dir, "launch")
@@ -75,7 +76,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
     agent_param_file = PathJoinSubstitution(
         [EnvironmentVariable("CONFIG_DIR"), [agent_ns, "_params.yaml"]]
     )
-    resolved_scenario_param_file = scenario_param_file.perform(context) or agent_param_file
+    scenario_param_file = scenario_param_path or agent_param_file
 
     return [
         GroupAction(
@@ -88,7 +89,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                     parameters=[
                         fleet_param_file,
                         agent_param_file,
-                        resolved_scenario_param_file,
+                        scenario_param_file,
                         {
                             "use_sim_time": use_sim_time,
                             "agent_ns": agent_ns,
@@ -103,7 +104,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                     launch_arguments={
                         "use_sim_time": use_sim_time,
                         "agent_ns": agent_ns,
-                        "scenario_param_file": scenario_param_file,
+                        "scenario_param_file": scenario_param_path,
                     }.items(),
                     condition=IfCondition(
                         is_agent(agent_ns, "blue1holo", "wamv1holo", "rover1gz", "wamv1gz")
@@ -116,7 +117,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                     launch_arguments={
                         "use_sim_time": use_sim_time,
                         "agent_ns": agent_ns,
-                        "scenario_param_file": scenario_param_file,
+                        "scenario_param_file": scenario_param_path,
                     }.items(),
                 ),
                 IncludeLaunchDescription(
@@ -126,7 +127,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                     launch_arguments={
                         "use_sim_time": use_sim_time,
                         "agent_ns": agent_ns,
-                        "scenario_param_file": scenario_param_file,
+                        "scenario_param_file": scenario_param_path,
                     }.items(),
                 ),
                 IncludeLaunchDescription(
@@ -136,7 +137,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                     launch_arguments={
                         "use_sim_time": use_sim_time,
                         "agent_ns": agent_ns,
-                        "scenario_param_file": scenario_param_file,
+                        "scenario_param_file": scenario_param_path,
                     }.items(),
                 ),
                 IncludeLaunchDescription(
@@ -146,7 +147,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                     launch_arguments={
                         "use_sim_time": use_sim_time,
                         "agent_ns": agent_ns,
-                        "scenario_param_file": scenario_param_file,
+                        "scenario_param_file": scenario_param_path,
                         "initial_position": initial_position,
                         "initial_orientation": initial_orientation,
                     }.items(),
@@ -159,7 +160,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                     launch_arguments={
                         "use_sim_time": use_sim_time,
                         "agent_ns": agent_ns,
-                        "scenario_param_file": scenario_param_file,
+                        "scenario_param_file": scenario_param_path,
                         "initial_position": initial_position,
                         "initial_orientation": initial_orientation,
                     }.items(),
@@ -172,7 +173,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                     launch_arguments={
                         "use_sim_time": use_sim_time,
                         "agent_ns": agent_ns,
-                        "scenario_param_file": scenario_param_file,
+                        "scenario_param_file": scenario_param_path,
                         "loc_comparison": loc_comparison,
                         "lead_agent": lead_agent,
                         "initial_position": initial_position,
@@ -187,7 +188,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                     launch_arguments={
                         "use_sim_time": use_sim_time,
                         "agent_ns": agent_ns,
-                        "scenario_param_file": scenario_param_file,
+                        "scenario_param_file": scenario_param_path,
                     }.items(),
                 ),
                 IncludeLaunchDescription(
@@ -197,7 +198,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                     launch_arguments={
                         "use_sim_time": use_sim_time,
                         "agent_ns": agent_ns,
-                        "scenario_param_file": scenario_param_file,
+                        "scenario_param_file": scenario_param_path,
                     }.items(),
                     condition=IfCondition(is_agent(agent_ns, "wamv1gz")),
                 ),
@@ -208,7 +209,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                     launch_arguments={
                         "use_sim_time": use_sim_time,
                         "agent_ns": agent_ns,
-                        "scenario_param_file": scenario_param_file,
+                        "scenario_param_file": scenario_param_path,
                     }.items(),
                     condition=IfCondition(is_agent(agent_ns, "rover1gz", "wamv1holo", "wamv1gz")),
                 ),
@@ -219,7 +220,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                     launch_arguments={
                         "use_sim_time": use_sim_time,
                         "agent_ns": agent_ns,
-                        "scenario_param_file": scenario_param_file,
+                        "scenario_param_file": scenario_param_path,
                     }.items(),
                     condition=IfCondition(is_agent(agent_ns, "blue1holo")),
                 ),

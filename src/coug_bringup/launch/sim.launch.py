@@ -59,7 +59,6 @@ def load_launch_params(path: str, top_key: str) -> dict[str, Any]:
 
 def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Action]:
     use_sim_time = LaunchConfiguration("use_sim_time")
-    scenario_param_file = LaunchConfiguration("scenario_param_file")
     record_bag_path = LaunchConfiguration("record_bag_path")
     add_noise = LaunchConfiguration("add_noise")
     loc_comparison = LaunchConfiguration("loc_comparison")
@@ -70,8 +69,10 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
     enable_mapping = LaunchConfiguration("enable_mapping")
     hitl_mode = LaunchConfiguration("hitl_mode")
 
-    scenario_param_path = scenario_param_file.perform(context)
+    scenario_param_path = LaunchConfiguration("scenario_param_file").perform(context)
     known_initial_poses_bool = IfCondition(known_initial_poses).evaluate(context)
+
+    use_gazebo = os.path.basename(os.path.dirname(scenario_param_path)) == "gazebo"
 
     config_dir = os.environ["CONFIG_DIR"]
     coug_bringup_dir = get_package_share_directory("coug_bringup")
@@ -88,23 +89,22 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
         [EnvironmentVariable("CONFIG_DIR"), "fleet", "coug_holoocean_params.yaml"]
     )
 
-    fleet_launch_params = load_launch_params(
-        os.path.join(config_dir, "fleet", "coug_bringup_params.yaml"), "/**"
-    )
-    scenario_launch_params = load_launch_params(scenario_param_path, "/**")
-    use_gazebo = os.path.basename(os.path.dirname(scenario_param_path)) == "gazebo"
+    fleet_param_path = os.path.join(config_dir, "fleet", "coug_bringup_params.yaml")
+
+    launch_params = {
+        **load_launch_params(fleet_param_path, "/**"),
+        **load_launch_params(scenario_param_path, "/**"),
+    }
 
     base_station: dict[str, Any] = {}
     if use_gazebo:
         pose_source = scenario_param_path
         agent_poses = {
             agent_ns: load_launch_params(scenario_param_path, f"/{agent_ns}")
-            for agent_ns in scenario_launch_params.get("agents", [])
+            for agent_ns in launch_params.get("agents", [])
         }
     else:
-        scenario_filename = scenario_launch_params.get(
-            "scenario_file", fleet_launch_params.get("scenario_file")
-        )
+        scenario_filename = launch_params["scenario_file"]
         scenario_file = os.path.join(config_dir, "holoocean", scenario_filename)
         pose_source = scenario_file
         with open(scenario_file) as scenario_config:
@@ -123,7 +123,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
             launch_arguments={
                 "use_sim_time": use_sim_time,
                 "agent_list": agent_list_str,
-                "scenario_param_file": scenario_param_file,
+                "scenario_param_file": scenario_param_path,
                 "lead_agent": lead_agent,
                 "record_bag_path": record_bag_path,
                 "enable_direct_comms": enable_direct_comms,
@@ -139,7 +139,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                     os.path.join(coug_gazebo_launch_dir, "coug_gazebo_world.launch.py")
                 ),
                 launch_arguments={
-                    "scenario_param_file": scenario_param_file,
+                    "scenario_param_file": scenario_param_path,
                 }.items(),
             )
         )
@@ -165,7 +165,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                 launch_arguments={
                     "use_sim_time": use_sim_time,
                     "agent_ns": agent_ns,
-                    "scenario_param_file": scenario_param_file,
+                    "scenario_param_file": scenario_param_path,
                     "loc_comparison": loc_comparison,
                     "lead_agent": lead_agent,
                     "initial_position": position if known_initial_poses_bool else "[0.0, 0.0, 0.0]",
@@ -185,7 +185,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                 launch_arguments={
                     "use_sim_time": use_sim_time,
                     "agent_ns": agent_ns,
-                    "scenario_param_file": scenario_param_file,
+                    "scenario_param_file": scenario_param_path,
                     "initial_position": position,
                     "initial_orientation": orientation,
                 }.items(),
@@ -198,7 +198,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                 launch_arguments={
                     "use_sim_time": use_sim_time,
                     "agent_ns": agent_ns,
-                    "scenario_param_file": scenario_param_file,
+                    "scenario_param_file": scenario_param_path,
                     "add_noise": add_noise,
                 }.items(),
             )
@@ -215,7 +215,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                         parameters=[
                             fleet_param_file,
                             agent_param_file,
-                            scenario_param_file,
+                            scenario_param_path,
                             {"use_sim_time": use_sim_time},
                         ],
                         remappings=[
@@ -231,7 +231,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                         parameters=[
                             fleet_param_file,
                             agent_param_file,
-                            scenario_param_file,
+                            scenario_param_path,
                             {
                                 "use_sim_time": use_sim_time,
                                 "world_frame": "map",
@@ -271,7 +271,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                         name="modem_converter_node",
                         parameters=[
                             holoocean_fleet_param_file,
-                            scenario_param_file,
+                            scenario_param_path,
                             {
                                 "use_sim_time": use_sim_time,
                                 "add_noise": add_noise,
@@ -285,7 +285,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                         name="modem_depth_converter_node",
                         parameters=[
                             holoocean_fleet_param_file,
-                            scenario_param_file,
+                            scenario_param_path,
                             {
                                 "use_sim_time": use_sim_time,
                                 "add_noise": add_noise,
