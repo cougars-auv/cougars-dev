@@ -2,6 +2,8 @@
   coug_gazebo_agent_launch:
     ros__parameters:
       urdf_file: "rover.gazebo.xacro"
+      ardupilot_instance: 0
+      ardupilot_param_file: ""
 
   coug_gazebo_world_launch:
     ros__parameters:

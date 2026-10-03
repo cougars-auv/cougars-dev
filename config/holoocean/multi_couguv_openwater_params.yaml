@@ -1,8 +1,7 @@
 holoocean_node:
   ros__parameters:
-    publish_commands: true
-    show_viewport: false
     draw_arrow: false
+    show_viewport: false
 
     relative_path: false
     scenario_path: "/home/ue4/config/holoocean/multi_couguv_openwater.json"
