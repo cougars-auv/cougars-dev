@@ -27,7 +27,6 @@
       boxes_topic: "camera/boxes"
       camera_info_topic: "camera/rgb/camera_info"
       output_topic: "detections_3d_labeled"
-      map_frame: "map"
 
   landmark_tracker_node:
     ros__parameters:
@@ -47,7 +46,6 @@
       output_topic: "landmarks"
       marker_topic: "landmarks/markers"
       label_topic: "landmarks/labels"
-      map_frame: "map"
 
   euclidean_cluster_node:
     ros__parameters:
