@@ -289,8 +289,8 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                             {
                                 "use_sim_time": use_sim_time,
                                 "add_noise": add_noise,
-                                "depth_frame": "base_station",
                                 "map_frame": "map",
+                                "depth_frame": "base_station",
                             },
                         ],
                     ),
