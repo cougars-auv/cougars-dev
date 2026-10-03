@@ -294,6 +294,31 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                             },
                         ],
                     ),
+                    Node(
+                        package="coug_holoocean",
+                        executable="imu_converter",
+                        name="modem_imu_converter_node",
+                        parameters=[
+                            holoocean_fleet_param_file,
+                            scenario_param_path,
+                            {
+                                "use_sim_time": use_sim_time,
+                                "add_noise": add_noise,
+                                "add_bias": add_noise,
+                                "imu_frame": "base_station",
+                            },
+                        ],
+                    ),
+                    Node(
+                        package="coug_holoocean",
+                        executable="modem_status_converter",
+                        name="modem_status_converter_node",
+                        parameters=[
+                            holoocean_fleet_param_file,
+                            scenario_param_path,
+                            {"use_sim_time": use_sim_time},
+                        ],
+                    ),
                 ],
             )
         )
