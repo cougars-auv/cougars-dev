@@ -3,6 +3,10 @@ repositories:
     type: zip
     url: https://github.com/ArduPilot/ardupilot_gazebo/archive/refs/heads/main.zip
     version: ardupilot_gazebo-main
+  ardupilot_sitl_models:
+    type: zip
+    url: https://github.com/ArduPilot/SITL_Models/archive/refs/heads/master.zip
+    version: SITL_Models-master/Gazebo
   coug_gazebo:
     type: git
     url: git@github.com:cougars-auv/coug_gazebo.git
