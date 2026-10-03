@@ -4,3 +4,14 @@
       input_topic: "cmd_hsd_helm"
       output_topic: "cmd_hsd"
       beams_topic: "dvl/beams"
+
+  mavros:
+    ros__parameters:
+      plugin_allowlist:
+        - command
+        - global_position
+        - imu
+        - local_position
+        - setpoint_raw
+        - sys_status
+        - sys_time
