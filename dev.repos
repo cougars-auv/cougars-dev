@@ -7,6 +7,10 @@ repositories:
     type: zip
     url: https://github.com/ArduPilot/SITL_Models/archive/refs/heads/master.zip
     version: SITL_Models-master/Gazebo
+  blue_description:
+    type: zip
+    url: https://github.com/Robotic-Decision-Making-Lab/blue/archive/refs/heads/main.zip
+    version: blue-main/blue_description
   coug_gazebo:
     type: git
     url: git@github.com:cougars-auv/coug_gazebo.git
