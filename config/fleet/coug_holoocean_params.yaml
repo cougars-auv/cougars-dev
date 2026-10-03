@@ -163,6 +163,8 @@
       # https://www.blueprintsubsea.com/seatrac/seatrac-standard
       bearing_noise_sigmas: [0.01745, 0.01745] # [azimuth, elevation] [rad]
       range_noise_sigma: 0.1 # [m]
+      # https://www.blueprintsubsea.com/downloads/seatrac/UM-140-D00221-13.pdf
+      depth_noise_sigma: 0.1 # [m]
 
       # --- ROS Topics and Frames ---
       beacon_rec_topic: "AcousticBeaconSensor"
@@ -171,6 +173,7 @@
       modem_send_topic: "modem_send"
       modem_cmd_update_topic: "modem_cmd_update"
       depth_topic: "modem/depth/odometry"
+      ahrs_topic: "modem/imu/data"
 
   modem_depth_converter_node:
     ros__parameters:
@@ -211,7 +214,7 @@
       sync_slop_sec: 0.05 # [s]
 
       # -- ROS Topics and Frames ---
-      imu_input_topic: "modem/imu/data"
+      ahrs_input_topic: "modem/imu/data"
       depth_input_topic: "modem/depth/odometry"
       output_topic: "modem_status"
 

@@ -24,7 +24,7 @@
       status_topic: "agent/status"
       odom_topic: "odometry/global"
       depth_topic: "seatrac/depth/odometry"
-      imu_topic: "seatrac/imu/data"
+      ahrs_topic: "seatrac/imu/data"
 
   agent_status_stager_node:
     ros__parameters:
