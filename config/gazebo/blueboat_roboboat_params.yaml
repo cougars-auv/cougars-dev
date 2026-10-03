@@ -1,7 +1,7 @@
 /**:
   sim_launch:
     ros__parameters:
-      agents: ["blueboat1gz"]
+      agents: ["yboat1gz"]
 
   coug_gazebo_world_launch:
     ros__parameters:
@@ -31,7 +31,7 @@ mapviz:
       origin_longitude: -82.450928 # [deg]
       origin_altitude: 0.0 # [m]
 
-/blueboat1gz:
+/yboat1gz:
   sim_launch:
     ros__parameters:
       location: [-226.3, 1060.4, 0.0] # [x, y, z] [m]
