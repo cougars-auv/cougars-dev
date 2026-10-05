@@ -18,10 +18,14 @@
       atmospheric_pressure: 82776.2 # [Pa] Deer Creek (~1673 m elevation)
       max_pressure_delta: 9780.0 # [Pa] ~1 m depth jump
 
+      ahrs_topic: "seatrac/imu/data"
+
       use_parameter_child_frame: true
 
   navsat_odom_node:
     ros__parameters:
+      ahrs_topic: "seatrac/imu/data"
+
       use_parameter_child_frame: true
 
   seatrac_x150_imu_depth_node:
