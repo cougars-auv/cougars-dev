@@ -47,6 +47,8 @@ CoUGARs is a low-cost, configurable AUV platform designed for multi-agent autono
 
   **Simulation (Gazebo):**
 
+  > This project also contains Gazebo simulations and proof-of-concept code for the [2026 RoboBoat](https://roboboat.org/) and [2027 URC](https://urc.marssociety.org/) field robotics competitions.
+
   - Open the `cougars-dev` repository in VSCode and use the Command Palette (`Ctrl + Shift + P`) to select "Dev Containers: Reopen in Container." When prompted, click "CoUGARs Dev" or "CoUGARs Dev (NVIDIA)."
 
   - Once the containers load, open a new terminal window using `` Ctrl + Alt + Shift + ` ``, build the workspace, and launch a Gazebo scenario using `./sim_launch.sh`.
