@@ -10,17 +10,11 @@
   coug_gazebo_agent_launch:
     ros__parameters:
       urdf_file: "blueboat.gazebo.xacro"
-      ardupilot_instance: 0
       ardupilot_param_file: "blueboat.param"
 
   coug_helm_launch:
     ros__parameters:
       tree_file: "follow_waypoints_nav2.xml"
-
-  mavros_node:
-    ros__parameters:
-      # ArduPilot SITL instance N (ardupilot_instance) listens on TCP 5760 + 10N
-      fcu_url: "tcp://127.0.0.1:5760"
 
   controller_server:
     ros__parameters:
@@ -147,42 +141,7 @@
       publish_tf: true
 
       imu0: "mavros/imu/data"
-      imu0_config: [
-          false,
-          false,
-          false, # X, Y, Z
-          false,
-          false,
-          false, # Roll, Pitch, Yaw
-          false,
-          false,
-          false, # Vx, Vy, Vz
-          true,
-          true,
-          true, # Vroll, Vpitch, Vyaw
-          true,
-          true,
-          true, # Ax, Ay, Az
-        ]
-
       imu1: "mavros/imu/data"
-      imu1_config: [
-          false,
-          false,
-          false, # X, Y, Z
-          true,
-          true,
-          true, # Roll, Pitch, Yaw
-          false,
-          false,
-          false, # Vx, Vy, Vz
-          false,
-          false,
-          false, # Vroll, Vpitch, Vyaw
-          false,
-          false,
-          false, # Ax, Ay, Az
-        ]
 
       odom1_config: [
           true,

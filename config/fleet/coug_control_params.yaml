@@ -19,6 +19,11 @@
       input_topic: "cmd_vel_out"
       output_topic: "mavros/setpoint_velocity/cmd_vel"
 
+  mavros_node:
+    ros__parameters:
+      # IMPORTANT! This must match coug_gazebo_agent_launch's ardupilot_instance (port 5760 + 10N).
+      fcu_url: "tcp://127.0.0.1:5760"
+
   mavros:
     ros__parameters:
       plugin_allowlist:
