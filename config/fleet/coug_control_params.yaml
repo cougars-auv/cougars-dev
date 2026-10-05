@@ -5,6 +5,20 @@
       output_topic: "cmd_hsd"
       beams_topic: "dvl/beams"
 
+  mavros_plugin_config_node:
+    ros__parameters:
+      tick_period_sec: 1.0 # [s]
+
+      local_position:
+        tf.send: true
+      setpoint_velocity:
+        mav_frame: "BODY_NED"
+
+  cmd_vel_relay_node:
+    ros__parameters:
+      input_topic: "cmd_vel_out"
+      output_topic: "mavros/setpoint_velocity/cmd_vel"
+
   mavros:
     ros__parameters:
       plugin_allowlist:
@@ -12,6 +26,6 @@
         - global_position
         - imu
         - local_position
-        - setpoint_raw
+        - setpoint_velocity
         - sys_status
         - sys_time
