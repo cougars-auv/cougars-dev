@@ -62,7 +62,7 @@
       status_topic: "base/agent/status"
       odom_topic: "base/odometry/global"
       depth_topic: "base/seatrac/depth/odometry"
-      imu_topic: "base/seatrac/imu/data"
+      ahrs_topic: "base/seatrac/imu/data"
 
   base_status_poller_node:
     ros__parameters:

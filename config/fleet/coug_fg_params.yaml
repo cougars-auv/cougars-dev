@@ -434,7 +434,7 @@
 
       # --- ROS Topics and Frames ---
       input_topic: "modem_status"
-      imu_output_topic: "seatrac/imu/data_ned"
+      ahrs_output_topic: "seatrac/imu/data_ned"
       depth_output_topic: "seatrac/depth/odometry_ned"
 
       use_parameter_frame: false
