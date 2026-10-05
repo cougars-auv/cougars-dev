@@ -13,7 +13,7 @@
 
   coug_helm_launch:
     ros__parameters:
-      tree_file: "behaviors_nav2_w_aruco_and_assist.xml"
+      tree_file: "follow_waypoints_nav2_w_aruco_and_assist.xml"
 
   controller_server:
     ros__parameters:

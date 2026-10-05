@@ -1,7 +1,7 @@
 /**:
   coug_helm_launch:
     ros__parameters:
-      tree_file: "behaviors_hsd_w_recovery.xml"
+      tree_file: "follow_waypoints_hsd_w_recovery.xml"
 
   bt_helm_node:
     ros__parameters:
