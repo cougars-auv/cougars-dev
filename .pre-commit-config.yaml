@@ -48,13 +48,13 @@ repos:
         exclude: \.md$
 
   - repo: https://github.com/python-jsonschema/check-jsonschema
-    rev: 0.38.0
+    rev: 0.38.2
     hooks:
       - id: check-dependabot
       - id: check-github-workflows
 
   - repo: https://github.com/pre-commit/mirrors-clang-format
-    rev: v23.1.0
+    rev: v23.1.2
     hooks:
       - id: clang-format
         types_or: [c++, c]
@@ -66,7 +66,7 @@ repos:
         args: ["--ignore-words-list=fom,ned,sitl,te", "--write-changes"]
 
   - repo: https://github.com/BlankSpruce/gersemi-pre-commit
-    rev: 0.28.1
+    rev: 0.29.2
     hooks:
       - id: gersemi
         args: ["-i", "--indent", "2"]
@@ -82,19 +82,19 @@ repos:
       - id: markdownlint-fix
 
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v2.3.1
+    rev: v2.4.0
     hooks:
       - id: mypy
         exclude: setup\.py$
 
   - repo: https://github.com/rbubley/mirrors-prettier
-    rev: v3.9.6
+    rev: v3.9.9
     hooks:
       - id: prettier
         types_or: [json, markdown, yaml]
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.16.6
+    rev: v0.16.10
     hooks:
       - id: ruff-check
         args: ["--fix"]
@@ -106,6 +106,6 @@ repos:
       - id: shellcheck
 
   - repo: https://github.com/scop/pre-commit-shfmt
-    rev: v3.13.1-1
+    rev: v3.14.1-1
     hooks:
       - id: shfmt
