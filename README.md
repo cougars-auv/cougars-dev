@@ -48,7 +48,6 @@ CoUGARs is a low-cost, configurable AUV platform designed for multi-agent autono
   **Simulation (Gazebo):**
 
   > This project also contains Gazebo simulations and proof-of-concept code for the [2026 RoboBoat](https://roboboat.org/) and [2027 URC](https://urc.marssociety.org/) field robotics competitions.
-
   - Open the `cougars-dev` repository in VSCode and use the Command Palette (`Ctrl + Shift + P`) to select "Dev Containers: Reopen in Container." When prompted, click "CoUGARs Dev" or "CoUGARs Dev (NVIDIA)."
 
   - Once the containers load, open a new terminal window using `` Ctrl + Alt + Shift + ` ``, build the workspace, and launch a Gazebo scenario using `./sim_launch.sh`.
@@ -71,7 +70,7 @@ CoUGARs is a low-cost, configurable AUV platform designed for multi-agent autono
     cd ~/cougars-dev/scripts && ./bag_launch.sh
     ```
 
-> If you run into crashes or out-of-memory errors while building the workspace, restrict the compiler to a single worker using `colcon build --parallel-workers 1`.
+> If you run into crashes or out-of-memory errors while building the workspace, limit the build to one package and one compile job at a time using `MAKEFLAGS="-j1" colcon build --parallel-workers 1`. This is the safest (and slowest) setting, so raise either number as far as your computer's RAM allows.
 
 ## Documentation
 
