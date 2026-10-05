@@ -107,7 +107,9 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                         "scenario_param_file": scenario_param_path,
                     }.items(),
                     condition=IfCondition(
-                        is_agent(agent_ns, "blue1holo", "wamv1holo", "rover1gz", "wamv1gz")
+                        is_agent(
+                            agent_ns, "blue1holo", "wamv1holo", "rover1gz", "wamv1gz", "yboat1gz"
+                        )
                     ),
                 ),
                 IncludeLaunchDescription(
@@ -155,6 +157,19 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                 ),
                 IncludeLaunchDescription(
                     PythonLaunchDescriptionSource(
+                        os.path.join(coug_fg_launch_dir, "coug_fg_mavros_ekf.launch.py")
+                    ),
+                    launch_arguments={
+                        "use_sim_time": use_sim_time,
+                        "agent_ns": agent_ns,
+                        "scenario_param_file": scenario_param_path,
+                        "initial_position": initial_position,
+                        "initial_orientation": initial_orientation,
+                    }.items(),
+                    condition=IfCondition(is_agent(agent_ns, "yboat1gz")),
+                ),
+                IncludeLaunchDescription(
+                    PythonLaunchDescriptionSource(
                         os.path.join(coug_fg_launch_dir, "coug_fg_dvl_ekf.launch.py")
                     ),
                     launch_arguments={
@@ -179,7 +194,9 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                         "initial_position": initial_position,
                         "initial_orientation": initial_orientation,
                     }.items(),
-                    condition=UnlessCondition(is_agent(agent_ns, "coug2", "rover1gz", "wamv1gz")),
+                    condition=UnlessCondition(
+                        is_agent(agent_ns, "coug2", "rover1gz", "wamv1gz", "yboat1gz")
+                    ),
                 ),
                 IncludeLaunchDescription(
                     PythonLaunchDescriptionSource(
@@ -200,7 +217,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                         "agent_ns": agent_ns,
                         "scenario_param_file": scenario_param_path,
                     }.items(),
-                    condition=IfCondition(is_agent(agent_ns, "wamv1gz")),
+                    condition=IfCondition(is_agent(agent_ns, "wamv1gz", "yboat1gz")),
                 ),
                 IncludeLaunchDescription(
                     PythonLaunchDescriptionSource(
@@ -211,7 +228,9 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                         "agent_ns": agent_ns,
                         "scenario_param_file": scenario_param_path,
                     }.items(),
-                    condition=IfCondition(is_agent(agent_ns, "rover1gz", "wamv1holo", "wamv1gz")),
+                    condition=IfCondition(
+                        is_agent(agent_ns, "rover1gz", "wamv1holo", "wamv1gz", "yboat1gz")
+                    ),
                 ),
                 IncludeLaunchDescription(
                     PythonLaunchDescriptionSource(

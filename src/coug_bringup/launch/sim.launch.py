@@ -246,6 +246,39 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
         )
 
     if not use_gazebo:
+        if "location" not in base_station or "rotation" not in base_station:
+            raise RuntimeError(
+                f"No 'location' and 'rotation' set for 'base_station' in '{pose_source}'."
+            )
+        base_station_position = as_meters(base_station["location"])
+        base_station_orientation = as_radians(base_station["rotation"])
+        actions.append(
+            Node(
+                package="tf2_ros",
+                executable="static_transform_publisher",
+                name="map_to_base_station_transform",
+                arguments=[
+                    "--x",
+                    str(base_station_position[0]),
+                    "--y",
+                    str(base_station_position[1]),
+                    "--z",
+                    str(base_station_position[2]),
+                    "--roll",
+                    str(base_station_orientation[0]),
+                    "--pitch",
+                    str(base_station_orientation[1]),
+                    "--yaw",
+                    str(base_station_orientation[2]),
+                    "--frame-id",
+                    "map",
+                    "--child-frame-id",
+                    "base_station",
+                ],
+                parameters=[{"use_sim_time": use_sim_time}],
+            )
+        )
+
         actions.append(
             Node(
                 package="tf2_ros",
@@ -320,39 +353,6 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                         ],
                     ),
                 ],
-            )
-        )
-
-        if "location" not in base_station or "rotation" not in base_station:
-            raise RuntimeError(
-                f"No 'location' and 'rotation' set for 'base_station' in '{pose_source}'."
-            )
-        base_station_position = as_meters(base_station["location"])
-        base_station_orientation = as_radians(base_station["rotation"])
-        actions.append(
-            Node(
-                package="tf2_ros",
-                executable="static_transform_publisher",
-                name="map_to_base_station_transform",
-                arguments=[
-                    "--x",
-                    str(base_station_position[0]),
-                    "--y",
-                    str(base_station_position[1]),
-                    "--z",
-                    str(base_station_position[2]),
-                    "--roll",
-                    str(base_station_orientation[0]),
-                    "--pitch",
-                    str(base_station_orientation[1]),
-                    "--yaw",
-                    str(base_station_orientation[2]),
-                    "--frame-id",
-                    "map",
-                    "--child-frame-id",
-                    "base_station",
-                ],
-                parameters=[{"use_sim_time": use_sim_time}],
             )
         )
 
