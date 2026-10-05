@@ -100,7 +100,7 @@
           ground_points_topic: "/yboat1gz/ground_segmentation/ground_points"
           nonground_points_topic: "/yboat1gz/ground_segmentation/obstacle_points"
 
-          robot_height: 1.2 # [m]
+          robot_height: 1.4 # [m]
           max_data_range: 0.0 # [m]
           nonground_prob_thresh: 0.5
           nonground_decay: 0.95
@@ -124,7 +124,7 @@
           ground_points_topic: "/yboat1gz/ground_segmentation/ground_points"
           nonground_points_topic: "/yboat1gz/ground_segmentation/obstacle_points"
 
-          robot_height: 1.2 # [m]
+          robot_height: 1.4 # [m]
           # https://github.com/stereolabs/zed-ros2-wrapper/blob/v5.5.0/zed_wrapper/config/zed2i.yaml
           max_data_range: 15.0 # [m]
 
