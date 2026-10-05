@@ -1,26 +1,33 @@
-/wamv1gz:
+/yboat1gz:
   coug_comms_base_launch:
     ros__parameters:
-      beacon_id: 2
+      beacon_id: 3
 
   coug_description_launch:
     ros__parameters:
-      urdf_file: "wamv.urdf.xacro"
+      urdf_file: "blueboat.urdf.xacro"
 
   coug_gazebo_agent_launch:
     ros__parameters:
-      urdf_file: "wamv.gazebo.xacro"
+      urdf_file: "blueboat.gazebo.xacro"
+      ardupilot_instance: 0
+      ardupilot_param_file: "blueboat.param"
 
   coug_helm_launch:
     ros__parameters:
       tree_file: "behaviors_nav2.xml"
+
+  mavros_node:
+    ros__parameters:
+      # ArduPilot SITL instance N (ardupilot_instance) listens on TCP 5760 + 10N
+      fcu_url: "tcp://127.0.0.1:5760"
 
   controller_server:
     ros__parameters:
       controller_frequency: 20.0 # [Hz]
 
       general_goal_checker:
-        xy_goal_tolerance: 2.5 # [m]
+        xy_goal_tolerance: 1.0 # [m] BlueOS WP_RADIUS
 
       FollowPath:
         transform_tolerance: 0.3 # [s]
@@ -29,12 +36,16 @@
         batch_size: 1000
 
         motion_model: "DiffDrive"
-        vx_max: 1.0 # [m/s]
+        vx_max: 1.0 # [m/s] BlueOS WP_SPEED
         vx_min: -0.7 # [m/s]
-        wz_max: 3.8 # [rad/s]
+        wz_max: 0.524 # [rad/s] BlueOS ATC_STR_RAT_MAX (30 deg/s)
+
+        ax_max: 0.7 # [m/s^2] BlueOS ATC_ACCEL_MAX
+        ax_min: -1.0 # [m/s^2] BlueOS ATC_DECEL_MAX
+        az_max: 0.524 # [rad/s^2] BlueOS ATC_STR_ACC_MAX (30 deg/s^2)
 
         vx_std: 0.4 # [m/s]
-        wz_std: 0.8 # [rad/s]
+        wz_std: 0.11 # [rad/s]
 
         prune_distance: 4.0 # [m]
 
@@ -81,23 +92,23 @@
         update_frequency: 1.0 # [Hz]
         publish_frequency: 0.0 # [Hz]
 
-        footprint: "[[2.555, 1.267], [2.555, -1.267], [-2.822, -1.267], [-2.822, 1.267]]"
+        footprint: "[[0.6, 0.465], [0.6, -0.465], [-0.6, -0.465], [-0.6, 0.465]]" # BlueBoat 1.2 x 0.93 m
         plugins: ["ground_consistency_layer", "inflation_layer"]
 
         ground_consistency_layer:
           plugin: "nav2_ground_consistency_costmap_plugin::GroundConsistencyLayer"
-          ground_points_topic: "/wamv1gz/ground_segmentation/ground_points"
-          nonground_points_topic: "/wamv1gz/ground_segmentation/obstacle_points"
+          ground_points_topic: "/yboat1gz/ground_segmentation/ground_points"
+          nonground_points_topic: "/yboat1gz/ground_segmentation/obstacle_points"
 
-          robot_height: 2.2 # [m]
+          robot_height: 1.2 # [m]
           max_data_range: 0.0 # [m]
           nonground_prob_thresh: 0.5
           nonground_decay: 0.95
 
         inflation_layer:
           plugin: "nav2_costmap_2d::InflationLayer"
-          inflation_radius: 4.6 # [m]
-          cost_scaling_factor: 1.66 # [1/m]
+          inflation_radius: 2.26 # [m]
+          cost_scaling_factor: 3.08 # [1/m]
 
   local_costmap:
     local_costmap:
@@ -105,22 +116,22 @@
         update_frequency: 5.0 # [Hz]
         publish_frequency: 1.0 # [Hz]
 
-        footprint: "[[2.555, 1.267], [2.555, -1.267], [-2.822, -1.267], [-2.822, 1.267]]"
+        footprint: "[[0.6, 0.465], [0.6, -0.465], [-0.6, -0.465], [-0.6, 0.465]]" # BlueBoat 1.2 x 0.93 m
         plugins: ["ground_consistency_layer", "inflation_layer"]
 
         ground_consistency_layer:
           plugin: "nav2_ground_consistency_costmap_plugin::GroundConsistencyLayer"
-          ground_points_topic: "/wamv1gz/ground_segmentation/ground_points"
-          nonground_points_topic: "/wamv1gz/ground_segmentation/obstacle_points"
+          ground_points_topic: "/yboat1gz/ground_segmentation/ground_points"
+          nonground_points_topic: "/yboat1gz/ground_segmentation/obstacle_points"
 
-          robot_height: 2.2 # [m]
+          robot_height: 1.2 # [m]
           # https://github.com/stereolabs/zed-ros2-wrapper/blob/v5.5.0/zed_wrapper/config/zed2i.yaml
           max_data_range: 15.0 # [m]
 
         inflation_layer:
           plugin: "nav2_costmap_2d::InflationLayer"
-          inflation_radius: 4.1 # [m]
-          cost_scaling_factor: 1.95 # [1/m]
+          inflation_radius: 1.76 # [m]
+          cost_scaling_factor: 4.27 # [1/m]
 
   planner_server:
     ros__parameters:
@@ -129,14 +140,13 @@
 
   navsat_odom_node:
     ros__parameters:
-      ahrs_topic: "camera/imu/data"
+      ahrs_topic: "mavros/imu/data"
 
   ekf_filter_node_map:
     ros__parameters:
       publish_tf: true
 
-      imu0: "camera/imu/data_raw"
-      # IMPORTANT! Handle non-trivial IMU rotation for robot_localization gravity mishandling bug.
+      imu0: "mavros/imu/data"
       imu0_config: [
           false,
           false,
@@ -150,18 +160,18 @@
           true,
           true,
           true, # Vroll, Vpitch, Vyaw
-          false,
-          false,
-          false, # Ax, Ay, Az
+          true,
+          true,
+          true, # Ax, Ay, Az
         ]
 
-      imu1: "camera/imu/data"
+      imu1: "mavros/imu/data"
       imu1_config: [
           false,
           false,
           false, # X, Y, Z
-          false,
-          false,
+          true,
+          true,
           true, # Roll, Pitch, Yaw
           false,
           false,
@@ -173,28 +183,6 @@
           false,
           false, # Ax, Ay, Az
         ]
-
-      imu2: "camera/imu/data_raw"
-      imu2_config: [
-          false,
-          false,
-          false, # X, Y, Z
-          true,
-          true,
-          false, # Roll, Pitch, Yaw
-          false,
-          false,
-          false, # Vx, Vy, Vz
-          false,
-          false,
-          false, # Vroll, Vpitch, Vyaw
-          false,
-          false,
-          false, # Ax, Ay, Az
-        ]
-      imu2_queue_size: 15
-      imu2_differential: false
-      imu2_relative: false
 
       odom1_config: [
           true,
@@ -214,78 +202,8 @@
           false, # Ax, Ay, Az
         ]
 
-      odom2: "camera/odom"
-      odom2_config: [
-          true,
-          true,
-          true, # X, Y, Z
-          false,
-          false,
-          true, # Roll, Pitch, Yaw
-          false,
-          false,
-          false, # Vx, Vy, Vz
-          false,
-          false,
-          false, # Vroll, Vpitch, Vyaw
-          false,
-          false,
-          false, # Ax, Ay, Az
-        ]
-      odom2_queue_size: 10
-      odom2_differential: true
-      odom2_relative: false
-      odom2_pose_use_child_frame: true # Handle non-trivial base frame offset.
-
-  ekf_filter_node_odom:
-    ros__parameters:
-      frequency: 50.0 # [Hz]
-
-      imu0: "camera/imu/data_raw"
-      # IMPORTANT! Handle non-trivial IMU rotation for robot_localization gravity mishandling bug.
-      imu0_config: [
-          false,
-          false,
-          false, # X, Y, Z
-          false,
-          false,
-          false, # Roll, Pitch, Yaw
-          false,
-          false,
-          false, # Vx, Vy, Vz
-          true,
-          true,
-          true, # Vroll, Vpitch, Vyaw
-          false,
-          false,
-          false, # Ax, Ay, Az
-        ]
-
-      odom0: "camera/odom"
-      odom0_config: [
-          true,
-          true,
-          true, # X, Y, Z
-          true,
-          true,
-          true, # Roll, Pitch, Yaw
-          false,
-          false,
-          false, # Vx, Vy, Vz
-          false,
-          false,
-          false, # Vroll, Vpitch, Vyaw
-          false,
-          false,
-          false, # Ax, Ay, Az
-        ]
-      odom0_queue_size: 10
-      odom0_differential: false
-      odom0_relative: false
-      odom0_pose_use_child_frame: true # Handle non-trivial base frame offset.
-
   ground_segmentation_node:
     ros__parameters:
-      lidar_to_ground: -1.91 # [m]
+      lidar_to_ground: -0.31 # [m] 0.15 camera above the deck + 0.16 freeboard
       groundInlierThreshold: 0.05 # [m]
       maxGroundHeightDeviation: 0.05 # [m]
