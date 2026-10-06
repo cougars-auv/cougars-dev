@@ -35,4 +35,5 @@ build() {
   compose run --rm builder && compose up -d runtime
 }
 restart() { compose up -d --force-recreate; }
+stop() { compose stop runtime; }
 logs() { docker logs -f cougars-runtime-ct; }
