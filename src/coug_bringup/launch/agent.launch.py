@@ -52,7 +52,6 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
 
     scenario_param_path = LaunchConfiguration("scenario_param_file").perform(context)
 
-    coug_belief_mppi_dir = FindPackageShare("coug_belief_mppi")
     coug_comms_dir = get_package_share_directory("coug_comms")
     coug_comms_launch_dir = os.path.join(coug_comms_dir, "launch")
     coug_control_dir = get_package_share_directory("coug_control")
@@ -63,6 +62,8 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
     coug_fg_launch_dir = os.path.join(coug_fg_dir, "launch")
     coug_helm_dir = get_package_share_directory("coug_helm")
     coug_helm_launch_dir = os.path.join(coug_helm_dir, "launch")
+
+    coug_belief_mppi_dir = FindPackageShare("coug_belief_mppi")
     coug_perception_dir = FindPackageShare("coug_perception")
     coug_terrain_dir = FindPackageShare("coug_terrain")
     coug_visual_dvl_dir = FindPackageShare("coug_visual_dvl")
