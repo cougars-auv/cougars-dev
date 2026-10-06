@@ -16,6 +16,10 @@
     ros__parameters:
       tree_file: "follow_waypoints_nav2.xml"
 
+  coug_terrain_launch:
+    ros__parameters:
+      ahrs_topic: "mavros/imu/data"
+
   controller_server:
     ros__parameters:
       controller_frequency: 20.0 # [Hz]

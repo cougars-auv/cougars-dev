@@ -12,10 +12,6 @@
       FollowPath:
         visualize: true
 
-  imu_filter_madgwick:
-    ros__parameters:
-      declination: -0.108460 # [rad] WMMHR-2025 (27.3661 N, 82.4509 W, 2027-06-02)
-
 mapviz:
   ros__parameters:
     default_capture_radius: 0.1 # [m]

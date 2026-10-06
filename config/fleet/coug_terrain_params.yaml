@@ -4,6 +4,7 @@
       dem_file: ""
       dsm_file: ""
       dsm_dem_file: ""
+      ahrs_topic: "camera/imu/data"
 
   dem_costmap_node:
     ros__parameters:
