@@ -34,7 +34,7 @@
       ahrs:
         use_parameter_frame: true
         enable_ahrs: true
-        use_parameter_sigmas: true # TODO: Test this
+        use_parameter_sigmas: true
         parameter_sigmas:
           # https://docs.clearpathrobotics.com/assets/files/clearpath_robotics_014603-TDS1-8efeae7b74bd54c43ea676651f063dbf.pdf
           orientation_noise_sigmas: [0.00436, 0.00436, 0.01396] # [roll, pitch, yaw] [rad]
