@@ -60,14 +60,15 @@
   cd ~/cougars-dev/ops && ./connect.sh <agent-ns>
   ```
 
-- Use the configured commands to pull the latest code from both remotes, import the vcs-pinned packages, update the Docker images, rebuild the workspace, and restart the ROS 2 software.
+- Use the configured commands to pull the latest code from both remotes, import the vcs-pinned packages, update the Docker images, rebuild the workspace, and restart, monitor, and stop the ROS 2 software.
 
   ```bash
-  pull
-  pull-base
-  vcs-import
-  docker-pull
-  build
-  restart
-  logs
+  pull        # Pull all updates from GitHub
+  pull-base   # Pull all updates from the base station
+  vcs-import  # Import the packages in runtime.repos
+  docker-pull # Pull the latest Docker images
+  build       # Rebuild the workspace
+  restart     # Restart the ROS 2 software
+  logs        # Follow the Docker container logs
+  stop        # Stop the ROS 2 software
   ```

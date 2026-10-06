@@ -32,7 +32,7 @@ vcs-import() { ~/cougars-dev/ops/import.sh; }
 docker-pull() { compose pull; }
 build() {
   compose stop runtime
-  compose run --rm builder && compose up -d runtime
+  compose run --rm builder
 }
 restart() { compose up -d --force-recreate; }
 stop() { compose stop runtime; }
