@@ -11,6 +11,10 @@ repositories:
     type: zip
     url: https://github.com/Robotic-Decision-Making-Lab/blue/archive/refs/heads/main.zip
     version: blue-main/blue_description
+  coug_belief_mppi:
+    type: git
+    url: git@github.com:cougars-auv/coug_belief_mppi.git
+    version: main
   coug_gazebo:
     type: git
     url: git@github.com:cougars-auv/coug_gazebo.git
@@ -23,6 +27,10 @@ repositories:
     type: git
     url: git@github.com:cougars-auv/coug_mapviz.git
     version: main
+  coug_perception:
+    type: git
+    url: git@github.com:cougars-auv/coug_perception.git
+    version: main
   coug_rqt:
     type: git
     url: git@github.com:cougars-auv/coug_rqt.git
@@ -31,14 +39,38 @@ repositories:
     type: git
     url: git@github.com:cougars-auv/coug_template.git
     version: main
+  coug_terrain:
+    type: git
+    url: git@github.com:cougars-auv/coug_terrain.git
+    version: main
+  coug_visual_dvl:
+    type: git
+    url: git@github.com:cougars-auv/coug_visual_dvl.git
+    version: main
   eigen_checks:
     type: zip
     url: https://github.com/tu-darmstadt-ros-pkg/eigen_checks/archive/refs/heads/ros2.zip
     version: eigen_checks-ros2
+  ground_segmentation:
+    type: zip
+    url: https://github.com/dfki-ric/ground_segmentation/archive/refs/heads/master.zip
+    version: ground_segmentation-master
+  ground_segmentation_ros2:
+    type: zip
+    url: https://github.com/dfki-ric/ground_segmentation_ros2/archive/refs/heads/master.zip
+    version: ground_segmentation_ros2-master
   holoocean_interfaces:
     type: zip
     url: https://github.com/cougars-auv/holoocean-ros/archive/refs/heads/main.zip
     version: holoocean-ros-main/holoocean_interfaces
+  lidar_cluster_ros2:
+    type: zip
+    url: https://github.com/cougars-auv/lidar_cluster_ros2/archive/refs/heads/ros2.zip
+    version: lidar_cluster_ros2-ros2
+  nav2_ground_consistency_costmap_plugin:
+    type: zip
+    url: https://github.com/dfki-ric/nav2_ground_consistency_costmap_plugin/archive/refs/heads/main.zip
+    version: nav2_ground_consistency_costmap_plugin-main
   voxblox_ros2:
     type: zip
     url: https://github.com/tu-darmstadt-ros-pkg/voxblox_ros2/archive/refs/heads/ros2.zip

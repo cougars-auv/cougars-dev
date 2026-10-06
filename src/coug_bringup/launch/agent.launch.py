@@ -35,6 +35,7 @@ from launch.substitutions import (
     PythonExpression,
 )
 from launch_ros.actions import Node, PushRosNamespace
+from launch_ros.substitutions import FindPackageShare
 
 
 def is_agent(agent_ns: LaunchConfiguration, *names: str) -> PythonExpression:
@@ -51,8 +52,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
 
     scenario_param_path = LaunchConfiguration("scenario_param_file").perform(context)
 
-    coug_belief_mppi_dir = get_package_share_directory("coug_belief_mppi")
-    coug_belief_mppi_launch_dir = os.path.join(coug_belief_mppi_dir, "launch")
+    coug_belief_mppi_dir = FindPackageShare("coug_belief_mppi")
     coug_comms_dir = get_package_share_directory("coug_comms")
     coug_comms_launch_dir = os.path.join(coug_comms_dir, "launch")
     coug_control_dir = get_package_share_directory("coug_control")
@@ -63,12 +63,9 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
     coug_fg_launch_dir = os.path.join(coug_fg_dir, "launch")
     coug_helm_dir = get_package_share_directory("coug_helm")
     coug_helm_launch_dir = os.path.join(coug_helm_dir, "launch")
-    coug_perception_dir = get_package_share_directory("coug_perception")
-    coug_perception_launch_dir = os.path.join(coug_perception_dir, "launch")
-    coug_terrain_dir = get_package_share_directory("coug_terrain")
-    coug_terrain_launch_dir = os.path.join(coug_terrain_dir, "launch")
-    coug_visual_dvl_dir = get_package_share_directory("coug_visual_dvl")
-    coug_visual_dvl_launch_dir = os.path.join(coug_visual_dvl_dir, "launch")
+    coug_perception_dir = FindPackageShare("coug_perception")
+    coug_terrain_dir = FindPackageShare("coug_terrain")
+    coug_visual_dvl_dir = FindPackageShare("coug_visual_dvl")
 
     fleet_param_file = PathJoinSubstitution(
         [EnvironmentVariable("CONFIG_DIR"), "fleet", "coug_bringup_params.yaml"]
@@ -99,7 +96,9 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                 ),
                 IncludeLaunchDescription(
                     PythonLaunchDescriptionSource(
-                        os.path.join(coug_belief_mppi_launch_dir, "coug_belief_mppi.launch.py")
+                        PathJoinSubstitution(
+                            [coug_belief_mppi_dir, "launch", "coug_belief_mppi.launch.py"]
+                        )
                     ),
                     launch_arguments={
                         "use_sim_time": use_sim_time,
@@ -210,7 +209,9 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                 ),
                 IncludeLaunchDescription(
                     PythonLaunchDescriptionSource(
-                        os.path.join(coug_perception_launch_dir, "coug_perception.launch.py")
+                        PathJoinSubstitution(
+                            [coug_perception_dir, "launch", "coug_perception.launch.py"]
+                        )
                     ),
                     launch_arguments={
                         "use_sim_time": use_sim_time,
@@ -221,7 +222,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                 ),
                 IncludeLaunchDescription(
                     PythonLaunchDescriptionSource(
-                        os.path.join(coug_terrain_launch_dir, "coug_terrain.launch.py")
+                        PathJoinSubstitution([coug_terrain_dir, "launch", "coug_terrain.launch.py"])
                     ),
                     launch_arguments={
                         "use_sim_time": use_sim_time,
@@ -234,7 +235,9 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                 ),
                 IncludeLaunchDescription(
                     PythonLaunchDescriptionSource(
-                        os.path.join(coug_visual_dvl_launch_dir, "coug_visual_dvl.launch.py")
+                        PathJoinSubstitution(
+                            [coug_visual_dvl_dir, "launch", "coug_visual_dvl.launch.py"]
+                        )
                     ),
                     launch_arguments={
                         "use_sim_time": use_sim_time,

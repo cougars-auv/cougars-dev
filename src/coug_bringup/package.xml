@@ -8,16 +8,12 @@
   <license>Apache-2.0</license>
 
   <exec_depend>ament_index_python</exec_depend>
-  <exec_depend>coug_belief_mppi</exec_depend>
   <exec_depend>coug_comms</exec_depend>
   <exec_depend>coug_control</exec_depend>
   <exec_depend>coug_description</exec_depend>
   <exec_depend>coug_fg</exec_depend>
   <exec_depend>coug_helm</exec_depend>
   <exec_depend>coug_interfaces</exec_depend>
-  <exec_depend>coug_perception</exec_depend>
-  <exec_depend>coug_terrain</exec_depend>
-  <exec_depend>coug_visual_dvl</exec_depend>
   <exec_depend>diagnostic_msgs</exec_depend>
   <exec_depend>diagnostic_updater</exec_depend>
   <exec_depend>ffmpeg_image_transport</exec_depend>
