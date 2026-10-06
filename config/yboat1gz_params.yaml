@@ -34,12 +34,8 @@
         vx_min: -0.7 # [m/s]
         wz_max: 0.524 # [rad/s] BlueOS ATC_STR_RAT_MAX (30 deg/s)
 
-        ax_max: 0.7 # [m/s^2] BlueOS ATC_ACCEL_MAX
-        ax_min: -1.0 # [m/s^2] BlueOS ATC_DECEL_MAX
-        az_max: 0.524 # [rad/s^2] BlueOS ATC_STR_ACC_MAX (30 deg/s^2)
-
         vx_std: 0.4 # [m/s]
-        wz_std: 0.11 # [rad/s]
+        wz_std: 0.8 # [rad/s]
 
         prune_distance: 4.0 # [m]
 
@@ -85,6 +81,9 @@
       ros__parameters:
         update_frequency: 1.0 # [Hz]
         publish_frequency: 0.0 # [Hz]
+        width: 200 # [m]
+        height: 200 # [m]
+        resolution: 0.1 # [m/cell]
 
         footprint: "[[0.6, 0.465], [0.6, -0.465], [-0.6, -0.465], [-0.6, 0.465]]" # BlueBoat 1.2 x 0.93 m
         plugins: ["ground_consistency_layer", "inflation_layer"]
@@ -95,14 +94,14 @@
           nonground_points_topic: "/yboat1gz/ground_segmentation/obstacle_points"
 
           robot_height: 1.4 # [m]
-          max_data_range: 0.0 # [m]
+          max_data_range: 15.0 # [m]
           nonground_prob_thresh: 0.5
           nonground_decay: 0.95
 
         inflation_layer:
           plugin: "nav2_costmap_2d::InflationLayer"
-          inflation_radius: 2.26 # [m]
-          cost_scaling_factor: 3.08 # [1/m]
+          inflation_radius: 1.26 # [m]
+          cost_scaling_factor: 6.96 # [1/m]
 
   local_costmap:
     local_costmap:
@@ -124,8 +123,8 @@
 
         inflation_layer:
           plugin: "nav2_costmap_2d::InflationLayer"
-          inflation_radius: 1.76 # [m]
-          cost_scaling_factor: 4.27 # [1/m]
+          inflation_radius: 1.06 # [m]
+          cost_scaling_factor: 9.29 # [1/m]
 
   planner_server:
     ros__parameters:
@@ -161,8 +160,16 @@
           false, # Ax, Ay, Az
         ]
 
+  landmark_tracker_node:
+    ros__parameters:
+      max_range: 5.0 # [m]
+
+  euclidean_cluster_node:
+    ros__parameters:
+      minZ: 0.05 # [m]
+
   ground_segmentation_node:
     ros__parameters:
-      lidar_to_ground: -0.31 # [m] 0.15 camera above the deck + 0.16 freeboard
+      lidar_to_ground: -0.46 # [m]
       groundInlierThreshold: 0.05 # [m]
       maxGroundHeightDeviation: 0.05 # [m]
