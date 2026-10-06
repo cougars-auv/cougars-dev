@@ -164,6 +164,28 @@
           false, # Ax, Ay, Az
         ]
 
+      odom2: "odometry/local"
+      odom2_config: [
+          false,
+          false,
+          false, # X, Y, Z
+          false,
+          false,
+          false, # Roll, Pitch, Yaw
+          true,
+          true,
+          false, # Vx, Vy, Vz
+          false,
+          false,
+          false, # Vroll, Vpitch, Vyaw
+          false,
+          false,
+          false, # Ax, Ay, Az
+        ]
+      odom2_queue_size: 10
+      odom2_differential: false
+      odom2_relative: false
+
   landmark_tracker_node:
     ros__parameters:
       max_range: 5.0 # [m]

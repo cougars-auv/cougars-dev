@@ -358,6 +358,18 @@
       input_topic: "imu/data_ned"
       output_topic: "imu/data"
 
+  mavros_odom_covariance_node:
+    ros__parameters:
+      # --- Node Settings ---
+      position_noise_sigmas: [1.0, 1.0, 1.0] # [x, y, z] [m]
+      orientation_noise_sigmas: [0.05, 0.05, 0.05] # [roll, pitch, yaw] [rad]
+      velocity_noise_sigmas: [0.1, 0.1, 0.1] # [x, y, z] [m/s]
+      angular_velocity_noise_sigmas: [0.05, 0.05, 0.05] # [x, y, z] [rad/s]
+
+      # --- ROS Topics ---
+      input_topic: "mavros/local_position/odom"
+      output_topic: "odometry/local"
+
   navsat_odom_node:
     ros__parameters:
       # --- Node Settings ---
@@ -662,11 +674,6 @@
       yaw_offset: 0.0 # [rad]
 
       orientation_stddev: 0.05 # [rad]
-
-  mavros_odom_relay_node:
-    ros__parameters:
-      input_topic: "mavros/local_position/odom"
-      output_topic: "odometry/local"
 
   rtk_gps_truth_relay_node:
     ros__parameters:
