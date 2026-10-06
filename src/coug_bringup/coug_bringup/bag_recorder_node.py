@@ -86,6 +86,7 @@ class BagRecorderNode(Node):
             timestamp = datetime.now().astimezone().strftime("%Y-%m-%d-%H-%M-%S")
             path = os.path.join(self._bag_dir, f"{base}_{self._agent_ns}_{timestamp}")
             self._bag_path = path
+            sim_time_args = ["--use-sim-time"] if self.get_parameter("use_sim_time").value else []
             self._bag_process = subprocess.Popen(
                 [
                     "ros2",
@@ -98,6 +99,7 @@ class BagRecorderNode(Node):
                     "mcap",
                     "--exclude-topics",
                     "/clock",
+                    *sim_time_args,
                 ]
             )
             response.success = True
