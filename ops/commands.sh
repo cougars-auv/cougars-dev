@@ -30,6 +30,9 @@ pull() { pull_all origin; }
 pull-base() { pull_all base; }
 vcs-import() { ~/cougars-dev/ops/import.sh; }
 docker-pull() { compose pull; }
-build() { compose run --rm builder; }
+build() {
+  compose stop runtime
+  compose run --rm builder && compose up -d runtime
+}
 restart() { compose up -d --force-recreate; }
 logs() { docker logs -f cougars-runtime-ct; }
