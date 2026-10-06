@@ -35,7 +35,7 @@
         wz_max: 0.524 # [rad/s] BlueOS ATC_STR_RAT_MAX (30 deg/s)
 
         vx_std: 0.4 # [m/s]
-        wz_std: 0.8 # [rad/s]
+        wz_std: 0.4 # [rad/s]
 
         prune_distance: 4.0 # [m]
 
