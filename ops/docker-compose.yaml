@@ -24,8 +24,6 @@ services:
       - ../log:/ros2_ws/log
     environment:
       - MAKEFLAGS=-j2
-    mem_limit: 6g
-    memswap_limit: 6g
     command: >
       nice -n 19 colcon build --parallel-workers 1
       --cmake-args -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_TESTING=OFF
