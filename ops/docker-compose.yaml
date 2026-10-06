@@ -22,7 +22,7 @@ services:
       - ../build:/ros2_ws/build
       - ../install:/ros2_ws/install
       - ../log:/ros2_ws/log
-    command: colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release
+    command: colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF
 
   router:
     image: frostlab/cougars:runtime-${VERSION:-latest}
