@@ -110,7 +110,7 @@
 
           robot_height: 1.625 # [m]
           max_data_range: 0.0 # [m]
-          nonground_prob_thresh: 0.5 # Allow smaller rocks to trigger the larger global costmap cells.
+          nonground_prob_thresh: 0.5
           nonground_decay: 0.95
 
         inflation_layer:
