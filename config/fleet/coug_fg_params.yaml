@@ -26,7 +26,7 @@
     max_opt_rate_hz: 0.0 # [Hz] Max graph optimization rate. 0.0 for no limit.
     smoother_lag_sec: 20.0 # [s]
     relinearize_threshold: 0.1
-    relinearize_skip: 1
+    relinearize_skip: 10
 
     # --- Keyframe Settings ---
     # "DVL" (default), "Depth", "Timer", "None"
