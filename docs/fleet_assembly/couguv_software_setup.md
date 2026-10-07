@@ -8,13 +8,13 @@
 
   ```yaml
   /<agent-ns>:
-    coug_description_launch:
-      ros__parameters:
-        urdf_file: "<agent-type>.urdf.xacro"
-
     coug_comms_base_launch:
       ros__parameters:
         beacon_id: <beacon-id>
+
+    coug_description_launch:
+      ros__parameters:
+        urdf_file: "<agent-type>.urdf.xacro"
   ```
 
 - Commit and push the new file.
