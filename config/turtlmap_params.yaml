@@ -12,12 +12,17 @@
         parameter_sigmas:
           accel_noise_density_sigmas: [2.4525e-4, 2.4525e-4, 2.4525e-4] # [x, y, z] [m/s^2/√Hz] br2config.yaml
           gyro_noise_density_sigmas: [8.726646e-5, 8.726646e-5, 8.726646e-5] # [x, y, z] [rad/s/√Hz] br2config.yaml
-        accel_bias_rw_sigmas: [6.20438876e-3, 6.20438876e-3, 6.20438876e-3] # [x, y, z] [m/s^2/√s] br2config.yaml
-        gyro_bias_rw_sigmas: [6.1324618e-4, 6.1324618e-4, 6.1324618e-4] # [x, y, z] [rad/s/√s] br2config.yaml
+        # Gauss-Markov fit K ≈ 2.3 * B / √tau_c at tau_c = 500 s.
+        # https://www.microstrain.com/sites/default/files/3dm-gx5-25_datasheet_8400-0093_1.pdf
+        accel_bias_rw_sigmas: [4.04e-5, 4.04e-5, 4.04e-5] # [x, y, z] [m/s^2/√s]
+        gyro_bias_rw_sigmas: [3.99e-6, 3.99e-6, 3.99e-6] # [x, y, z] [rad/s/√s]
+        # accel_bias_rw_sigmas: [6.20438876e-3, 6.20438876e-3, 6.20438876e-3] # [x, y, z] [m/s^2/√s] br2config.yaml
+        # gyro_bias_rw_sigmas: [6.1324618e-4, 6.1324618e-4, 6.1324618e-4] # [x, y, z] [rad/s/√s] br2config.yaml
         integration_covariance: 1.0e-8 # TURTLMap Posegraph.cpp setImuParams()
         gravity: [0.0, 0.0, -9.81007] # [x, y, z] [m/s^2] br2config.yaml (g: 9.81007)
 
       dvl_topic: "dvl/twist_fom"
+      beams_topic: "dvl/beams_fom"
 
       gps:
         enable_gps: false
@@ -51,7 +56,8 @@
     ros__parameters:
       use_parameter_frame: true
       override_timestamp: true # DVL A50 clock is not synced in these bags
-      use_turtlmap_fom_covariance: true
+
+      # use_turtlmap_fom_covariance: true
 
   fluid_pressure_odom_node:
     ros__parameters:

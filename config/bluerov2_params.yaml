@@ -24,6 +24,9 @@
       # ahrs:
       #   enable_ahrs: true
 
+      dvl:
+        use_parameter_sigmas: true
+
       priors:
         use_parameter_priors: false
         use_parameter_priors_sigmas: false
@@ -31,6 +34,10 @@
   dvl_a50_odom_node:
     ros__parameters:
       use_parameter_frame: true
+
+  dvl_a50_twist_beams_node:
+    ros__parameters:
+      velocity_scale: 0.975 # Speed of sound correction (Utah Lake)
 
   fluid_pressure_odom_node:
     ros__parameters:
