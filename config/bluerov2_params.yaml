@@ -24,9 +24,6 @@
       # ahrs:
       #   enable_ahrs: true
 
-      dvl:
-        robust_kernel: "Huber"
-
       priors:
         use_parameter_priors: false
         use_parameter_priors_sigmas: false

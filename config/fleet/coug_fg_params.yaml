@@ -300,10 +300,15 @@
   dvl_a50_twist_beams_node:
     ros__parameters:
       # --- Node Settings ---
-      override_timestamp: false # Stamp with receive time (if the A50 clock isn't synced).
+      override_timestamp: false # Stamp with receive time minus A50 latency (if the A50 clock isn't synced).
 
       fom_valid_threshold: 0.01 # [m/s] FOM below this is accepted even if the DVL flags the velocity invalid.
-      fom_covariance_scale: 4.0 # TURTLMap-based FOM covariance calculation.
+      fom_sigma_scale: 16.0
+      beam_fom_sigma_scale: 16.0
+
+      # TURTLMap-based FOM covariance calculation
+      use_turtlmap_fom_covariance: false
+      turtlmap_fom_covariance_scale: 4.0
 
       # https://docs.waterlinked.com/dvl/dvl-a50/
       beam_field_of_view_radians: 0.0768 # [rad] Half-power beam width.
@@ -311,7 +316,6 @@
       beam_max_range: 500.0 # [m] Maximum reportable beam distance.
 
       # https://docs.waterlinked.com/dvl/dvl-a50/
-      beam_velocity_noise_sigma: 0.011 # [m/s]
       beam_range_noise_sigma: 0.1 # [m]
 
       # --- ROS Topics and Frames ---

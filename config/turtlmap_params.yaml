@@ -51,6 +51,7 @@
     ros__parameters:
       use_parameter_frame: true
       override_timestamp: true # DVL A50 clock is not synced in these bags
+      use_turtlmap_fom_covariance: true
 
   fluid_pressure_odom_node:
     ros__parameters:
