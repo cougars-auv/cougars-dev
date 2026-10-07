@@ -53,6 +53,7 @@ launch_args=(
 
 if [[ "${options}" == *"Record rosbag"* ]]; then
   prefix=$(gum input --placeholder "Set bag prefix..." || true)
+  prefix=${prefix//[^A-Za-z0-9_-]/_}
   launch_args+=("record_bag_path:=${BAGS_DIR}/${prefix:-rosbag}$(date +'_%Y-%m-%d-%H-%M-%S')")
 fi
 
