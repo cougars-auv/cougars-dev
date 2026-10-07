@@ -8,7 +8,7 @@
       publish_diagnostics: true
       bag_record_service: "bag_record"
 
-  rgb_ffmpeg_republish:
+  image_republisher:
     ros__parameters:
       in_transport: "raw"
       out_transport: "ffmpeg"

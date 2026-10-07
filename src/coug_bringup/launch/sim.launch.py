@@ -211,7 +211,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                     Node(
                         package="image_transport",
                         executable="republish",
-                        name="rgb_ffmpeg_republish",
+                        name="image_republisher",
                         parameters=[
                             fleet_param_file,
                             agent_param_file,
