@@ -301,7 +301,7 @@
     ros__parameters:
       # --- Node Settings ---
       override_timestamp: false # Stamp with receive time minus A50 latency (if the A50 clock isn't synced).
-      velocity_scale: 1.0 # Scale factor for all DVL velocities (actual / configured speed of sound).
+      velocity_scale: 1.0 # Scale factor to correct configured speed of sound errors.
 
       fom_valid_threshold: 0.01 # [m/s] FOM below this is accepted even if the DVL flags the velocity invalid.
 
