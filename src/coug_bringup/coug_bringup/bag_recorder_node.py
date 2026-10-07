@@ -72,7 +72,10 @@ class BagRecorderNode(Node):
         if request.start:
             if self._bag_process is not None:
                 response.success = False
-                response.message = f"Bag recording already in progress: '{os.path.basename(self._bag_path or '')}'."
+                response.message = (
+                    "Bag recording already in progress: "
+                    f"'{os.path.basename(self._bag_path or '')}'."
+                )
                 self.get_logger().warning(response.message)
                 return response
 
