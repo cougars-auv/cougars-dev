@@ -305,10 +305,6 @@
       fom_valid_threshold: 0.01 # [m/s] FOM below this is accepted even if the DVL flags the velocity invalid.
       fom_covariance_scale: 4.0 # TURTLMap-based FOM covariance calculation.
 
-      simulate_dropout: false
-      dropout_rate_hz: 0.033 # [Hz] 0.0 disables.
-      dropout_duration_sec: 5.0 # [s]
-
       # https://docs.waterlinked.com/dvl/dvl-a50/
       beam_field_of_view_radians: 0.0768 # [rad] Half-power beam width.
       beam_min_range: 0.05 # [m] Minimum reportable beam distance.
