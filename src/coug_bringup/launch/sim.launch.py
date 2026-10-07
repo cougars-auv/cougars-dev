@@ -211,7 +211,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                     Node(
                         package="image_transport",
                         executable="republish",
-                        name="rgb_ffmpeg_republish_node",
+                        name="rgb_ffmpeg_republish",
                         parameters=[
                             fleet_param_file,
                             agent_param_file,
@@ -226,7 +226,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                     Node(
                         package="voxblox_ros",
                         executable="tsdf_server",
-                        name="voxblox_node",
+                        name="tsdf_server",
                         condition=IfCondition(enable_mapping),
                         parameters=[
                             fleet_param_file,

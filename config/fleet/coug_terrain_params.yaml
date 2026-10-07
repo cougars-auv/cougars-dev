@@ -30,7 +30,7 @@
       origin_topic: "/origin"
       output_topic: "terrain/dsm/occupancy"
 
-  ground_segmentation_node:
+  ground_segmentation:
     ros__parameters:
       maxX: 100.0 # [m]
       minX: -100.0 # [m]

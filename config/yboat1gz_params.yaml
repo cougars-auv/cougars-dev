@@ -190,11 +190,11 @@
     ros__parameters:
       max_range: 5.0 # [m]
 
-  euclidean_cluster_node:
+  euclidean_spatial:
     ros__parameters:
       minZ: 0.05 # [m]
 
-  ground_segmentation_node:
+  ground_segmentation:
     ros__parameters:
       lidar_to_ground: -0.46 # [m]
       groundInlierThreshold: 0.05 # [m]

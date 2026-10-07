@@ -47,7 +47,7 @@
       marker_topic: "landmarks/markers"
       label_topic: "landmarks/labels"
 
-  euclidean_cluster_node:
+  euclidean_spatial:
     ros__parameters:
       minX: -13.5 # [m]
       maxX: 13.5 # [m]

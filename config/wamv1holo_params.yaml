@@ -136,7 +136,7 @@
     ros__parameters:
       beacon_id: 5
 
-  ground_segmentation_node:
+  ground_segmentation:
     ros__parameters:
       lidar_to_ground: -2.17 # [m]
       groundInlierThreshold: 0.25 # [m]

@@ -8,7 +8,7 @@
       publish_diagnostics: false
       bag_record_service: "bag_record"
 
-  rgb_ffmpeg_republish_node:
+  rgb_ffmpeg_republish:
     ros__parameters:
       in_transport: "raw"
       out_transport: "ffmpeg"
@@ -19,7 +19,7 @@
           bit_rate: 4194304 # [bits/s]
           gop_size: 10 # Frames between keyframes.
 
-  voxblox_node:
+  tsdf_server:
     ros__parameters:
       tsdf_voxel_size: 0.05 # [m]
       method: "fast"

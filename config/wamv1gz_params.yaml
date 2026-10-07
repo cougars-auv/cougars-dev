@@ -129,13 +129,13 @@
 
   navsat_odom_node:
     ros__parameters:
-      ahrs_topic: "camera/imu/data"
+      ahrs_topic: "camera/imu/data_madgwick"
 
   ekf_filter_node_map:
     ros__parameters:
       publish_tf: true
 
-      imu0: "camera/imu/data_raw"
+      imu0: "camera/imu/data"
       # IMPORTANT! Handle non-trivial IMU rotation for robot_localization gravity mishandling bug.
       imu0_config: [
           false,
@@ -155,7 +155,7 @@
           false, # Ax, Ay, Az
         ]
 
-      imu1: "camera/imu/data"
+      imu1: "camera/imu/data_madgwick"
       imu1_config: [
           false,
           false,
@@ -174,7 +174,7 @@
           false, # Ax, Ay, Az
         ]
 
-      imu2: "camera/imu/data_raw"
+      imu2: "camera/imu/data"
       imu2_config: [
           false,
           false,
@@ -241,7 +241,7 @@
     ros__parameters:
       frequency: 50.0 # [Hz]
 
-      imu0: "camera/imu/data_raw"
+      imu0: "camera/imu/data"
       # IMPORTANT! Handle non-trivial IMU rotation for robot_localization gravity mishandling bug.
       imu0_config: [
           false,
@@ -284,7 +284,7 @@
       odom0_relative: false
       odom0_pose_use_child_frame: true # Handle non-trivial base frame offset.
 
-  ground_segmentation_node:
+  ground_segmentation:
     ros__parameters:
       lidar_to_ground: -1.91 # [m]
       groundInlierThreshold: 0.05 # [m]

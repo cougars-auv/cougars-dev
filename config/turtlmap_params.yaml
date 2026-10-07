@@ -99,6 +99,8 @@
           false, # Ax, Ay, Az
         ]
 
+      imu1: "imu/data"
+
   ekf_filter_node_odom:
     ros__parameters:
       gravitational_acceleration: 9.81007 # [m/s^2] br2config.yaml (g: 9.81007)
@@ -178,3 +180,5 @@
           false,
           false, # Ax, Ay, Az
         ]
+
+      imu1: "imu/data"

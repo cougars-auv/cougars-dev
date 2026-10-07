@@ -17,7 +17,7 @@
 
       # --- ROS Topics ---
       input_topic: "camera/imu/data_gz"
-      output_topic: "camera/imu/data_raw"
+      output_topic: "camera/imu/data"
 
   mag_covariance_node:
     ros__parameters:

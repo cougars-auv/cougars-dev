@@ -498,7 +498,7 @@
       imu0_relative: false
       imu0_remove_gravitational_acceleration: true
 
-      imu1: "imu/data"
+      imu1: "imu/data_madgwick"
       imu1_config: [
           false,
           false,
@@ -671,7 +671,7 @@
 
       orientation_stddev: 0.05 # [rad]
 
-  rtk_gps_truth_relay_node:
+  rtk_gps_truth_relay:
     ros__parameters:
       input_topic: "gps/odometry"
       output_topic: "odometry/truth"
@@ -727,7 +727,7 @@
       imu0_relative: false
       imu0_remove_gravitational_acceleration: true
 
-      imu1: "imu/data"
+      imu1: "imu/data_madgwick"
       imu1_config: [
           false,
           false,

@@ -14,7 +14,7 @@
       setpoint_velocity:
         mav_frame: "BODY_NED"
 
-  cmd_vel_relay_node:
+  cmd_vel_relay:
     ros__parameters:
       input_topic: "cmd_vel_out"
       output_topic: "mavros/setpoint_velocity/cmd_vel"
