@@ -447,6 +447,7 @@
   sbg_imu_mag_node:
     ros__parameters:
       # --- Node Settings ---
+      stamp_offset_sec: 0.0 # [s]
       # IMPORTANT! This must match the magnitude of factor_graph_node's mag reference_field.
       au_to_tesla: 5.0286e-05
 

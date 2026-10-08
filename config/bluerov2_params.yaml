@@ -54,6 +54,10 @@
     ros__parameters:
       use_parameter_frame: true
 
+  sbg_imu_mag_node:
+    ros__parameters:
+      stamp_offset_sec: -0.06 # [s] IMPORTANT! SBG mag stamps lag behind IMU data (imu_filter_madwick fix)
+
   ekf_filter_node_map:
     ros__parameters:
       odom1: "gps/odometry_null"
