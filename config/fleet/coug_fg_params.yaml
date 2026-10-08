@@ -171,8 +171,8 @@
       covariance_scalar: 1.0
       use_parameter_sigmas: false
       parameter_sigmas:
-        # https://waterlinked.com/dvl-a50
-        velocity_noise_sigmas: [0.02, 0.02, 0.02] # [x, y, z] [m/s]
+        # https://docs.waterlinked.com/dvl/dvl-a50/
+        velocity_noise_sigmas: [0.0203, 0.0203, 0.00595] # [x, y, z] [m/s]
       diagnostic_timeout_sec: 0.25 # [s]
       robust_kernel: "None"
       robust_k: 1.345
