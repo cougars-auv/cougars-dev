@@ -293,7 +293,7 @@
 
       # --- ROS Topics and Frames ---
       input_topic: "dvl/position"
-      output_topic: "dvl/odometry_ned"
+      output_topic: "dvl/odometry"
 
       use_parameter_frame: false
 
@@ -401,11 +401,6 @@
       input_topic: "gps/odometry"
       output_topic: "odometry/truth"
 
-  odom_ned_to_enu_node:
-    ros__parameters:
-      input_topic: "dvl/odometry_ned"
-      output_topic: "dvl/odometry"
-
   odom_to_tf_node:
     ros__parameters:
       input_topic: "dvl/odometry"
@@ -422,16 +417,6 @@
 
       use_parameter_frame: false
 
-  seatrac_imu_ned_to_enu_node:
-    ros__parameters:
-      input_topic: "seatrac/imu/data_ned"
-      output_topic: "seatrac/imu/data"
-
-  seatrac_odom_ned_to_enu_node:
-    ros__parameters:
-      input_topic: "seatrac/depth/odometry_ned"
-      output_topic: "seatrac/depth/odometry"
-
   seatrac_x150_imu_depth_node:
     ros__parameters:
       # --- Node Settings ---
@@ -446,8 +431,8 @@
 
       # --- ROS Topics and Frames ---
       input_topic: "modem_status"
-      ahrs_output_topic: "seatrac/imu/data_ned"
-      depth_output_topic: "seatrac/depth/odometry_ned"
+      ahrs_output_topic: "seatrac/imu/data"
+      depth_output_topic: "seatrac/depth/odometry"
 
       use_parameter_frame: false
 
