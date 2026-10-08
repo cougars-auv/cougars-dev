@@ -50,7 +50,7 @@
         parameter_priors_sigmas:
           initial_velocity_sigmas: [0.1, 0.1, 0.1] # [x, y, z] [m/s] TURTLMap PosegraphBackendOnline.cpp callbackDVL()
         # https://docs.clearpathrobotics.com/assets/files/clearpath_robotics_014603-TDS1-8efeae7b74bd54c43ea676651f063dbf.pdf
-        initial_gyro_bias_sigmas: [3.9e-5, 3.9e-5, 3.9e-5] # [x, y, z] [rad/s]
+        initial_gyro_bias_sigmas: [6.98e-4, 6.98e-4, 6.98e-4] # [x, y, z] [rad/s]
 
   dvl_a50_twist_beams_node:
     ros__parameters:

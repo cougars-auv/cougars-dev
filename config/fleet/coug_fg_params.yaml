@@ -97,7 +97,7 @@
       covariance_scalar: 1.0
       use_parameter_sigmas: false
       parameter_sigmas:
-        # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/hardware-documentation/aiding-sensors
+        # https://content.u-blox.com/sites/default/files/documents/ZED-F9P-01B_DataSheet_UBX-17051259.pdf
         position_noise_sigmas: [0.015, 0.015] # [east, north] [m]
       diagnostic_timeout_sec: 2.0 # [s]
       robust_kernel: "None"
@@ -115,7 +115,7 @@
       use_parameter_sigmas: false
       parameter_sigmas:
         # https://www.te.com/commerce/DocumentDelivery/DDEController?Action=srchrtrv&DocNm=MS5837-02BA01&DocType=DS&DocLang=English
-        position_z_noise_sigma: 0.02 # [m]
+        position_z_noise_sigma: 0.02 # [m] ±2 mbar accuracy
       diagnostic_timeout_sec: 1.0 # [s]
       robust_kernel: "None"
       robust_k: 1.345
@@ -171,8 +171,9 @@
       covariance_scalar: 1.0
       use_parameter_sigmas: false
       parameter_sigmas:
-        # https://docs.waterlinked.com/dvl/dvl-a50/
-        velocity_noise_sigmas: [0.0203, 0.0203, 0.00595] # [x, y, z] [m/s]
+        # Janus beam geometry (22.5° tilt) with 0.0101 m/s beam noise.
+        # https://waterlinked.com/datasheets/dvl-a50
+        velocity_noise_sigmas: [0.0187, 0.0187, 0.00547] # [x, y, z] [m/s]
       diagnostic_timeout_sec: 0.25 # [s]
       robust_kernel: "None"
       robust_k: 1.345
@@ -213,10 +214,10 @@
       covariance_scalar: 1.0
       enable_bearing: true
       # https://www.blueprintsubsea.com/seatrac/seatrac-standard
-      bearing_noise_sigmas: [0.01745, 0.01745] # [azimuth, elevation] [rad]
+      bearing_noise_sigmas: [0.01745, 0.01745] # [azimuth, elevation] [rad] ~±1° angular resolution
       enable_range: true
       # https://www.blueprintsubsea.com/seatrac/seatrac-standard
-      range_noise_sigma: 0.1 # [m]
+      range_noise_sigma: 0.1 # [m] ±0.1 m range resolution
       sound_speed: 1500.0 # [m/s]
       neighbor:
         modem_tf: # Relative to the neighboring agent's base frame.
@@ -314,8 +315,9 @@
       beam_min_range: 0.05 # [m] Minimum reportable beam distance.
       beam_max_range: 500.0 # [m] Maximum reportable beam distance.
 
-      # https://docs.waterlinked.com/dvl/dvl-a50/
-      beam_velocity_noise_sigma: 0.011 # [m/s]
+      # ±1.01% long-term accuracy at 1 m/s.
+      # https://waterlinked.com/datasheets/dvl-a50
+      beam_velocity_noise_sigma: 0.0101 # [m/s]
       beam_range_noise_sigma: 0.1 # [m]
 
       # --- ROS Topics and Frames ---

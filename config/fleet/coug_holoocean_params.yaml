@@ -53,7 +53,7 @@
     ros__parameters:
       # --- Node Settings ---
       # https://www.te.com/commerce/DocumentDelivery/DDEController?Action=srchrtrv&DocNm=MS5837-02BA01&DocType=DS&DocLang=English
-      position_z_noise_sigma: 0.02 # [m]
+      position_z_noise_sigma: 0.02 # [m] ±2 mbar accuracy
 
       # --- ROS Topics and Frames ---
       input_topic: "DepthSensor"
@@ -65,8 +65,9 @@
       # IMPORTANT! This must match HoloOcean's MaxRange for the DVLSensor.
       max_range: 500.0 # [m] Beams at or beyond this are reported lost.
 
-      # https://waterlinked.com/dvl-a50
-      beam_velocity_noise_sigma: 0.011 # [m/s]
+      # ±1.01% long-term accuracy at 1 m/s.
+      # https://waterlinked.com/datasheets/dvl-a50
+      beam_velocity_noise_sigma: 0.0101 # [m/s]
       beam_range_noise_sigma: 0.1 # [m]
 
       # --- ROS Topics and Frames ---
@@ -80,7 +81,7 @@
       # --- Node Settings ---
       transform_timeout_sec: 0.1 # [s]
 
-      # https://waterlinked.com/dvl-a50
+      # https://waterlinked.com/datasheets/dvl-a50
       position_noise_sigma_scale: 0.0101 # [m/m]
       # https://docs.waterlinked.com/dvl/dead-reckoning/
       yaw_drift_sigma: 0.3 # [deg/min]
@@ -97,7 +98,7 @@
       origin_longitude: -111.90721
       origin_altitude: 1412.0
 
-      # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/hardware-documentation/aiding-sensors
+      # https://content.u-blox.com/sites/default/files/documents/ZED-F9P-01B_DataSheet_UBX-17051259.pdf
       position_noise_sigmas: [0.015, 0.015, 0.025] # [east, north, up] [m]
 
       # --- ROS Topics and Frames ---
@@ -161,8 +162,8 @@
       beacon_id: 1
 
       # https://www.blueprintsubsea.com/seatrac/seatrac-standard
-      bearing_noise_sigmas: [0.01745, 0.01745] # [azimuth, elevation] [rad]
-      range_noise_sigma: 0.1 # [m]
+      bearing_noise_sigmas: [0.01745, 0.01745] # [azimuth, elevation] [rad] ~±1° angular resolution
+      range_noise_sigma: 0.1 # [m] ±0.1 m range resolution
       # https://www.blueprintsubsea.com/downloads/seatrac/UM-140-D00221-13.pdf
       depth_noise_sigma: 0.1 # [m]
 
@@ -226,7 +227,7 @@
       atmospheric_pressure: 101325.0 # [Pa]
 
       # https://www.te.com/commerce/DocumentDelivery/DDEController?Action=srchrtrv&DocNm=MS5837-02BA01&DocType=DS&DocLang=English
-      fluid_pressure_noise_sigma: 195.61 # [Pa]
+      fluid_pressure_noise_sigma: 195.61 # [Pa] ±2 mbar accuracy
 
       # --- ROS Topics and Frames ---
       input_topic: "DepthSensor"

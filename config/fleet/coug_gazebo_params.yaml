@@ -22,7 +22,8 @@
   mag_covariance_node:
     ros__parameters:
       # --- Node Settings ---
-      magnetic_field_noise_sigmas: [3.0e-7, 3.0e-7, 3.0e-7] # [x, y, z] [T]
+      # https://github.com/stereolabs/zed-sdk/issues/487
+      magnetic_field_noise_sigmas: [5.0e-7, 5.0e-7, 5.0e-7] # [x, y, z] [T]
 
       # --- ROS Topics ---
       input_topic: "camera/imu/mag_gz"
@@ -31,6 +32,7 @@
   navsat_covariance_node:
     ros__parameters:
       # --- Node Settings ---
+      # https://content.u-blox.com/sites/default/files/documents/ZED-F9P-01B_DataSheet_UBX-17051259.pdf
       position_noise_sigmas: [0.015, 0.015, 0.025] # [east, north, up] [m]
 
       # --- ROS Topics ---
