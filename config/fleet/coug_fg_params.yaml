@@ -651,15 +651,18 @@
   imu_filter_madgwick:
     ros__parameters:
       use_mag: true
-      world_frame: "enu"
       publish_tf: false
-      gain: 0.1
 
+      yaw_offset: 0.0 # [rad]
       # East-positive declination (NOAA convention).
       # https://www.ngdc.noaa.gov/geomag/calculators/magcalc.shtml#declination
       declination: 0.185867 # [rad] WMMHR-2025 (40.2406 N, 111.741 W, 2027-06-02)
-      yaw_offset: 0.0 # [rad]
+      world_frame: "enu"
 
+      gain: 0.1
+      mag_bias_x: 0.0 # [T]
+      mag_bias_y: 0.0 # [T]
+      mag_bias_z: 0.0 # [T]
       orientation_stddev: 0.05 # [rad]
 
   ukf_filter_node_map:
