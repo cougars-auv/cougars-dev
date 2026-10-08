@@ -40,18 +40,12 @@ from launch.events import matches_action
 from launch.events.process import SignalProcess
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.logging import get_logger, launch_config
-from launch.substitution import Substitution
 from launch.substitutions import (
     EnvironmentVariable,
     LaunchConfiguration,
     PathJoinSubstitution,
-    PythonExpression,
 )
 from launch_ros.actions import Node, PushRosNamespace
-
-
-def agent_frame(agent_ns: str | Substitution, frame: str) -> PythonExpression:
-    return PythonExpression(["'", agent_ns, f"/{frame}' if '", agent_ns, f"' != '' else '{frame}'"])
 
 
 def snapshot_config() -> str:
@@ -264,22 +258,6 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                 condition=UnlessCondition(hitl_mode),
             )
         )
-
-        if agent_ns == "bluerov2":
-            actions.append(
-                Node(
-                    package="tf2_ros",
-                    executable="static_transform_publisher",
-                    name="sonar_link_to_sonar_frame_transform",
-                    arguments=[
-                        "--frame-id",
-                        agent_frame(agent_ns, "sonar_link"),
-                        "--child-frame-id",
-                        "sonar_frame",
-                    ],
-                    parameters=[{"use_sim_time": use_sim_time}],
-                )
-            )
 
         agent_param_file = PathJoinSubstitution(
             [EnvironmentVariable("CONFIG_DIR"), f"{agent_ns}_params.yaml"]
