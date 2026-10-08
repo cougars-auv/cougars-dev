@@ -181,23 +181,36 @@
 
     beams:
       enable_beams: true
-      use_parameter_frames: false
-      use_parameter_tfs: false
-      parameter_tfs: # Relative to the target frame.
-        beam0_position: [0.0, 0.0, 0.0] # [x, y, z] [m]
-        beam0_orientation: [0.0, 0.0, 0.0, 1.0] # [qx, qy, qz, qw]
-        beam1_position: [0.0, 0.0, 0.0] # [x, y, z] [m]
-        beam1_orientation: [0.0, 0.0, 0.0, 1.0] # [qx, qy, qz, qw]
-        beam2_position: [0.0, 0.0, 0.0] # [x, y, z] [m]
-        beam2_orientation: [0.0, 0.0, 0.0, 1.0] # [qx, qy, qz, qw]
-        beam3_position: [0.0, 0.0, 0.0] # [x, y, z] [m]
-        beam3_orientation: [0.0, 0.0, 0.0, 1.0] # [qx, qy, qz, qw]
+      beam0:
+        use_parameter_frame: false
+        use_parameter_tf: false
+        parameter_tf: # Relative to the target frame.
+          position: [0.0, 0.0, 0.0] # [x, y, z] [m]
+          orientation: [0.0, 0.0, 0.0, 1.0] # [qx, qy, qz, qw]
+      beam1:
+        use_parameter_frame: false
+        use_parameter_tf: false
+        parameter_tf: # Relative to the target frame.
+          position: [0.0, 0.0, 0.0] # [x, y, z] [m]
+          orientation: [0.0, 0.0, 0.0, 1.0] # [qx, qy, qz, qw]
+      beam2:
+        use_parameter_frame: false
+        use_parameter_tf: false
+        parameter_tf: # Relative to the target frame.
+          position: [0.0, 0.0, 0.0] # [x, y, z] [m]
+          orientation: [0.0, 0.0, 0.0, 1.0] # [qx, qy, qz, qw]
+      beam3:
+        use_parameter_frame: false
+        use_parameter_tf: false
+        parameter_tf: # Relative to the target frame.
+          position: [0.0, 0.0, 0.0] # [x, y, z] [m]
+          orientation: [0.0, 0.0, 0.0, 1.0] # [qx, qy, qz, qw]
       covariance_scalar: 1.0
       use_parameter_sigmas: false
       parameter_sigmas:
         # ±1.01% long-term accuracy at 1 m/s.
         # https://waterlinked.com/datasheets/dvl-a50
-        beam_velocity_noise_sigma: 0.0101 # [m/s]
+        velocity_noise_sigma: 0.0101 # [m/s]
       diagnostic_timeout_sec: 0.25 # [s]
       robust_kernel: "None"
       robust_k: 1.345
