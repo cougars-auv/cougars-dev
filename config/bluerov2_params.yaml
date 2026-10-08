@@ -3,6 +3,10 @@
     ros__parameters:
       urdf_file: "bluerov2.urdf.xacro"
 
+  coug_fg_base_launch:
+    ros__parameters:
+      gps_topic: "imu/nav_sat_fix"
+
   "**":
     ros__parameters:
       transform_time_offset: 0.3 # [s] Fix for sonar timestamps

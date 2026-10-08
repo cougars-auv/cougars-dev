@@ -1,4 +1,8 @@
 /**:
+  bag_launch:
+    ros__parameters:
+      pointcloud_topic: "camera/point_cloud/cloud_registered"
+
   sim_launch:
     ros__parameters:
       scenario_file: "couguv_openwater.json"

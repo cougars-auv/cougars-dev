@@ -3,6 +3,10 @@
     ros__parameters:
       urdf_file: "couguv.urdf.xacro"
 
+  coug_fg_base_launch:
+    ros__parameters:
+      gps_topic: "/fix"
+
   dvl_a50_odom_node:
     ros__parameters:
       use_parameter_frame: true

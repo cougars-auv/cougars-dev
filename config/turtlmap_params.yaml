@@ -1,4 +1,8 @@
 /turtlmap:
+  bag_launch:
+    ros__parameters:
+      pointcloud_topic: "/zedm/zed_node/point_cloud/cloud_registered"
+
   coug_description_launch:
     ros__parameters:
       urdf_file: "turtlmap.urdf.xacro"

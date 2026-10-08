@@ -1,4 +1,8 @@
 /**:
+  coug_fg_base_launch:
+    ros__parameters:
+      gps_topic: "gps/fix"
+
   ros__parameters:
     # --- Node Settings ---
     publish_global_tf: true # Publish the map -> odom transform.

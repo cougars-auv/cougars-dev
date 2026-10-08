@@ -78,6 +78,16 @@ def save_artifacts(record_bag_path: str, config_snapshot: str) -> None:
             get_logger("launch.user").info(f"{label} saved: {destination}")
 
 
+def load_launch_params(path: str, top_key: str) -> dict[str, Any]:
+    try:
+        with open(path) as config_file:
+            config = yaml.safe_load(config_file)
+        params = config[top_key]["bag_launch"]["ros__parameters"]
+        return dict(params)
+    except (KeyError, TypeError, OSError):
+        return {}
+
+
 def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Action]:
     use_sim_time = LaunchConfiguration("use_sim_time")
     agent_list_config = LaunchConfiguration("agent_list")
@@ -98,12 +108,15 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
 
     agent_list = yaml.safe_load(agent_list_str)
 
+    config_dir = os.environ["CONFIG_DIR"]
     coug_bringup_dir = get_package_share_directory("coug_bringup")
     coug_bringup_launch_dir = os.path.join(coug_bringup_dir, "launch")
 
     fleet_param_file = PathJoinSubstitution(
         [EnvironmentVariable("CONFIG_DIR"), "fleet", "coug_bringup_params.yaml"]
     )
+
+    fleet_param_path = os.path.join(config_dir, "fleet", "coug_bringup_params.yaml")
 
     actions: list[Action] = []
 
@@ -271,6 +284,14 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
         agent_param_file = PathJoinSubstitution(
             [EnvironmentVariable("CONFIG_DIR"), f"{agent_ns}_params.yaml"]
         )
+
+        agent_param_path = os.path.join(config_dir, f"{agent_ns}_params.yaml")
+        launch_params = {
+            **load_launch_params(fleet_param_path, "/**"),
+            **load_launch_params(agent_param_path, f"/{agent_ns}"),
+        }
+        pointcloud_topic = launch_params["pointcloud_topic"]
+
         actions.append(
             GroupAction(
                 actions=[
@@ -288,14 +309,7 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                                 "world_frame": "map",
                             },
                         ],
-                        remappings=[
-                            (
-                                "pointcloud_1",
-                                "/zedm/zed_node/point_cloud/cloud_registered"
-                                if agent_ns == "turtlmap"
-                                else "camera/point_cloud/cloud_registered",
-                            ),
-                        ],
+                        remappings=[("pointcloud_1", pointcloud_topic)],
                     ),
                 ]
             )
