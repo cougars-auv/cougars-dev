@@ -396,6 +396,11 @@
 
       use_parameter_child_frame: false
 
+  odom_child_to_base_node:
+    ros__parameters:
+      input_topic: "gps/odometry"
+      output_topic: "odometry/truth"
+
   odom_ned_to_enu_node:
     ros__parameters:
       input_topic: "dvl/odometry_ned"
@@ -675,11 +680,6 @@
       yaw_offset: 0.0 # [rad]
 
       orientation_stddev: 0.05 # [rad]
-
-  rtk_gps_truth_relay:
-    ros__parameters:
-      input_topic: "gps/odometry"
-      output_topic: "odometry/truth"
 
   ukf_filter_node_map:
     ros__parameters:
