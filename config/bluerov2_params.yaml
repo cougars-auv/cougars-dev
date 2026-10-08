@@ -37,7 +37,7 @@
 
   dvl_a50_twist_beams_node:
     ros__parameters:
-      velocity_scale: 0.975 # Speed of sound correction (Utah Lake)
+      velocity_scale: 0.963 # Speed of sound correction (Utah Lake, RTK-calibrated)
 
   fluid_pressure_odom_node:
     ros__parameters:
