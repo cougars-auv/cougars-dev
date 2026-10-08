@@ -40,7 +40,7 @@
     imu_topic: "imu/data"
     gps_odom_topic: "gps/odometry"
     depth_odom_topic: "depth/odometry"
-    mag_topic: "imu/mag"
+    mag_topic: "imu/mag_tesla"
     ahrs_topic: "imu/data"
     dvl_topic: "dvl/twist"
     beams_topic: "dvl/beams"
@@ -452,8 +452,8 @@
       au_to_tesla: 5.0286e-05
 
       # --- ROS Topics and Frames ---
-      input_topic: "imu/mag_au"
-      output_topic: "imu/mag"
+      input_topic: "imu/mag"
+      output_topic: "imu/mag_tesla"
 
       use_parameter_frame: false
 

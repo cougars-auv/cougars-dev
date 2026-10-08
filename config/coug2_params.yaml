@@ -8,22 +8,28 @@
       use_parameter_frame: true
       override_timestamp: true # DVL A50 clock is not synced in these bags
 
+      input_topic: "/dvl/position"
+
   dvl_a50_twist_beams_node:
     ros__parameters:
       use_parameter_frame: true
       override_timestamp: true # DVL A50 clock is not synced in these bags
+
+      input_topic: "/dvl/data"
 
   fluid_pressure_odom_node:
     ros__parameters:
       atmospheric_pressure: 82776.2 # [Pa] Deer Creek (~1673 m elevation)
       max_pressure_delta: 9780.0 # [Pa] ~1 m depth jump
 
+      input_topic: "/pressure/data"
       ahrs_topic: "seatrac/imu/data"
 
       use_parameter_child_frame: true
 
   navsat_odom_node:
     ros__parameters:
+      input_topic: "/fix"
       ahrs_topic: "seatrac/imu/data"
 
       use_parameter_child_frame: true
@@ -31,6 +37,8 @@
   seatrac_x150_imu_depth_node:
     ros__parameters:
       mag_declination_radians: 0.187962 # [rad] WMMHR-2025 (40.4166 N, 111.5077 W, 2025-08-28)
+
+      input_topic: "/modem_status"
 
       use_parameter_frame: true
 

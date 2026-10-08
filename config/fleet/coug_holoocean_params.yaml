@@ -149,7 +149,7 @@
 
       # --- ROS Topics and Frames ---
       input_topic: "MagnetometerSensor"
-      output_topic: "imu/mag_au"
+      output_topic: "imu/mag"
       bias_topic: "imu/mag/bias"
 
   modem_converter_node:

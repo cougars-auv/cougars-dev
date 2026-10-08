@@ -153,17 +153,6 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
             "/diagnostics:=/diagnostics_discard",
             "/diagnostics_agg:=/diagnostics_agg_discard",
             "/origin:=/origin_discard",
-            f"/pressure/data:=/{agent_list[0]}/pressure/data",
-            f"/fix:=/{agent_list[0]}/gps/fix",
-            f"/dvl/position:=/{agent_list[0]}/dvl/position",
-            f"/dvl/data:=/{agent_list[0]}/dvl/data",
-            f"/modem_status:=/{agent_list[0]}/modem_status",
-            f"/nav/filtered_imu/data:=/{agent_list[0]}/imu/data_ned",
-            f"/BlueROV/pressure2_fluid:=/{agent_list[0]}/pressure/data",
-            (
-                "/zedm/zed_node/point_cloud/cloud_registered:="
-                f"/{agent_list[0]}/camera/point_cloud/cloud_registered"
-            ),
         ]
         for agent_ns in agent_list:
             remaps += [
@@ -190,9 +179,6 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                 f"/{agent_ns}/gps/odometry:=/{agent_ns}/gps/odometry_discard",
                 f"/{agent_ns}/dvl/twist:=/{agent_ns}/dvl/twist_discard",
                 f"/{agent_ns}/dvl/odometry:=/{agent_ns}/dvl/odometry_discard",
-                f"/{agent_ns}/imu/nav_sat_fix:=/{agent_ns}/gps/fix",
-                f"/{agent_ns}/imu/mag:=/{agent_ns}/imu/mag_au",
-                f"/{agent_ns}/shallow/pressure/data:=/{agent_ns}/pressure/data",
             ]
 
         start_paused_args = (
@@ -304,7 +290,12 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                             },
                         ],
                         remappings=[
-                            ("pointcloud_1", "camera/point_cloud/cloud_registered"),
+                            (
+                                "pointcloud_1",
+                                "/zedm/zed_node/point_cloud/cloud_registered"
+                                if agent_ns == "turtlmap"
+                                else "camera/point_cloud/cloud_registered",
+                            ),
                         ],
                     ),
                 ]

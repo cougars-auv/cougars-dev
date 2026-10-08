@@ -59,12 +59,20 @@
 
       # use_turtlmap_fom_covariance: true
 
+      input_topic: "/dvl/data"
+
   fluid_pressure_odom_node:
     ros__parameters:
       pressure_scale: 100.0 # IMPORTANT! Pressure is in hPa, not Pa
       atmospheric_pressure: 99339.996 # [Pa] br2config.yaml (atm_press: 993.39996 hPa)
 
+      input_topic: "/BlueROV/pressure2_fluid"
+
       use_parameter_child_frame: true
+
+  imu_ned_to_enu_node:
+    ros__parameters:
+      input_topic: "/nav/filtered_imu/data"
 
   ekf_filter_node_map:
     ros__parameters:
