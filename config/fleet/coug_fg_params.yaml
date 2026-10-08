@@ -29,8 +29,8 @@
     relinearize_skip: 10
 
     # --- Keyframe Settings ---
-    # "DVL" (default), "Depth", "Timer", "None"
-    keyframe_source: "DVL"
+    # "Beams" (default), "DVL", "Depth", "Timer", "None"
+    keyframe_source: "Beams"
     backup_keyframe_source: "Depth"
     keyframe_timeout_sec: 0.5 # [s]
     keyframe_timer_rate_hz: 10.0 # [Hz]
@@ -43,6 +43,7 @@
     mag_topic: "imu/mag"
     ahrs_topic: "imu/data"
     dvl_topic: "dvl/twist"
+    beams_topic: "dvl/beams"
     wrench_topic: "cmd_wrench"
     global_odom_topic: "odometry/global" # (of the base frame in the map frame)
     smoothed_path_topic: "smoothed_path" # (of the base frame in the map frame)
@@ -161,7 +162,7 @@
       robust_k: 1.345
 
     dvl:
-      enable_dvl: true
+      enable_dvl: false
       enable_dvl_init_priors: true
       use_parameter_frame: false
       use_parameter_tf: false
@@ -174,6 +175,29 @@
         # Janus beam geometry (22.5° tilt) with 0.0101 m/s beam noise.
         # https://waterlinked.com/datasheets/dvl-a50
         velocity_noise_sigmas: [0.0187, 0.0187, 0.00547] # [x, y, z] [m/s]
+      diagnostic_timeout_sec: 0.25 # [s]
+      robust_kernel: "None"
+      robust_k: 1.345
+
+    beams:
+      enable_beams: true
+      use_parameter_frames: false
+      use_parameter_tfs: false
+      parameter_tfs: # Relative to the target frame.
+        beam0_position: [0.0, 0.0, 0.0] # [x, y, z] [m]
+        beam0_orientation: [0.0, 0.0, 0.0, 1.0] # [qx, qy, qz, qw]
+        beam1_position: [0.0, 0.0, 0.0] # [x, y, z] [m]
+        beam1_orientation: [0.0, 0.0, 0.0, 1.0] # [qx, qy, qz, qw]
+        beam2_position: [0.0, 0.0, 0.0] # [x, y, z] [m]
+        beam2_orientation: [0.0, 0.0, 0.0, 1.0] # [qx, qy, qz, qw]
+        beam3_position: [0.0, 0.0, 0.0] # [x, y, z] [m]
+        beam3_orientation: [0.0, 0.0, 0.0, 1.0] # [qx, qy, qz, qw]
+      covariance_scalar: 1.0
+      use_parameter_sigmas: false
+      parameter_sigmas:
+        # ±1.01% long-term accuracy at 1 m/s.
+        # https://waterlinked.com/datasheets/dvl-a50
+        beam_velocity_noise_sigma: 0.0101 # [m/s]
       diagnostic_timeout_sec: 0.25 # [s]
       robust_kernel: "None"
       robust_k: 1.345
