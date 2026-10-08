@@ -147,39 +147,38 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
         atexit.register(save_artifacts, record_bag_path_str, config_snapshot)
 
     if play_bag_path_str:
-        remaps = [
-            "/tf:=/tf_discard",
-            "/tf_static:=/tf_static_discard",
-            "/diagnostics:=/diagnostics_discard",
-            "/diagnostics_agg:=/diagnostics_agg_discard",
-            "/origin:=/origin_discard",
+        root_outputs = [
+            "tf",
+            "tf_static",
+            "diagnostics.*",
+            "origin",
+            "local_xy_origin",
         ]
-        for agent_ns in agent_list:
-            remaps += [
-                f"/{agent_ns}/robot_description:=/{agent_ns}/robot_description_discard",
-                f"/{agent_ns}/odometry/local:=/{agent_ns}/odometry/local_discard",
-                f"/{agent_ns}/odometry/global:=/{agent_ns}/odometry/global_discard",
-                f"/{agent_ns}/smoothed_path:=/{agent_ns}/smoothed_path_discard",
-                (
-                    f"/{agent_ns}/factor_graph_node/velocity:="
-                    f"/{agent_ns}/factor_graph_node/velocity_discard"
-                ),
-                (
-                    f"/{agent_ns}/factor_graph_node/metrics:="
-                    f"/{agent_ns}/factor_graph_node/metrics_discard"
-                ),
-                (
-                    f"/{agent_ns}/factor_graph_node/imu/bias:="
-                    f"/{agent_ns}/factor_graph_node/imu/bias_discard"
-                ),
-                (
-                    f"/{agent_ns}/factor_graph_node/imu/mag/bias:="
-                    f"/{agent_ns}/factor_graph_node/imu/mag/bias_discard"
-                ),
-                f"/{agent_ns}/gps/odometry:=/{agent_ns}/gps/odometry_discard",
-                f"/{agent_ns}/dvl/twist:=/{agent_ns}/dvl/twist_discard",
-                f"/{agent_ns}/dvl/odometry:=/{agent_ns}/dvl/odometry_discard",
-            ]
+        agent_outputs = [
+            "robot_description",
+            "agent/status",
+            "base/.*",
+            "cmd_hsd.*",
+            "led/color",
+            "modem_send",
+            "waypoints.*",
+            "odometry/(local|global).*",
+            "smoothed_path.*",
+            "factor_graph_node.*",
+            "imu/data_madgwick",
+            "gps/odometry",
+            "depth/odometry",
+            "imu/mag_tesla",
+            "seatrac/imu/data",
+            "seatrac/depth/odometry",
+            "dvl/odometry",
+            "dvl/twist.*",
+            "dvl/beams.*",
+            r"dvl/beam\d/range",
+        ]
+        exclude_regex = "|".join(
+            [f"^/({'|'.join(root_outputs)})$", f"^/[^/]+/({'|'.join(agent_outputs)})$"]
+        )
 
         start_paused_args = (
             ["--start-paused"] if IfCondition(start_paused).evaluate(context) else []
@@ -198,8 +197,8 @@ def launch_setup(context: LaunchContext, *args: Any, **kwargs: Any) -> list[Acti
                 "--rate",
                 playback_rate,
                 *start_paused_args,
-                "--remap",
-                *remaps,
+                "--exclude-regex",
+                exclude_regex,
             ],
         )
         actions.append(play_process)
