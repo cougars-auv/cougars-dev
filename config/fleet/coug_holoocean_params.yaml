@@ -258,6 +258,10 @@
 
   wrench_converter_node:
     ros__parameters:
+      # --- Node Settings ---
+      water_density: 997.0 # [kg/m^3]
+
+      # --- ROS Topics and Frames ---
       control_topic: "ControlCommand"
       odom_topic: "DynamicsSensorOdom"
       wrench_raw_topic: "cmd_wrench_raw"
