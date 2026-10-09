@@ -20,9 +20,9 @@ diagnostic_aggregator:
         find_and_remove_prefix:
           [
             "factor_graph_node: [/<agent_ns>] ",
-            "factor_graph_node_isam2: [/<agent_ns>] ",
-            "factor_graph_node_lpi: [/<agent_ns>] ",
+            "factor_graph_node_vel: [/<agent_ns>] ",
             "factor_graph_node_tpi: [/<agent_ns>] ",
+            "factor_graph_node_lpi: [/<agent_ns>] ",
           ]
         timeout: 5.0
 
