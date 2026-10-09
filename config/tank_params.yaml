@@ -44,6 +44,9 @@
       dvl:
         use_parameter_sigmas: true
 
+      beams:
+        robust_kernel: "Huber"
+
       priors:
         use_parameter_priors: false
         use_parameter_priors_sigmas: false
