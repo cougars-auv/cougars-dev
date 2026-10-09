@@ -45,7 +45,7 @@
     gps_odom_topic: "gps/odometry"
     depth_odom_topic: "depth/odometry"
     mag_topic: "imu/mag_tesla"
-    ahrs_topic: "imu/data"
+    ahrs_topic: "imu/data_madgwick"
     dvl_topic: "dvl/twist"
     beams_topic: "dvl/beams"
     wrench_topic: "cmd_wrench"
@@ -389,7 +389,7 @@
       # --- ROS Topics and Frames ---
       input_topic: "pressure/data"
       output_topic: "depth/odometry"
-      ahrs_topic: "imu/data"
+      ahrs_topic: "imu/data_madgwick"
 
       calibrate_service: "depth/calibrate"
 
@@ -432,7 +432,7 @@
       # --- ROS Topics and Frames ---
       input_topic: "gps/fix"
       output_topic: "gps/odometry"
-      ahrs_topic: "imu/data"
+      ahrs_topic: "imu/data_madgwick"
       origin_topic: "/origin"
 
       use_parameter_child_frame: false

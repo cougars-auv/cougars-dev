@@ -60,6 +60,7 @@
       position_covariance_threshold: 0.001 # [m^2] IMPORTANT! Using RTK GPS ground truth
 
       input_topic: "imu/nav_sat_fix"
+      ahrs_topic: "imu/data"
 
       use_parameter_child_frame: true
 

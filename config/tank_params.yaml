@@ -61,9 +61,33 @@
 
       use_parameter_frame: true
 
+  factor_graph_node:
+    ros__parameters:
+      ahrs_topic: "imu/data"
+
+  factor_graph_node_vel:
+    ros__parameters:
+      ahrs_topic: "imu/data"
+
+  factor_graph_node_lpi:
+    ros__parameters:
+      ahrs_topic: "imu/data"
+
+  factor_graph_node_tpi:
+    ros__parameters:
+      ahrs_topic: "imu/data"
+
+  fluid_pressure_odom_node:
+    ros__parameters:
+      ahrs_topic: "imu/data"
+
   imu_ned_to_enu_node:
     ros__parameters:
       input_topic: "/imu/data"
+
+  navsat_odom_node:
+    ros__parameters:
+      ahrs_topic: "imu/data"
 
   ekf_filter_node_map:
     ros__parameters:

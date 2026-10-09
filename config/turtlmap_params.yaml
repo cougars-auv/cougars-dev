@@ -66,18 +66,39 @@
 
       use_parameter_frame: true
 
+  factor_graph_node:
+    ros__parameters:
+      ahrs_topic: "imu/data"
+
+  factor_graph_node_vel:
+    ros__parameters:
+      ahrs_topic: "imu/data"
+
+  factor_graph_node_lpi:
+    ros__parameters:
+      ahrs_topic: "imu/data"
+
+  factor_graph_node_tpi:
+    ros__parameters:
+      ahrs_topic: "imu/data"
+
   fluid_pressure_odom_node:
     ros__parameters:
       pressure_scale: 100.0 # IMPORTANT! Pressure is in hPa, not Pa
       atmospheric_pressure: 99339.996 # [Pa] br2config.yaml (atm_press: 993.39996 hPa)
 
       input_topic: "/BlueROV/pressure2_fluid"
+      ahrs_topic: "imu/data"
 
       use_parameter_child_frame: true
 
   imu_ned_to_enu_node:
     ros__parameters:
       input_topic: "/nav/filtered_imu/data"
+
+  navsat_odom_node:
+    ros__parameters:
+      ahrs_topic: "imu/data"
 
   ekf_filter_node_map:
     ros__parameters:
