@@ -9,11 +9,11 @@
               <range bottom="0.000000" left="0.000000" right="1.000000" top="1.000000" />
               <limitY />
               <curve color="#000000" name="/<agent_ns>/odometry/truth/pose/pose/position/x" />
-              <curve color="#ff55ff" name="/<agent_ns>/odometry/global_ekf/pose/pose/position/x" />
-              <curve color="#ffff00" name="/<agent_ns>/odometry/global_ukf/pose/pose/position/x" />
+              <curve color="#aa00ff" name="/<agent_ns>/odometry/global_ekf/pose/pose/position/x" />
+              <curve color="#ff55ff" name="/<agent_ns>/odometry/global_ukf/pose/pose/position/x" />
               <curve color="#55aaff" name="/<agent_ns>/odometry/global_lpi/pose/pose/position/x" />
               <curve color="#ff0000" name="/<agent_ns>/odometry/global_tpi/pose/pose/position/x" />
-              <curve color="#aa00ff" name="/<agent_ns>/odometry/global_vel/pose/pose/position/x" />
+              <curve color="#ffff00" name="/<agent_ns>/odometry/global_vel/pose/pose/position/x" />
               <curve color="#00ff00" name="/<agent_ns>/odometry/global/pose/pose/position/x" />
               <curve color="#ffaa00" name="/<agent_ns>/base/odometry/global_nbr/pose/pose/position/x" />
             </plot>
@@ -23,11 +23,11 @@
               <range bottom="0.000000" left="0.000000" right="1.000000" top="1.000000" />
               <limitY />
               <curve color="#000000" name="/<agent_ns>/odometry/truth/pose/pose/position/y" />
-              <curve color="#ff55ff" name="/<agent_ns>/odometry/global_ekf/pose/pose/position/y" />
-              <curve color="#ffff00" name="/<agent_ns>/odometry/global_ukf/pose/pose/position/y" />
+              <curve color="#aa00ff" name="/<agent_ns>/odometry/global_ekf/pose/pose/position/y" />
+              <curve color="#ff55ff" name="/<agent_ns>/odometry/global_ukf/pose/pose/position/y" />
               <curve color="#55aaff" name="/<agent_ns>/odometry/global_lpi/pose/pose/position/y" />
               <curve color="#ff0000" name="/<agent_ns>/odometry/global_tpi/pose/pose/position/y" />
-              <curve color="#aa00ff" name="/<agent_ns>/odometry/global_vel/pose/pose/position/y" />
+              <curve color="#ffff00" name="/<agent_ns>/odometry/global_vel/pose/pose/position/y" />
               <curve color="#00ff00" name="/<agent_ns>/odometry/global/pose/pose/position/y" />
               <curve color="#ffaa00" name="/<agent_ns>/base/odometry/global_nbr/pose/pose/position/y" />
             </plot>
@@ -37,11 +37,11 @@
               <range bottom="0.000000" left="0.000000" right="1.000000" top="1.000000" />
               <limitY />
               <curve color="#000000" name="/<agent_ns>/odometry/truth/pose/pose/position/z" />
-              <curve color="#ff55ff" name="/<agent_ns>/odometry/global_ekf/pose/pose/position/z" />
-              <curve color="#ffff00" name="/<agent_ns>/odometry/global_ukf/pose/pose/position/z" />
+              <curve color="#aa00ff" name="/<agent_ns>/odometry/global_ekf/pose/pose/position/z" />
+              <curve color="#ff55ff" name="/<agent_ns>/odometry/global_ukf/pose/pose/position/z" />
               <curve color="#55aaff" name="/<agent_ns>/odometry/global_lpi/pose/pose/position/z" />
               <curve color="#ff0000" name="/<agent_ns>/odometry/global_tpi/pose/pose/position/z" />
-              <curve color="#aa00ff" name="/<agent_ns>/odometry/global_vel/pose/pose/position/z" />
+              <curve color="#ffff00" name="/<agent_ns>/odometry/global_vel/pose/pose/position/z" />
               <curve color="#00ff00" name="/<agent_ns>/odometry/global/pose/pose/position/z" />
               <curve color="#ffaa00" name="/<agent_ns>/base/odometry/global_nbr/pose/pose/position/z" />
             </plot>
@@ -57,11 +57,11 @@
               <range bottom="0.000000" left="0.000000" right="1.000000" top="1.000000" />
               <limitY />
               <curve color="#000000" name="/<agent_ns>/odometry/truth/pose/pose/orientation/roll" />
-              <curve color="#ff55ff" name="/<agent_ns>/odometry/global_ekf/pose/pose/orientation/roll" />
-              <curve color="#ffff00" name="/<agent_ns>/odometry/global_ukf/pose/pose/orientation/roll" />
+              <curve color="#aa00ff" name="/<agent_ns>/odometry/global_ekf/pose/pose/orientation/roll" />
+              <curve color="#ff55ff" name="/<agent_ns>/odometry/global_ukf/pose/pose/orientation/roll" />
               <curve color="#55aaff" name="/<agent_ns>/odometry/global_lpi/pose/pose/orientation/roll" />
               <curve color="#ff0000" name="/<agent_ns>/odometry/global_tpi/pose/pose/orientation/roll" />
-              <curve color="#aa00ff" name="/<agent_ns>/odometry/global_vel/pose/pose/orientation/roll" />
+              <curve color="#ffff00" name="/<agent_ns>/odometry/global_vel/pose/pose/orientation/roll" />
               <curve color="#00ff00" name="/<agent_ns>/odometry/global/pose/pose/orientation/roll" />
               <curve color="#ffaa00" name="/<agent_ns>/base/odometry/global_nbr/pose/pose/orientation/roll" />
             </plot>
@@ -71,11 +71,11 @@
               <range bottom="0.000000" left="0.000000" right="1.000000" top="1.000000" />
               <limitY />
               <curve color="#000000" name="/<agent_ns>/odometry/truth/pose/pose/orientation/pitch" />
-              <curve color="#ff55ff" name="/<agent_ns>/odometry/global_ekf/pose/pose/orientation/pitch" />
-              <curve color="#ffff00" name="/<agent_ns>/odometry/global_ukf/pose/pose/orientation/pitch" />
+              <curve color="#aa00ff" name="/<agent_ns>/odometry/global_ekf/pose/pose/orientation/pitch" />
+              <curve color="#ff55ff" name="/<agent_ns>/odometry/global_ukf/pose/pose/orientation/pitch" />
               <curve color="#55aaff" name="/<agent_ns>/odometry/global_lpi/pose/pose/orientation/pitch" />
               <curve color="#ff0000" name="/<agent_ns>/odometry/global_tpi/pose/pose/orientation/pitch" />
-              <curve color="#aa00ff"
+              <curve color="#ffff00"
                 name="/<agent_ns>/odometry/global_vel/pose/pose/orientation/pitch" />
               <curve color="#00ff00" name="/<agent_ns>/odometry/global/pose/pose/orientation/pitch" />
               <curve color="#ffaa00" name="/<agent_ns>/base/odometry/global_nbr/pose/pose/orientation/pitch" />
@@ -86,11 +86,11 @@
               <range bottom="0.000000" left="0.000000" right="1.000000" top="1.000000" />
               <limitY />
               <curve color="#000000" name="/<agent_ns>/odometry/truth/pose/pose/orientation/yaw" />
-              <curve color="#ff55ff" name="/<agent_ns>/odometry/global_ekf/pose/pose/orientation/yaw" />
-              <curve color="#ffff00" name="/<agent_ns>/odometry/global_ukf/pose/pose/orientation/yaw" />
+              <curve color="#aa00ff" name="/<agent_ns>/odometry/global_ekf/pose/pose/orientation/yaw" />
+              <curve color="#ff55ff" name="/<agent_ns>/odometry/global_ukf/pose/pose/orientation/yaw" />
               <curve color="#55aaff" name="/<agent_ns>/odometry/global_lpi/pose/pose/orientation/yaw" />
               <curve color="#ff0000" name="/<agent_ns>/odometry/global_tpi/pose/pose/orientation/yaw" />
-              <curve color="#aa00ff" name="/<agent_ns>/odometry/global_vel/pose/pose/orientation/yaw" />
+              <curve color="#ffff00" name="/<agent_ns>/odometry/global_vel/pose/pose/orientation/yaw" />
               <curve color="#00ff00" name="/<agent_ns>/odometry/global/pose/pose/orientation/yaw" />
               <curve color="#ffaa00" name="/<agent_ns>/base/odometry/global_nbr/pose/pose/orientation/yaw" />
             </plot>
@@ -110,7 +110,7 @@
                 name="/<agent_ns>/factor_graph_node_lpi/velocity/twist/twist/linear/x" />
               <curve color="#ff0000"
                 name="/<agent_ns>/factor_graph_node_tpi/velocity/twist/twist/linear/x" />
-              <curve color="#aa00ff"
+              <curve color="#ffff00"
                 name="/<agent_ns>/factor_graph_node_vel/velocity/twist/twist/linear/x" />
               <curve color="#00ff00" name="/<agent_ns>/factor_graph_node/velocity/twist/twist/linear/x" />
             </plot>
@@ -124,7 +124,7 @@
                 name="/<agent_ns>/factor_graph_node_lpi/velocity/twist/twist/linear/y" />
               <curve color="#ff0000"
                 name="/<agent_ns>/factor_graph_node_tpi/velocity/twist/twist/linear/y" />
-              <curve color="#aa00ff"
+              <curve color="#ffff00"
                 name="/<agent_ns>/factor_graph_node_vel/velocity/twist/twist/linear/y" />
               <curve color="#00ff00" name="/<agent_ns>/factor_graph_node/velocity/twist/twist/linear/y" />
             </plot>
@@ -138,7 +138,7 @@
                 name="/<agent_ns>/factor_graph_node_lpi/velocity/twist/twist/linear/z" />
               <curve color="#ff0000"
                 name="/<agent_ns>/factor_graph_node_tpi/velocity/twist/twist/linear/z" />
-              <curve color="#aa00ff"
+              <curve color="#ffff00"
                 name="/<agent_ns>/factor_graph_node_vel/velocity/twist/twist/linear/z" />
               <curve color="#00ff00" name="/<agent_ns>/factor_graph_node/velocity/twist/twist/linear/z" />
             </plot>
@@ -158,7 +158,7 @@
                 name="/<agent_ns>/factor_graph_node_lpi/imu/bias/twist/twist/linear/x" />
               <curve color="#ff0000"
                 name="/<agent_ns>/factor_graph_node_tpi/imu/bias/twist/twist/linear/x" />
-              <curve color="#aa00ff"
+              <curve color="#ffff00"
                 name="/<agent_ns>/factor_graph_node_vel/imu/bias/twist/twist/linear/x" />
               <curve color="#00ff00" name="/<agent_ns>/factor_graph_node/imu/bias/twist/twist/linear/x" />
             </plot>
@@ -172,7 +172,7 @@
                 name="/<agent_ns>/factor_graph_node_lpi/imu/bias/twist/twist/linear/y" />
               <curve color="#ff0000"
                 name="/<agent_ns>/factor_graph_node_tpi/imu/bias/twist/twist/linear/y" />
-              <curve color="#aa00ff"
+              <curve color="#ffff00"
                 name="/<agent_ns>/factor_graph_node_vel/imu/bias/twist/twist/linear/y" />
               <curve color="#00ff00" name="/<agent_ns>/factor_graph_node/imu/bias/twist/twist/linear/y" />
             </plot>
@@ -186,7 +186,7 @@
                 name="/<agent_ns>/factor_graph_node_lpi/imu/bias/twist/twist/linear/z" />
               <curve color="#ff0000"
                 name="/<agent_ns>/factor_graph_node_tpi/imu/bias/twist/twist/linear/z" />
-              <curve color="#aa00ff"
+              <curve color="#ffff00"
                 name="/<agent_ns>/factor_graph_node_vel/imu/bias/twist/twist/linear/z" />
               <curve color="#00ff00" name="/<agent_ns>/factor_graph_node/imu/bias/twist/twist/linear/z" />
             </plot>
@@ -206,7 +206,7 @@
                 name="/<agent_ns>/factor_graph_node_lpi/imu/bias/twist/twist/angular/x" />
               <curve color="#ff0000"
                 name="/<agent_ns>/factor_graph_node_tpi/imu/bias/twist/twist/angular/x" />
-              <curve color="#aa00ff"
+              <curve color="#ffff00"
                 name="/<agent_ns>/factor_graph_node_vel/imu/bias/twist/twist/angular/x" />
               <curve color="#00ff00" name="/<agent_ns>/factor_graph_node/imu/bias/twist/twist/angular/x" />
             </plot>
@@ -220,7 +220,7 @@
                 name="/<agent_ns>/factor_graph_node_lpi/imu/bias/twist/twist/angular/y" />
               <curve color="#ff0000"
                 name="/<agent_ns>/factor_graph_node_tpi/imu/bias/twist/twist/angular/y" />
-              <curve color="#aa00ff"
+              <curve color="#ffff00"
                 name="/<agent_ns>/factor_graph_node_vel/imu/bias/twist/twist/angular/y" />
               <curve color="#00ff00" name="/<agent_ns>/factor_graph_node/imu/bias/twist/twist/angular/y" />
             </plot>
@@ -234,7 +234,7 @@
                 name="/<agent_ns>/factor_graph_node_lpi/imu/bias/twist/twist/angular/z" />
               <curve color="#ff0000"
                 name="/<agent_ns>/factor_graph_node_tpi/imu/bias/twist/twist/angular/z" />
-              <curve color="#aa00ff"
+              <curve color="#ffff00"
                 name="/<agent_ns>/factor_graph_node_vel/imu/bias/twist/twist/angular/z" />
               <curve color="#00ff00" name="/<agent_ns>/factor_graph_node/imu/bias/twist/twist/angular/z" />
             </plot>
@@ -254,7 +254,7 @@
                 name="/<agent_ns>/factor_graph_node_lpi/imu/mag/bias/magnetic_field/x" />
               <curve color="#ff0000"
                 name="/<agent_ns>/factor_graph_node_tpi/imu/mag/bias/magnetic_field/x" />
-              <curve color="#aa00ff"
+              <curve color="#ffff00"
                 name="/<agent_ns>/factor_graph_node_vel/imu/mag/bias/magnetic_field/x" />
               <curve color="#00ff00"
                 name="/<agent_ns>/factor_graph_node/imu/mag/bias/magnetic_field/x" />
@@ -269,7 +269,7 @@
                 name="/<agent_ns>/factor_graph_node_lpi/imu/mag/bias/magnetic_field/y" />
               <curve color="#ff0000"
                 name="/<agent_ns>/factor_graph_node_tpi/imu/mag/bias/magnetic_field/y" />
-              <curve color="#aa00ff"
+              <curve color="#ffff00"
                 name="/<agent_ns>/factor_graph_node_vel/imu/mag/bias/magnetic_field/y" />
               <curve color="#00ff00"
                 name="/<agent_ns>/factor_graph_node/imu/mag/bias/magnetic_field/y" />
@@ -284,7 +284,7 @@
                 name="/<agent_ns>/factor_graph_node_lpi/imu/mag/bias/magnetic_field/z" />
               <curve color="#ff0000"
                 name="/<agent_ns>/factor_graph_node_tpi/imu/mag/bias/magnetic_field/z" />
-              <curve color="#aa00ff"
+              <curve color="#ffff00"
                 name="/<agent_ns>/factor_graph_node_vel/imu/mag/bias/magnetic_field/z" />
               <curve color="#00ff00"
                 name="/<agent_ns>/factor_graph_node/imu/mag/bias/magnetic_field/z" />

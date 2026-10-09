@@ -272,7 +272,7 @@ displays:
       visible: false
       collapsed: true
       topic: /<agent_ns>/odometry/global_ekf
-      color: "#ff55ff"
+      color: "#aa00ff"
       draw_style: lines
       position_tolerance: 0
       buffer_size: 0
@@ -292,7 +292,7 @@ displays:
       visible: false
       collapsed: true
       topic: /<agent_ns>/odometry/global_ukf
-      color: "#ffff00"
+      color: "#ff55ff"
       draw_style: lines
       position_tolerance: 0
       buffer_size: 0
@@ -352,7 +352,7 @@ displays:
       visible: false
       collapsed: true
       topic: /<agent_ns>/odometry/global_vel
-      color: "#aa00ff"
+      color: "#ffff00"
       draw_style: lines
       position_tolerance: 0
       buffer_size: 0
