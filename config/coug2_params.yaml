@@ -9,21 +9,24 @@
 
   dvl_a50_odom_node:
     ros__parameters:
-      use_parameter_frame: true
       override_timestamp: true # DVL A50 clock is not synced in these bags
 
       input_topic: "/dvl/position"
 
+      use_parameter_frame: true
+
   dvl_a50_twist_beams_node:
     ros__parameters:
-      use_parameter_frame: true
       override_timestamp: true # DVL A50 clock is not synced in these bags
 
       input_topic: "/dvl/data"
 
+      use_parameter_frame: true
+
   fluid_pressure_odom_node:
     ros__parameters:
       atmospheric_pressure: 82776.2 # [Pa] Deer Creek (~1673 m elevation)
+
       max_pressure_delta: 9780.0 # [Pa] ~1 m depth jump
 
       input_topic: "/pressure/data"

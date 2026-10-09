@@ -46,6 +46,7 @@
   fluid_pressure_odom_node:
     ros__parameters:
       atmospheric_pressure: 86039.8 # [Pa] Utah Lake (~1358 m elevation)
+
       max_pressure_delta: 9780.0 # [Pa] ~1 m depth jump
 
       input_topic: "shallow/pressure/data"
@@ -58,13 +59,13 @@
 
       use_parameter_child_frame: true
 
-  seatrac_x150_imu_depth_node:
-    ros__parameters:
-      use_parameter_frame: true
-
   sbg_imu_mag_node:
     ros__parameters:
       stamp_offset_sec: -0.06 # [s] IMPORTANT! SBG mag stamps lag behind IMU data (imu_filter_madwick fix)
+
+  seatrac_x150_imu_depth_node:
+    ros__parameters:
+      use_parameter_frame: true
 
   ekf_filter_node_map:
     ros__parameters:
