@@ -20,12 +20,6 @@
         enable_gps: false
         enable_gps_init_priors: false
 
-      mag:
-        enable_mag: false
-
-      ahrs:
-        enable_ahrs: true
-
       # priors:
       #   parameter_priors:
       #     initial_position: [0.0, 0.0, -275.0] # [x, y, z] [m]
