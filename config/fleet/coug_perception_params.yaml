@@ -11,8 +11,8 @@
 
       # --- ROS Topics ---
       image_topic: "camera/rgb/image_rect_color"
-      boxes_topic: "camera/boxes"
-      output_topic: "camera/boxes/image"
+      detections_topic: "camera/detections"
+      debug_image_topic: "camera/debug_image"
 
   detection_fusion_node:
     ros__parameters:
@@ -23,10 +23,10 @@
       transform_timeout_sec: 0.1 # [s]
 
       # --- ROS Topics and Frames ---
-      input_topic: "clusters/points"
-      boxes_topic: "camera/boxes"
+      points_topic: "clusters/points"
+      detections_topic: "camera/detections"
       camera_info_topic: "camera/rgb/camera_info"
-      output_topic: "detections_3d_labeled"
+      detections_3d_topic: "detections_3d"
 
   landmark_tracker_node:
     ros__parameters:
@@ -41,9 +41,9 @@
       transform_timeout_sec: 0.1 # [s]
 
       # --- ROS Topics and Frames ---
-      input_topic: "detections_3d_labeled"
+      detections_3d_topic: "detections_3d"
       camera_info_topic: "camera/rgb/camera_info"
-      output_topic: "landmarks"
+      landmarks_topic: "landmarks"
       marker_topic: "landmarks/markers"
       label_topic: "landmarks/labels"
 

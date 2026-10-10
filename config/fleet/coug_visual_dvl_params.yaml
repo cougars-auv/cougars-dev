@@ -9,6 +9,6 @@
       # --- ROS Topics and Frames ---
       front_image_topic: "stereo/front/image_raw"
       back_image_topic: "stereo/back/image_raw"
-      front_info_topic: "stereo/front/camera_info"
-      back_info_topic: "stereo/back/camera_info"
+      front_camera_info_topic: "stereo/front/camera_info"
+      back_camera_info_topic: "stereo/back/camera_info"
       velocity_topic: "dvl/visual"

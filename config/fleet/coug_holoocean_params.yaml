@@ -19,11 +19,11 @@
       # --- ROS Topics and Frames ---
       color_input_topic: "DepthCameraRGBCamera"
       depth_input_topic: "DepthCameraDepth"
-      info_input_topic: "DepthCameraInfo"
+      camera_info_input_topic: "DepthCameraInfo"
       color_output_topic: "camera/rgb/image_rect_color"
-      color_info_output_topic: "camera/rgb/camera_info"
+      color_camera_info_output_topic: "camera/rgb/camera_info"
       depth_output_topic: "camera/depth/depth_registered"
-      depth_info_output_topic: "camera/depth/camera_info"
+      depth_camera_info_output_topic: "camera/depth/camera_info"
 
   depth_camera_imu_converter_node:
     ros__parameters:
@@ -133,7 +133,7 @@
       # --- ROS Topics and Frames ---
       imu_input_topic: "IMUSensor"
       ahrs_input_topic: "RotationSensor"
-      output_topic: "imu/data"
+      imu_output_topic: "imu/data"
       bias_topic: "imu/bias"
 
   mag_converter_node:
@@ -243,8 +243,8 @@
       back_input_topic: "BackStereoRGBCamera"
       front_output_topic: "stereo/front/image_raw"
       back_output_topic: "stereo/back/image_raw"
-      front_info_output_topic: "stereo/front/camera_info"
-      back_info_output_topic: "stereo/back/camera_info"
+      front_camera_info_output_topic: "stereo/front/camera_info"
+      back_camera_info_output_topic: "stereo/back/camera_info"
 
   truth_converter_node:
     ros__parameters:

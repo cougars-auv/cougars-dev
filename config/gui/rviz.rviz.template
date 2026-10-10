@@ -844,7 +844,7 @@ Visualization Manager:
         Durability Policy: Volatile
         History Policy: Keep Last
         Reliability Policy: Reliable
-        Value: /<agent_ns>/camera/boxes/image
+        Value: /<agent_ns>/camera/debug_image
       Value: false
     - Class: rviz_default_plugins/MarkerArray
       Enabled: false
