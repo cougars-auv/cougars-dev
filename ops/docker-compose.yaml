@@ -1,0 +1,73 @@
+# Copyright 2026 BYU FROST Lab
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+services:
+  builder:
+    image: frostlab/cougars:runtime-${VERSION:-latest}
+    container_name: cougars-builder-ct
+    profiles: ["build"]
+    volumes:
+      - ../src:/ros2_ws/src
+      - ../build:/ros2_ws/build
+      - ../install:/ros2_ws/install
+      - ../log:/ros2_ws/log
+    environment:
+      - MAKEFLAGS=-j2
+    command: >
+      nice -n 19 colcon build --parallel-workers 1
+      --cmake-args -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_TESTING=OFF
+
+  router:
+    image: frostlab/cougars:runtime-${VERSION:-latest}
+    container_name: cougars-router-ct
+    network_mode: host
+    ipc: host
+    pid: host
+    environment:
+      - ZENOH_CONFIG_OVERRIDE
+    restart: unless-stopped
+    command: ros2 run rmw_zenoh_cpp rmw_zenohd
+
+  runtime:
+    image: frostlab/cougars:runtime-${VERSION:-latest}
+    # build:
+    #   context: ..
+    #   dockerfile: docker/Dockerfile.runtime
+    #   args:
+    #     - VERSION=${VERSION:-latest}
+    container_name: cougars-runtime-ct
+    network_mode: host
+    ipc: host
+    pid: host
+    privileged: true
+    depends_on:
+      - router
+    environment:
+      - RMW_IMPLEMENTATION=rmw_zenoh_cpp
+      - ROS_DOMAIN_ID=24
+    volumes:
+      - ../src:/ros2_ws/src
+      - ../build:/ros2_ws/build
+      - ../install:/ros2_ws/install
+      - ../log:/ros2_ws/log
+      - ../config:/config
+      - ../bags:/bags
+      - /etc/localtime:/etc/localtime:ro
+      - /run/udev:/run/udev:ro
+      - /dev:/dev
+    restart: unless-stopped
+    command: >
+      ros2 launch coug_bringup agent.launch.py
+      agent_ns:=${AGENT_NS}
+      use_sim_time:=${USE_SIM_TIME:-false}

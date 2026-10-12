@@ -1,0 +1,86 @@
+/**:
+  coug_comms_base_launch:
+    ros__parameters:
+      beacon_id: 1
+
+  agent_receiver_node:
+    ros__parameters:
+      # --- Node Settings ---
+      publish_diagnostics: true
+      service_history_size: 5 # Number of recent service results kept for diagnostics.
+
+      # --- ROS Topics ---
+      modem_rec_topic: "modem_rec"
+
+      start_service: "start"
+      stop_service: "stop"
+      surface_service: "surface"
+      home_service: "home"
+      emergency_stop_service: "emergency_stop"
+      emergency_surface_service: "emergency_surface"
+
+  agent_status_bundler_node:
+    ros__parameters:
+      status_topic: "agent/status"
+      odom_topic: "odometry/global"
+      depth_topic: "seatrac/depth/odometry"
+      ahrs_topic: "seatrac/imu/data"
+
+  agent_status_stager_node:
+    ros__parameters:
+      modem_send_topic: "modem_send"
+      status_topic: "agent/status"
+
+  base_dispatcher_node:
+    ros__parameters:
+      # --- Node Settings ---
+      publish_diagnostics: true
+      service_history_size: 5 # Number of recent service results kept for diagnostics.
+
+      direct_timeout_sec: 2.0 # [s] Max direct heartbeat age before falling back to acoustics.
+
+      # --- ROS Topics ---
+      modem_send_topic: "modem_send"
+
+      start_service: "base/start"
+      stop_service: "base/stop"
+      surface_service: "base/surface"
+      home_service: "base/home"
+      emergency_stop_service: "base/emergency_stop"
+      emergency_surface_service: "base/emergency_surface"
+
+      direct_status_topic: "agent/status"
+      direct_start_service: "start"
+      direct_stop_service: "stop"
+      direct_surface_service: "surface"
+      direct_home_service: "home"
+      direct_emergency_stop_service: "emergency_stop"
+      direct_emergency_surface_service: "emergency_surface"
+
+  base_status_extractor_node:
+    ros__parameters:
+      status_topic: "base/agent/status"
+      odom_topic: "base/odometry/global"
+      depth_topic: "base/seatrac/depth/odometry"
+      ahrs_topic: "base/seatrac/imu/data"
+
+  base_status_poller_node:
+    ros__parameters:
+      # --- Node Settings ---
+      publish_diagnostics: true
+      diagnostic_timeout_sec: 10.0 # [s]
+
+      direct_timeout_sec: 2.0 # [s] Max direct heartbeat age before falling back to acoustics.
+      tick_period_sec: 0.05 # [s] Timer period for checking timeouts and issuing pending polls.
+      poll_period_sec: 0.0 # [s] Cooldown between polls. 0.0 polls as fast as responses allow.
+      response_timeout_sec: 5.0 # [s] Backstop wait if the driver never reports a response timeout.
+
+      # --- ROS Topics and Frames ---
+      modem_send_topic: "modem_send"
+      modem_rec_topic: "modem_rec"
+      modem_cmd_update_topic: "modem_cmd_update"
+
+      status_topic: "base/agent/status"
+      direct_status_topic: "agent/status"
+
+      use_parameter_frame: false

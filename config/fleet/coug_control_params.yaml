@@ -1,0 +1,36 @@
+/**:
+  hsd_mode_converter_node:
+    ros__parameters:
+      input_topic: "cmd_hsd_helm"
+      output_topic: "cmd_hsd"
+      beams_topic: "dvl/beams"
+
+  mavros_plugin_config_node:
+    ros__parameters:
+      tick_period_sec: 1.0 # [s]
+
+      local_position:
+        tf.send: true
+      setpoint_velocity:
+        mav_frame: "BODY_NED"
+
+  cmd_vel_relay:
+    ros__parameters:
+      input_topic: "cmd_vel_out"
+      output_topic: "mavros/setpoint_velocity/cmd_vel"
+
+  mavros_node:
+    ros__parameters:
+      # IMPORTANT! This must match coug_gazebo_agent_launch's ardupilot_instance (port 5760 + 10N).
+      fcu_url: "tcp://127.0.0.1:5760"
+
+  mavros:
+    ros__parameters:
+      plugin_allowlist:
+        - command
+        - global_position
+        - imu
+        - local_position
+        - setpoint_velocity
+        - sys_status
+        - sys_time

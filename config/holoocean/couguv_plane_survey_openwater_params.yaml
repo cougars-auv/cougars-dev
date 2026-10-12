@@ -1,0 +1,17 @@
+holoocean_node:
+  ros__parameters:
+    draw_arrow: false
+    show_viewport: false
+
+    relative_path: false
+    scenario_path: "/home/ue4/config/holoocean/couguv_plane_survey_openwater.json"
+
+/**:
+  sim_launch:
+    ros__parameters:
+      scenario_file: "couguv_plane_survey_openwater.json"
+
+/base_station:
+  navsat_odom_node:
+    ros__parameters:
+      use_parameter_origin: true

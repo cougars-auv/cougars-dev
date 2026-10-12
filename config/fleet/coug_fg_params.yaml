@@ -1,0 +1,851 @@
+/**:
+  coug_fg_base_launch:
+    ros__parameters:
+      gps_topic: "gps/fix"
+
+  ros__parameters:
+    # --- Node Settings ---
+    publish_global_tf: true # Publish the map -> odom transform.
+    publish_neighbor_global_tf: true # Publish the map -> neighbor base transforms.
+    transform_time_offset: 0.0 # [s]
+    transform_timeout_sec: 0.1 # [s]
+    publish_smoothed_path: true
+    publish_velocity: true
+    publish_imu_bias: true
+    publish_mag_bias: true
+    publish_graph_metrics: true
+    publish_diagnostics: true
+
+    # These are computationally expensive to calculate, so disable if not needed.
+    publish_pose_cov: true
+    publish_neighbor_pose_cov: true
+    publish_velocity_cov: false
+    publish_imu_bias_cov: false
+    publish_mag_bias_cov: false
+
+    # --- GTSAM Smoother Settings ---
+    # "IncrementalFixedLagSmoother" (default), "ISAM2", "LevenbergMarquardt"
+    solver_type: "IncrementalFixedLagSmoother"
+    max_update_rate_hz: 0.0 # [Hz] Max graph update (keyframe) rate. 0.0 for no limit.
+    max_opt_rate_hz: 0.0 # [Hz] Max graph optimization rate. 0.0 for no limit.
+    smoother_lag_sec: 20.0 # [s]
+    relinearize_threshold: 0.1
+    relinearize_skip: 10
+
+    # --- Keyframe Settings ---
+    # "Beams" (default), "DVL", "Depth", "Timer", "None"
+    keyframe_source: "Beams"
+    backup_keyframe_source: "Depth"
+    keyframe_timeout_sec: 0.5 # [s]
+    keyframe_timer_rate_hz: 10.0 # [Hz]
+    min_keyframe_interval_sec: 0.02 # [s]
+
+    # --- ROS Topics and Frames ---
+    imu_topic: "imu/data"
+    gps_odom_topic: "gps/odometry"
+    depth_odom_topic: "depth/odometry"
+    mag_topic: "imu/mag_tesla"
+    ahrs_topic: "imu/data_madgwick"
+    dvl_topic: "dvl/twist"
+    beams_topic: "dvl/beams"
+    wrench_topic: "cmd_wrench"
+    global_odom_topic: "odometry/global" # (of the base frame in the map frame)
+    smoothed_path_topic: "smoothed_path" # (of the base frame in the map frame)
+    velocity_topic: "~/velocity" # (at the target frame in the map frame)
+    imu_bias_topic: "~/imu/bias" # (in the IMU frame)
+    mag_bias_topic: "~/imu/mag/bias" # (in the magnetometer frame)
+    graph_metrics_topic: "~/metrics"
+    reset_service: "~/reset"
+
+    multiagent_namespaces: ["coug2holo", "coug3holo"]
+    multiagent_status_topic: "base/agent/status" # Prefixed with neighbor namespace.
+    multiagent_global_odom_topic: "base/odometry/global_nbr" # Prefixed with neighbor namespace.
+
+    # --- Factor Settings ---
+    # "None" (default), "Huber", "Tukey"
+    base:
+      use_parameter_tf: false
+      parameter_tf: # Relative to the target frame.
+        position: [0.0, 0.0, 0.0] # [x, y, z] [m]
+        orientation: [0.0, 0.0, 0.0, 1.0] # [qx, qy, qz, qw]
+
+    imu:
+      use_parameter_frame: false
+      use_parameter_tf: false
+      parameter_tf: # Relative to the target frame.
+        position: [0.0, 0.0, 0.0] # [x, y, z] [m]
+        orientation: [0.0, 0.0, 0.0, 1.0] # [qx, qy, qz, qw]
+      covariance_scalar: 1.0
+      # https://github.com/SBG-Systems/sbg_ros2_driver/blob/3.4.0/config/sbg_device_uart_default.yaml
+      sensor_rate_hz: 200.0 # [Hz]
+      use_parameter_sigmas: false
+      parameter_sigmas:
+        # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/performance-specifications
+        accel_noise_density_sigmas: [5.6e-4, 5.6e-4, 5.6e-4] # [x, y, z] [m/s^2/√Hz]
+        gyro_noise_density_sigmas: [5.24e-5, 5.24e-5, 5.24e-5] # [x, y, z] [rad/s/√Hz]
+      # Gauss-Markov fit K ≈ 2.3 * B / √tau_c at tau_c = 500 s.
+      # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/performance-specifications
+      accel_bias_rw_sigmas: [1.4e-5, 1.4e-5, 1.4e-5] # [x, y, z] [m/s^2/√s]
+      gyro_bias_rw_sigmas: [3.5e-6, 3.5e-6, 3.5e-6] # [x, y, z] [rad/s/√s]
+      integration_covariance: 1.0e-8
+      gravity: [0.0, 0.0, -9.8] # [x, y, z] [m/s^2]
+      diagnostic_timeout_sec: 1.0 # [s]
+
+    gps:
+      enable_gps: true
+      enable_gps_init_priors: true
+      use_parameter_frame: false
+      use_parameter_tf: false
+      parameter_tf: # Relative to the target frame.
+        position: [0.0, 0.0, 0.0] # [x, y, z] [m]
+        orientation: [0.0, 0.0, 0.0, 1.0] # [qx, qy, qz, qw]
+      covariance_scalar: 1.0
+      use_parameter_sigmas: false
+      parameter_sigmas:
+        # https://content.u-blox.com/sites/default/files/documents/ZED-F9P-01B_DataSheet_UBX-17051259.pdf
+        position_noise_sigmas: [0.015, 0.015] # [east, north] [m]
+      diagnostic_timeout_sec: 2.0 # [s]
+      robust_kernel: "None"
+      robust_k: 1.345
+
+    depth:
+      enable_depth: true
+      enable_depth_init_priors: true
+      use_parameter_frame: false
+      use_parameter_tf: false
+      parameter_tf: # Relative to the target frame.
+        position: [0.0, 0.0, 0.0] # [x, y, z] [m]
+        orientation: [0.0, 0.0, 0.0, 1.0] # [qx, qy, qz, qw]
+      covariance_scalar: 1.0
+      use_parameter_sigmas: false
+      parameter_sigmas:
+        # https://www.te.com/commerce/DocumentDelivery/DDEController?Action=srchrtrv&DocNm=MS5837-02BA01&DocType=DS&DocLang=English
+        position_z_noise_sigma: 0.02 # [m] ±2 mbar accuracy
+      diagnostic_timeout_sec: 1.0 # [s]
+      robust_kernel: "None"
+      robust_k: 1.345
+
+    mag:
+      enable_mag: true
+      estimate_hard_iron_bias: true
+      use_parameter_frame: false
+      use_parameter_tf: false
+      parameter_tf: # Relative to the target frame.
+        position: [0.0, 0.0, 0.0] # [x, y, z] [m]
+        orientation: [0.0, 0.0, 0.0, 1.0] # [qx, qy, qz, qw]
+      covariance_scalar: 1.0
+      use_parameter_sigmas: false
+      parameter_sigmas:
+        # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/hardware-documentation/aiding-sensors
+        magnetic_field_noise_sigmas: [3.0e-07, 3.0e-07, 3.0e-07] # [x, y, z] [T]
+      # https://www.ngdc.noaa.gov/geomag/calculators/magcalc.shtml#igrfwmm
+      reference_field: [3.9166e-06, 2.08288e-05, -4.5602e-05] # [x, y, z] [T] WMMHR-2025 (40.2406 N, 111.741 W, 2027-06-02)
+      diagnostic_timeout_sec: 1.0 # [s]
+      robust_kernel: "None"
+      robust_k: 1.345
+
+    ahrs:
+      enable_ahrs: false
+      enable_ahrs_init_priors: true
+      constrain_yaw_only: true
+      use_parameter_frame: false
+      use_parameter_tf: false
+      parameter_tf: # Relative to the target frame.
+        position: [0.0, 0.0, 0.0] # [x, y, z] [m]
+        orientation: [0.0, 0.0, 0.0, 1.0] # [qx, qy, qz, qw]
+      covariance_scalar: 1.0
+      use_parameter_sigmas: false
+      parameter_sigmas:
+        # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/performance-specifications
+        orientation_noise_sigmas: [0.00698, 0.00698, 0.01745] # [roll, pitch, yaw] [rad]
+      # East-positive declination (NOAA convention).
+      # https://www.ngdc.noaa.gov/geomag/calculators/magcalc.shtml#declination
+      mag_declination_radians: 0.0 # [rad]
+      diagnostic_timeout_sec: 1.0 # [s]
+      robust_kernel: "None"
+      robust_k: 1.345
+
+    dvl:
+      enable_dvl: false
+      enable_dvl_init_priors: true
+      use_parameter_frame: false
+      use_parameter_tf: false
+      parameter_tf: # Relative to the target frame.
+        position: [0.0, 0.0, 0.0] # [x, y, z] [m]
+        orientation: [0.0, 0.0, 0.0, 1.0] # [qx, qy, qz, qw]
+      covariance_scalar: 1.0
+      use_parameter_sigmas: false
+      parameter_sigmas:
+        # Janus beam geometry (22.5° tilt) with 0.0101 m/s beam noise.
+        # https://waterlinked.com/datasheets/dvl-a50
+        velocity_noise_sigmas: [0.0187, 0.0187, 0.00547] # [x, y, z] [m/s]
+      diagnostic_timeout_sec: 0.25 # [s]
+      robust_kernel: "None"
+      robust_k: 1.345
+
+    beams:
+      enable_beams: true
+      beam0:
+        use_parameter_frame: false
+        use_parameter_tf: false
+        parameter_tf: # Relative to the target frame.
+          position: [0.0, 0.0, 0.0] # [x, y, z] [m]
+          orientation: [0.0, 0.0, 0.0, 1.0] # [qx, qy, qz, qw]
+      beam1:
+        use_parameter_frame: false
+        use_parameter_tf: false
+        parameter_tf: # Relative to the target frame.
+          position: [0.0, 0.0, 0.0] # [x, y, z] [m]
+          orientation: [0.0, 0.0, 0.0, 1.0] # [qx, qy, qz, qw]
+      beam2:
+        use_parameter_frame: false
+        use_parameter_tf: false
+        parameter_tf: # Relative to the target frame.
+          position: [0.0, 0.0, 0.0] # [x, y, z] [m]
+          orientation: [0.0, 0.0, 0.0, 1.0] # [qx, qy, qz, qw]
+      beam3:
+        use_parameter_frame: false
+        use_parameter_tf: false
+        parameter_tf: # Relative to the target frame.
+          position: [0.0, 0.0, 0.0] # [x, y, z] [m]
+          orientation: [0.0, 0.0, 0.0, 1.0] # [qx, qy, qz, qw]
+      covariance_scalar: 1.0
+      use_parameter_sigmas: false
+      parameter_sigmas:
+        # ±1.01% long-term accuracy at 1 m/s.
+        # https://waterlinked.com/datasheets/dvl-a50
+        velocity_noise_sigma: 0.0101 # [m/s]
+      diagnostic_timeout_sec: 0.25 # [s]
+      robust_kernel: "None"
+      robust_k: 1.345
+
+    const_vel:
+      enable_const_vel: false
+      enable_const_vel_dropout_only: false
+      covariance_scalar: 1.0
+      prediction_noise_sigmas: [0.001, 0.001, 0.001] # [x, y, z] [m/s/sqrt(s)]
+      robust_kernel: "None"
+      robust_k: 1.345
+
+    wrench:
+      enable_wrench: false
+      enable_wrench_dropout_only: false
+      use_parameter_frame: false
+      use_parameter_tf: false
+      parameter_tf: # Relative to the target frame.
+        position: [0.0, 0.0, 0.0] # [x, y, z] [m]
+        orientation: [0.0, 0.0, 0.0, 1.0] # [qx, qy, qz, qw]
+      covariance_scalar: 1.0
+      prediction_noise_sigmas: [0.1, 0.1, 0.1] # [x, y, z] [m/s/sqrt(s)]
+      mass: [31.87, 60.46, 60.46] # [x, y, z] [kg]
+      linear_drag: [1.59, 3.02, 3.02] # [x, y, z] [kg/s]
+      quad_drag: [6.11, 196.13, 196.13] # [x, y, z] [kg/m]
+      diagnostic_timeout_sec: 1.0 # [s]
+      robust_kernel: "None"
+      robust_k: 1.345
+
+    multiagent:
+      enable_multiagent: false
+      estimate_origin_delta: false
+      use_parameter_frame: false
+      use_parameter_tf: false
+      parameter_tf: # Relative to the target frame.
+        position: [0.0, 0.0, 0.0] # [x, y, z] [m]
+        orientation: [0.0, 0.0, 0.0, 1.0] # [qx, qy, qz, qw]
+      covariance_scalar: 1.0
+      enable_bearing: true
+      # https://www.blueprintsubsea.com/seatrac/seatrac-standard
+      bearing_noise_sigmas: [0.01745, 0.01745] # [azimuth, elevation] [rad] ~±1° angular resolution
+      enable_range: true
+      # https://www.blueprintsubsea.com/seatrac/seatrac-standard
+      range_noise_sigma: 0.1 # [m] ±0.1 m range resolution
+      sound_speed: 1500.0 # [m/s]
+      neighbor:
+        modem_tf: # Relative to the neighboring agent's base frame.
+          position: [0.3785, 0.0, -0.0985] # [x, y, z] [m]
+          orientation: [0.0, 0.0, 0.0, 1.0] # [qx, qy, qz, qw]
+        ahrs: # Transformed into the neighboring agent's base frame.
+          enable_ahrs: true
+          covariance_scalar: 1.0
+          # https://www.blueprintsubsea.com/seatrac/seatrac-standard
+          orientation_noise_sigmas: [0.00349, 0.00349, 0.01745] # [roll, pitch, yaw] [rad]
+          # East-positive declination (NOAA convention).
+          # https://www.ngdc.noaa.gov/geomag/calculators/magcalc.shtml#declination
+          mag_declination_radians: 0.0 # [rad]
+          robust_kernel: "None"
+          robust_k: 1.345
+        depth: # Transformed into the neighboring agent's base frame.
+          enable_depth: true
+          covariance_scalar: 1.0
+          # https://www.blueprintsubsea.com/downloads/seatrac/UM-140-D00221-13.pdf
+          position_z_noise_sigma: 0.1 # [m]
+          robust_kernel: "None"
+          robust_k: 1.345
+      diagnostic_timeout_sec: 1.0 # [s]
+      robust_kernel: "None"
+      robust_k: 1.345
+
+    # --- Initial State Priors ---
+    priors:
+      # If true, forces the initial state to be set by the values below.
+      # Also overrides use_parameter_priors_sigmas to set it to true.
+      use_parameter_priors: true
+      parameter_priors:
+        initial_position: [0.0, 0.0, 0.0] # [x, y, z] [m] (of the base frame in the map frame)
+        initial_orientation: [0.0, 0.0, 0.0] # [roll, pitch, yaw] [rad] (of the base frame in the map frame)
+        initial_velocity: [0.0, 0.0, 0.0] # [x, y, z] [m/s] (in the base frame)
+
+      initial_accel_bias: [0.0, 0.0, 0.0] # [x, y, z] [m/s^2] (in the IMU frame)
+      initial_gyro_bias: [0.0, 0.0, 0.0] # [x, y, z] [rad/s] (in the IMU frame)
+      hard_iron_bias: [0.0, 0.0, 0.0] # [x, y, z] [T] (in the magnetometer frame)
+      # IMPORTANT! The xy delta is seeded from the first range/bearing pair to prevent antipodal trapping.
+      origin_delta_position: [0.0, 0.0, 0.0] # [x, y, z] [m] (of the neighbor's map origin in the map frame)
+      origin_delta_orientation: [0.0, 0.0, 0.0] # [roll, pitch, yaw] [rad] (of the neighbor's map origin in the map frame)
+
+      # If true, forces the initial state covariance to be set by the values below.
+      use_parameter_priors_sigmas: true
+      parameter_priors_sigmas:
+        initial_position_sigmas: [0.001, 0.001, 0.001] # [x, y, z] [m] (in the map frame)
+        initial_orientation_sigmas: [0.001, 0.001, 0.001] # [roll, pitch, yaw] [rad] (in the map frame)
+        initial_velocity_sigmas: [0.001, 0.001, 0.001] # [x, y, z] [m/s] (in the base frame)
+
+      initial_accel_bias_sigmas: [0.01, 0.01, 0.01] # [x, y, z] [m/s^2] (in the IMU frame)
+      # IMPORTANT! The gravity-aligned component is unobservable with AHRS/mag/GPS off, so this bounds heading drift.
+      # https://support.sbg-systems.com/sc/el/latest/ellipse-documentation/performance-specifications
+      initial_gyro_bias_sigmas: [3.4e-5, 3.4e-5, 3.4e-5] # [x, y, z] [rad/s] (in the IMU frame)
+      # No published SBG hard-iron spec; assumes ~20% of the local field magnitude.
+      hard_iron_bias_sigmas: [1.0e-05, 1.0e-05, 1.0e-05] # [x, y, z] [T] (in the magnetometer frame)
+      origin_delta_position_sigmas: [1000.0, 1000.0, 1.0e-04] # [x, y, z] [m] (in the map frame)
+      origin_delta_orientation_sigmas: [1.0e-04, 1.0e-04, 1.0e-04] # [roll, pitch, yaw] [rad] (in the map frame)
+
+    # --- Comparison Methods ---
+    comparison:
+      # TURTLMap-inspired loosely-coupled DVL preintegration implementation
+      enable_loose_dvl_preintegration: false
+      # Thoms et al., IEEE JOE 2023 style tightly-coupled DVL preintegration implementation
+      enable_tight_dvl_preintegration: false
+
+  dvl_a50_odom_node:
+    ros__parameters:
+      # --- Node Settings ---
+      override_timestamp: false # Stamp with receive time (if the A50 clock isn't synced).
+
+      # https://docs.waterlinked.com/dvl/dead-reckoning/
+      orientation_noise_sigmas: [0.01745, 0.01745, 0.03491] # [roll, pitch, yaw] [rad]
+
+      # --- ROS Topics and Frames ---
+      input_topic: "dvl/position"
+      output_topic: "dvl/odometry"
+
+      use_parameter_frame: false
+
+  dvl_a50_twist_beams_node:
+    ros__parameters:
+      # --- Node Settings ---
+      override_timestamp: false # Stamp with receive time minus A50 latency (if the A50 clock isn't synced).
+      velocity_scale: 1.0 # Scale factor to correct configured speed of sound errors.
+
+      # TURTLMap-based FOM covariance calculation
+      use_turtlmap_fom_covariance: false
+      turtlmap_fom_covariance_scale: 4.0
+
+      # https://docs.waterlinked.com/dvl/dvl-a50/
+      beam_field_of_view_radians: 0.0768 # [rad] Half-power beam width.
+      beam_min_range: 0.05 # [m] Minimum reportable beam distance.
+      beam_max_range: 500.0 # [m] Maximum reportable beam distance.
+
+      # ±1.01% long-term accuracy at 1 m/s.
+      # https://waterlinked.com/datasheets/dvl-a50
+      beam_velocity_noise_sigma: 0.0101 # [m/s]
+      beam_range_noise_sigma: 0.1 # [m]
+
+      # --- ROS Topics and Frames ---
+      input_topic: "dvl/data"
+      twist_output_topic: "dvl/twist"
+      twist_fom_output_topic: "dvl/twist_fom"
+      beams_output_topic: "dvl/beams"
+      beams_fom_output_topic: "dvl/beams_fom"
+
+      beam0_range_output_topic: "dvl/beam0/range"
+      beam1_range_output_topic: "dvl/beam1/range"
+      beam2_range_output_topic: "dvl/beam2/range"
+      beam3_range_output_topic: "dvl/beam3/range"
+
+      use_parameter_frame: false
+
+  fluid_pressure_odom_node:
+    ros__parameters:
+      # --- Node Settings ---
+      pressure_scale: 1.0 # Scale factor to convert the input reading to Pascals.
+      atmospheric_pressure: 101325.0 # [Pa]
+      water_density: 997.0 # [kg/m^3]
+      gravity: 9.8 # [m/s^2]
+
+      max_pressure_delta: 0.0 # [Pa] Reject larger jumps as spikes. 0.0 disables rejection.
+      max_consecutive_rejections: 5 # Accept the new pressure after this many rejections in a row.
+
+      use_ahrs: true # Fuse AHRS for robot_localization odom transform.
+
+      # --- ROS Topics and Frames ---
+      input_topic: "pressure/data"
+      output_topic: "depth/odometry"
+      ahrs_topic: "imu/data_madgwick"
+
+      calibrate_service: "depth/calibrate"
+
+      use_parameter_child_frame: false
+
+  imu_ned_to_enu_node:
+    ros__parameters:
+      input_topic: "imu/data_ned"
+      output_topic: "imu/data"
+
+  mavros_odom_covariance_node:
+    ros__parameters:
+      # --- Node Settings ---
+      position_noise_sigmas: [1.0, 1.0, 1.0] # [x, y, z] [m]
+      orientation_noise_sigmas: [0.05, 0.05, 0.05] # [roll, pitch, yaw] [rad]
+      velocity_noise_sigmas: [0.1, 0.1, 0.1] # [x, y, z] [m/s]
+      angular_velocity_noise_sigmas: [0.05, 0.05, 0.05] # [x, y, z] [rad/s]
+
+      # --- ROS Topics ---
+      input_topic: "mavros/local_position/odom"
+      output_topic: "odometry/local"
+
+  navsat_odom_node:
+    ros__parameters:
+      # --- Node Settings ---
+      publish_diagnostics: true
+
+      set_origin: false # Whether this node owns and publishes the ENU origin.
+      origin_pub_rate_hz: 1.0 # [Hz]
+
+      position_covariance_threshold: 0.0 # [m^2] Max horizontal variance to publish odom. 0.0 disables.
+
+      use_parameter_origin: false # Only used if set_origin is true.
+      origin_latitude: 40.33940 # [deg]
+      origin_longitude: -111.90721 # [deg]
+      origin_altitude: 1412.0 # [m]
+
+      use_ahrs: true # Fuse AHRS for robot_localization odom transform.
+
+      # --- ROS Topics and Frames ---
+      input_topic: "gps/fix"
+      output_topic: "gps/odometry"
+      ahrs_topic: "imu/data_madgwick"
+      origin_topic: "/origin"
+
+      use_parameter_child_frame: false
+
+  odom_child_to_base_node:
+    ros__parameters:
+      input_topic: "gps/odometry"
+      output_topic: "odometry/truth"
+
+  odom_to_tf_node:
+    ros__parameters:
+      input_topic: "dvl/odometry"
+
+  sbg_imu_mag_node:
+    ros__parameters:
+      # --- Node Settings ---
+      stamp_offset_sec: 0.0 # [s]
+      # IMPORTANT! This must match the magnitude of factor_graph_node's mag reference_field.
+      au_to_tesla: 5.0286e-05
+
+      # --- ROS Topics and Frames ---
+      input_topic: "imu/mag"
+      output_topic: "imu/mag_tesla"
+
+      use_parameter_frame: false
+
+  seatrac_x150_imu_depth_node:
+    ros__parameters:
+      # --- Node Settings ---
+      # https://www.blueprintsubsea.com/seatrac/seatrac-standard
+      orientation_noise_sigmas: [0.00349, 0.00349, 0.01745] # [roll, pitch, yaw] [rad]
+      # East-positive declination (NOAA convention).
+      # https://www.ngdc.noaa.gov/geomag/calculators/magcalc.shtml#declination
+      mag_declination_radians: 0.0 # [rad]
+
+      # https://www.blueprintsubsea.com/downloads/seatrac/UM-140-D00221-13.pdf
+      position_z_noise_sigma: 0.1 # [m]
+
+      # --- ROS Topics and Frames ---
+      input_topic: "modem_status"
+      ahrs_output_topic: "seatrac/imu/data"
+      depth_output_topic: "seatrac/depth/odometry"
+
+      use_parameter_frame: false
+
+  ekf_filter_node_map:
+    ros__parameters:
+      frequency: 30.0
+      two_d_mode: false
+      publish_tf: false # Published by FG instead.
+      print_diagnostics: true
+
+      gravitational_acceleration: 9.8 # [m/s^2]
+      initial_estimate_covariance: [
+          1.0e-6,
+          1.0e-6,
+          1.0e-6, # X, Y, Z
+          1.0e-6,
+          1.0e-6,
+          1.0e-6, # Roll, Pitch, Yaw
+          1.0e-6,
+          1.0e-6,
+          1.0e-6, # Vx, Vy, Vz
+          1.0e-9,
+          1.0e-9,
+          1.0e-9, # Vroll, Vpitch, Vyaw
+          1.0e-9,
+          1.0e-9,
+          1.0e-9, # Ax, Ay, Az
+        ]
+
+      imu0: "imu/data"
+      # IMPORTANT! robot_localization in ROS 2 Jazzy has a known bug with mishandling gravity removal for non-trivial IMU to base rotations.
+      # Disable acceleration fusion in the agent-specific config file if the rotation is non-trivial.
+      imu0_config: [
+          false,
+          false,
+          false, # X, Y, Z
+          false,
+          false,
+          false, # Roll, Pitch, Yaw
+          false,
+          false,
+          false, # Vx, Vy, Vz
+          true,
+          true,
+          true, # Vroll, Vpitch, Vyaw
+          true,
+          true,
+          true, # Ax, Ay, Az
+        ]
+      imu0_queue_size: 15
+      imu0_differential: false
+      imu0_relative: false
+      imu0_remove_gravitational_acceleration: true
+
+      imu1: "imu/data_madgwick"
+      imu1_config: [
+          false,
+          false,
+          false, # X, Y, Z
+          true,
+          true,
+          true, # Roll, Pitch, Yaw
+          false,
+          false,
+          false, # Vx, Vy, Vz
+          false,
+          false,
+          false, # Vroll, Vpitch, Vyaw
+          false,
+          false,
+          false, # Ax, Ay, Az
+        ]
+      imu1_queue_size: 15
+      imu1_differential: false
+      imu1_relative: false # Absolute orientation in the map frame.
+
+      odom0: "depth/odometry"
+      odom0_config: [
+          false,
+          false,
+          true, # X, Y, Z
+          false,
+          false,
+          false, # Roll, Pitch, Yaw
+          false,
+          false,
+          false, # Vx, Vy, Vz
+          false,
+          false,
+          false, # Vroll, Vpitch, Vyaw
+          false,
+          false,
+          false, # Ax, Ay, Az
+        ]
+      odom0_queue_size: 5
+      odom0_differential: false
+      odom0_relative: false # Absolute depth in the map frame.
+      odom0_pose_use_child_frame: true # Handle non-trivial base frame offset.
+
+      odom1: "gps/odometry"
+      odom1_config: [
+          true,
+          true,
+          false, # X, Y, Z
+          false,
+          false,
+          false, # Roll, Pitch, Yaw
+          false,
+          false,
+          false, # Vx, Vy, Vz
+          false,
+          false,
+          false, # Vroll, Vpitch, Vyaw
+          false,
+          false,
+          false, # Ax, Ay, Az
+        ]
+      odom1_queue_size: 5
+      odom1_differential: false
+      odom1_relative: false # Absolute GPS position in the map frame.
+      odom1_pose_use_child_frame: true # Handle non-trivial base frame offset.
+
+      twist0: "dvl/twist"
+      twist0_config: [
+          false,
+          false,
+          false, # X, Y, Z
+          false,
+          false,
+          false, # Roll, Pitch, Yaw
+          true,
+          true,
+          true, # Vx, Vy, Vz
+          false,
+          false,
+          false, # Vroll, Vpitch, Vyaw
+          false,
+          false,
+          false, # Ax, Ay, Az
+        ]
+      twist0_queue_size: 5
+
+  ekf_filter_node_odom:
+    ros__parameters:
+      frequency: 30.0
+      two_d_mode: false
+      publish_tf: true
+      print_diagnostics: true
+
+      gravitational_acceleration: 9.8 # [m/s^2]
+      initial_estimate_covariance: [
+          1.0e-6,
+          1.0e-6,
+          1.0e-6, # X, Y, Z
+          1.0e-6,
+          1.0e-6,
+          1.0e-6, # Roll, Pitch, Yaw
+          1.0e-6,
+          1.0e-6,
+          1.0e-6, # Vx, Vy, Vz
+          1.0e-9,
+          1.0e-9,
+          1.0e-9, # Vroll, Vpitch, Vyaw
+          1.0e-9,
+          1.0e-9,
+          1.0e-9, # Ax, Ay, Az
+        ]
+
+      imu0: "imu/data"
+      # IMPORTANT! robot_localization in ROS 2 Jazzy has a known bug with mishandling gravity removal for non-trivial IMU to base rotations.
+      # Disable acceleration fusion in the agent-specific config file if the rotation is non-trivial.
+      imu0_config: [
+          false,
+          false,
+          false, # X, Y, Z
+          false,
+          false,
+          false, # Roll, Pitch, Yaw
+          false,
+          false,
+          false, # Vx, Vy, Vz
+          true,
+          true,
+          true, # Vroll, Vpitch, Vyaw
+          true,
+          true,
+          true, # Ax, Ay, Az
+        ]
+      imu0_queue_size: 15
+      imu0_differential: false
+      imu0_relative: false
+      imu0_remove_gravitational_acceleration: true
+
+      twist0: "dvl/twist"
+      twist0_config: [
+          false,
+          false,
+          false, # X, Y, Z
+          false,
+          false,
+          false, # Roll, Pitch, Yaw
+          true,
+          true,
+          true, # Vx, Vy, Vz
+          false,
+          false,
+          false, # Vroll, Vpitch, Vyaw
+          false,
+          false,
+          false, # Ax, Ay, Az
+        ]
+      twist0_queue_size: 5
+
+  imu_filter_madgwick:
+    ros__parameters:
+      use_mag: true
+      publish_tf: false
+
+      yaw_offset: 0.0 # [rad]
+      # East-positive declination (NOAA convention).
+      # https://www.ngdc.noaa.gov/geomag/calculators/magcalc.shtml#declination
+      declination: 0.185867 # [rad] WMMHR-2025 (40.2406 N, 111.741 W, 2027-06-02)
+      world_frame: "enu"
+
+      gain: 0.1
+      mag_bias_x: 0.0 # [T]
+      mag_bias_y: 0.0 # [T]
+      mag_bias_z: 0.0 # [T]
+      orientation_stddev: 0.05 # [rad]
+
+  ukf_filter_node_map:
+    ros__parameters:
+      frequency: 30.0
+      two_d_mode: false
+      publish_tf: false # Published by FG instead.
+      print_diagnostics: true
+
+      gravitational_acceleration: 9.8 # [m/s^2]
+      initial_estimate_covariance: [
+          1.0e-6,
+          1.0e-6,
+          1.0e-6, # X, Y, Z
+          1.0e-6,
+          1.0e-6,
+          1.0e-6, # Roll, Pitch, Yaw
+          1.0e-6,
+          1.0e-6,
+          1.0e-6, # Vx, Vy, Vz
+          1.0e-9,
+          1.0e-9,
+          1.0e-9, # Vroll, Vpitch, Vyaw
+          1.0e-9,
+          1.0e-9,
+          1.0e-9, # Ax, Ay, Az
+        ]
+
+      imu0: "imu/data"
+      # IMPORTANT! robot_localization in ROS 2 Jazzy has a known bug with mishandling gravity removal for non-trivial IMU to base rotations.
+      # Disable acceleration fusion in the agent-specific config file if the rotation is non-trivial.
+      imu0_config: [
+          false,
+          false,
+          false, # X, Y, Z
+          false,
+          false,
+          false, # Roll, Pitch, Yaw
+          false,
+          false,
+          false, # Vx, Vy, Vz
+          true,
+          true,
+          true, # Vroll, Vpitch, Vyaw
+          true,
+          true,
+          true, # Ax, Ay, Az
+        ]
+      imu0_queue_size: 15
+      imu0_differential: false
+      imu0_relative: false
+      imu0_remove_gravitational_acceleration: true
+
+      imu1: "imu/data_madgwick"
+      imu1_config: [
+          false,
+          false,
+          false, # X, Y, Z
+          true,
+          true,
+          true, # Roll, Pitch, Yaw
+          false,
+          false,
+          false, # Vx, Vy, Vz
+          false,
+          false,
+          false, # Vroll, Vpitch, Vyaw
+          false,
+          false,
+          false, # Ax, Ay, Az
+        ]
+      imu1_queue_size: 15
+      imu1_differential: false
+      imu1_relative: false # Absolute orientation in the map frame.
+
+      odom0: "depth/odometry"
+      odom0_config: [
+          false,
+          false,
+          true, # X, Y, Z
+          false,
+          false,
+          false, # Roll, Pitch, Yaw
+          false,
+          false,
+          false, # Vx, Vy, Vz
+          false,
+          false,
+          false, # Vroll, Vpitch, Vyaw
+          false,
+          false,
+          false, # Ax, Ay, Az
+        ]
+      odom0_queue_size: 5
+      odom0_differential: false
+      odom0_relative: false # Absolute depth in the map frame.
+      odom0_pose_use_child_frame: true # Handle non-trivial base frame offset.
+
+      odom1: "gps/odometry"
+      odom1_config: [
+          true,
+          true,
+          false, # X, Y, Z
+          false,
+          false,
+          false, # Roll, Pitch, Yaw
+          false,
+          false,
+          false, # Vx, Vy, Vz
+          false,
+          false,
+          false, # Vroll, Vpitch, Vyaw
+          false,
+          false,
+          false, # Ax, Ay, Az
+        ]
+      odom1_queue_size: 5
+      odom1_differential: false
+      odom1_relative: false # Absolute GPS position in the map frame.
+      odom1_pose_use_child_frame: true # Handle non-trivial base frame offset.
+
+      twist0: "dvl/twist"
+      twist0_config: [
+          false,
+          false,
+          false, # X, Y, Z
+          false,
+          false,
+          false, # Roll, Pitch, Yaw
+          true,
+          true,
+          true, # Vx, Vy, Vz
+          false,
+          false,
+          false, # Vroll, Vpitch, Vyaw
+          false,
+          false,
+          false, # Ax, Ay, Az
+        ]
+      twist0_queue_size: 5
+
+/base_station:
+  navsat_odom_node:
+    ros__parameters:
+      set_origin: true
+      use_ahrs: false

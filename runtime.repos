@@ -1,0 +1,33 @@
+repositories:
+  coug_comms:
+    type: git
+    url: git@github.com:cougars-auv/coug_comms.git
+    version: main
+  coug_control:
+    type: git
+    url: git@github.com:cougars-auv/coug_control.git
+    version: main
+  coug_description:
+    type: git
+    url: git@github.com:cougars-auv/coug_description.git
+    version: main
+  coug_fg:
+    type: git
+    url: git@github.com:cougars-auv/coug_fg.git
+    version: main
+  coug_helm:
+    type: git
+    url: git@github.com:cougars-auv/coug_helm.git
+    version: main
+  coug_interfaces:
+    type: git
+    url: git@github.com:cougars-auv/coug_interfaces.git
+    version: main
+  dvl_msgs:
+    type: zip
+    url: https://github.com/paagutie/dvl_msgs/archive/refs/heads/master.zip
+    version: dvl_msgs-master
+  seatrac_interfaces:
+    type: zip
+    url: https://github.com/BYU-FROST-Lab/seatrac-ros2/archive/refs/heads/main.zip
+    version: seatrac-ros2-main/seatrac_interfaces

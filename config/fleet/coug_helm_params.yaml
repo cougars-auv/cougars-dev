@@ -1,0 +1,84 @@
+/**:
+  coug_helm_launch:
+    ros__parameters:
+      tree_file: "follow_waypoints_hsd_w_recovery.xml"
+
+  bt_helm_node:
+    ros__parameters:
+      # --- Node Settings ---
+      tick_period_sec: 0.05 # [s]
+      publish_diagnostics: true
+      plugin_lib_names:
+        - "nav2_recovery_node_bt_node"
+        - "nav2_round_robin_node_bt_node"
+        - "nav2_navigate_to_pose_action_bt_node"
+
+      server_timeout_sec: 1.0 # [s] Max wait for a service or Nav2 goal/cancel response.
+      startup_timeout_sec: 30.0 # [s] Max wait for Nav2 action servers at startup.
+
+      # Waypoint reached if normalized ellipse distance < 1.0 (direct hit).
+      surface_capture_radius: 1000.0 # [m]
+      surface_capture_radius_z: 0.5 # [m]
+      home_capture_radius: 25.0 # [m]
+      home_capture_radius_z: 0.5 # [m]
+
+      # Waypoint reached if overshoot detected within slip ellipse.
+      surface_slip_radius: 1000.0 # [m]
+      surface_slip_radius_z: 0.5 # [m]
+      home_slip_radius: 50.0 # [m]
+      home_slip_radius_z: 0.5 # [m]
+
+      default_speed_rpm: 1500.0 # [RPM]
+
+      odom_timeout_sec: 2.0 # [s] Max odometry dropout before the emergency-surface recovery.
+      odom_recovery_timeout_sec: 30.0 # [s] Time to wait for odometry to recover before aborting.
+
+      progress_timeout_sec: 15.0 # [s] Max no-progress time before a recovery is triggered. 0.0 disables.
+      progress_threshold: 0.5 # [m] Min moved distance required for progress check.
+      number_of_retries: 6 # Max recovery attempts before a behavior fails.
+      wait_duration_sec: 5.0 # [s] Idle time for the Wait recovery action.
+      backup_speed_rpm: -900.0 # [RPM] Reverse thrust for the BackUp recovery action.
+      backup_duration_sec: 5.0 # [s] Duration of the BackUp recovery maneuver.
+
+      tracked_goal_update_threshold: 0.1 # [m] Min tracked goal shift before the Nav2 goal is resent.
+      teleop_timeout_sec: 2.0 # [s] Time the LED stays blue after the last teleop command.
+      led_flash_duration_sec: 5.0 # [s] Duration of the green arrival flash and hold.
+      led_flash_rate_hz: 2.0 # [Hz]
+
+      # --- Groot2 Connection ---
+      publish_groot2: false
+      groot2_port: 1667 # [port] (override per-robot to avoid conflicts)
+
+      # --- ROS Topics ---
+      waypoints_topic: "waypoints"
+      odom_topic: "odometry/global"
+      beams_topic: "dvl/beams"
+      aruco_topic: "aruco_detections"
+      hsd_topic: "cmd_hsd_helm"
+      teleop_topic: "cmd_vel_joy"
+      led_color_topic: "led/color"
+
+      start_service: "start"
+      stop_service: "stop"
+      surface_service: "surface"
+      home_service: "home"
+      emergency_stop_service: "emergency_stop"
+      emergency_surface_service: "emergency_surface"
+      assist_service: "assist"
+
+      follow_service: "assist/follow"
+      stay_service: "assist/stay"
+      fetch_service: "assist/fetch"
+      come_service: "assist/come"
+      give_service: "assist/give"
+
+      arm_thruster_service: "thruster/arm"
+      reset_localization_service: "factor_graph_node/reset"
+
+  aruco_tracker:
+    ros__parameters:
+      cam_base_topic: "camera/rgb/image_rect_color"
+      image_is_rectified: true
+      marker_dict: "4X4_50"
+      marker_size: 0.15 # [m]
+      publish_tf: true

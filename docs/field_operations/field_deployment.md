@@ -1,0 +1,53 @@
+# Field Deployment
+
+## Startup
+
+- Power on the dedicated fleet WiFi router and each CougUV.
+
+- On the base station, open the `cougars-dev` repository in VSCode. Use the Command Palette (`Ctrl + Shift + P`) to select "Dev Containers: Reopen in Container."
+
+- Once the containers load, open a new terminal window using `` Ctrl + Alt + Shift + ` `` and launch the base station software with `./base_launch.sh`.
+
+  ```bash
+  cd ~/cougars-dev/scripts && ./base_launch.sh
+  ```
+
+  > If `use_parameter_origin` is set to false, the base station sets the fleet-wide origin from the first GPS fix of the first selected agent. Relaunching `./base_launch.sh` mid-mission will cause the shared origin to fall out of sync. Restart the ROS 2 software on each CougUV whenever you restart the base station.
+
+## Field Changes
+
+- Create a field branch (e.g., `field/utah-lake-jan-1`) in each repository you plan to edit.
+
+- Make any code or config changes on the base station in VSCode, then commit them to the field branches locally.
+
+  > Do not edit code directly on the CougUVs. Make changes on the base station, then roll them out to the fleet with Git.
+
+- Rebuild the workspace and relaunch the base station software with `./base_launch.sh`.
+
+  ```bash
+  cd ~/cougars-dev && colcon build
+  cd ~/cougars-dev/scripts && ./base_launch.sh
+  ```
+
+- For each CougUV:
+
+  - Outside of the dev container, attach to a tmux session on the CougUV using `./connect.sh <agent-ns>`.
+
+    ```bash
+    cd ~/cougars-dev/ops && ./connect.sh <agent-ns>
+    ```
+
+  - Check out the field branches created on the base station.
+
+    ```bash
+    git fetch base
+    git switch -c field/utah-lake-jan-1 base/field/utah-lake-jan-1
+    ```
+
+  - Use the configured commands to pull the latest code from the base station remote, rebuild the workspace, and restart the ROS 2 software.
+
+    ```bash
+    pull-base
+    build
+    restart
+    ```

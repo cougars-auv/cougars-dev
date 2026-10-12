@@ -1,0 +1,222 @@
+# Copyright 2026 BYU FROST Lab
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: Docker Build
+
+run-name: ${{ github.event.client_payload.repo && format('{0}@{1}', github.event.client_payload.repo, github.event.client_payload.sha) || '' }}
+
+on:
+  push:
+    branches: ["main"]
+    tags: ["v*"]
+  pull_request:
+    branches: ["main"]
+  repository_dispatch:
+    types: [docker-build]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  DOCKER_USERNAME: frostlab
+  DOCKER_REPO: frostlab/cougars
+  VERSION: ${{ (github.event.pull_request.number && format('pr-{0}', github.event.pull_request.number)) || (github.ref_type == 'tag' && github.ref_name) || 'latest' }}
+  CACHE_SUFFIX: ${{ github.event.pull_request.number && format('-pr-{0}', github.event.pull_request.number) || '' }}
+
+jobs:
+  changes:
+    runs-on: ubuntu-24.04
+    outputs:
+      docker: ${{ steps.filter.outputs.docker }}
+    steps:
+      - uses: actions/checkout@v7
+      - id: filter
+        if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref_type == 'branch')
+        uses: dorny/paths-filter@v4
+        with:
+          filters: |
+            docker:
+              - ".github/workflows/docker_build.yaml"
+              - "docker/**"
+              - ".dockerignore"
+              - "*.repos"
+              - "**/package.xml"
+
+  build-gtsam:
+    needs: changes
+    if: needs.changes.outputs.docker != 'false'
+    strategy:
+      matrix:
+        include:
+          - runner: ubuntu-24.04
+            arch: amd64
+          - runner: ubuntu-24.04-arm
+            arch: arm64
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: docker/setup-buildx-action@v4
+      - uses: docker/login-action@v4
+        with:
+          username: ${{ env.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+      - uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: docker/Dockerfile.gtsam
+          platforms: linux/${{ matrix.arch }}
+          push: true
+          tags: ${{ env.DOCKER_REPO }}:gtsam-${{ env.VERSION }}-${{ matrix.arch }}
+          provenance: false
+          cache-from: |
+            type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-gtsam-${{ matrix.arch }}
+            type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-gtsam-${{ matrix.arch }}${{ env.CACHE_SUFFIX }}
+          cache-to: type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-gtsam-${{ matrix.arch }}${{ env.CACHE_SUFFIX }},mode=max
+
+  manifest-gtsam:
+    needs: build-gtsam
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: docker/setup-buildx-action@v4
+      - uses: docker/login-action@v4
+        with:
+          username: ${{ env.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+      - run: |
+          docker buildx imagetools create \
+            -t ${{ env.DOCKER_REPO }}:gtsam-${{ env.VERSION }} \
+            ${{ env.DOCKER_REPO }}:gtsam-${{ env.VERSION }}-amd64 \
+            ${{ env.DOCKER_REPO }}:gtsam-${{ env.VERSION }}-arm64
+
+  build-runtime:
+    needs: manifest-gtsam
+    strategy:
+      matrix:
+        include:
+          - runner: ubuntu-24.04
+            arch: amd64
+          - runner: ubuntu-24.04-arm
+            arch: arm64
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: webfactory/ssh-agent@v0.10.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_KEY }}
+      - run: |
+          sudo apt-get update && sudo apt-get install -y python3-pip
+          pip3 install --user vcstool
+          echo "${HOME}/.local/bin" >>"${GITHUB_PATH}"
+          vcs import src <runtime.repos
+          vcs custom -n --git --args submodule update --init --recursive
+      - uses: docker/setup-buildx-action@v4
+      - uses: docker/login-action@v4
+        with:
+          username: ${{ env.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+      - uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: docker/Dockerfile.runtime
+          platforms: linux/${{ matrix.arch }}
+          pull: true
+          push: true
+          build-args: VERSION=${{ env.VERSION }}
+          tags: ${{ env.DOCKER_REPO }}:runtime-${{ env.VERSION }}-${{ matrix.arch }}
+          provenance: false
+          cache-from: |
+            type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-runtime-${{ matrix.arch }}
+            type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-runtime-${{ matrix.arch }}${{ env.CACHE_SUFFIX }}
+          cache-to: type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-runtime-${{ matrix.arch }}${{ env.CACHE_SUFFIX }},mode=max
+
+  manifest-runtime:
+    needs: build-runtime
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: docker/setup-buildx-action@v4
+      - uses: docker/login-action@v4
+        with:
+          username: ${{ env.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+      - run: |
+          docker buildx imagetools create \
+            -t ${{ env.DOCKER_REPO }}:runtime-${{ env.VERSION }} \
+            ${{ env.DOCKER_REPO }}:runtime-${{ env.VERSION }}-amd64 \
+            ${{ env.DOCKER_REPO }}:runtime-${{ env.VERSION }}-arm64
+
+  build-dev:
+    needs: manifest-runtime
+    strategy:
+      matrix:
+        include:
+          - runner: ubuntu-24.04
+            arch: amd64
+          - runner: ubuntu-24.04-arm
+            arch: arm64
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: webfactory/ssh-agent@v0.10.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_KEY }}
+      - run: |
+          sudo apt-get update && sudo apt-get install -y python3-pip
+          pip3 install --user vcstool
+          echo "${HOME}/.local/bin" >>"${GITHUB_PATH}"
+          vcs import src <runtime.repos
+          vcs import src <dev.repos
+          vcs custom -n --git --args submodule update --init --recursive
+      - uses: docker/setup-buildx-action@v4
+      - uses: docker/login-action@v4
+        with:
+          username: ${{ env.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+      - uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: docker/Dockerfile.dev
+          platforms: linux/${{ matrix.arch }}
+          pull: true
+          push: true
+          build-args: VERSION=${{ env.VERSION }}
+          tags: ${{ env.DOCKER_REPO }}:dev-${{ env.VERSION }}-${{ matrix.arch }}
+          provenance: false
+          cache-from: |
+            type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-dev-${{ matrix.arch }}
+            type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-dev-${{ matrix.arch }}${{ env.CACHE_SUFFIX }}
+          cache-to: type=registry,ref=${{ env.DOCKER_REPO }}:buildcache-dev-${{ matrix.arch }}${{ env.CACHE_SUFFIX }},mode=max
+
+  manifest-dev:
+    needs: build-dev
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: docker/setup-buildx-action@v4
+      - uses: docker/login-action@v4
+        with:
+          username: ${{ env.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+      - run: |
+          docker buildx imagetools create \
+            -t ${{ env.DOCKER_REPO }}:dev-${{ env.VERSION }} \
+            ${{ env.DOCKER_REPO }}:dev-${{ env.VERSION }}-amd64 \
+            ${{ env.DOCKER_REPO }}:dev-${{ env.VERSION }}-arm64
+
+  docker-build-status:
+    needs: [changes, manifest-dev]
+    if: always()
+    runs-on: ubuntu-24.04
+    steps:
+      - if: needs.changes.outputs.docker != 'false' && needs.manifest-dev.result != 'success'
+        run: exit 1

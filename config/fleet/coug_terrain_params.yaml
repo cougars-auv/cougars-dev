@@ -1,0 +1,56 @@
+/**:
+  coug_terrain_launch:
+    ros__parameters:
+      dem_file: ""
+      dsm_file: ""
+      dsm_dem_file: ""
+      ahrs_topic: "camera/imu/data"
+
+  dem_costmap_node:
+    ros__parameters:
+      # --- Node Settings ---
+      max_slope_degrees: 25.0 # [deg]
+      resolution: 1.0 # [m]
+      outside_is_lethal: false
+      fallback_size: 500.0 # [m] Flat prior extent when no DEM is loaded.
+
+      # --- ROS Topics and Frames ---
+      origin_topic: "/origin"
+      output_topic: "terrain/dem/occupancy"
+
+  dsm_costmap_node:
+    ros__parameters:
+      # --- Node Settings ---
+      max_obstacle_height: 0.15 # [m]
+      min_obstacle_area: 0.5 # [m^2]
+      resolution: 0.5 # [m]
+      fallback_size: 500.0 # [m] Flat prior extent when no DSM is loaded.
+
+      # --- ROS Topics and Frames ---
+      origin_topic: "/origin"
+      output_topic: "terrain/dsm/occupancy"
+
+  ground_segmentation:
+    ros__parameters:
+      maxX: 100.0 # [m]
+      minX: -100.0 # [m]
+      maxY: 100.0 # [m]
+      minY: -100.0 # [m]
+      maxZ: 100.0 # [m]
+      minZ: -100.0 # [m]
+      downsample: true
+      downsample_resolution: 0.05 # [m]
+      lidar_to_ground: -0.875 # [m] Camera to ground along base frame Z.
+      transform_tolerance: 0.1 # [s]
+
+      cellSizeX: 1.0 # [m]
+      cellSizeY: 1.0 # [m]
+      cellSizeZ: 10.0 # [m] Phase 1 vertical binning.
+      cellSizeZPhase2: 1.0 # [m] Phase 2 vertical binning.
+      slopeThresholdDegrees: 25.0 # [deg]
+      groundInlierThreshold: 0.1 # [m] Must stay below cellSizeZPhase2.
+      centroidSearchRadius: 5.0 # [m]
+      maxGroundHeightDeviation: 0.1 # [m]
+      use_imu_orientation: true
+
+      show_benchmark: false

@@ -1,0 +1,46 @@
+/**:
+  coug_gazebo_agent_launch:
+    ros__parameters:
+      urdf_file: "rover.gazebo.xacro"
+      # IMPORTANT! This must match mavros_node's fcu_url (port 5760 + 10N).
+      ardupilot_instance: 0
+      ardupilot_param_file: ""
+
+  coug_gazebo_world_launch:
+    ros__parameters:
+      world_file: "mdrs.sdf.xacro"
+
+  imu_covariance_node:
+    ros__parameters:
+      # --- Node Settings ---
+      orientation_noise_sigmas: [0.05, 0.05, 0.05] # [roll, pitch, yaw] [rad]
+
+      # --- ROS Topics ---
+      input_topic: "camera/imu/data_gz"
+      output_topic: "camera/imu/data"
+
+  mag_covariance_node:
+    ros__parameters:
+      # --- Node Settings ---
+      # https://github.com/stereolabs/zed-sdk/issues/487
+      magnetic_field_noise_sigmas: [5.0e-7, 5.0e-7, 5.0e-7] # [x, y, z] [T]
+
+      # --- ROS Topics ---
+      input_topic: "camera/imu/mag_gz"
+      output_topic: "camera/imu/mag"
+
+  navsat_covariance_node:
+    ros__parameters:
+      # --- Node Settings ---
+      # https://content.u-blox.com/sites/default/files/documents/ZED-F9P-01B_DataSheet_UBX-17051259.pdf
+      position_noise_sigmas: [0.015, 0.015, 0.025] # [east, north, up] [m]
+
+      # --- ROS Topics ---
+      input_topic: "gps/fix_gz"
+      output_topic: "gps/fix"
+
+  thrust_mixer_node:
+    ros__parameters:
+      input_topic: "cmd_vel_out"
+      left_output_topic: "thrusters/left/thrust"
+      right_output_topic: "thrusters/right/thrust"

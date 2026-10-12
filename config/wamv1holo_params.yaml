@@ -1,0 +1,142 @@
+/wamv1holo:
+  coug_comms_base_launch:
+    ros__parameters:
+      beacon_id: 5
+
+  coug_description_launch:
+    ros__parameters:
+      urdf_file: "wamv_holoocean.urdf.xacro"
+
+  coug_helm_launch:
+    ros__parameters:
+      tree_file: "follow_waypoints_nav2.xml"
+
+  "**":
+    ros__parameters:
+      priors:
+        parameter_priors_sigmas:
+          initial_position_sigmas: [0.001, 0.001, 1.0] # [x, y, z] [m]
+
+  controller_server:
+    ros__parameters:
+      controller_frequency: 20.0 # [Hz]
+
+      general_goal_checker:
+        xy_goal_tolerance: 2.5 # [m]
+
+      FollowPath:
+        transform_tolerance: 0.3 # [s]
+        time_steps: 56 # [steps]
+        model_dt: 0.05 # [s]
+        batch_size: 1000
+
+        motion_model: "DiffDrive"
+        vx_max: 1.0 # [m/s]
+        vx_min: -0.7 # [m/s]
+        wz_max: 3.8 # [rad/s]
+
+        vx_std: 0.4 # [m/s]
+        wz_std: 0.8 # [rad/s]
+
+        prune_distance: 4.0 # [m]
+
+        critics:
+          [
+            "ConstraintCritic",
+            "CostCritic",
+            "GoalCritic",
+            "GoalAngleCritic",
+            "PathAlignCritic",
+            "PathAngleCritic",
+            "PathFollowCritic",
+            "PreferForwardCritic",
+            "TwirlingCritic",
+          ]
+
+        CostCritic:
+          consider_footprint: true
+
+        GoalCritic:
+          threshold_to_consider: 3.0 # [m]
+
+        PathAlignCritic:
+          offset_from_furthest: 2 # [poses]
+
+        PathAngleCritic:
+          cost_weight: 4.0
+          offset_from_furthest: 2 # [poses]
+
+        PathFollowCritic:
+          cost_weight: 5.0
+          offset_from_furthest: 2 # [poses]
+          threshold_to_consider: 3.0 # [m]
+
+        PreferForwardCritic:
+          cost_weight: 7.5
+
+        TwirlingCritic:
+          cost_weight: 5.0
+
+  global_costmap:
+    global_costmap:
+      ros__parameters:
+        update_frequency: 1.0 # [Hz]
+        publish_frequency: 0.0 # [Hz]
+
+        footprint: "[[2.555, 1.267], [2.555, -1.267], [-2.822, -1.267], [-2.822, 1.267]]"
+        plugins: ["ground_consistency_layer", "inflation_layer"]
+
+        ground_consistency_layer:
+          plugin: "nav2_ground_consistency_costmap_plugin::GroundConsistencyLayer"
+          ground_points_topic: "/wamv1holo/ground_segmentation/ground_points"
+          nonground_points_topic: "/wamv1holo/ground_segmentation/obstacle_points"
+
+          robot_height: 2.35 # [m]
+          max_data_range: 0.0 # [m]
+          nonground_prob_thresh: 0.5
+          nonground_decay: 0.95
+
+        inflation_layer:
+          plugin: "nav2_costmap_2d::InflationLayer"
+          inflation_radius: 4.6 # [m]
+          cost_scaling_factor: 1.66 # [1/m]
+
+  local_costmap:
+    local_costmap:
+      ros__parameters:
+        update_frequency: 5.0 # [Hz]
+        publish_frequency: 1.0 # [Hz]
+
+        footprint: "[[2.555, 1.267], [2.555, -1.267], [-2.822, -1.267], [-2.822, 1.267]]"
+        plugins: ["ground_consistency_layer", "inflation_layer"]
+
+        ground_consistency_layer:
+          plugin: "nav2_ground_consistency_costmap_plugin::GroundConsistencyLayer"
+          ground_points_topic: "/wamv1holo/ground_segmentation/ground_points"
+          nonground_points_topic: "/wamv1holo/ground_segmentation/obstacle_points"
+
+          robot_height: 2.35 # [m]
+          max_data_range: 20.0 # [m]
+
+        inflation_layer:
+          plugin: "nav2_costmap_2d::InflationLayer"
+          inflation_radius: 4.1 # [m]
+          cost_scaling_factor: 1.95 # [1/m]
+
+  planner_server:
+    ros__parameters:
+      GridBased:
+        plugin: "nav2_navfn_planner::NavfnPlanner"
+
+  cmd_vel_converter_node:
+    ros__parameters:
+      agent_type: "surface_vessel"
+
+  modem_converter_node:
+    ros__parameters:
+      beacon_id: 5
+
+  ground_segmentation:
+    ros__parameters:
+      lidar_to_ground: -2.17 # [m]
+      groundInlierThreshold: 0.25 # [m]

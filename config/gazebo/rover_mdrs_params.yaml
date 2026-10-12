@@ -1,0 +1,56 @@
+/**:
+  sim_launch:
+    ros__parameters:
+      agents: ["rover1gz"]
+
+  coug_gazebo_world_launch:
+    ros__parameters:
+      world_file: "mdrs.sdf.xacro"
+
+  coug_terrain_launch:
+    ros__parameters:
+      dem_file: "mdrs_usgs3dep_opr_50cm.vrt"
+      dsm_file: "mdrs_ugrc_dsm_50cm.vrt"
+      dsm_dem_file: "mdrs_usgs3dep_opr_50cm.vrt"
+
+  controller_server:
+    ros__parameters:
+      FollowPath:
+        visualize: true
+
+  imu_filter_madgwick:
+    ros__parameters:
+      declination: 0.175154 # [rad] WMMHR-2025 (38.4060 N, 110.7920 W, 2027-06-02)
+
+mapviz:
+  ros__parameters:
+    default_capture_radius: 0.1 # [m]
+    default_capture_radius_z: 0.1 # [m]
+    default_slip_radius: 0.1 # [m]
+    default_slip_radius_z: 0.1 # [m]
+
+/base_station:
+  navsat_odom_node:
+    ros__parameters:
+      use_parameter_origin: true
+      origin_latitude: 38.406 # [deg]
+      origin_longitude: -110.792 # [deg]
+      origin_altitude: 1352.274 # [m]
+
+/rover1gz:
+  sim_launch:
+    ros__parameters:
+      location: [5.0, 30.0, -0.19] # [x, y, z] [m]
+      rotation: [0.0, 0.0, 0.0] # [roll, pitch, yaw] [deg]
+
+  global_costmap:
+    global_costmap:
+      ros__parameters:
+        publish_frequency: 0.5 # [Hz]
+        always_send_full_costmap: true
+
+  local_costmap:
+    local_costmap:
+      ros__parameters:
+        publish_frequency: 5.0 # [Hz]
+        always_send_full_costmap: true

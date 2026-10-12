@@ -1,0 +1,79 @@
+/coug2:
+  coug_description_launch:
+    ros__parameters:
+      urdf_file: "couguv.urdf.xacro"
+
+  coug_fg_base_launch:
+    ros__parameters:
+      gps_topic: "/fix"
+
+  dvl_a50_odom_node:
+    ros__parameters:
+      override_timestamp: true # DVL A50 clock is not synced in these bags
+
+      input_topic: "/dvl/position"
+
+      use_parameter_frame: true
+
+  dvl_a50_twist_beams_node:
+    ros__parameters:
+      override_timestamp: true # DVL A50 clock is not synced in these bags
+
+      input_topic: "/dvl/data"
+
+      use_parameter_frame: true
+
+  fluid_pressure_odom_node:
+    ros__parameters:
+      atmospheric_pressure: 82776.2 # [Pa] Deer Creek (~1673 m elevation)
+
+      max_pressure_delta: 9780.0 # [Pa] ~1 m depth jump
+
+      input_topic: "/pressure/data"
+      ahrs_topic: "seatrac/imu/data"
+
+      use_parameter_child_frame: true
+
+  navsat_odom_node:
+    ros__parameters:
+      input_topic: "/fix"
+      ahrs_topic: "seatrac/imu/data"
+
+      use_parameter_child_frame: true
+
+  seatrac_x150_imu_depth_node:
+    ros__parameters:
+      mag_declination_radians: 0.187962 # [rad] WMMHR-2025 (40.4166 N, 111.5077 W, 2025-08-28)
+
+      input_topic: "/modem_status"
+
+      use_parameter_frame: true
+
+  ekf_filter_node_map:
+    ros__parameters:
+      publish_tf: true
+
+      imu1: "seatrac/imu/data"
+      odom1: gps/odometry_null
+
+      odom2: "dvl/odometry"
+      odom2_config: [
+          true,
+          true,
+          false, # X, Y, Z
+          true,
+          true,
+          true, # Roll, Pitch, Yaw
+          false,
+          false,
+          false, # Vx, Vy, Vz
+          false,
+          false,
+          false, # Vroll, Vpitch, Vyaw
+          false,
+          false,
+          false, # Ax, Ay, Az
+        ]
+      odom2_differential: true
+
+      twist0: dvl/twist_null

@@ -1,0 +1,138 @@
+/**:
+  belief_state_monitor_node:
+    ros__parameters:
+      fg_odom_topic: "odometry/global"
+      fg_velocity_topic: "factor_graph_node/velocity"
+      fg_bias_topic: "factor_graph_node/imu/bias"
+      norm_trace_topic: "~/norm_trace"
+
+  behavior_server:
+    ros__parameters:
+      enable_stamped_cmd_vel: true
+      transform_tolerance: 0.3 # [s]
+      behavior_plugins: ["spin", "backup", "wait"]
+      spin:
+        plugin: "nav2_behaviors::Spin"
+      backup:
+        plugin: "nav2_behaviors::BackUp"
+      wait:
+        plugin: "nav2_behaviors::Wait"
+
+  bt_navigator:
+    ros__parameters:
+      odom_topic: "odometry/local"
+      transform_tolerance: 0.3 # [s]
+
+  controller_server:
+    ros__parameters:
+      controller_frequency: 10.0 # [Hz]
+      costmap_update_timeout: 1.0 # [s]
+      enable_stamped_cmd_vel: true
+      odom_topic: "odometry/local"
+      goal_checker_plugins: ["general_goal_checker"]
+
+      general_goal_checker:
+        plugin: "nav2_controller::SimpleGoalChecker"
+        xy_goal_tolerance: 1.5 # [m]
+        yaw_goal_tolerance: 6.28 # [rad]
+
+      FollowPath:
+        plugin: "nav2_mppi_controller::MPPIController"
+        transform_tolerance: 2.0 # [s]
+        time_steps: 15 # [steps]
+        model_dt: 0.1 # [s]
+        batch_size: 200
+
+        motion_model: "Omni"
+        vx_max: 1.0 # [m/s]
+        vx_min: -1.0 # [m/s]
+        vy_max: 1.0 # [m/s]
+        vy_min: -1.0 # [m/s]
+        wz_max: 0.3 # [rad/s]
+
+        vx_std: 0.2 # [m/s]
+        vy_std: 0.2 # [m/s]
+        wz_std: 0.1 # [rad/s]
+
+        critics:
+          [
+            "ConstraintCritic",
+            "GoalCritic",
+            "PathFollowCritic",
+            "BeliefStateCritic",
+          ]
+
+        PathFollowCritic:
+          cost_weight: 8.0
+          offset_from_furthest: 3 # [poses]
+
+        BeliefStateCritic:
+          enabled: true
+          cost_weight: 50000.0
+
+          fg_odom_topic: "odometry/global"
+          fg_velocity_topic: "factor_graph_node/velocity"
+          fg_bias_topic: "factor_graph_node/imu/bias"
+
+          accel_noise_density_sigmas: [5.6e-4, 5.6e-4, 5.6e-4] # [x, y, z] [m/s^2/√Hz]
+          gyro_noise_density_sigmas: [5.24e-5, 5.24e-5, 5.24e-5] # [x, y, z] [rad/s/√Hz]
+          accel_bias_rw_sigmas: [1.4e-5, 1.4e-5, 1.4e-5] # [x, y, z] [m/s^2/√s]
+          gyro_bias_rw_sigmas: [3.5e-6, 3.5e-6, 3.5e-6] # [x, y, z] [rad/s/√s]
+          integration_covariance: 1.0e-8
+          gravity: [0.0, 0.0, -9.8] # [x, y, z] [m/s^2]
+
+          dvl_update_rate_hz: 10.0 # [Hz]
+          velocity_noise_sigmas: [0.02, 0.02, 0.02] # [x, y, z] [m/s]
+
+          ahrs_update_rate_hz: 10.0 # [Hz]
+          orientation_yaw_noise_sigma: 0.01745 # [rad]
+
+  global_costmap:
+    global_costmap:
+      ros__parameters:
+        update_frequency: 1.0 # [Hz]
+        publish_frequency: 0.0 # [Hz]
+        rolling_window: true
+        width: 500 # [m]
+        height: 500 # [m]
+        resolution: 0.5 # [m/cell]
+
+        robot_radius: 0.3 # [m]
+        plugins: ["obstacle_layer"]
+
+        obstacle_layer:
+          plugin: "nav2_costmap_2d::ObstacleLayer"
+
+  local_costmap:
+    local_costmap:
+      ros__parameters:
+        update_frequency: 5.0 # [Hz]
+        publish_frequency: 0.0 # [Hz]
+        rolling_window: true
+        width: 20 # [m]
+        height: 20 # [m]
+
+        robot_radius: 0.3 # [m]
+        plugins: ["obstacle_layer"]
+
+        obstacle_layer:
+          plugin: "nav2_costmap_2d::ObstacleLayer"
+
+  planner_server:
+    ros__parameters:
+      costmap_update_timeout: 3.0 # [s]
+      GridBased:
+        plugin: "nav2_smac_planner::SmacPlanner2D"
+        tolerance: 0.5 # [m]
+
+  twist_mux:
+    ros__parameters:
+      topics:
+        nav2:
+          topic: "cmd_vel"
+          timeout: 0.5 # [s]
+          priority: 10
+        joy:
+          topic: "cmd_vel_joy"
+          timeout: 0.5 # [s]
+          priority: 20

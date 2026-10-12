@@ -1,0 +1,21 @@
+/**:
+  ros__parameters:
+    config_command_topic: "dvl/config/command"
+    battery_status_topic: "battery/status"
+    led_color_topic: "led/color"
+
+    bag_record_service: "bag_record"
+    arm_thruster_service: "thruster/arm"
+    reset_localization_service: "factor_graph_node/reset"
+    calibrate_depth_service: "depth/calibrate"
+    calibrate_fins_service: "fins/calibrate"
+
+    assist_service: "assist"
+    follow_service: "assist/follow"
+    stay_service: "assist/stay"
+    fetch_service: "assist/fetch"
+    come_service: "assist/come"
+    give_service: "assist/give"
+
+    emergency_stop_service: "base/emergency_stop"
+    emergency_surface_service: "base/emergency_surface"

@@ -1,0 +1,106 @@
+# Copyright 2026 BYU FROST Lab
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: ROS 2 Build & Test
+
+run-name: ${{ github.event.client_payload.repo && format('{0}@{1}', github.event.client_payload.repo, github.event.client_payload.sha) || '' }}
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+  repository_dispatch:
+    types: [ros2-build-test]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  DOCKER_REPO: frostlab/cougars
+
+jobs:
+  changes:
+    runs-on: ubuntu-24.04
+    outputs:
+      ros2: ${{ steps.filter.outputs.ros2 }}
+    steps:
+      - uses: actions/checkout@v7
+      - id: filter
+        if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref_type == 'branch')
+        uses: dorny/paths-filter@v4
+        with:
+          filters: |
+            ros2:
+              - ".github/workflows/ros2_build_test.yaml"
+              - "src/**"
+              - "*.repos"
+              - ".clang-tidy"
+
+  build-test:
+    needs: changes
+    if: needs.changes.outputs.ros2 != 'false'
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [runtime, dev]
+        runner: [ubuntu-24.04, ubuntu-24.04-arm]
+        include:
+          - target: runtime
+            repos: "runtime.repos"
+          - target: dev
+            repos: "runtime.repos dev.repos"
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/cache@v6
+        with:
+          path: ${{ github.workspace }}/.ccache
+          key: ccache-${{ github.repository }}-${{ matrix.runner }}-${{ matrix.target }}-${{ github.run_id }}
+          restore-keys: ccache-${{ github.repository }}-${{ matrix.runner }}-${{ matrix.target }}-
+      - uses: webfactory/ssh-agent@v0.10.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_KEY }}
+      - uses: ros-industrial/industrial_ci@master
+        env:
+          DOCKER_IMAGE: ${{ env.DOCKER_REPO }}:${{ matrix.target }}-latest
+          DOCKER_PULL: true
+          UPSTREAM_WORKSPACE: ${{ matrix.repos }}
+          ROSDEP_SKIP_KEYS: "gz-cmake3 gz-sim8"
+          TARGET_WORKSPACE: src
+          CCACHE_DIR: ${{ github.workspace }}/.ccache
+          BASEDIR: ${{ github.workspace }}/.work
+          CLANG_TIDY: true
+          CLANG_TIDY_BASE_REF: ${{ github.base_ref || '' }}
+          TARGET_CMAKE_ARGS: >
+            -DCMAKE_BUILD_TYPE=Debug
+            -DCMAKE_CXX_FLAGS="--coverage"
+            -DCMAKE_C_FLAGS="--coverage"
+          AFTER_SETUP_UPSTREAM_WORKSPACE: |
+            git config --global --add safe.directory "*"
+            vcs custom -n --git --args submodule update --init --recursive
+      - if: matrix.target == 'runtime' && matrix.runner == 'ubuntu-24.04'
+        uses: codecov/codecov-action@v7
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: false
+
+  ros2-build-test-status:
+    needs: [changes, build-test]
+    if: always()
+    runs-on: ubuntu-24.04
+    steps:
+      - if: needs.changes.outputs.ros2 != 'false' && needs.build-test.result != 'success'
+        run: exit 1

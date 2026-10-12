@@ -1,0 +1,5 @@
+*
+
+!docker/entrypoint.sh
+!docker/holoocean/entrypoint.sh
+!src/**/package.xml

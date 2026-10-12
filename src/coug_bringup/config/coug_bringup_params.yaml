@@ -1,0 +1,29 @@
+/**:
+  bag_launch:
+    ros__parameters:
+      pointcloud_topic: "camera/point_cloud/cloud_registered"
+
+  sim_launch:
+    ros__parameters:
+      scenario_file: "couguv_openwater.json"
+
+  bag_recorder_node:
+    ros__parameters:
+      publish_diagnostics: false
+      bag_record_service: "bag_record"
+
+  image_republisher:
+    ros__parameters:
+      in_transport: "raw"
+      out_transport: "ffmpeg"
+
+      out:
+        ffmpeg:
+          # https://github.com/stereolabs/zed-ros2-wrapper/blob/humble-v4.2.x/zed_wrapper/config/ffmpeg.yaml
+          bit_rate: 4194304 # [bits/s]
+          gop_size: 10 # Frames between keyframes.
+
+  tsdf_server:
+    ros__parameters:
+      tsdf_voxel_size: 0.05 # [m]
+      method: "fast"
