@@ -14,7 +14,7 @@
 
 services:
   mapproxy:
-    image: danielsnider/mapproxy
+    image: danielsnider/mapproxy@sha256:d8372c3b0af3c530d4a30385a7005a423b87e6aee5f62279e641b45eb19c800e
     container_name: cougars-mapproxy-ct
     network_mode: host
     volumes:

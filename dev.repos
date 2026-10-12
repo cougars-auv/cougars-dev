@@ -1,16 +1,16 @@
 repositories:
   ardupilot_gazebo:
     type: zip
-    url: https://github.com/ArduPilot/ardupilot_gazebo/archive/refs/heads/main.zip
-    version: ardupilot_gazebo-main
+    url: https://github.com/ArduPilot/ardupilot_gazebo/archive/082a0fe231f6e63bc8d1598f1cba461d9e2ea7f5.zip
+    version: ardupilot_gazebo-082a0fe231f6e63bc8d1598f1cba461d9e2ea7f5
   ardupilot_sitl_models:
     type: zip
-    url: https://github.com/ArduPilot/SITL_Models/archive/refs/heads/master.zip
-    version: SITL_Models-master/Gazebo
+    url: https://github.com/ArduPilot/SITL_Models/archive/25bc38ed8c6c0345840159a8cbc0b02781d52f3c.zip
+    version: SITL_Models-25bc38ed8c6c0345840159a8cbc0b02781d52f3c/Gazebo
   blue_description:
     type: zip
-    url: https://github.com/Robotic-Decision-Making-Lab/blue/archive/refs/heads/main.zip
-    version: blue-main/blue_description
+    url: https://github.com/Robotic-Decision-Making-Lab/blue/archive/812fea605cd2056ba20fac504f456457594595fb.zip
+    version: blue-812fea605cd2056ba20fac504f456457594595fb/blue_description
   coug_belief_mppi:
     type: git
     url: git@github.com:cougars-auv/coug_belief_mppi.git
@@ -49,16 +49,16 @@ repositories:
     version: main
   eigen_checks:
     type: zip
-    url: https://github.com/tu-darmstadt-ros-pkg/eigen_checks/archive/refs/heads/ros2.zip
-    version: eigen_checks-ros2
+    url: https://github.com/tu-darmstadt-ros-pkg/eigen_checks/archive/ea2089f6d35ba18f72fda3769ac7a93b08e1e5e2.zip
+    version: eigen_checks-ea2089f6d35ba18f72fda3769ac7a93b08e1e5e2
   ground_segmentation:
     type: zip
-    url: https://github.com/dfki-ric/ground_segmentation/archive/refs/heads/master.zip
-    version: ground_segmentation-master
+    url: https://github.com/dfki-ric/ground_segmentation/archive/e5aa4c2c47a961eae491056cf616fd415ff3d602.zip
+    version: ground_segmentation-e5aa4c2c47a961eae491056cf616fd415ff3d602
   ground_segmentation_ros2:
     type: zip
-    url: https://github.com/dfki-ric/ground_segmentation_ros2/archive/refs/heads/master.zip
-    version: ground_segmentation_ros2-master
+    url: https://github.com/dfki-ric/ground_segmentation_ros2/archive/c0d60fd8ddcf561d006a907e04c84f9a8847372a.zip
+    version: ground_segmentation_ros2-c0d60fd8ddcf561d006a907e04c84f9a8847372a
   holoocean_interfaces:
     type: zip
     url: https://github.com/cougars-auv/holoocean-ros/archive/refs/heads/main.zip
@@ -69,12 +69,12 @@ repositories:
     version: lidar_cluster_ros2-ros2
   nav2_ground_consistency_costmap_plugin:
     type: zip
-    url: https://github.com/dfki-ric/nav2_ground_consistency_costmap_plugin/archive/refs/heads/main.zip
-    version: nav2_ground_consistency_costmap_plugin-main
+    url: https://github.com/dfki-ric/nav2_ground_consistency_costmap_plugin/archive/41cec620efba6c370dccfc59a6ec1134775ff48a.zip
+    version: nav2_ground_consistency_costmap_plugin-41cec620efba6c370dccfc59a6ec1134775ff48a
   voxblox_ros2:
     type: zip
-    url: https://github.com/tu-darmstadt-ros-pkg/voxblox_ros2/archive/refs/heads/ros2.zip
-    version: voxblox_ros2-ros2
+    url: https://github.com/tu-darmstadt-ros-pkg/voxblox_ros2/archive/27c2bfcfc25beb1dbc701dcf4b72f4e5cce9fa50.zip
+    version: voxblox_ros2-27c2bfcfc25beb1dbc701dcf4b72f4e5cce9fa50
   vrx:
     type: zip
     url: https://github.com/cougars-auv/vrx/archive/refs/heads/jazzy.zip

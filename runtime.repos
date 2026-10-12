@@ -25,9 +25,9 @@ repositories:
     version: main
   dvl_msgs:
     type: zip
-    url: https://github.com/paagutie/dvl_msgs/archive/refs/heads/master.zip
-    version: dvl_msgs-master
+    url: https://github.com/paagutie/dvl_msgs/archive/555525ebc027f4ca21fdd654a6f30cecd259772f.zip
+    version: dvl_msgs-555525ebc027f4ca21fdd654a6f30cecd259772f
   seatrac_interfaces:
     type: zip
-    url: https://github.com/BYU-FROST-Lab/seatrac-ros2/archive/refs/heads/main.zip
-    version: seatrac-ros2-main/seatrac_interfaces
+    url: https://github.com/BYU-FROST-Lab/seatrac-ros2/archive/f416e4447a1a7523a43785fd694e5394c0232159.zip
+    version: seatrac-ros2-f416e4447a1a7523a43785fd694e5394c0232159/seatrac_interfaces

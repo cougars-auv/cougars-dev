@@ -73,7 +73,7 @@ jobs:
       - uses: webfactory/ssh-agent@v0.10.0
         with:
           ssh-private-key: ${{ secrets.SSH_KEY }}
-      - uses: ros-industrial/industrial_ci@master
+      - uses: ros-industrial/industrial_ci@125164b9f1883cdf1858897a7146d1bebf2be5c6
         env:
           DOCKER_IMAGE: ${{ env.DOCKER_REPO }}:${{ matrix.target }}-latest
           DOCKER_PULL: true
