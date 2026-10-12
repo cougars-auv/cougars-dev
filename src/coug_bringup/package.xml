@@ -2,7 +2,7 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>coug_bringup</name>
-  <version>0.0.0</version>
+  <version>0.1.0</version>
   <description>Project-wide launch configurations and bag recording.</description>
   <maintainer email="snelsond@byu.edu">Nelson Durrant</maintainer>
   <license>Apache-2.0</license>

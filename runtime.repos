@@ -2,27 +2,27 @@ repositories:
   coug_comms:
     type: git
     url: git@github.com:cougars-auv/coug_comms.git
-    version: main
+    version: v0.1.0
   coug_control:
     type: git
     url: git@github.com:cougars-auv/coug_control.git
-    version: main
+    version: v0.1.0
   coug_description:
     type: git
     url: git@github.com:cougars-auv/coug_description.git
-    version: main
+    version: v0.1.0
   coug_fg:
     type: git
     url: git@github.com:cougars-auv/coug_fg.git
-    version: main
+    version: v0.1.0
   coug_helm:
     type: git
     url: git@github.com:cougars-auv/coug_helm.git
-    version: main
+    version: v0.1.0
   coug_interfaces:
     type: git
     url: git@github.com:cougars-auv/coug_interfaces.git
-    version: main
+    version: v0.1.0
   dvl_msgs:
     type: zip
     url: https://github.com/paagutie/dvl_msgs/archive/555525ebc027f4ca21fdd654a6f30cecd259772f.zip
