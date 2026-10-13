@@ -46,7 +46,7 @@
       # --- ROS Topics and Frames ---
       imu_input_topic: "DepthCameraIMUSensor"
       ahrs_input_topic: "DepthCameraRotationSensor"
-      output_topic: "camera/imu/data"
+      imu_output_topic: "camera/imu/data"
       bias_topic: "camera/imu/bias"
 
   depth_converter_node:
@@ -206,7 +206,7 @@
       # --- ROS Topics and Frames ---
       imu_input_topic: "ModemIMUSensor"
       ahrs_input_topic: "ModemRotationSensor"
-      output_topic: "modem/imu/data"
+      imu_output_topic: "modem/imu/data"
       bias_topic: "modem/imu/bias"
 
   modem_status_converter_node:
