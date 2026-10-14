@@ -14,39 +14,39 @@ repositories:
   coug_belief_mppi:
     type: git
     url: git@github.com:cougars-auv/coug_belief_mppi.git
-    version: main
+    version: v0.1.1
   coug_gazebo:
     type: git
     url: git@github.com:cougars-auv/coug_gazebo.git
-    version: main
+    version: v0.1.0
   coug_holoocean:
     type: git
     url: git@github.com:cougars-auv/coug_holoocean.git
-    version: main
+    version: v0.1.1
   coug_mapviz:
     type: git
     url: git@github.com:cougars-auv/coug_mapviz.git
-    version: main
+    version: v0.1.0
   coug_perception:
     type: git
     url: git@github.com:cougars-auv/coug_perception.git
-    version: main
+    version: v0.1.0
   coug_rqt:
     type: git
     url: git@github.com:cougars-auv/coug_rqt.git
-    version: main
+    version: v0.1.0
   coug_template:
     type: git
     url: git@github.com:cougars-auv/coug_template.git
-    version: main
+    version: v0.1.0
   coug_terrain:
     type: git
     url: git@github.com:cougars-auv/coug_terrain.git
-    version: main
+    version: v0.1.0
   coug_visual_dvl:
     type: git
     url: git@github.com:cougars-auv/coug_visual_dvl.git
-    version: main
+    version: v0.1.0
   eigen_checks:
     type: zip
     url: https://github.com/tu-darmstadt-ros-pkg/eigen_checks/archive/ea2089f6d35ba18f72fda3769ac7a93b08e1e5e2.zip
@@ -61,12 +61,12 @@ repositories:
     version: ground_segmentation_ros2-c0d60fd8ddcf561d006a907e04c84f9a8847372a
   holoocean_interfaces:
     type: zip
-    url: https://github.com/cougars-auv/holoocean-ros/archive/refs/heads/main.zip
-    version: holoocean-ros-main/holoocean_interfaces
+    url: https://github.com/cougars-auv/holoocean-ros/archive/16bb46da0a198cbe0db34054843d3452d67c9197.zip
+    version: holoocean-ros-16bb46da0a198cbe0db34054843d3452d67c9197/holoocean_interfaces
   lidar_cluster_ros2:
     type: zip
-    url: https://github.com/cougars-auv/lidar_cluster_ros2/archive/refs/heads/ros2.zip
-    version: lidar_cluster_ros2-ros2
+    url: https://github.com/cougars-auv/lidar_cluster_ros2/archive/2c107be7a9ee3db65f4f8b6541401e25afcababd.zip
+    version: lidar_cluster_ros2-2c107be7a9ee3db65f4f8b6541401e25afcababd
   nav2_ground_consistency_costmap_plugin:
     type: zip
     url: https://github.com/dfki-ric/nav2_ground_consistency_costmap_plugin/archive/41cec620efba6c370dccfc59a6ec1134775ff48a.zip
@@ -77,5 +77,5 @@ repositories:
     version: voxblox_ros2-27c2bfcfc25beb1dbc701dcf4b72f4e5cce9fa50
   vrx:
     type: zip
-    url: https://github.com/cougars-auv/vrx/archive/refs/heads/jazzy.zip
-    version: vrx-jazzy
+    url: https://github.com/cougars-auv/vrx/archive/6a8c586310a59780331fafb6e38522f680294fed.zip
+    version: vrx-6a8c586310a59780331fafb6e38522f680294fed
