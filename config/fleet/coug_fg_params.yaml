@@ -36,6 +36,7 @@
     # "Beams" (default), "DVL", "Depth", "Timer", "None"
     keyframe_source: "Beams"
     backup_keyframe_source: "Depth"
+    use_imu_keyframe_stamp: false # Stamp keyframes at the latest IMU sample
     keyframe_timeout_sec: 0.5 # [s]
     keyframe_timer_rate_hz: 10.0 # [Hz]
     min_keyframe_interval_sec: 0.02 # [s]
