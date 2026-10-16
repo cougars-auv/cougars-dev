@@ -16,10 +16,6 @@
     ros__parameters:
       tree_file: "follow_waypoints_nav2.xml"
 
-  coug_terrain_launch:
-    ros__parameters:
-      ahrs_topic: "mavros/imu/data"
-
   controller_server:
     ros__parameters:
       controller_frequency: 20.0 # [Hz]
@@ -90,17 +86,21 @@
         resolution: 0.1 # [m/cell]
 
         footprint: "[[0.6, 0.465], [0.6, -0.465], [-0.6, -0.465], [-0.6, 0.465]]" # BlueBoat 1.2 x 0.93 m
-        plugins: ["ground_consistency_layer", "inflation_layer"]
+        plugins: ["voxel_layer", "inflation_layer"]
 
-        ground_consistency_layer:
-          plugin: "nav2_ground_consistency_costmap_plugin::GroundConsistencyLayer"
-          ground_points_topic: "/yboat1gz/ground_segmentation/ground_points"
-          nonground_points_topic: "/yboat1gz/ground_segmentation/obstacle_points"
-
-          robot_height: 1.4 # [m]
-          max_data_range: 15.0 # [m]
-          nonground_prob_thresh: 0.5
-          nonground_decay: 0.95
+        voxel_layer:
+          plugin: "nav2_costmap_2d::VoxelLayer"
+          z_resolution: 0.1 # [m]
+          z_voxels: 16
+          observation_sources: "lidar"
+          lidar:
+            topic: "/yboat1gz/camera/point_cloud/cloud_registered"
+            data_type: "PointCloud2"
+            clearing: true
+            min_obstacle_height: 0.0 # [m]
+            max_obstacle_height: 1.4 # [m]
+            obstacle_max_range: 15.0 # [m]
+            raytrace_max_range: 15.0 # [m]
 
         inflation_layer:
           plugin: "nav2_costmap_2d::InflationLayer"
@@ -114,15 +114,21 @@
         publish_frequency: 1.0 # [Hz]
 
         footprint: "[[0.6, 0.465], [0.6, -0.465], [-0.6, -0.465], [-0.6, 0.465]]" # BlueBoat 1.2 x 0.93 m
-        plugins: ["ground_consistency_layer", "inflation_layer"]
+        plugins: ["voxel_layer", "inflation_layer"]
 
-        ground_consistency_layer:
-          plugin: "nav2_ground_consistency_costmap_plugin::GroundConsistencyLayer"
-          ground_points_topic: "/yboat1gz/ground_segmentation/ground_points"
-          nonground_points_topic: "/yboat1gz/ground_segmentation/obstacle_points"
-
-          robot_height: 1.4 # [m]
-          max_data_range: 15.0 # [m]
+        voxel_layer:
+          plugin: "nav2_costmap_2d::VoxelLayer"
+          z_resolution: 0.1 # [m]
+          z_voxels: 16
+          observation_sources: "lidar"
+          lidar:
+            topic: "/yboat1gz/camera/point_cloud/cloud_registered"
+            data_type: "PointCloud2"
+            clearing: true
+            min_obstacle_height: 0.0 # [m]
+            max_obstacle_height: 1.4 # [m]
+            obstacle_max_range: 15.0 # [m]
+            raytrace_max_range: 15.0 # [m]
 
         inflation_layer:
           plugin: "nav2_costmap_2d::InflationLayer"
@@ -191,10 +197,6 @@
 
   euclidean_spatial:
     ros__parameters:
-      minZ: 0.05 # [m]
+      minZ: -0.46 # [m]
 
-  ground_segmentation:
-    ros__parameters:
-      lidar_to_ground: -0.46 # [m]
-      groundInlierThreshold: 0.05 # [m]
-      maxGroundHeightDeviation: 0.05 # [m]
+      points_in_topic: "camera/point_cloud/cloud_registered"
