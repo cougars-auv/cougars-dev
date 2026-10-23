@@ -36,7 +36,7 @@
     # "Beams" (default), "DVL", "Depth", "Timer", "None"
     keyframe_source: "Beams"
     backup_keyframe_source: "Depth"
-    use_imu_keyframe_stamp: false # Stamp keyframes at the latest IMU sample
+    use_imu_keyframe_stamp: true # Stamp keyframes at the latest IMU sample
     keyframe_timeout_sec: 0.5 # [s]
     keyframe_timer_rate_hz: 10.0 # [Hz]
     min_keyframe_interval_sec: 0.02 # [s]
@@ -186,6 +186,7 @@
 
     beams:
       enable_beams: true
+      min_split_imu_samples: 2 # Minimum number of IMU samples needed to split beam keyframes (0 disables).
       beam0:
         use_parameter_frame: false
         use_parameter_tf: false
@@ -344,7 +345,8 @@
     ros__parameters:
       # --- Node Settings ---
       override_timestamp: false # Stamp with receive time minus A50 latency (if the A50 clock isn't synced).
-      velocity_scale: 1.0 # Scale factor to correct configured speed of sound errors.
+      sound_speed: 1500.0 # [m/s] Actual speed of sound.
+      configured_sound_speed: 1500.0 # [m/s] Speed of sound set on the A50.
 
       # TURTLMap-based FOM covariance calculation
       use_turtlmap_fom_covariance: false
