@@ -186,7 +186,7 @@
 
     beams:
       enable_beams: true
-      min_split_imu_samples: 2 # Minimum number of IMU samples needed to split beam keyframes (0 disables).
+      min_split_imu_samples: 0 # Minimum number of IMU samples needed to split beam keyframes (0 disables).
       beam0:
         use_parameter_frame: false
         use_parameter_tf: false

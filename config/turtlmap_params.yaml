@@ -48,6 +48,9 @@
           # https://docs.clearpathrobotics.com/assets/files/clearpath_robotics_014603-TDS1-8efeae7b74bd54c43ea676651f063dbf.pdf
           orientation_noise_sigmas: [0.00436, 0.00436, 0.01396] # [roll, pitch, yaw] [rad]
 
+      beams:
+        min_split_imu_samples: 2
+
       priors:
         use_parameter_priors: false
         use_parameter_priors_sigmas: false

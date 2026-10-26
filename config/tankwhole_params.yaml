@@ -45,6 +45,7 @@
         use_parameter_sigmas: true
 
       beams:
+        min_split_imu_samples: 2
         robust_kernel: "Huber"
 
       priors:
