@@ -50,6 +50,8 @@
 
       beams:
         min_split_imu_samples: 2
+        # robust_kernel: "Huber"
+        robust_k: 5.0
 
       priors:
         use_parameter_priors: false
@@ -144,6 +146,7 @@
         ]
 
       imu1: "imu/data"
+      twist0: "dvl/twist_fom"
 
   ekf_filter_node_odom:
     ros__parameters:
@@ -184,6 +187,8 @@
           false,
           false, # Ax, Ay, Az
         ]
+
+      twist0: "dvl/twist_fom"
 
   ukf_filter_node_map:
     ros__parameters:
@@ -226,3 +231,4 @@
         ]
 
       imu1: "imu/data"
+      twist0: "dvl/twist_fom"
