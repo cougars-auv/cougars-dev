@@ -28,7 +28,7 @@ CoUGARs is a low-cost, configurable AUV platform designed for multi-agent autono
 
   **Simulation (HoloOcean):**
 
-  - Build the runtime image from the `cougars-auv` fork of [HoloOcean-ROS](https://github.com/cougars-auv/holoocean-ros/tree/main/docker/runtime). When prompted to run `./build_container.sh`, specify the `nelson/cougars-dev` branch with `./build_container.sh -b nelson/cougars-dev`.
+  - Build the runtime image from the `cougars-auv` fork of [HoloOcean-ROS](https://github.com/cougars-auv/holoocean-ros/tree/main/docker/runtime). When prompted to run `./build_container.sh`, specify the `v2.4.0` tag with `./build_container.sh -b v2.4.0`.
 
   - Open the `cougars-dev` repository in VSCode and use the Command Palette (`Ctrl + Shift + P`) to select "Dev Containers: Reopen in Container." When prompted, click "CoUGARs Dev (NVIDIA)."
 
