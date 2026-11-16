@@ -34,9 +34,11 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 
 # Build GTSAM
 WORKDIR /tmp/gtsam-build
+COPY docker/patches/gtsam-newest-keys-last.patch /tmp/
 RUN --mount=type=cache,target=/root/.ccache \
   ccache -z \
   && git clone --depth 1 --branch "${GTSAM_VERSION}" https://github.com/borglab/gtsam.git . \
+  && git apply /tmp/gtsam-newest-keys-last.patch \
   && cmake -B build -S . \
   -DCMAKE_BUILD_TYPE=Release \
   -DGTSAM_BUILD_WITH_MARCH_NATIVE=OFF \

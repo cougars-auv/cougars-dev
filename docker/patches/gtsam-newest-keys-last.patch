@@ -1,0 +1,20 @@
+diff --git a/gtsam/nonlinear/IncrementalFixedLagSmoother.cpp b/gtsam/nonlinear/IncrementalFixedLagSmoother.cpp
+index 394eb77..e01d9b4 100644
+--- a/gtsam/nonlinear/IncrementalFixedLagSmoother.cpp
++++ b/gtsam/nonlinear/IncrementalFixedLagSmoother.cpp
+@@ -81,6 +81,15 @@ FixedLagSmoother::Result IncrementalFixedLagSmoother::update(
+   // Force iSAM2 to put the marginalizable variables at the beginning
+   createOrderingConstraints(marginalizableKeys, constrainedKeys);
+
++  // Keep the new factors' variables last, at the root of the Bayes tree, as
++  // iSAM2 does when it gets no constraints (backport of borglab/gtsam 6c0ae73eeb)
++  if (constrainedKeys) {
++    for (Key key : newFactors.keys()) {
++      int& group = (*constrainedKeys)[key];
++      if (group != 0) group = 2;
++    }
++  }
++
+   if (debug) {
+     std::cout << "Constrained Keys: ";
+     if (constrainedKeys) {
